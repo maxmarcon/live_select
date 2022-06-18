@@ -1,0 +1,12 @@
+<div class="flex justify-center">
+    <.form for={:form} let={f} name="resolution" phx-change="validate" phx-submit="submit" class="w-1/4">
+        <.live_component
+            module={LiveSelect}
+            id="live_select"
+            form={f}
+            placeholder="Search for firms..."
+            input_field={:live_select}
+            change_msg={@change_msg}
+        />
+    </.form>
+</div>
