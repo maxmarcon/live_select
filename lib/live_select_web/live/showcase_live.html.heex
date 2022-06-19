@@ -1,12 +1,22 @@
-<div class="flex justify-center">
-    <.form for={:form} let={f} name="resolution" phx-change="validate" phx-submit="submit" class="w-1/4">
-        <.live_component
-            module={LiveSelect}
-            id="live_select"
-            form={f}
-            placeholder="Search for firms..."
-            input_field={:live_select}
-            change_msg={@change_msg}
-        />
-    </.form>
+<div class="flex w-full">
+    <div class="flex flex-col w-1/2 gap-y-5">
+        <div class="prose text-center">
+            <h2>Change settings here</h2>
+        </div>
+    </div>
+    <div class="flex flex-col w-1/2 items-center gap-y-5">
+        <div class="prose text-center">
+            <h2>Try out the component here</h2>
+        </div>
+        <.form for={:form} let={f} name="resolution" phx-change="validate" phx-submit="submit" class="w-1/2">
+            <.live_component
+                module={LiveSelect}
+                id="live_select"
+                form={f}
+                placeholder="Search for your next holiday destination"
+                input_field={:live_select}
+                change_msg={@change_msg}
+            />
+        </.form>
+    </div>
 </div>

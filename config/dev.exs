@@ -16,7 +16,8 @@ config :live_select, LiveSelectWeb.Endpoint,
   secret_key_base: "2nJhi0qF4Z8rVEW1MahlKTpKsfE/IqlM0/sxyd9S98q/96ZiWJOpCkLHd5/cmsz5",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support

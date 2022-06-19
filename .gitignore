@@ -32,3 +32,5 @@ live_select-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.idea/
+*.iml

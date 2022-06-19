@@ -1,6 +1,14 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
+  @destinations (for id <- 1..500 do
+       {Faker.Address.city(), id}
+     end ++
+       for id <- 501..701 do
+         {Faker.Address.country(), id}
+       end
+    |> Enum.sort())
+
   @impl true
   def mount(_params, _session, socket) do
     socket = assign(socket, change_msg: :change, options: 10)
@@ -25,7 +33,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {^change_msg, text} ->
         send_update(LiveSelect,
           id: "live_select",
-          options: option_list(text, socket.assigns.options)
+          options: destinations(text)
         )
 
       _ ->
@@ -39,11 +47,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
     IO.inspect(message, label: "MESSAGE")
   end
 
-  defp option_list("", _options), do: []
-  
-  defp option_list(_text, options) do
-    for id <- 1..options do
-      {Faker.Address.city(), id}
-    end
+  defp destinations(""), do: []
+
+  defp destinations(text) do
+    @destinations
+    |> Enum.filter(fn {name, _id} ->
+      String.contains?(String.downcase(name), String.downcase(text))
+    end)
   end
 end
