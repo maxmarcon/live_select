@@ -38,7 +38,7 @@ defmodule LiveSelect.MixProject do
       {:phoenix, "~> 1.6.10", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev, optional: true},
       {:floki, ">= 0.30.0", only: :test, optional: true},
-      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev,optional: true},
+      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev, optional: true},
       {:telemetry_metrics, "~> 0.6", optional: true},
       {:telemetry_poller, "~> 1.0", optional: true},
       {:jason, "~> 1.2", optional: true},
@@ -57,7 +57,7 @@ defmodule LiveSelect.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end

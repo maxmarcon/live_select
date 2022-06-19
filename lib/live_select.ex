@@ -63,9 +63,10 @@ defmodule LiveSelect do
       else
         if String.length(search_term) > 2 do
           send(self(), {socket.assigns.change_msg, search_term})
+          socket
+        else
+          assign(socket, :options, [])
         end
-
-        socket
       end
 
     {:noreply, socket}

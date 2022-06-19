@@ -1,17 +1,13 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
-  @destinations (for id <- 1..500 do
-       {Faker.Address.city(), id}
-     end ++
-       for id <- 501..701 do
-         {Faker.Address.country(), id}
-       end
-    |> Enum.sort())
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, change_msg: :change, options: 10)
+  cities = Path.expand("../../../assets/cities.json", __DIR__)
+          |> File.read!()
+          |> Jason.decode!()
+    socket = assign(socket, change_msg: :change, cities: cities, hidden_input_value: nil)
 
     {:ok, socket}
   end
@@ -23,6 +19,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     {:noreply, socket}
   end
+  
+  def handle_event("change", params, socket) do
+    IO.inspect(params)
+    {:noreply, assign(socket, :hidden_input_value, params["live_select"])}
+  end
 
   @impl true
   def handle_info(message, socket) do
@@ -33,7 +34,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {^change_msg, text} ->
         send_update(LiveSelect,
           id: "live_select",
-          options: destinations(text)
+          options: cities(text, socket.assigns.cities)
         )
 
       _ ->
@@ -47,12 +48,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
     IO.inspect(message, label: "MESSAGE")
   end
 
-  defp destinations(""), do: []
+  defp cities("", _cities), do: []
 
-  defp destinations(text) do
-    @destinations
-    |> Enum.filter(fn {name, _id} ->
+  defp cities(text, cities) do
+    cities
+    |> Enum.filter(fn %{"name" => name} ->
       String.contains?(String.downcase(name), String.downcase(text))
+    end)
+    |> Enum.map(fn %{"name" => name, "loc" => %{"coordinates" => coord}} ->
+      {name, coord}
     end)
   end
 end
