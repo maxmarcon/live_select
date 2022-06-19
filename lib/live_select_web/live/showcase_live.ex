@@ -1,28 +1,43 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
-
   @impl true
   def mount(_params, _session, socket) do
-  cities = Path.expand("../../../assets/cities.json", __DIR__)
-          |> File.read!()
-          |> Jason.decode!()
-    socket = assign(socket, change_msg: :change, cities: cities, hidden_input_value: nil)
+    cities =
+      Path.expand("../../../assets/cities.json", __DIR__)
+      |> File.read!()
+      |> Jason.decode!()
+
+    socket =
+      assign(socket,
+        change_msg: :change,
+        cities: cities,
+        handle_event: "",
+        recent_event: false
+      )
 
     {:ok, socket}
   end
 
+
   @impl true
   def handle_event(event, params, socket) do
-    IO.inspect(event, label: "EVENT")
-    IO.inspect(params, label: "PARAMS")
+    handle_event = ~s"""
+              handle_event(
+                  #{event}, 
+                  #{inspect(params)}, 
+                  socket
+              )    
+              """
 
-    {:noreply, socket}
+    Process.send_after(self(), :clear_recent_event, 2000)
+    
+    {:noreply, assign(socket, handle_event: handle_event, recent_event: true)}
   end
   
-  def handle_event("change", params, socket) do
-    IO.inspect(params)
-    {:noreply, assign(socket, :hidden_input_value, params["live_select"])}
+  @impl true 
+  def handle_info(:clear_recent_event, socket) do
+    {:noreply, assign(socket, :recent_event, false)}
   end
 
   @impl true

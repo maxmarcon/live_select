@@ -13,7 +13,7 @@ defmodule LiveSelect do
         change_msg: :search,
         select_msg: :select,
         search_term: "",
-        selected: false,
+        selected: nil,
         disabled: false,
         placeholder: "Type to search...",
         form: :form,

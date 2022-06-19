@@ -3,6 +3,12 @@
         <div class="prose text-center">
             <h2>Change settings here</h2>
         </div>
+        <div class="prose text-center">
+            <h2>See events and messages here</h2>
+        </div>
+        <div class={"#{if @recent_event, do: "animate-bounce"} ml-10 border-info border-2"}>
+            <div class="whitespace-pre"><%= @handle_event %></div>
+        </div>
     </div>
     <div class="flex flex-col w-1/2 items-center gap-y-5">
         <div class="prose text-center">
@@ -18,7 +24,6 @@
                 change_msg={@change_msg}
             />
         
-            <p> Selected value = <%= @hidden_input_value %></p>
         </.form>
     </div>
 </div>
