@@ -2,6 +2,18 @@
     <div class="flex flex-col w-1/2 gap-y-5">
         <div class="prose text-center">
             <h2>Change settings here</h2>
+            <.form for={:settings} let={f} phx-change="update-settings">
+                <div class="flex p-5 gap-2">
+                    <div class="form-control max-w-sm">
+                        <%= label(f, :form_name, "Form name:", class: "label label-text #{if @form_name == "", do: "invalid-feedback"}") %>
+                        <%= text_input(f, :form_name, class: "input input-bordered #{if @form_name == "", do: "input-error"}", value: @form_name) %>
+                    </div>
+                    <div class="form-control max-w-sm">
+                        <%= label(f, :change_msg, class: "label label-text #{if @change_msg == "", do: "invalid-feedback"}") %>
+                        <%= text_input(f, :change_msg, class: "input input-bordered #{if @change_msg == "", do: "input-error"}", value: @change_msg) %>
+                    </div>
+                </div>
+            </.form>
         </div>
         <div class="prose text-center">
             <h2>See events and messages here</h2>
@@ -12,12 +24,18 @@
                 <Util.handle_event event={@event} params={@params} />
             </div>
         <% end %>
+
+        <%= if @msg do %>
+            <div class={"#{if @recent_msg, do: "animate-bounce"} ml-10 border-info border-2 rounded p-2"}>
+                <Util.handle_info msg={@msg} />
+            </div>
+        <% end %>
     </div>
     <div class="flex flex-col w-1/2 items-center gap-y-5">
         <div class="prose text-center">
             <h2>Try out the component here</h2>
         </div>
-        <.form for={:form} let={f} name="resolution" phx-change="change" class="w-1/2">
+        <.form for={String.to_atom(@form_name)} let={f} phx-change="change" class="w-1/2">
             <.live_component
                 module={LiveSelect}
                 id="live_select"
