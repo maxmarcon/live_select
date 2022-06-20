@@ -6,9 +6,12 @@
         <div class="prose text-center">
             <h2>See events and messages here</h2>
         </div>
-        <div class={"#{if @recent_event, do: "animate-bounce"} ml-10 border-info border-2"}>
-            <div class="whitespace-pre"><%= @handle_event %></div>
-        </div>
+        
+        <%= if @event do %>
+            <div class={"#{if @recent_event, do: "animate-bounce"} ml-10 border-info border-2 rounded p-2"}>
+                <Util.handle_event event={@event} params={@params} />
+            </div>
+        <% end %>
     </div>
     <div class="flex flex-col w-1/2 items-center gap-y-5">
         <div class="prose text-center">
