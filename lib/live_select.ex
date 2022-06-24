@@ -16,10 +16,11 @@ defmodule LiveSelect do
         selected: nil,
         disabled: false,
         placeholder: "Type to search...",
-        form: :form,
+        form: nil,
         options: [],
         dropdown_mouseover: false,
-        current_focus: -1
+        current_focus: -1,
+        class: "dropdown w-full"
       )
 
     {:ok, socket}
@@ -127,6 +128,10 @@ defmodule LiveSelect do
         selected: selected
       )
       |> push_event("selected", %{selected: [label, selected]})
+
+    unless socket.assigns.form do
+      send(self(), {socket.assigns.select_msg, selected})
+    end
 
     socket
   end

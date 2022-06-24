@@ -42,11 +42,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       assign(socket,
         change_msg: :change,
+        select_msg: :select,
         cities: cities,
         events: [],
         new_event: false,
         params: nil,
-        form_name: "form"
+        form: true,
+        live_select_id: "live_select_with_form"
       )
 
     {:ok, socket}
@@ -55,10 +57,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @impl true
   def handle_event(
         "update-settings",
-        %{"settings" => %{"form_name" => form_name, "change_msg" => change_msg}},
+        %{"settings" => %{"form" => form, "change_msg" => change_msg}},
         socket
       ) do
-    {:noreply, assign(socket, form_name: form_name, change_msg: change_msg)}
+    form = form == "true"
+    live_select_id = if form, do: "live_select_with_form", else: "live_select_without_form"
+    
+    {:noreply, assign(socket, form: form, live_select_id: live_select_id, change_msg: change_msg)}
   end
 
   @impl true
@@ -81,14 +86,24 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @impl true
   def handle_info(message, socket) do
     change_msg = socket.assigns.change_msg
+    select_msg = socket.assigns.select_msg
 
     case message do
-      {^change_msg, text} = msg ->
+      {^change_msg, text} ->
         send_update(LiveSelect,
-          id: "live_select",
+          id: socket.assigns.live_select_id,
           options: cities(text, socket.assigns.cities)
         )
 
+        Process.send_after(self(), :clear_new_event, 1_000)
+
+        {:noreply,
+         assign(socket,
+           events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
+           new_event: true
+         )}
+
+      {^select_msg, _selected} ->
         Process.send_after(self(), :clear_new_event, 1_000)
 
         {:noreply,
