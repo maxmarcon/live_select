@@ -1,30 +1,34 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
-  defmodule Util do
+  @max_events 3
+
+  defmodule Render do
     use Phoenix.Component
 
-    def handle_event(assigns) do
-      ~H"""
-      <p>
-      def handle_event(
-        <span class="text-success"><%= inspect(@event) %></span>, 
-        <span class="text-primary"><%= inspect(@params) %></span>, 
-        socket
-      )
-      </p>
-      """
-    end
+    def event(assigns) do
+      cond do
+        assigns[:event] ->
+          ~H"""
+            <p>
+            def handle_event(
+              <span class="text-success"><%= inspect(@event) %></span>, 
+              <span class="text-primary"><%= inspect(@params) %></span>, 
+              socket
+            )
+            </p>
+          """
 
-    def handle_info(assigns) do
-      ~H"""
-      <p>
-      def handle_info(
-        <span class="text-success"><%= inspect(@msg) %></span>, 
-        socket
-      )
-      </p>
-      """
+        assigns[:msg] ->
+          ~H"""
+            <p>
+            def handle_info(
+              <span class="text-success"><%= inspect(@msg) %></span>, 
+              socket
+            )
+            </p>
+          """
+      end
     end
   end
 
@@ -38,11 +42,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       assign(socket,
         change_msg: :change,
-        msg: nil,
-        recent_msg: false,
         cities: cities,
-        event: nil,
-        recent_event: false,
+        events: [],
+        new_event: false,
         params: nil,
         form_name: "form"
       )
@@ -61,24 +63,19 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_event(event, params, socket) do
-    Process.send_after(self(), :clear_recent_event, 1_000)
+    Process.send_after(self(), :clear_new_event, 1_000)
 
     {:noreply,
      assign(socket,
-       event: event,
-       params: params |> Map.take([socket.assigns.form_name]),
-       recent_event: true
+       events:
+         [%{params: params, event: event} | socket.assigns.events] |> Enum.take(@max_events),
+       new_event: true
      )}
   end
 
   @impl true
-  def handle_info(:clear_recent_event, socket) do
-    {:noreply, assign(socket, :recent_event, false)}
-  end
-
-  @impl true
-  def handle_info(:clear_recent_msg, socket) do
-    {:noreply, assign(socket, :recent_msg, false)}
+  def handle_info(:clear_new_event, socket) do
+    {:noreply, assign(socket, :new_event, false)}
   end
 
   @impl true
@@ -92,9 +89,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
           options: cities(text, socket.assigns.cities)
         )
 
-        Process.send_after(self(), :clear_recent_msg, 1_000)
+        Process.send_after(self(), :clear_new_event, 1_000)
 
-        {:noreply, assign(socket, msg: msg, recent_msg: true)}
+        {:noreply,
+         assign(socket,
+           events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
+           new_event: true
+         )}
 
       _ ->
         {:noreply, socket}
