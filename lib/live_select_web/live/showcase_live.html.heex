@@ -34,7 +34,7 @@
             <h2>Try out the component here:</h2>
         </div>
         <%= if @form do %>
-            <.form for={:form_name} let={f} phx-change="change" class="w-1/2">
+            <.form for={@form} let={f} phx-change="change" class="w-1/2">
                 <.live_component
                 module={LiveSelect}
                 id={@live_select_id}

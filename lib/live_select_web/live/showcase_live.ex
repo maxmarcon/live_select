@@ -33,7 +33,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     cities =
       Path.expand("../../../assets/cities.json", __DIR__)
       |> File.read!()
@@ -47,9 +47,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
         events: [],
         new_event: false,
         params: nil,
-        form: true,
+        form: (params["form"] || "form") |> String.to_atom(),
         live_select_id: "live_select_with_form"
       )
+      
 
     {:ok, socket}
   end

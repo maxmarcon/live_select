@@ -1,5 +1,5 @@
 <div class={@class} phx-hook="LiveSelect" id={@id}>
-    <%= text_input(@form, :search_term,
+    <%= text_input(@form, "#{@input_field}_text_input",
                     value: @search_term,
                     class: "input input-bordered w-full #{if @selected, do: "input-primary text-primary"}",
                     phx_click: "click",
