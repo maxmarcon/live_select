@@ -1,5 +1,5 @@
 defmodule LiveSelect do
-  @moduledoc false
+  @moduledoc "This is LiveSelect main module"
 
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
@@ -19,7 +19,7 @@ defmodule LiveSelect do
         form: nil,
         options: [],
         dropdown_mouseover: false,
-        current_focus: -1,
+        current_focus: -1,  
         class: "dropdown w-full"
       )
 

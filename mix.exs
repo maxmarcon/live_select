@@ -10,7 +10,10 @@ defmodule LiveSelect.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: [
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -44,7 +47,8 @@ defmodule LiveSelect.MixProject do
       {:jason, "~> 1.2", optional: true},
       {:plug_cowboy, "~> 2.5"},
       {:faker, "~> 0.17", optional: true},
-      {:tailwind, "~> 0.1.6", only: :dev, optional: true}
+      {:tailwind, "~> 0.1.6", only: :dev, optional: true},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
