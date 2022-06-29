@@ -3,13 +3,14 @@ defmodule LiveSelect do
 
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
-
+  
   @impl true
   def mount(socket) do
     socket =
       socket
       |> assign(
         options: [],
+        input_field: :live_select,
         change_msg: :search,
         select_msg: :select,
         search_term: "",
