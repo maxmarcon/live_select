@@ -5,7 +5,7 @@ module.exports = {
         './js/**/*.js',
         '../lib/*_web.ex',
         '../lib/*_web/**/*.*ex',
-        '../lib/live_select.*ex'
+        '../lib/live_select/*.*ex'
     ],
     theme: {
         extend: {},

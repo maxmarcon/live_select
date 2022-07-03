@@ -41,30 +41,35 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     socket =
       assign(socket,
-        change_msg: :change,
-        select_msg: :select,
         cities: cities,
         events: [],
         new_event: false,
-        params: nil,
-        form: (params["form"] || "form") |> String.to_atom(),
-        live_select_id: "live_select_with_form"
+        live_select_id: "live_select"
       )
       
-
     {:ok, socket}
   end
 
   @impl true
+  def handle_params(params, _url, socket) do
+    socket = socket
+      |> assign(:form, (params["form"] || "form") |> String.to_atom())
+      |> assign(:msg_prefix, params["msg_prefix"] || "live_select")
+    
+    {:noreply, socket}
+  end
+  
+  @impl true
   def handle_event(
         "update-settings",
-        %{"settings" => %{"form" => form, "change_msg" => change_msg}},
+        %{"settings" => settings},
         socket
       ) do
-    form = form == "true"
-    live_select_id = if form, do: "live_select_with_form", else: "live_select_without_form"
     
-    {:noreply, assign(socket, form: form, live_select_id: live_select_id, change_msg: change_msg)}
+    socket = socket
+      |> push_patch(to: Routes.live_path(socket, __MODULE__, settings))
+    
+    {:noreply, socket}
   end
 
   @impl true
@@ -86,12 +91,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    change_msg = socket.assigns.change_msg
-    select_msg = socket.assigns.select_msg
-
+    msg_prefix = socket.assigns.msg_prefix
+    select_msg = "#{msg_prefix}_select"
+    change_msg = "#{msg_prefix}_change"
+      
     case message do
       {^change_msg, text} ->
-        send_update(LiveSelect,
+        send_update(LiveSelect.Component,
           id: socket.assigns.live_select_id,
           options: cities(text, socket.assigns.cities)
         )
