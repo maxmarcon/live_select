@@ -4,18 +4,18 @@ defmodule LiveSelect do
   import Phoenix.LiveView.Helpers
 
   def render(form, name, opts \\ []) do
-    assigns = %{module: LiveSelect.Component}
+    form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
-    p =
-      [
-        id: opts[:id],
-        form: form,
-        name: name
-      ]
-      |> Keyword.merge(opts)
+    assigns =
+      opts
+      |> Map.new()
+      |> Map.put_new(:id, "#{form_name}_#{name}")
+      |> Map.put(:module, LiveSelect.Component)
+      |> Map.put(:name, name)
+      |> Map.put(:form, form)
 
     ~H"""
-    <.live_component module={@module} {p} />
+    <.live_component {assigns} />
     """
   end
 end

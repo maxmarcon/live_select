@@ -2,10 +2,11 @@ defmodule LiveSelectWeb.LiveSelectWithFormTest do
   @moduledoc false
 
   use LiveSelectWeb.ConnCase
-
-  test "can be rendered in a form" do
+  alias LiveSelect.Component
+  
+  test "can be rendered" do
     component =
-      render_component(LiveSelect, id: "live_select", form: :my_form)
+      render_component(Component, id: "live_select", form: :my_form)
       |> Floki.parse_document!()
 
     assert component
@@ -16,6 +17,4 @@ defmodule LiveSelectWeb.LiveSelectWithFormTest do
            |> Floki.find("input#my_form_live_select_text_input[type=text]")
            |> Enum.any?()
   end
-  
-  
 end
