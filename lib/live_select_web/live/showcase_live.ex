@@ -8,6 +8,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
 
   defmodule Render do
+    @moduledoc false
+
     use Phoenix.Component
 
     def event(assigns) do

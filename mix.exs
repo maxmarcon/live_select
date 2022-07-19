@@ -12,7 +12,8 @@ defmodule LiveSelect.MixProject do
       aliases: aliases(),
       deps: deps(),
       docs: [
-        extras: ["README.md"]
+        extras: ["README.md"],
+        filter_modules: "LiveSelect$"
       ]
     ]
   end

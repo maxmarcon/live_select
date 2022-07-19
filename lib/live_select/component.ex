@@ -1,5 +1,5 @@
 defmodule LiveSelect.Component do
-  @moduledoc "This is LiveSelect main module"
+  @moduledoc false
 
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
