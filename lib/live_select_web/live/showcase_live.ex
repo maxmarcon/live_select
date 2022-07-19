@@ -5,7 +5,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @max_events 3
 
-  @live_select_opts ["msg_prefix", "min_strokes", "id"]
+  @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
   @default_form_name "my_form"
   @default_input_name :live_select
 
@@ -105,7 +105,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     case message do
       {^change_msg, text} ->
         send_update(LiveSelect.Component,
-          id: socket.assigns.live_select_opts[:id] || "#{socket.assigns.form}_live_select",
+          id:
+            socket.assigns.live_select_opts[:id] || "#{socket.assigns.form}_live_select_component",
           options: cities(text, socket.assigns.cities)
         )
 
@@ -138,7 +139,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       value =
         cond do
           value == "" -> nil
-          param == "min_strokes" -> String.to_integer(value)
+          param == "search_term_min_length" -> String.to_integer(value)
           true -> value
         end
 

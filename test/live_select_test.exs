@@ -36,7 +36,7 @@ defmodule LiveSelectTest do
   end
 
   test "number of minimum keystrokes can be configured", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?min_strokes=4")
+    {:ok, live, _html} = live(conn, "/?search_term_min_length=4")
 
     element(live, "input#my_form_live_select_text_input[type=text]")
     |> render_click()

@@ -20,7 +20,7 @@ defmodule LiveSelect do
   Opts:
 
   * `msg_prefix` - the prefix of messages sent by `LiveSelect` to the parent component. Defaults to "live_select"
-  * `min_strokes` - minimum number of keystrokes after which the dropdown is populated. Defaults to 3.
+  * `search_term_min_length` - minimum number of keystrokes after which the dropdown is populated. Defaults to 3.
 
   """
   def live_select(form, name, opts \\ []) do
@@ -29,7 +29,7 @@ defmodule LiveSelect do
     assigns =
       opts
       |> Map.new()
-      |> Map.put_new(:id, "#{form_name}_#{name}")
+      |> Map.put_new(:id, "#{form_name}_live_select_component")
       |> Map.put(:module, LiveSelect.Component)
       |> Map.put(:name, name)
       |> Map.put(:form, form)

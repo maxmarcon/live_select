@@ -74,7 +74,7 @@ defmodule LiveSelect.Component do
       if socket.assigns.selected do
         socket
       else
-        if String.length(search_term) >= socket.assigns.min_strokes do
+        if String.length(search_term) >= socket.assigns.search_term_min_length do
           send(self(), {msg(socket, "change"), search_term})
           socket
         else
@@ -129,7 +129,7 @@ defmodule LiveSelect.Component do
   defp default_opts() do
     [
       msg_prefix: "live_select",
-      min_strokes: 3
+      search_term_min_length: 3
     ]
   end
 

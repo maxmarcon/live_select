@@ -10,12 +10,12 @@
                 <%= text_input(f, :form, class: "input input-bordered", value: @form) %>
             </div>
             <div class="form-control max-w-sm">
-                <%= label(f, :msg_prefix, "Msg prefix:", class: "label label-text") %>
+                <%= label(f, :msg_prefix, "msg_prefix:", class: "label label-text") %>
                 <%= text_input(f, :msg_prefix, class: "input input-bordered", value: @live_select_opts[:msg_prefix], placeholder: "live_select") %>
             </div>
             <div class="form-control max-w-sm">
-                <%= label(f, :min_strokes, "Min strokes:", class: "label label-text") %>
-                <%= text_input(f, :min_strokes, class: "input input-bordered", value: @live_select_opts[:min_strokes], placeholder: "3") %>
+                <%= label(f, :search_term_min_length, "search_term_min_length:", class: "label label-text") %>
+                <%= text_input(f, :search_term_min_length, class: "input input-bordered", value: @live_select_opts[:search_term_min_length], placeholder: "3") %>
             </div>
 
         </div>
