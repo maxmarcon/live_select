@@ -9,26 +9,38 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(
-           options: [],
-           input_field: :live_select,
-           msg_prefix: "live_select",
-           search_term: "",
-           selected: nil,
-           disabled: false,
-           placeholder: "Type to search...",
-           form: nil,
-           options: [],
-           dropdown_mouseover: false,
-           current_focus: -1,
-           class: "dropdown w-full"
-         )
+        class: "dropdown w-full",
+        current_focus: -1,
+        disabled: false,
+        dropdown_mouseover: false,
+        form: nil,
+        input_field: :live_select,
+        options: [],
+        placeholder: "Type to search...",
+        search_term: "",
+        selected: nil
+      )
 
     {:ok, socket}
   end
 
   @impl true
   def update(assigns, socket) do
-    {:ok, assign(socket, Map.put(assigns, :current_focus, -1))}
+    socket =
+      socket
+      |> assign(assigns)
+      |> assign(:current_focus, -1)
+
+    socket =
+      Enum.reduce(default_opts(), socket, fn {opt, default}, socket ->
+        if socket.assigns[opt] do
+          socket
+        else
+          assign(socket, opt, default)
+        end
+      end)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -56,13 +68,13 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keyup", %{"value" => search_term, "key" => key} = _params, socket)
+  def handle_event("keyup", %{"value" => search_term, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab"] do
     socket =
       if socket.assigns.selected do
         socket
       else
-        if String.length(search_term) > 2 do
+        if String.length(search_term) >= socket.assigns.min_strokes do
           send(self(), {msg(socket, "change"), search_term})
           socket
         else
@@ -82,11 +94,11 @@ defmodule LiveSelect.Component do
       {:noreply, socket}
     else
       {:noreply,
-        assign(
-          socket,
-          :current_focus,
-          min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1)
-        )}
+       assign(
+         socket,
+         :current_focus,
+         min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1)
+       )}
     end
   end
 
@@ -114,6 +126,13 @@ defmodule LiveSelect.Component do
     {:noreply, assign(socket, dropdown_mouseover: false)}
   end
 
+  defp default_opts() do
+    [
+      msg_prefix: "live_select",
+      min_strokes: 3
+    ]
+  end
+
   defp select(socket, -1), do: socket
 
   defp select(socket, selected_position) do
@@ -122,11 +141,11 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(
-           options: [],
-           current_focus: -1,
-           search_term: label,
-           selected: selected
-         )
+        options: [],
+        current_focus: -1,
+        search_term: label,
+        selected: selected
+      )
       |> push_event("selected", %{selected: [label, selected]})
 
     socket
@@ -138,5 +157,6 @@ defmodule LiveSelect.Component do
     |> push_event("reset", %{})
   end
 
-  defp msg(socket, msg), do: "#{socket.assigns.msg_prefix}_#{msg}"
+  defp msg(socket, msg),
+    do: "#{socket.assigns.msg_prefix}_#{msg}"
 end

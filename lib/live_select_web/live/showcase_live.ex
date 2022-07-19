@@ -1,7 +1,13 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
+  import LiveSelect
+
   @max_events 3
+
+  @live_select_opts ["msg_prefix", "min_strokes", "id"]
+  @default_form_name "my_form"
+  @default_input_name :live_select
 
   defmodule Render do
     use Phoenix.Component
@@ -33,7 +39,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     cities =
       Path.expand("../../../assets/cities.json", __DIR__)
       |> File.read!()
@@ -43,32 +49,33 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assign(socket,
         cities: cities,
         events: [],
-        new_event: false,
-        live_select_id: "live_select"
+        new_event: false
       )
-      
+
     {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    socket = socket
-      |> assign(:form, (params["form"] || "form") |> String.to_atom())
-      |> assign(:msg_prefix, params["msg_prefix"] || "live_select")
-    
+    socket =
+      socket
+      |> assign(:form, (params["form"] || @default_form_name) |> String.to_atom())
+      |> assign(:input_name, params["input_name"] || @default_input_name)
+      |> assign(:live_select_opts, live_select_opts(params))
+
     {:noreply, socket}
   end
-  
+
   @impl true
   def handle_event(
         "update-settings",
         %{"settings" => settings},
         socket
       ) do
-    
-    socket = socket
+    socket =
+      socket
       |> push_patch(to: Routes.live_path(socket, __MODULE__, settings))
-    
+
     {:noreply, socket}
   end
 
@@ -91,14 +98,14 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    msg_prefix = socket.assigns.msg_prefix
+    msg_prefix = socket.assigns.live_select_opts[:msg_prefix] || "live_select"
     select_msg = "#{msg_prefix}_select"
     change_msg = "#{msg_prefix}_change"
-      
+
     case message do
       {^change_msg, text} ->
         send_update(LiveSelect.Component,
-          id: socket.assigns.live_select_id,
+          id: socket.assigns.live_select_opts[:id] || "#{socket.assigns.form}_live_select",
           options: cities(text, socket.assigns.cities)
         )
 
@@ -122,6 +129,21 @@ defmodule LiveSelectWeb.ShowcaseLive do
       _ ->
         {:noreply, socket}
     end
+  end
+
+  defp live_select_opts(params) do
+    params
+    |> Map.take(@live_select_opts)
+    |> Keyword.new(fn {param, value} ->
+      value =
+        cond do
+          value == "" -> nil
+          param == "min_strokes" -> String.to_integer(value)
+          true -> value
+        end
+
+      {String.to_existing_atom(param), value}
+    end)
   end
 
   defp cities("", _cities), do: []

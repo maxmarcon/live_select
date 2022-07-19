@@ -24,7 +24,7 @@ defmodule LiveSelectWeb.ConnCase do
       import Phoenix.ConnTest
       import LiveSelectWeb.ConnCase
       import Phoenix.LiveViewTest
-      
+
       alias LiveSelectWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing

@@ -1,9 +1,9 @@
-defmodule LiveSelectWeb.LiveSelectWithFormTest do
+defmodule LiveSelect.ComponentTest do
   @moduledoc false
 
   use LiveSelectWeb.ConnCase
   alias LiveSelect.Component
-  
+
   test "can be rendered" do
     component =
       render_component(Component, id: "live_select", form: :my_form)
