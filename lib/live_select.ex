@@ -15,7 +15,7 @@ defmodule LiveSelect do
   Renders a `live_select` input in your form.
 
   * `:form` - the form, either a `Phoenix.HTML.Form` or an atom
-  * `:name` - the name of the input field
+  * `:field` - the name of the input field that will appear in the form
 
   Opts:
 
@@ -23,7 +23,7 @@ defmodule LiveSelect do
   * `search_term_min_length` - minimum number of keystrokes after which the dropdown is populated. Defaults to 3.
 
   """
-  def live_select(form, name, opts \\ []) do
+  def live_select(form, field, opts \\ []) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
     assigns =
@@ -31,7 +31,7 @@ defmodule LiveSelect do
       |> Map.new()
       |> Map.put_new(:id, "#{form_name}_live_select_component")
       |> Map.put(:module, LiveSelect.Component)
-      |> Map.put(:name, name)
+      |> Map.put(:field, field)
       |> Map.put(:form, form)
 
     ~H"""

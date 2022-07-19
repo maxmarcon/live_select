@@ -49,8 +49,7 @@ config :live_select, LiveSelectWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"lib/live_select_web/(live|views)/.*(ex)$",
-      ~r"lib/live_select_web/templates/.*(eex)$"
+      ~r"lib/.*(ex)$"
     ]
   ]
 

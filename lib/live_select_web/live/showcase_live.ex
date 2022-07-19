@@ -7,7 +7,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
   @default_form_name "my_form"
-  @default_input_name :live_select
+  @default_field_name :live_select
 
   defmodule Render do
     use Phoenix.Component
@@ -57,10 +57,17 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_params(params, _url, socket) do
+    field_name =
+      case field_name = params["field_name"] do
+        nil -> @default_field_name
+        "" -> @default_field_name
+        _ -> field_name
+      end
+
     socket =
       socket
       |> assign(:form, (params["form"] || @default_form_name) |> String.to_atom())
-      |> assign(:input_name, params["input_name"] || @default_input_name)
+      |> assign(:field_name, field_name)
       |> assign(:live_select_opts, live_select_opts(params))
 
     {:noreply, socket}

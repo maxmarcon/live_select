@@ -4,6 +4,12 @@ defmodule LiveSelect.Component do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
 
+  @default_opts [
+    msg_prefix: "live_select",
+    search_term_min_length: 3,
+    field: "live_select"
+  ]
+
   @impl true
   def mount(socket) do
     socket =
@@ -14,7 +20,6 @@ defmodule LiveSelect.Component do
         disabled: false,
         dropdown_mouseover: false,
         form: nil,
-        input_field: :live_select,
         options: [],
         placeholder: "Type to search...",
         search_term: "",
@@ -32,7 +37,7 @@ defmodule LiveSelect.Component do
       |> assign(:current_focus, -1)
 
     socket =
-      Enum.reduce(default_opts(), socket, fn {opt, default}, socket ->
+      Enum.reduce(@default_opts, socket, fn {opt, default}, socket ->
         if socket.assigns[opt] do
           socket
         else
@@ -127,10 +132,6 @@ defmodule LiveSelect.Component do
   end
 
   defp default_opts() do
-    [
-      msg_prefix: "live_select",
-      search_term_min_length: 3
-    ]
   end
 
   defp select(socket, -1), do: socket
