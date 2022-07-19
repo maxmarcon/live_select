@@ -19,6 +19,14 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#my_form_city_search_text_input[type=text]")
   end
 
+  test "can be rendered with a given form name", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?form_name=special_form")
+
+    assert has_element?(live, "input#special_form_live_select[type=hidden]")
+
+    assert has_element?(live, "input#special_form_live_select_text_input[type=text]")
+  end
+
   test "with at least 3 keystrokes in the input field it does show the dropdown", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 

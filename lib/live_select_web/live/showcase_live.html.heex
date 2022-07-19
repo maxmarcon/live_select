@@ -6,12 +6,12 @@
         <.form for={:settings} let={f} phx-change="update-settings">
         <div class="flex flex-wrap p-5 gap-2">
             <div class="form-control max-w-sm">
-                <%= label(f, :form, "Form name:", class: "label label-text") %>
-                <%= text_input(f, :form, class: "input input-bordered", value: @form) %>
+                <%= label(f, :form_name, "Form name:", class: "label label-text") %>
+                <%= text_input(f, :form_name, class: "input input-bordered", value: @form_name, placeholder: @default_form_name) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :field_name, "Field name:", class: "label label-text") %>
-                <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name, placeholder: "live_select") %>
+                <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name, placeholder: @default_field_name) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :msg_prefix, "msg_prefix:", class: "label label-text") %>
@@ -42,8 +42,8 @@
         <div class="prose text-center">
             <h2>Try out the component here:</h2>
         </div>
-        <.form for={@form} let={f} phx-change="change" class="w-1/2">
-            <%= live_select f, @field_name, @live_select_opts %> 
+        <.form for={with_default(@form_name, @default_form_name) |> String.to_atom()} let={f} phx-change="change" class="w-1/2">
+            <%= live_select f, with_default(@field_name, @default_field_name), @live_select_opts %> 
         </.form>
     </div>
 </div>

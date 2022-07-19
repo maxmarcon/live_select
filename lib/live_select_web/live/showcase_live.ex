@@ -6,8 +6,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @max_events 3
 
   @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
-  @default_form_name "my_form"
-  @default_field_name :live_select
 
   defmodule Render do
     use Phoenix.Component
@@ -49,7 +47,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assign(socket,
         cities: cities,
         events: [],
-        new_event: false
+        new_event: false,
+        default_form_name: "my_form",
+        default_field_name: :live_select
       )
 
     {:ok, socket}
@@ -57,17 +57,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_params(params, _url, socket) do
-    field_name =
-      case field_name = params["field_name"] do
-        nil -> @default_field_name
-        "" -> @default_field_name
-        _ -> field_name
-      end
-
     socket =
       socket
-      |> assign(:form, (params["form"] || @default_form_name) |> String.to_atom())
-      |> assign(:field_name, field_name)
+      |> assign(:form_name, params["form_name"])
+      |> assign(:field_name, params["field_name"])
       |> assign(:live_select_opts, live_select_opts(params))
 
     {:noreply, socket}
@@ -113,7 +106,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {^change_msg, text} ->
         send_update(LiveSelect.Component,
           id:
-            socket.assigns.live_select_opts[:id] || "#{socket.assigns.form}_live_select_component",
+            socket.assigns.live_select_opts[:id] ||
+              "#{with_default(socket.assigns.form_name, socket.assigns.default_form_name)}_live_select_component",
           options: cities(text, socket.assigns.cities)
         )
 
@@ -165,4 +159,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {name, coord}
     end)
   end
+
+  defp with_default(value, default) when value in [nil, ""], do: default
+  defp with_default(value, _default), do: value
 end

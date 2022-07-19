@@ -1,5 +1,21 @@
 export default {
     LiveSelect: {
+        attachDomEventHandlers() {
+            this.el.querySelector("input[type=text]").onkeydown = (event) => {
+                switch (event.code) {
+                    case 'Enter':
+                        event.preventDefault()
+                        this.pushEventTo(this.el, 'enter', {})
+                        break;
+                    case 'ArrowDown':
+                        this.pushEventTo(this.el, 'results-down', {})
+                        break;
+                    case 'ArrowUp':
+                        this.pushEventTo(this.el, 'results-up', {})
+                        break;
+                }
+            }
+        },
         setSearchInputValue(value) {
             this.el.querySelector("input[type=text]").value = value;
         },
@@ -17,26 +33,16 @@ export default {
                 this.setSearchInputValue(label);
                 this.setHiddenInputValue(selected)
             })
-            this.el.querySelector("input[type=text]").onkeydown = (event) => {
-                switch (event.code) {
-                    case 'Enter':
-                        event.preventDefault()
-                        this.pushEventTo(this.el, 'enter', {})
-                        break;
-                    case 'ArrowDown':
-                        this.pushEventTo(this.el, 'results-down', {})
-                        break;
-                    case 'ArrowUp':
-                        this.pushEventTo(this.el, 'results-up', {})
-                        break;
-                }
-            }
             this.el.querySelector(".dropdown-content").onmouseover = () => {
                 this.pushEventTo(this.el, 'dropdown-mouseover', {})
             }
             this.el.querySelector(".dropdown-content").onmouseleave = () => {
                 this.pushEventTo(this.el, 'dropdown-mouseleave', {})
             }
+            this.attachDomEventHandlers()
+        },
+        updated() {
+            this.attachDomEventHandlers()
         }
     }
 }

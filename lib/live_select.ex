@@ -12,15 +12,12 @@ defmodule LiveSelect do
   import Phoenix.LiveView.Helpers
 
   @doc ~S"""
-  Renders a `live_select` input in your form.
-
-  * `:form` - the form, either a `Phoenix.HTML.Form` or an atom
-  * `:field` - the name of the input field that will appear in the form
+  Renders a `LiveSelect` input in a `form` with a given `field` name.
 
   Opts:
 
   * `msg_prefix` - the prefix of messages sent by `LiveSelect` to the parent component. Defaults to "live_select"
-  * `search_term_min_length` - minimum number of keystrokes after which the dropdown is populated. Defaults to 3.
+  * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
 
   """
   def live_select(form, field, opts \\ []) do
