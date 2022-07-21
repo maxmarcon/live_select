@@ -61,18 +61,6 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("enter", _params, socket) do
-    socket =
-      if socket.assigns.selected do
-        reset_input(socket)
-      else
-        select(socket, socket.assigns.current_focus)
-      end
-
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_event("keyup", %{"value" => search_term, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab"] do
     socket =
@@ -94,7 +82,7 @@ defmodule LiveSelect.Component do
   def handle_event("keyup", _params, socket), do: {:noreply, socket}
 
   @impl true
-  def handle_event("results-down", _params, socket) do
+  def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
     if socket.assigns.dropdown_mouseover do
       {:noreply, socket}
     else
@@ -108,13 +96,28 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("results-up", _params, socket) do
+  def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
     if socket.assigns.dropdown_mouseover do
       {:noreply, socket}
     else
       {:noreply, assign(socket, :current_focus, max(0, socket.assigns.current_focus - 1))}
     end
   end
+
+  @impl true
+  def handle_event("keydown", %{"key" => "Enter"}, socket) do
+    socket =
+      if socket.assigns.selected do
+        reset_input(socket)
+      else
+        select(socket, socket.assigns.current_focus)
+      end
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("keydown", _params, socket), do: {:noreply, socket}
 
   @impl true
   def handle_event("select", %{"idx" => idx}, socket) do

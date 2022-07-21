@@ -2,18 +2,16 @@ export default {
     LiveSelect: {
         attachDomEventHandlers() {
             this.el.querySelector("input[type=text]").onkeydown = (event) => {
-                switch (event.code) {
-                    case 'Enter':
-                        event.preventDefault()
-                        this.pushEventTo(this.el, 'enter', {})
-                        break;
-                    case 'ArrowDown':
-                        this.pushEventTo(this.el, 'results-down', {})
-                        break;
-                    case 'ArrowUp':
-                        this.pushEventTo(this.el, 'results-up', {})
-                        break;
+                if (event.code == "Enter") {
+                    event.preventDefault()
                 }
+                this.pushEventTo(this.el, 'keydown', {key: event.code})
+            }
+            this.el.querySelector(".dropdown-content").onmouseover = () => {
+                this.pushEventTo(this.el, 'dropdown-mouseover', {})
+            }
+            this.el.querySelector(".dropdown-content").onmouseleave = () => {
+                this.pushEventTo(this.el, 'dropdown-mouseleave', {})
             }
         },
         setSearchInputValue(value) {
@@ -33,12 +31,6 @@ export default {
                 this.setSearchInputValue(label);
                 this.setHiddenInputValue(selected)
             })
-            this.el.querySelector(".dropdown-content").onmouseover = () => {
-                this.pushEventTo(this.el, 'dropdown-mouseover', {})
-            }
-            this.el.querySelector(".dropdown-content").onmouseleave = () => {
-                this.pushEventTo(this.el, 'dropdown-mouseleave', {})
-            }
             this.attachDomEventHandlers()
         },
         updated() {
