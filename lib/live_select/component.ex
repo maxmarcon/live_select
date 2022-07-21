@@ -35,6 +35,7 @@ defmodule LiveSelect.Component do
       socket
       |> assign(assigns)
       |> assign(:current_focus, -1)
+      |> update(:options, &normalize_options/1)
 
     socket =
       Enum.reduce(@default_opts, socket, fn {opt, default}, socket ->
@@ -160,4 +161,21 @@ defmodule LiveSelect.Component do
 
   defp msg(socket, msg),
     do: "#{socket.assigns.msg_prefix}_#{msg}"
+
+  defp normalize_options(option_list) do
+    option_list
+    |> Enum.map(fn
+      option when is_list(option) ->
+        {option[:key], option[:value]}
+
+      {_key, _value} = option ->
+        option
+
+      option when is_binary(option) or is_atom(option) or is_integer(option) ->
+        {option, option}
+
+      option ->
+        raise "invalid option: #{option}"
+    end)
+  end
 end
