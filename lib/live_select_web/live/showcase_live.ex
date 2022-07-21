@@ -40,14 +40,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    cities =
-      Path.expand("../../../assets/cities.json", __DIR__)
-      |> File.read!()
-      |> Jason.decode!()
-
     socket =
       assign(socket,
-        cities: cities,
         events: [],
         new_event: false,
         default_form_name: "my_form",
@@ -110,7 +104,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           id:
             socket.assigns.live_select_opts[:id] ||
               "#{with_default(socket.assigns.form_name, socket.assigns.default_form_name)}_live_select_component",
-          options: cities(text, socket.assigns.cities)
+          options: change_handler().handle_change(text)
         )
 
         Process.send_after(self(), :clear_new_event, 1_000)
@@ -150,18 +144,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end)
   end
 
-  defp cities("", _cities), do: []
-
-  defp cities(text, cities) do
-    cities
-    |> Enum.filter(fn %{"name" => name} ->
-      String.contains?(String.downcase(name), String.downcase(text))
-    end)
-    |> Enum.map(fn %{"name" => name, "loc" => %{"coordinates" => coord}} ->
-      {name, coord}
-    end)
-  end
-
   defp with_default(value, default) when value in [nil, ""], do: default
   defp with_default(value, _default), do: value
+
+  defp change_handler() do
+    Application.get_env(:live_select, :change_handler) ||
+      raise "you need to specify a :change_handler in your :live_select config"
+  end
 end

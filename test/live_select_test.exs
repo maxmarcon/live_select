@@ -20,6 +20,8 @@ defmodule LiveSelectTest do
   end
 
   test "can be rendered with a given form name", %{conn: conn} do
+    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
+
     {:ok, live, _html} = live(conn, "/?form_name=special_form")
 
     assert has_element?(live, "input#special_form_live_select[type=hidden]")
@@ -28,6 +30,8 @@ defmodule LiveSelectTest do
   end
 
   test "with at least 3 keystrokes in the input field it does show the dropdown", %{conn: conn} do
+    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
+
     {:ok, live, _html} = live(conn, "/")
 
     element(live, "input#my_form_live_select_text_input[type=text]")
@@ -52,6 +56,8 @@ defmodule LiveSelectTest do
   end
 
   test "number of minimum keystrokes can be configured", %{conn: conn} do
+    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
+
     {:ok, live, _html} = live(conn, "/?search_term_min_length=4")
 
     element(live, "input#my_form_live_select_text_input[type=text]")

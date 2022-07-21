@@ -50,7 +50,8 @@ defmodule LiveSelect.MixProject do
       {:faker, "~> 0.17", optional: true},
       {:tailwind, "~> 0.1.6", only: :dev, optional: true},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 

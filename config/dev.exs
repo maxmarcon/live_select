@@ -1,5 +1,7 @@
 import Config
 
+config :live_select, :change_handler, LiveSelect.ChangeHandler
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

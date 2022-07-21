@@ -20,7 +20,8 @@ defmodule LiveSelect do
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
 
   """
-  def live_select(form, field, opts \\ []) do
+  def live_select(form, field, opts \\ [])
+      when (is_binary(field) or is_atom(field)) and is_list(opts) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
     assigns =
