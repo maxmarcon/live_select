@@ -3,6 +3,7 @@ defmodule LiveSelectTest do
 
   use LiveSelectWeb.ConnCase
 
+  @live_select "div[name=live-select]"
   @text_input_selector "input#my_form_live_select_text_input[type=text]"
   @dropdown_entries "ul[name=live-select-dropdown] > li > span"
 
@@ -147,6 +148,25 @@ defmodule LiveSelectTest do
     assert_dropdown_element_active(live, 1)
   end
 
+  test "moving the mouse on the dropdown deactivate elements", %{conn: conn} do
+    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    # pos: 0
+    keydown(live, "ArrowDown")
+
+    assert_dropdown_element_active(live, 0)
+
+    dropdown_mouseover(live)
+
+    assert_dropdown_element_active(live, -1)
+  end
+
   defp assert_dropdown_has_size(live, size) when is_integer(size) do
     assert_dropdown_has_size(live, &(&1 == size))
   end
@@ -193,7 +213,12 @@ defmodule LiveSelectTest do
   end
 
   defp keydown(live, key) do
-    element(live, "div[phx-hook=LiveSelect]")
+    element(live, @live_select)
     |> render_hook("keydown", %{"key" => key})
+  end
+
+  defp dropdown_mouseover(live) do
+    element(live, @live_select)
+    |> render_hook("dropdown-mouseover")
   end
 end

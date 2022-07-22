@@ -34,3 +34,5 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 ```
 
 ## Usage
+
+Refer to the [module's documentation](`LiveSelect`).
