@@ -42,7 +42,7 @@
             <h2>Try out the component here:</h2>
         </div>
         <.form for={with_default(@form_name, @default_form_name) |> String.to_atom()} let={f} phx-change="change" class="w-1/2">
-            <%= live_select f, with_default(@field_name, @default_field_name), @live_select_opts %> 
+            <%= LiveSelect.render f, with_default(@field_name, @default_field_name), @live_select_opts %> 
         </.form>
     </div>
 </div>

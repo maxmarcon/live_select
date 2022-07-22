@@ -2,14 +2,14 @@ defmodule LiveSelect do
   @moduledoc ~S"""
   Dynamic drop down input for live view
 
-  The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
+  The `LiveSelect` input is rendered by calling the `render/3` function and passing it a form and the name of the input.
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
   with the matching options, which the user can then select.
 
   ## How to control which elements are rendered in the dropdown
 
   Whenever the user enters or modifies the text in the text input, LiveSelect sends a message with the current text and its component id to the Liveview. The Liveview's job is to handle
-  the message and update LiveSelect's `options` assign via [send_update](`Phoenix.LiveView.send_update/3`).
+  the message and by calling `LiveSelect.update/2`
 
   ## Example
 
@@ -22,10 +22,10 @@ defmodule LiveSelect do
 
   Liveview:
   ```
-  def handle_info("live_select_change", %{id: component_id, text: text}) do 
+  def handle_info("live_select_change", %{text: text} = change_msg) do 
     cities = City.search(text)
     
-    send_update(LiveSelect.Component, id: component_id, options: cities)
+    LiveSelect.update(change_msg, cities)
     
     {:noreply, socket}
   end
@@ -43,7 +43,7 @@ defmodule LiveSelect do
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
 
   """
-  def live_select(form, field, opts \\ [])
+  def render(form, field, opts \\ [])
       when (is_binary(field) or is_atom(field)) and is_list(opts) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
@@ -59,4 +59,12 @@ defmodule LiveSelect do
     <.live_component {assigns} />
     """
   end
+
+  @doc ~S"""
+  Update a `LiveSelect` component with new options. `update_request` is the original update request message received from the component,
+  and options is the new list of options.
+  """
+  def update(%{module: module, id: component_id} = _update_request, options)
+      when is_list(options),
+      do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end

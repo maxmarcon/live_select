@@ -1,8 +1,6 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
-  import LiveSelect
-
   @max_events 3
 
   @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
@@ -99,10 +97,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
     change_msg = "#{msg_prefix}_change"
 
     case message do
-      {^change_msg, %{id: id, text: text}} ->
-        send_update(LiveSelect.Component,
-          id: id,
-          options: change_handler().handle_change(text)
+      {^change_msg, %{text: text} = change_msg_body} ->
+        LiveSelect.update(
+          change_msg_body,
+          change_handler().handle_change(text)
         )
 
         Process.send_after(self(), :clear_new_event, 1_000)
