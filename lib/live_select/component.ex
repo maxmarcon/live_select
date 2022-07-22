@@ -69,7 +69,7 @@ defmodule LiveSelect.Component do
         socket
       else
         if String.length(search_term) >= socket.assigns.search_term_min_length do
-          send(self(), {msg(socket, "change"), search_term})
+          send(self(), {msg(socket, "change"), %{text: search_term, id: socket.assigns.id}})
           socket
         else
           assign(socket, :options, [])

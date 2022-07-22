@@ -2,13 +2,34 @@ defmodule LiveSelect do
   @moduledoc ~S"""
   Dynamic drop down input for live view
 
-  The input is render calling the `live_select/3` function and passing it a form and the name of the input.
+  The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
+  LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
+  with the matching options, which the user can then select.
 
-  `LiveSelect` works by rendering a dropdown that will be dynamically filled by a handler in the parent LiveView.
+  ## How to control which elements are rendered in the dropdown
 
-  ## How the dropdown is filled
+  Whenever the user enters or modifies the text in the text input, LiveSelect sends a message with the current text and its component id to the Liveview. The Liveview's job is to handle
+  the message and update LiveSelect's `options` assign via [send_update](`Phoenix.LiveView.send_update/3`).
 
-  To fill the dropdown.
+  ## Example
+
+  Template:
+  ```
+  <.form for={:my_form} let={f} phx-change="change">
+      <%= live_select f, :city_search %> 
+  </.form>
+  ```
+
+  Liveview:
+  ```
+  def handle_info("live_select_change", %{id: component_id, text: text}) do 
+    cities = City.search(text)
+    
+    send_update(LiveSelect.Component, id: component_id, options: cities)
+    
+    {:noreply, socket}
+  end
+  ```
   """
 
   import Phoenix.LiveView.Helpers
@@ -29,7 +50,7 @@ defmodule LiveSelect do
     assigns =
       opts
       |> Map.new()
-      |> Map.put_new(:id, "#{form_name}_live_select_component")
+      |> Map.put_new(:id, "#{form_name}_#{field}_component")
       |> Map.put(:module, LiveSelect.Component)
       |> Map.put(:field, field)
       |> Map.put(:form, form)

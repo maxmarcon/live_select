@@ -99,11 +99,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
     change_msg = "#{msg_prefix}_change"
 
     case message do
-      {^change_msg, text} ->
+      {^change_msg, %{id: id, text: text}} ->
         send_update(LiveSelect.Component,
-          id:
-            socket.assigns.live_select_opts[:id] ||
-              "#{with_default(socket.assigns.form_name, socket.assigns.default_form_name)}_live_select_component",
+          id: id,
           options: change_handler().handle_change(text)
         )
 
