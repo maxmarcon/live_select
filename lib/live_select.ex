@@ -6,7 +6,9 @@ defmodule LiveSelect do
 
   `LiveSelect` works by rendering a dropdown that will be dynamically filled by a handler in the parent LiveView.
 
+  ## How the dropdown is filled
 
+  To fill the dropdown.
   """
 
   import Phoenix.LiveView.Helpers

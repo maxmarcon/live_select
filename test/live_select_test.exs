@@ -3,6 +3,9 @@ defmodule LiveSelectTest do
 
   use LiveSelectWeb.ConnCase
 
+  @text_input_selector "input#my_form_live_select_text_input[type=text]"
+  @dropdown_entries "ul[name=live-select-dropdown] > li > span"
+
   test "can be rendered", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
@@ -20,8 +23,6 @@ defmodule LiveSelectTest do
   end
 
   test "can be rendered with a given form name", %{conn: conn} do
-    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
-
     {:ok, live, _html} = live(conn, "/?form_name=special_form")
 
     assert has_element?(live, "input#special_form_live_select[type=hidden]")
@@ -32,8 +33,6 @@ defmodule LiveSelectTest do
   test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
     conn: conn
   } do
-    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
-
     {:ok, live, _html} = live(conn, "/")
 
     type(live, "Be")
@@ -42,7 +41,7 @@ defmodule LiveSelectTest do
   end
 
   test "with at least 3 keystrokes in the input field it does show the dropdown", %{conn: conn} do
-    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
+    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ -> ["A", "B", "C"] end)
 
     {:ok, live, _html} = live(conn, "/")
 
@@ -52,7 +51,7 @@ defmodule LiveSelectTest do
   end
 
   test "number of minimum keystrokes can be configured", %{conn: conn} do
-    Mox.stub_with(LiveSelect.ChangeHandlerMock, LiveSelect.ChangeHandler)
+    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ -> ["A", "B", "C"] end)
 
     {:ok, live, _html} = live(conn, "/?search_term_min_length=4")
 
@@ -125,6 +124,29 @@ defmodule LiveSelectTest do
     assert_dropdown_has_elements(live, ["A", "B", "C"])
   end
 
+  test "can navigate dropdown elements with arrows", %{conn: conn} do
+    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    # pos: 0
+    keydown(live, "ArrowDown")
+    # pos: 1
+    keydown(live, "ArrowDown")
+    # pos: 2
+    keydown(live, "ArrowDown")
+    # pos: 2
+    keydown(live, "ArrowDown")
+    # pos: 1
+    keydown(live, "ArrowUp")
+
+    assert_dropdown_element_active(live, 1)
+  end
+
   defp assert_dropdown_has_size(live, size) when is_integer(size) do
     assert_dropdown_has_size(live, &(&1 == size))
   end
@@ -134,7 +156,7 @@ defmodule LiveSelectTest do
 
     assert render(live)
            |> Floki.parse_document!()
-           |> Floki.find("ul[name=live-select-dropdown] li")
+           |> Floki.find(@dropdown_entries)
            |> Enum.count()
            |> then(&fun.(&1))
   end
@@ -142,7 +164,7 @@ defmodule LiveSelectTest do
   defp type(live, text) do
     0..String.length(text)
     |> Enum.each(fn pos ->
-      element(live, "input#my_form_live_select_text_input[type=text]")
+      element(live, @text_input_selector)
       |> render_keyup(%{"key" => String.at(text, pos), "value" => String.slice(text, 0..pos)})
     end)
   end
@@ -150,9 +172,28 @@ defmodule LiveSelectTest do
   defp assert_dropdown_has_elements(live, elements) do
     assert render(live)
            |> Floki.parse_document!()
-           |> Floki.find("ul[name=live-select-dropdown] > li > span")
+           |> Floki.find(@dropdown_entries)
            |> Floki.text()
            |> String.replace(~r/\s+/, "") ==
              Enum.join(elements)
+  end
+
+  defp assert_dropdown_element_active(live, pos) do
+    attributes =
+      render(live)
+      |> Floki.parse_document!()
+      |> Floki.attribute(@dropdown_entries, "class")
+      |> Enum.map(&String.trim/1)
+
+    expected_attributes =
+      0..(Enum.count(attributes) - 1)
+      |> Enum.map(&if &1 == pos, do: "active", else: "")
+
+    assert attributes == expected_attributes
+  end
+
+  defp keydown(live, key) do
+    element(live, "div[phx-hook=LiveSelect]")
+    |> render_hook("keydown", %{"key" => key})
   end
 end
