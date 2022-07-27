@@ -43,7 +43,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         events: [],
         new_event: false,
         default_form_name: "my_form",
-        default_field_name: :live_select
+        default_field_name: :live_select,
+        default_id: "my_form_live_select_component"
       )
 
     {:ok, socket}

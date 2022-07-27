@@ -6,10 +6,10 @@ defmodule LiveSelect do
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
   with the matching options, which the user can then select.
 
-  ## How to control which elements are rendered in the dropdown
+  ## How to update the content of the dropdown
 
-  Whenever the user enters or modifies the text in the text input, LiveSelect sends a message with the current text and its component id to the Liveview. The Liveview's job is to handle
-  the message and by calling `LiveSelect.update/2`
+  Whenever the user enters or modifies the text in the text input, LiveSelect sends a message with the current text and its component id to the LiveView. 
+  The LiveView's job is to handle the message and by calling `LiveSelect.update/2`
 
   ## Example
 
@@ -20,12 +20,36 @@ defmodule LiveSelect do
   </.form>
   ```
 
-  Liveview:
+  LiveView:
   ```
-  def handle_info("live_select_change", %{text: text} = change_msg) do 
-    cities = City.search(text)
+  def handle_info({"live_select_change", change_msg}) do 
+    cities = City.search(change_msg.text)
     
     LiveSelect.update(change_msg, cities)
+    
+    {:noreply, socket}
+  end
+  ```
+
+  If you have multiple LiveSelect elements, you can assign them custom ids to distinguish between them:
+
+  Template:
+  ```
+  <.form for={:my_form} let={f} phx-change="change">
+      <%= live_select f, :city_search, id: "city-search" %> 
+      <%= live_select f, :album_search, id: "album-search" %>
+  </.form>
+  ```
+
+  LiveView:
+  ```
+  def handle_info({"live_select_change", change_msg}) do 
+    options = case chang_msg.id do
+      "city-search" -> City.search(change_msg.text)
+      "album-search" -> Album.search(change_msg.text)
+    end
+   
+    LiveSelect.update(change_msg, options)
     
     {:noreply, socket}
   end
@@ -61,8 +85,8 @@ defmodule LiveSelect do
   end
 
   @doc ~S"""
-  Update a `LiveSelect` component with new options. `update_request` is the original update request message received from the component,
-  and options is the new list of options.
+  Update a `LiveSelect` component with new options. `update_request` must be the original update request message received from the component,
+  and options is the new list of options that will be used to fill the dropdown.
   """
   def update(%{module: module, id: component_id} = _update_request, options)
       when is_list(options),

@@ -31,6 +31,12 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#special_form_live_select_text_input[type=text]")
   end
 
+  test "can be rendered with a given id", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?id=my-component")
+
+    assert has_element?(live, "div#my-component[phx-hook=LiveSelect]")
+  end
+
   test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
     conn: conn
   } do
