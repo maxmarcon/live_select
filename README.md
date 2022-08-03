@@ -2,8 +2,11 @@
 
 `LiveSelect` is a simple LiveView component that implements a dynamic search and selection
 field that can be filled dynamically by your application. It has no external dependencies apart from
-LiveView. It is styling agnostic but comes with optional pre-configured styles using [Tailwindcss](https://tailwindcss.com/)
+LiveView. It is styling agnostic but comes with optional pre-configured styles
+using [Tailwindcss](https://tailwindcss.com/)
 and [DaisyUI](https://daisyui.com/).
+
+![Demo](priv/static/images/demo.gif)
 
 ## Installation
 
@@ -17,7 +20,8 @@ To install, add this to your dependencies:
 
 ## Javascript Hooks
 
-`LiveSelect` relies on Javascript hooks to operate correctly. You need to add `LiveSelect`'s hooks to your websocket connection.
+`LiveSelect` relies on Javascript hooks to operate correctly. You need to add `LiveSelect`'s hooks to your websocket
+connection.
 In your `app.js` file:
 
 ```
