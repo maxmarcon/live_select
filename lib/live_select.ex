@@ -16,13 +16,13 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= live_select f, :city_search %> 
+      <%= LiveSelect.render f, :city_search %> 
   </.form>
   ```
 
   LiveView:
   ```
-  def handle_info({"live_select_change", change_msg}) do 
+  def handle_info({"live_select_change", change_msg}, socket) do 
     cities = City.search(change_msg.text)
     
     LiveSelect.update(change_msg, cities)
@@ -36,14 +36,14 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= live_select f, :city_search, id: "city-search" %> 
-      <%= live_select f, :album_search, id: "album-search" %>
+      <%= LiveSelect.render f, :city_search, id: "city-search" %> 
+      <%= LiveSelect.render f, :album_search, id: "album-search" %>
   </.form>
   ```
 
   LiveView:
   ```
-  def handle_info({"live_select_change", change_msg}) do 
+  def handle_info({"live_select_change", change_msg}, socket) do 
     options = case chang_msg.id do
       "city-search" -> City.search(change_msg.text)
       "album-search" -> Album.search(change_msg.text)

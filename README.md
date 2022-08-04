@@ -40,3 +40,9 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 ## Usage
 
 Refer to the [module's documentation](`LiveSelect`).
+
+## TODO
+
+ - [ ] Add `package.json` to enable `import live_select from "live_select"`
+ - [ ] Make sure component classes are included by tailwind 
+ - [ ] Enable custom styling 
