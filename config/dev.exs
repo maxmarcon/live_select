@@ -64,15 +64,3 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
-
-config :tailwind,
-  version: "3.1.3",
-  default: [
-    args: ~w(
-      --config=tailwind.config.js
-      --input=css/app.css
-      --output=../priv/static/assets/app.css
-      --watch
-    ),
-    cd: Path.expand("../assets", __DIR__)
-  ]
