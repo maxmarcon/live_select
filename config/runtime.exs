@@ -20,6 +20,9 @@ if System.get_env("PHX_SERVER") do
   config :live_select, LiveSelectWeb.Endpoint, server: true
 end
 
+port = String.to_integer(System.get_env("PORT") || "4000")
+config :live_select, LiveSelectWeb.Endpoint, http: [port: port]
+
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
