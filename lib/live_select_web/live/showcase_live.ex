@@ -3,7 +3,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @max_events 3
 
-  @live_select_opts ["msg_prefix", "search_term_min_length", "id"]
+  @live_select_opts ["msg_prefix", "search_term_min_length", "id", "container_class"]
 
   defmodule Render do
     @moduledoc false
@@ -137,7 +137,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           true -> value
         end
 
-      {String.to_existing_atom(param), value}
+      {String.to_atom(param), value}
     end)
   end
 

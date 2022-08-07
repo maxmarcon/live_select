@@ -1,7 +1,7 @@
-<div id={@id} class={@class} name="live-select" phx-hook="LiveSelect" phx-target={@myself}>
+<div id={@id} class={@container_class} name="live-select" phx-hook="LiveSelect" phx-target={@myself}>
     <%= text_input(@form, "#{@field}_text_input",
                     value: @search_term,
-                    class: "input input-bordered w-full #{if @selected, do: "input-primary text-primary"}",
+                    class: "#{@text_input_class} #{if @selected, do: @text_input_selected_class}",
                     phx_click: "click",
                     placeholder: @placeholder,
                     phx_debounce: 200,
@@ -12,11 +12,11 @@
                     autocomplete: "off")
     %>
     <%= hidden_input(@form, @field) %>
-    <ul class={"dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full"}  
+    <ul class={@dropdown_class}  
     style={if Enum.empty?(@options), do: "display: none;", else: ""} name="live-select-dropdown">
     <%= for {{label, _}, idx} <- Enum.with_index(@options) do %>
         <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself}>
-            <span class={" #{if idx == @current_focus, do: "active"}"}>
+            <span class={"#{if idx == @current_focus, do: @active_option_class}"}>
             <%= label %>
             </span>
         </li>

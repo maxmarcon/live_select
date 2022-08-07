@@ -173,6 +173,20 @@ defmodule LiveSelectTest do
     assert_dropdown_element_active(live, -1)
   end
 
+  test "can override the container_class", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?container_class=foobar")
+
+    assert element(live, @live_select)
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("class") == ["foobar"]
+  end
+
+  test "can override the text_input_class"
+  test "can override the text_input_selected_class"
+  test "can override the dropdown_class"
+  test "can override the active_option_class"
+
   defp assert_dropdown_has_size(live, size) when is_integer(size) do
     assert_dropdown_has_size(live, &(&1 == size))
   end
