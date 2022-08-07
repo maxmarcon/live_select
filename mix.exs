@@ -5,7 +5,8 @@ defmodule LiveSelect.MixProject do
     [
       app: :live_select,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.13",
+      description: "Dynamic search and selection input field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -64,7 +65,8 @@ defmodule LiveSelect.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      "jshooks.deploy": ["esbuild jshooks --minify"]
     ]
   end
 end
