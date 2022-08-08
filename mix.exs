@@ -65,8 +65,7 @@ defmodule LiveSelect.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
-      "jshooks.deploy": ["esbuild jshooks --minify"]
+      "assets.deploy": ["esbuild module"]
     ]
   end
 end

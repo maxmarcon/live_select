@@ -2,7 +2,7 @@
   "name": "live_select",
   "version": "0.1.0",
   "description": "Dynamic search and selection input field for LiveView",
-  "main": "priv/static/assets/live_select.min.js",
+  "main": "priv/static/live_select.min.js",
   "repository": "git@github.com:maxmarcon/live_select.git",
   "author": "Max Marcon <maxmarcon@gmx.net>",
   "license": "Apache License 2.0"

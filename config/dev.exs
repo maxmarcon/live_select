@@ -64,9 +64,9 @@ config :esbuild,
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ],
-  jshooks: [
+  module: [
     args:
-      ~w(js/live_select.js --target=es2017 --outfile=../priv/static/assets/live_select.min.js),
+      ~w(js/live_select.js --target=es2017 --minify --outfile=../priv/static/live_select.min.js),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
