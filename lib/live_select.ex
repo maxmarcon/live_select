@@ -65,7 +65,8 @@ defmodule LiveSelect do
 
   * `msg_prefix` - the prefix of messages sent by `LiveSelect` to the parent component. Defaults to "live_select"
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
-
+  * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling
+    
   """
   def render(form, field, opts \\ [])
       when (is_binary(field) or is_atom(field)) and is_list(opts) do

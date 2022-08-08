@@ -8,12 +8,17 @@ defmodule LiveSelect.Component do
     msg_prefix: "live_select",
     search_term_min_length: 3,
     field: "live_select",
-    container_class: ~S(dropdown w-full),
-    text_input_class: ~S(input input-bordered w-full),
-    text_input_selected_class: ~S(input-primary text-primary),
-    dropdown_class:
-      ~S(dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full),
-    active_option_class: ~S(active)
+    style: :daisyui
+  ]
+
+  @styles [
+    daisyui: [
+      container: ~S(dropdown w-full),
+      text_input: ~S(input input-bordered w-full),
+      text_input_selected: ~S(input-primary text-primary),
+      dropdown: ~S(dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full),
+      active_option: ~S(active)
+    ]
   ]
 
   @impl true
@@ -187,5 +192,9 @@ defmodule LiveSelect.Component do
       option ->
         raise "invalid option: #{option}"
     end)
+  end
+
+  defp class(style, element) do
+    get_in(@styles, [style, element])
   end
 end

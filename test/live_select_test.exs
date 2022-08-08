@@ -3,9 +3,22 @@ defmodule LiveSelectTest do
 
   use LiveSelectWeb.ConnCase
 
-  @live_select "div[name=live-select]"
-  @text_input_selector "input#my_form_live_select_text_input[type=text]"
-  @dropdown_entries "ul[name=live-select-dropdown] > li > span"
+  @expected_class [
+    daisyui: [
+      container: ~S(dropdown w-full),
+      text_input: ~S(input input-bordered w-full),
+      text_input_selected: ~S(input-primary text-primary),
+      dropdown: ~S(dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full),
+      active_option: ~S(active)
+    ]
+  ]
+
+  @selectors [
+    container: "div[name=live-select]",
+    text_input: "input#my_form_live_select_text_input[type=text]",
+    dropdown: "ul[name=live-select-dropdown]",
+    dropdown_entries: "ul[name=live-select-dropdown] > li > span"
+  ]
 
   test "can be rendered", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
@@ -173,19 +186,74 @@ defmodule LiveSelectTest do
     assert_dropdown_element_active(live, -1)
   end
 
-  test "can override the container_class", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?container_class=foobar")
+  for style <- [:daisyui, :none, nil] do
+    @style style
 
-    assert element(live, @live_select)
-           |> render()
-           |> Floki.parse_fragment!()
-           |> Floki.attribute("class") == ["foobar"]
+    describe "when style = #{@style || "default"}" do
+      for element <- [
+            :container,
+            :text_input,
+            :dropdown
+          ] do
+        @element element
+
+        test "#{@element} has default class", %{conn: conn} do
+          {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+          assert element(live, @selectors[@element])
+                 |> render()
+                 |> Floki.parse_fragment!()
+                 |> Floki.attribute("class") == [
+                   get_in(@expected_class, [@style || :daisyui, @element]) || ""
+                 ]
+        end
+      end
+
+      test "class for active option is set", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        end)
+
+        type(live, "ABC")
+
+        keydown(live, "ArrowDown")
+
+        assert_dropdown_element_active(
+          live,
+          0,
+          get_in(@expected_class, [@style || :daisyui, :active_option]) || ""
+        )
+      end
+
+      test "additional class for text input selected is set", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        end)
+
+        type(live, "ABC")
+
+        keydown(live, "ArrowDown")
+
+        keydown(live, "Enter")
+
+        expected_class =
+          (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
+            " " <>
+            (get_in(@expected_class, [@style || :daisyui, :text_input_selected]) || "")
+
+        assert element(live, @selectors[:text_input])
+               |> render()
+               |> Floki.parse_fragment!()
+               |> Floki.attribute("class") == [
+                 expected_class
+               ]
+      end
+    end
   end
-
-  test "can override the text_input_class"
-  test "can override the text_input_selected_class"
-  test "can override the dropdown_class"
-  test "can override the active_option_class"
 
   defp assert_dropdown_has_size(live, size) when is_integer(size) do
     assert_dropdown_has_size(live, &(&1 == size))
@@ -196,7 +264,7 @@ defmodule LiveSelectTest do
 
     assert render(live)
            |> Floki.parse_document!()
-           |> Floki.find(@dropdown_entries)
+           |> Floki.find(@selectors[:dropdown_entries])
            |> Enum.count()
            |> then(&fun.(&1))
   end
@@ -204,7 +272,7 @@ defmodule LiveSelectTest do
   defp type(live, text) do
     0..String.length(text)
     |> Enum.each(fn pos ->
-      element(live, @text_input_selector)
+      element(live, @selectors[:text_input])
       |> render_keyup(%{"key" => String.at(text, pos), "value" => String.slice(text, 0..pos)})
     end)
   end
@@ -212,33 +280,33 @@ defmodule LiveSelectTest do
   defp assert_dropdown_has_elements(live, elements) do
     assert render(live)
            |> Floki.parse_document!()
-           |> Floki.find(@dropdown_entries)
+           |> Floki.find(@selectors[:dropdown_entries])
            |> Floki.text()
            |> String.replace(~r/\s+/, "") ==
              Enum.join(elements)
   end
 
-  defp assert_dropdown_element_active(live, pos) do
+  defp assert_dropdown_element_active(live, pos, active_class \\ "active") do
     attributes =
       render(live)
       |> Floki.parse_document!()
-      |> Floki.attribute(@dropdown_entries, "class")
+      |> Floki.attribute(@selectors[:dropdown_entries], "class")
       |> Enum.map(&String.trim/1)
 
     expected_attributes =
       0..(Enum.count(attributes) - 1)
-      |> Enum.map(&if &1 == pos, do: "active", else: "")
+      |> Enum.map(&if &1 == pos, do: active_class, else: "")
 
     assert attributes == expected_attributes
   end
 
   defp keydown(live, key) do
-    element(live, @live_select)
+    element(live, @selectors[:container])
     |> render_hook("keydown", %{"key" => key})
   end
 
   defp dropdown_mouseover(live) do
-    element(live, @live_select)
+    element(live, @selectors[:container])
     |> render_hook("dropdown-mouseover")
   end
 end

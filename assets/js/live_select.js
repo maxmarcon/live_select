@@ -7,10 +7,10 @@ export default {
                 }
                 this.pushEventTo(this.el, 'keydown', {key: event.code})
             }
-            this.el.querySelector(".dropdown-content").onmouseover = () => {
+            this.el.querySelector("ul").onmouseover = () => {
                 this.pushEventTo(this.el, 'dropdown-mouseover', {})
             }
-            this.el.querySelector(".dropdown-content").onmouseleave = () => {
+            this.el.querySelector("ul").onmouseleave = () => {
                 this.pushEventTo(this.el, 'dropdown-mouseleave', {})
             }
         },
