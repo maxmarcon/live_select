@@ -8,8 +8,8 @@ defmodule LiveSelect do
 
   ## How to update the content of the dropdown
 
-  Whenever the user enters or modifies the text in the text input, LiveSelect sends a message with the current text and its component id to the LiveView. 
-  The LiveView's job is to handle the message and by calling `LiveSelect.update/2`
+  Whenever the user types something in the text input, LiveSelect sends a message with the current text and its component id to the LiveView. 
+  The LiveView's job is to handle the message by calling `LiveSelect.update/2`
 
   ## Example
 

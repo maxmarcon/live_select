@@ -14,7 +14,8 @@ defmodule LiveSelect.MixProject do
       deps: deps(),
       docs: [
         extras: ["README.md"],
-        filter_modules: "LiveSelect$"
+        filter_modules: "LiveSelect$",
+        assets: "priv/static/images"
       ]
     ]
   end
