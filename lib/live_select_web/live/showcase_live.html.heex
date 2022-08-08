@@ -7,23 +7,27 @@
         <div class="flex flex-wrap p-5 gap-2">
             <div class="form-control max-w-sm">
                 <%= label(f, :form_name, "Form name:", class: "label label-text") %>
-                <%= text_input(f, :form_name, class: "input input-bordered", value: @form_name, placeholder: @default_form_name) %>
+                <%= text_input(f, :form_name, class: "input input-bordered", value: @form_name) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :field_name, "Field name:", class: "label label-text") %>
-                <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name, placeholder: @default_field_name) %>
+                <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :msg_prefix, "msg_prefix:", class: "label label-text") %>
-                <%= text_input(f, :msg_prefix, class: "input input-bordered", value: @live_select_opts[:msg_prefix], placeholder: "live_select") %>
+                <%= text_input(f, :msg_prefix, class: "input input-bordered", value: @live_select_opts[:msg_prefix]) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :search_term_min_length, "search_term_min_length:", class: "label label-text") %>
-                <%= text_input(f, :search_term_min_length, class: "input input-bordered", value: @live_select_opts[:search_term_min_length], placeholder: "3") %>
+                <%= text_input(f, :search_term_min_length, class: "input input-bordered", value: @live_select_opts[:search_term_min_length]) %>
             </div>
             <div class="form-control max-w-sm">
                 <%= label(f, :id, "id:", class: "label label-text") %>
-                <%= text_input(f, :id, class: "input input-bordered", value: @live_select_opts[:id], placeholder: @default_id) %>
+                <%= text_input(f, :id, class: "input input-bordered", value: @live_select_opts[:id]) %>
+            </div>
+            <div class="form-control max-w-sm">
+                <%= label(f, :style, "style:", class: "label label-text") %>
+                <%= select(f, :style, [:daisyui, :none], class: "select select-bordered", selected: @live_select_opts[:style]) %>
             </div>
         </div>
         </.form>
@@ -45,8 +49,8 @@
         <div class="prose text-center">
             <h2>Try out the component here:</h2>
         </div>
-        <.form for={with_default(@form_name, @default_form_name) |> String.to_atom()} let={f} phx-change="change" class="w-1/2">
-            <%= LiveSelect.render f, with_default(@field_name, @default_field_name), @live_select_opts %> 
+        <.form for={@form_name} let={f} phx-change="change" class="w-1/2">
+            <%= LiveSelect.render f, @field_name, @live_select_opts %> 
         </.form>
     </div>
 </div>

@@ -3,7 +3,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @max_events 3
 
-  @live_select_opts ["msg_prefix", "search_term_min_length", "id", "container_class"]
+  # valid params with default values
+  @params [
+    form_name: "my_form",
+    field_name: "live_select",
+    msg_prefix: "live_select",
+    search_term_min_length: 3,
+    id: "my_form_live_select_component",
+    style: :daisyui
+  ]
 
   defmodule Render do
     @moduledoc false
@@ -42,9 +50,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assign(socket,
         events: [],
         new_event: false,
-        default_form_name: "my_form",
-        default_field_name: :live_select,
-        default_id: "my_form_live_select_component"
+        params: @params
       )
 
     {:ok, socket}
@@ -52,10 +58,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_params(params, _url, socket) do
+    params = Map.reject(params, fn {_param, value} -> value == "" end)
+
     socket =
       socket
-      |> assign(:form_name, params["form_name"])
-      |> assign(:field_name, params["field_name"])
+      |> assign(:form_name, (params["form_name"] || @params[:form_name]) |> String.to_atom())
+      |> assign(:field_name, params["field_name"] || @params[:field_name])
       |> assign(:live_select_opts, live_select_opts(params))
 
     {:noreply, socket}
@@ -127,22 +135,26 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp live_select_opts(params) do
-    params
-    |> Map.take(@live_select_opts)
-    |> Keyword.new(fn {param, value} ->
-      value =
-        cond do
-          value == "" -> nil
-          param == "search_term_min_length" -> String.to_integer(value)
-          true -> value
-        end
+    keys = Keyword.keys(@params) |> Enum.map(&to_string/1)
 
-      {String.to_atom(param), value}
+    params =
+      params
+      |> Map.take(keys)
+      |> Keyword.new(fn {param, value} ->
+        value =
+          cond do
+            param == "search_term_min_length" -> String.to_integer(value)
+            param == "style" -> String.to_atom(value)
+            true -> value
+          end
+
+        {String.to_atom(param), value}
+      end)
+
+    Enum.reduce(@params, params, fn {param, default}, params ->
+      Keyword.put_new(params, param, default)
     end)
   end
-
-  defp with_default(value, default) when value in [nil, ""], do: default
-  defp with_default(value, _default), do: value
 
   defp change_handler() do
     Application.get_env(:live_select, :change_handler) ||
