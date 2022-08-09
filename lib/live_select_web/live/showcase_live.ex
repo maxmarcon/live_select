@@ -15,7 +15,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     field_name: "live_select",
     form_name: "my_form",
     id: "my_form_live_select_component",
-    msg_prefix: "live_select",
+    change_msg: "live_select_change",
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,
@@ -111,8 +111,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    msg_prefix = socket.assigns.live_select_opts[:msg_prefix] || "live_select"
-    change_msg = "#{msg_prefix}_change"
+    change_msg = socket.assigns.live_select_opts[:change_msg]
 
     case message do
       {^change_msg, %{text: text} = change_msg_body} ->

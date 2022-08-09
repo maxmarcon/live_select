@@ -11,7 +11,7 @@ defmodule LiveSelect.Component do
     dropdown_class: nil,
     dropdown_extra_class: nil,
     field: "live_select",
-    msg_prefix: "live_select",
+    change_msg: "live_select_change",
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,
@@ -89,7 +89,7 @@ defmodule LiveSelect.Component do
         if String.length(search_term) >= socket.assigns.search_term_min_length do
           send(
             self(),
-            {msg(socket, "change"),
+            {socket.assigns.change_msg,
              %{module: __MODULE__, id: socket.assigns.id, text: search_term}}
           )
 
@@ -181,9 +181,6 @@ defmodule LiveSelect.Component do
     |> assign(options: [], selected: nil, search_term: "")
     |> push_event("reset", %{})
   end
-
-  defp msg(socket, msg),
-    do: "#{socket.assigns.msg_prefix}_#{msg}"
 
   defp normalize_options(option_list) do
     option_list

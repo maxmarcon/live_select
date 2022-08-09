@@ -4,13 +4,25 @@ defmodule LiveSelect do
 
   The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
-  with the matching options, which the user can then select.
+  containing the matching options, which the user can then select.
 
-  ## Update the content of the dropdown
+  Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
+  selecting an option by clicking on it with the mouse.
 
-  Whenever the user types something in the text input, LiveSelect sends a message with the current text and its component id to the LiveView. 
+  When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Example" section
+  below for details on how to handle the event.
+
+  ## Reacting to user's input
+
+  Whenever the user types something in the text input, LiveSelect sends a message with the following format to the LiveView:
+
+  ```
+  {"live_select_change", change_msg}
+  ```
+
+  Where `change_msg` is a map with, among others, a `text` property containing the current content of the input field.
   The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
-  to update the dropdown's content. See the "Example" section below.
+  to update the dropdown's content with the new set of selectable options. See the "Example" section below for details.
 
   ## Styles
 
@@ -54,6 +66,8 @@ defmodule LiveSelect do
 
   ## Example
 
+  Here's an example that describes all the moving parts in detail.
+    
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
@@ -68,9 +82,15 @@ defmodule LiveSelect do
   @impl true
   def handle_info({"live_select_change", change_msg}, socket) do 
     cities = City.search(change_msg.text)
-    // cities:
-    // {"city name 1", [lat_1, long_1]} ... {"city name 2", [lat_2, long_2]}
-    
+    # cities could be:
+    # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
+    #
+    # but it could also be (no coordinates in this case):
+    # [ "city name 1", "city name 2", ... ]
+    #
+    # or:
+    # [ [key: "city name 1", value: [lat_1, long_1]], [key: "city name 2", value: [lat_2, long_2]], ... ] 
+
     LiveSelect.update(change_msg, cities)
     
     {:noreply, socket}
@@ -116,7 +136,7 @@ defmodule LiveSelect do
 
   Opts:
 
-  * `msg_prefix` - the prefix of messages sent by `LiveSelect` to the parent component. Defaults to "live_select"
+  * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Defaults to "live_select_change"
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
   * `id` - assign a specific id to the component. Useful when you have multiple LiveSelect components in the same view. Defaults to: "form_name_field_name_component"
   * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.
@@ -148,10 +168,12 @@ defmodule LiveSelect do
   end
 
   @doc ~S"""
-  Update a `LiveSelect` component with new options. `update_request` must be the original update request message received from the component,
-  and options is the new list of options that will be used to fill the dropdown.
+  Update a `LiveSelect` component with new options. `change_msg` must be the message originally sent by the component (i.e the second part of the message tuple),
+  and `options` is the new list of options that will be used to fill the dropdown.
+
+  The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
   """
-  def update(%{module: module, id: component_id} = _update_request, options)
+  def update(%{module: module, id: component_id} = change_msg, options)
       when is_list(options),
       do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end
