@@ -202,7 +202,7 @@ defmodule LiveSelect.Component do
     end)
   end
 
-  defp class(style, element, class_override \\ nil, class_extend \\ nil)
+  defp class(style, element, class_override, class_extend \\ nil)
 
   defp class(style, element, nil, nil) do
     get_in(@styles, [style, element])

@@ -198,6 +198,27 @@ defmodule LiveSelectTest do
     assert_dropdown_element_active(live, -1)
   end
 
+  test "can select an element", %{conn: conn} do
+    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    # pos: 0
+    keydown(live, "ArrowDown")
+    # pos: 1
+    keydown(live, "ArrowDown")
+
+    keydown(live, "Enter")
+
+    render(live)
+
+    assert_value_selected(live, "B")
+  end
+
   for style <- [:daisyui, :none, nil] do
     @style style
 
@@ -242,7 +263,6 @@ defmodule LiveSelectTest do
             conn: conn
           } do
             option = @extend_class_option[@element]
-            IO.inspect(option)
 
             {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=foo")
 
@@ -388,6 +408,17 @@ defmodule LiveSelectTest do
       |> Enum.map(&if &1 == pos, do: active_class, else: "")
 
     assert attributes == expected_attributes
+  end
+
+  defp assert_value_selected(live, value) do
+    # would be nice to check the value of the hidden input field, but this
+    # is set by the JS hook
+    assert live
+           |> element(@selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("value") ==
+             [value]
   end
 
   defp keydown(live, key) do
