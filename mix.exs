@@ -4,7 +4,7 @@ defmodule LiveSelect.MixProject do
   def project do
     [
       app: :live_select,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.13",
       description: "Dynamic search and selection input field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -88,9 +88,13 @@ defmodule LiveSelect.MixProject do
 
   defp docs() do
     [
-      extras: ["README.md", "CHANGELOG.md"],
+      extras: [
+        "README.md",
+        "CHANGELOG.md"
+      ],
       filter_modules: "LiveSelect$",
-      assets: "priv/static/images"
+      assets: "priv/static/images",
+      main: "readme"
     ]
   end
 end

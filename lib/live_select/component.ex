@@ -5,18 +5,18 @@ defmodule LiveSelect.Component do
   import Phoenix.HTML.Form
 
   @default_opts [
-    msg_prefix: "live_select",
-    search_term_min_length: 3,
-    field: "live_select",
-    style: :daisyui,
+    active_option_class: nil,
     container_class: nil,
     container_extra_class: nil,
-    text_input_class: nil,
-    text_input_extra_class: nil,
-    text_input_selected_class: nil,
     dropdown_class: nil,
     dropdown_extra_class: nil,
-    active_option_class: nil
+    field: "live_select",
+    msg_prefix: "live_select",
+    search_term_min_length: 3,
+    style: :daisyui,
+    text_input_class: nil,
+    text_input_extra_class: nil,
+    text_input_selected_class: nil
   ]
 
   @styles [
@@ -24,7 +24,7 @@ defmodule LiveSelect.Component do
       container: ~S(dropdown),
       text_input: ~S(input input-bordered),
       text_input_selected: ~S(input-primary text-primary),
-      dropdown: ~S(dropdown-content menu menu-compact shadow bg-base-200 rounded-box),
+      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box),
       active_option: ~S(active)
     ]
   ]

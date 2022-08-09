@@ -1,7 +1,7 @@
 {
   "name": "live_select",
-  "version": "0.1.0",
-  "description": "Dynamic search and selection input field for LiveView",
+  "version": "0.1.1",
+  "description": "JS hooks for LiveSelect",
   "main": "priv/static/live_select.min.js",
   "repository": "git@github.com:maxmarcon/live_select.git",
   "author": "Max Marcon <maxmarcon@gmx.net>",

@@ -1,8 +1,7 @@
 # LiveSelect
 
-`LiveSelect` is a stateful LiveView component that implements a dynamic search and selection
-field that can be filled dynamically by your application. It has no external dependencies apart from
-LiveView. It comes with optional pre-configured styles
+`LiveSelect` is a stateful LiveView component that implements a search and selection
+field with content provided dynamically by your application. It comes with optional pre-configured styles
 for [DaisyUI](https://daisyui.com/).
 
 ![](assets/demo.gif)
@@ -76,6 +75,18 @@ of the callback that your LiveView needs to implement in order to handle the eve
 
 This allows you to quickly copy and paste the function definition into your live view.
 
+Note that the showcase app uses the following styling options:
+
+```elixir
+[
+    container_extra_class: "w-full",
+    dropdown_extra_class: "w-full bg-base-200 p-2",
+    text_input_extra_class: "w-full"
+]
+```
+
+See [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3) for details.
+
 ## Usage
 
 Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.html).
@@ -88,3 +99,4 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Rename LiveSelect.render to live_select
  - [ ] Enable slots
  - [ ] Enable tailwind styles
+ - [ ] Enable styles in showcase app

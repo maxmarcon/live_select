@@ -7,20 +7,20 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   # valid params with default values
   @params [
-    form_name: "my_form",
-    field_name: "live_select",
-    msg_prefix: "live_select",
-    search_term_min_length: 3,
-    id: "my_form_live_select_component",
-    style: :daisyui,
+    active_option_class: nil,
     container_class: nil,
     container_extra_class: nil,
-    text_input_class: nil,
-    text_input_extra_class: nil,
-    text_input_selected_class: nil,
     dropdown_class: nil,
     dropdown_extra_class: nil,
-    active_option_class: nil
+    field_name: "live_select",
+    form_name: "my_form",
+    id: "my_form_live_select_component",
+    msg_prefix: "live_select",
+    search_term_min_length: 3,
+    style: :daisyui,
+    text_input_class: nil,
+    text_input_extra_class: nil,
+    text_input_selected_class: nil
   ]
 
   defmodule Render do
@@ -151,7 +151,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
         {String.to_atom(param), value}
       end)
 
-    Enum.reduce(@params, params, fn {param, default}, params ->
+    @params
+    |> Keyword.merge(Application.get_env(:live_select, :default_styles, []))
+    |> Enum.reduce(params, fn {param, default}, params ->
       Keyword.put_new(params, param, default)
     end)
   end

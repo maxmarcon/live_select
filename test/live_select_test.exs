@@ -8,7 +8,7 @@ defmodule LiveSelectTest do
       container: ~S(dropdown),
       text_input: ~S(input input-bordered),
       text_input_selected: ~S(input-primary text-primary),
-      dropdown: ~S(dropdown-content menu menu-compact shadow bg-base-200 rounded-box),
+      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box),
       active_option: ~S(active)
     ]
   ]

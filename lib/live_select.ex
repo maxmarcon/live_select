@@ -29,11 +29,11 @@ defmodule LiveSelect do
   The following table shows the default styles for each component and the options you can use to adjust its CSS classes.
 
   |Component|Default daisyUI class|class override option|class extend option|
-  |---------|---------------------|---------------------|-------------------|
+  |--|--|--|--|
   |*outer container*|"dropdown"|`container_class`|`container_extra_class`|
   |*text field*|"input input-bordered"|`text_input_class`|`text_input_extra_class`|
   |*text field selected*|"input-primary text-primary"|`text_input_selected_class`| |
-  |*dropdown*|"dropdown-content menu menu-compact shadow bg-base-200 rounded-box"|`dropdown_class`|`dropdown_extra_class`|
+  |*dropdown*|"dropdown-content menu menu-compact shadow rounded-box"|`dropdown_class`|`dropdown_extra_class`|
   |*active option*|"active"|`active_option_class`| |
 
   For example, if you want to show a full-width LiveSelect component with a secondary color for the dropdown background

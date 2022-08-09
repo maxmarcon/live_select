@@ -2,6 +2,11 @@ import Config
 
 config :live_select, :change_handler, LiveSelect.ChangeHandler
 
+config :live_select, :default_styles,
+  container_extra_class: "w-full",
+  dropdown_extra_class: "w-full bg-base-200 p-2",
+  text_input_extra_class: "w-full"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
