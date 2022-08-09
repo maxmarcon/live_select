@@ -8,15 +8,23 @@ defmodule LiveSelect.Component do
     msg_prefix: "live_select",
     search_term_min_length: 3,
     field: "live_select",
-    style: :daisyui
+    style: :daisyui,
+    container_class: nil,
+    container_extra_class: nil,
+    text_input_class: nil,
+    text_input_extra_class: nil,
+    text_input_selected_class: nil,
+    dropdown_class: nil,
+    dropdown_extra_class: nil,
+    active_option_class: nil
   ]
 
   @styles [
     daisyui: [
-      container: ~S(dropdown w-full),
-      text_input: ~S(input input-bordered w-full),
+      container: ~S(dropdown),
+      text_input: ~S(input input-bordered),
       text_input_selected: ~S(input-primary text-primary),
-      dropdown: ~S(dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full),
+      dropdown: ~S(dropdown-content menu menu-compact shadow bg-base-200 rounded-box),
       active_option: ~S(active)
     ]
   ]
@@ -194,7 +202,17 @@ defmodule LiveSelect.Component do
     end)
   end
 
-  defp class(style, element) do
+  defp class(style, element, class_override \\ nil, class_extend \\ nil)
+
+  defp class(style, element, nil, nil) do
     get_in(@styles, [style, element])
+  end
+
+  defp class(_style, _element, class_override, nil) do
+    class_override
+  end
+
+  defp class(style, element, nil, class_extend) do
+    (get_in(@styles, [style, element]) || "") <> " #{class_extend}"
   end
 end

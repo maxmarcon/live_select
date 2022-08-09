@@ -10,7 +10,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
     msg_prefix: "live_select",
     search_term_min_length: 3,
     id: "my_form_live_select_component",
-    style: :daisyui
+    style: :daisyui,
+    container_class: nil,
+    container_extra_class: "w-full",
+    text_input_class: nil,
+    text_input_extra_class: "w-full",
+    text_input_selected_class: nil,
+    dropdown_class: nil,
+    dropdown_extra_class: "w-full",
+    active_option_class: nil
   ]
 
   defmodule Render do
@@ -102,7 +110,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @impl true
   def handle_info(message, socket) do
     msg_prefix = socket.assigns.live_select_opts[:msg_prefix] || "live_select"
-    select_msg = "#{msg_prefix}_select"
     change_msg = "#{msg_prefix}_change"
 
     case message do
@@ -112,15 +119,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
           change_handler().handle_change(text)
         )
 
-        Process.send_after(self(), :clear_new_event, 1_000)
-
-        {:noreply,
-         assign(socket,
-           events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
-           new_event: true
-         )}
-
-      {^select_msg, _selected} ->
         Process.send_after(self(), :clear_new_event, 1_000)
 
         {:noreply,

@@ -6,10 +6,51 @@ defmodule LiveSelect do
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
   with the matching options, which the user can then select.
 
-  ## How to update the content of the dropdown
+  ## Update the content of the dropdown
 
   Whenever the user types something in the text input, LiveSelect sends a message with the current text and its component id to the LiveView. 
-  The LiveView's job is to handle the message by calling `LiveSelect.update/2`
+  The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
+  to update the dropdown's content. See the "Example" section below.
+
+  ## Styles
+
+  You can use the `style` option in `LiveSelect.render/3` to control which style will be used. Currently supported values are 
+  `:daisyui` (default) or `:none`. LiveSelect styles the following elements:
+
+  1. The outer container of the component
+  2. The text field
+  3. The text field when an option has been selected
+  4. The dropdown with the options
+  5. The active option the user navigated to using the arrow keys
+
+  For each of these components there is a `{component}_class` and for some a `{component}_extra_class` option, which can be used
+  to either override or extend the default CSS classes for the component
+
+  The following table shows the default styles for each component and the options you can use to adjust its CSS classes.
+
+  |Component|Default daisyUI class|class override option|class extend option|
+  |---------|---------------------|---------------------|-------------------|
+  |*outer container*|"dropdown"|`container_class`|`container_extra_class`|
+  |*text field*|"input input-bordered"|`text_input_class`|`text_input_extra_class`|
+  |*text field selected*|"input-primary text-primary"|`text_input_selected_class`| |
+  |*dropdown*|"dropdown-content menu menu-compact shadow bg-base-200 rounded-box"|`dropdown_class`|`dropdown_extra_class`|
+  |*active option*|"active"|`active_option_class`| |
+
+  For example, if you want to show a full-width LiveSelect component with a secondary color for the dropdown background
+  and a active options with a warning background, you can do this:
+
+  ```
+  LiveSelect.render("my_form", "my_input",
+      container_extra_class: "w-full",
+      text_input_extra_class: "w-full",
+      dropdown_extra_class: "w-full bg-secondary",
+      active_option_class: "bg-warning"
+    )
+  ```
+
+  Result:
+
+  ![](assets/styled.jpg)
 
   ## Example
 
@@ -22,10 +63,20 @@ defmodule LiveSelect do
 
   LiveView:
   ```
+  @impl true
   def handle_info({"live_select_change", change_msg}, socket) do 
     cities = City.search(change_msg.text)
+    // cities:
+    // {"city name 1", [lat_1, long_1]} ... {"city name 2", [lat_2, long_2]}
     
     LiveSelect.update(change_msg, cities)
+    
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("change", %{"my_form" => %{"live_select" => city_coords}}, socket) do 
+    IO.puts("You selected a city located at: #{city_coords}")
     
     {:noreply, socket}
   end
@@ -65,7 +116,16 @@ defmodule LiveSelect do
 
   * `msg_prefix` - the prefix of messages sent by `LiveSelect` to the parent component. Defaults to "live_select"
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
-  * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling
+  * `id` - assign a specific id to the component. Useful when you have multiple LiveSelect components in the same view. Defaults to: "form_name_field_name_component"
+  * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.
+  * `container_class` -  See the "Styles" section above for this and the following options.
+  * `container_extra_class`
+  * `text_input_class`
+  * `text_input_extra_class`
+  * `text_input_selected_class`
+  * `dropdown_class`
+  * `dropdown_extra_class`
+  * `active_option_class`
     
   """
   def render(form, field, opts \\ [])

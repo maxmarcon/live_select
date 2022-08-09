@@ -1,6 +1,6 @@
 # LiveSelect
 
-`LiveSelect` is a simple LiveView component that implements a dynamic search and selection
+`LiveSelect` is a stateful LiveView component that implements a dynamic search and selection
 field that can be filled dynamically by your application. It has no external dependencies apart from
 LiveView. It comes with optional pre-configured styles
 for [DaisyUI](https://daisyui.com/).
@@ -63,15 +63,18 @@ That's it! Now your `LiveSelect` component will use pre-configured daisyUI style
 ## Showcase app
 
 The repository includes a showcase app you can use to play around with the different options and parameter for `LiveSelect`.
-From within the cloned repository, simply run:
+To start the showcase app, simply run:
 
 `PORT=4001 mix phx.server`
 
-The showcase app also shows the messages and events that your LiveView receives. For each event or message, the app shows function head
+from within the cloned repository. The app will be available at http://localhost:4001.
+The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows function head
 of the callback that your LiveView needs to implement in order to handle the event.
 
 ![](priv/static/images/showcase.jpg)
 ![](assets/showcase.jpg)
+
+This allows you to quickly copy and paste the function definition into your live view.
 
 ## Usage
 
@@ -81,7 +84,7 @@ Refer to the [module's documentation](`LiveSelect`).
 
  - [X] Add `package.json` to enable `import live_select from "live_select"`
  - [X] Make sure component classes are included by tailwind 
- - [ ] Enable custom styling 
+ - [X] Enable custom styling 
  - [ ] Rename LiveSelect.render
  - [ ] Enable slots
  - [ ] Enable tailwind styles

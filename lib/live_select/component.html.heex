@@ -1,7 +1,7 @@
-<div id={@id} class={class(@style, :container)} name="live-select" phx-hook="LiveSelect" phx-target={@myself}>
+<div id={@id} class={class(@style, :container, @container_class, @container_extra_class)} name="live-select" phx-hook="LiveSelect" phx-target={@myself}>
     <%= text_input(@form, "#{@field}_text_input",
                     value: @search_term,
-                    class: "#{class(@style, :text_input)}#{if @selected, do: " #{class(@style, :text_input_selected)}"}",
+                    class: "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if @selected, do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
                     phx_click: "click",
                     placeholder: @placeholder,
                     phx_debounce: 200,
@@ -12,11 +12,11 @@
                     autocomplete: "off")
     %>
     <%= hidden_input(@form, @field) %>
-    <ul class={class(@style, :dropdown)}  
+    <ul class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}  
     style={if Enum.empty?(@options), do: "display: none;", else: ""} name="live-select-dropdown">
     <%= for {{label, _}, idx} <- Enum.with_index(@options) do %>
         <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself}>
-            <span class={"#{if idx == @current_focus, do: class(@style, :active_option)}"}>
+            <span class={"#{if idx == @current_focus, do: class(@style, :active_option, @active_option_class)}"}>
             <%= label %>
             </span>
         </li>

@@ -5,12 +5,24 @@ defmodule LiveSelectTest do
 
   @expected_class [
     daisyui: [
-      container: ~S(dropdown w-full),
-      text_input: ~S(input input-bordered w-full),
+      container: ~S(dropdown),
+      text_input: ~S(input input-bordered),
       text_input_selected: ~S(input-primary text-primary),
-      dropdown: ~S(dropdown-content menu menu-compact p-2 shadow bg-base-200 rounded-box w-full),
+      dropdown: ~S(dropdown-content menu menu-compact shadow bg-base-200 rounded-box),
       active_option: ~S(active)
     ]
+  ]
+
+  @override_class_option [
+    container: :container_class,
+    text_input: :text_input_class,
+    dropdown: :dropdown_class
+  ]
+
+  @extend_class_option [
+    container: :container_extra_class,
+    text_input: :text_input_extra_class,
+    dropdown: :dropdown_extra_class
   ]
 
   @selectors [
@@ -207,6 +219,41 @@ defmodule LiveSelectTest do
                    get_in(@expected_class, [@style || :daisyui, @element]) || ""
                  ]
         end
+
+        if @override_class_option[@element] do
+          test "#{@element} class can be overridden with #{@override_class_option[@element]}", %{
+            conn: conn
+          } do
+            option = @override_class_option[@element]
+
+            {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=foo")
+
+            assert element(live, @selectors[@element])
+                   |> render()
+                   |> Floki.parse_fragment!()
+                   |> Floki.attribute("class") == [
+                     "foo"
+                   ]
+          end
+        end
+
+        if @extend_class_option[@element] do
+          test "#{@element} class can be extended with #{@extend_class_option[@element]}", %{
+            conn: conn
+          } do
+            option = @extend_class_option[@element]
+            IO.inspect(option)
+
+            {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=foo")
+
+            assert element(live, @selectors[@element])
+                   |> render()
+                   |> Floki.parse_fragment!()
+                   |> Floki.attribute("class") == [
+                     (get_in(@expected_class, [@style || :daisyui, @element]) || "") <> " foo"
+                   ]
+          end
+        end
       end
 
       test "class for active option is set", %{conn: conn} do
@@ -227,6 +274,24 @@ defmodule LiveSelectTest do
         )
       end
 
+      test "class for active option can be overriden", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}&active_option_class=foo")
+
+        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        end)
+
+        type(live, "ABC")
+
+        keydown(live, "ArrowDown")
+
+        assert_dropdown_element_active(
+          live,
+          0,
+          "foo"
+        )
+      end
+
       test "additional class for text input selected is set", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}")
 
@@ -244,6 +309,31 @@ defmodule LiveSelectTest do
           (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
             " " <>
             (get_in(@expected_class, [@style || :daisyui, :text_input_selected]) || "")
+
+        assert element(live, @selectors[:text_input])
+               |> render()
+               |> Floki.parse_fragment!()
+               |> Floki.attribute("class") == [
+                 expected_class
+               ]
+      end
+
+      test "additional class for text input selected can be overridden", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}&text_input_selected_class=foo")
+
+        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
+          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        end)
+
+        type(live, "ABC")
+
+        keydown(live, "ArrowDown")
+
+        keydown(live, "Enter")
+
+        expected_class =
+          (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
+            " foo"
 
         assert element(live, @selectors[:text_input])
                |> render()
