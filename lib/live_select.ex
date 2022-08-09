@@ -1,6 +1,6 @@
 defmodule LiveSelect do
   @moduledoc ~S"""
-  Dynamic drop down input for live view
+  Dynamic dropdown input for live view
 
   The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
@@ -37,7 +37,7 @@ defmodule LiveSelect do
   |*active option*|"active"|`active_option_class`| |
 
   For example, if you want to show a full-width LiveSelect component with a secondary color for the dropdown background
-  and a active options with a warning background, you can do this:
+  and active options with a warning background, you can do this:
 
   ```
   live_select("my_form", "my_input",
@@ -77,7 +77,7 @@ defmodule LiveSelect do
   end
 
   @impl true
-  def handle_event("change", %{"my_form" => %{"live_select" => city_coords}}, socket) do 
+  def handle_event("change", %{"my_form" => %{"city_search" => city_coords}}, socket) do 
     IO.puts("You selected a city located at: #{city_coords}")
     
     {:noreply, socket}
