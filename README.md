@@ -3,9 +3,10 @@
 `LiveSelect` is a simple LiveView component that implements a dynamic search and selection
 field that can be filled dynamically by your application. It has no external dependencies apart from
 LiveView. It comes with optional pre-configured styles
-for [DaisyUI](https://daisyui.com/) and [Tailwindcss](https://tailwindcss.com/) (coming soon).
+for [DaisyUI](https://daisyui.com/).
 
-![Demo](assets/demo.gif)
+![](assets/demo.gif)
+![](priv/static/images/demo.gif)
 
 ## Installation
 
@@ -31,8 +32,8 @@ import live_select from "live_select"
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
 
 
-// if you have other hooks you can do this
-let hooks = Object.assign(my_hooks, live_select)
+// if you have other hooks (called "my_hooks") you can do this:
+const hooks = Object.assign(my_hooks, live_select)
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
@@ -42,7 +43,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 of styling is controlled using the `style` option in `LiveSelect.render/3`.
 
 If you want to use daisyUI styles, you'll have to install daisyUI. This is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
-Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, add the following line to the content section in your `tailwind.config.js`:
+Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, you need to add the following line to the `content` section in your `tailwind.config.js`:
 
 ```
 module.exports = {
@@ -55,12 +56,14 @@ module.exports = {
 }
 ```
 
+That's it! Now your `LiveSelect` component will use pre-configured daisyUI styles.
+
 **NOTE:** you might need an additional `..` in the path if your application is an umbrella app
 
 
 ## Usage
 
-Refer to the [module's documentation](./lib/live_select.ex).
+Refer to the [module's documentation](`LiveSelect`).
 
 ## TODO
 

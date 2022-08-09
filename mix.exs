@@ -13,7 +13,7 @@ defmodule LiveSelect.MixProject do
       aliases: aliases(),
       deps: deps(),
       docs: [
-        extras: ["README.md"],
+        extras: ["README.md", "CHANGELOG.md"],
         filter_modules: "LiveSelect$",
         assets: "priv/static/images"
       ]
