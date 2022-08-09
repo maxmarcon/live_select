@@ -78,7 +78,7 @@ This allows you to quickly copy and paste the function definition into your live
 
 ## Usage
 
-Refer to the [module's documentation](`LiveSelect`).
+Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.html).
 
 ## TODO
 
