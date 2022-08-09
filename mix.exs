@@ -16,7 +16,9 @@ defmodule LiveSelect.MixProject do
         extras: ["README.md", "CHANGELOG.md"],
         filter_modules: "LiveSelect$",
         assets: "priv/static/images"
-      ]
+      ],
+      package: package(),
+      source_url: "https://github.com/maxmarcon/live_select"
     ]
   end
 
@@ -67,6 +69,17 @@ defmodule LiveSelect.MixProject do
     [
       setup: ["deps.get"],
       "assets.deploy": ["esbuild module"]
+    ]
+  end
+
+  defp package() do
+    [
+      licenses: ["Apache-2.0"],
+      links: %{
+        "GitHub" => "https://github.com/maxmarcon/live_select"
+      },
+      files:
+        ~w(lib/live_select/component.* lib/live_select.ex package.json priv/static/live_select.min.js)
     ]
   end
 end
