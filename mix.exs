@@ -12,13 +12,10 @@ defmodule LiveSelect.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      docs: [
-        extras: ["README.md", "CHANGELOG.md"],
-        filter_modules: "LiveSelect$",
-        assets: "priv/static/images"
-      ],
+      docs: docs(),
       package: package(),
-      source_url: "https://github.com/maxmarcon/live_select"
+      source_url: "https://github.com/maxmarcon/live_select",
+      name: "LiveSelect"
     ]
   end
 
@@ -86,6 +83,14 @@ defmodule LiveSelect.MixProject do
       },
       files:
         ~w(mix.exs lib/live_select/component.* lib/live_select.ex package.json priv/static/live_select.min.js)
+    ]
+  end
+
+  defp docs() do
+    [
+      extras: ["README.md", "CHANGELOG.md"],
+      filter_modules: "LiveSelect$",
+      assets: "priv/static/images"
     ]
   end
 end
