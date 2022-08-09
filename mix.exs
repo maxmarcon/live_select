@@ -26,10 +26,16 @@ defmodule LiveSelect.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [
-      mod: {LiveSelect.Application, []},
-      extra_applications: [:logger, :runtime_tools]
-    ]
+    case Code.ensure_loaded(LiveSelect.Application) do
+      {:error, :nofile} ->
+        []
+
+      {:module, module} ->
+        [
+          mod: {module, []},
+          extra_applications: [:logger, :runtime_tools]
+        ]
+    end
   end
 
   # Specifies which paths to compile per environment.
@@ -79,7 +85,7 @@ defmodule LiveSelect.MixProject do
         "GitHub" => "https://github.com/maxmarcon/live_select"
       },
       files:
-        ~w(lib/live_select/component.* lib/live_select.ex package.json priv/static/live_select.min.js)
+        ~w(mix.exs lib/live_select/component.* lib/live_select.ex package.json priv/static/live_select.min.js)
     ]
   end
 end
