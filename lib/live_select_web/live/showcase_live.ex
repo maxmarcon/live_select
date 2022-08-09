@@ -1,6 +1,8 @@
 defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
+  import LiveSelect
+
   @max_events 3
 
   # valid params with default values
@@ -12,12 +14,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
     id: "my_form_live_select_component",
     style: :daisyui,
     container_class: nil,
-    container_extra_class: "w-full",
+    container_extra_class: nil,
     text_input_class: nil,
-    text_input_extra_class: "w-full",
+    text_input_extra_class: nil,
     text_input_selected_class: nil,
     dropdown_class: nil,
-    dropdown_extra_class: "w-full",
+    dropdown_extra_class: nil,
     active_option_class: nil
   ]
 

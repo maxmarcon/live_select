@@ -2,7 +2,7 @@ defmodule LiveSelect do
   @moduledoc ~S"""
   Dynamic drop down input for live view
 
-  The `LiveSelect` input is rendered by calling the `render/3` function and passing it a form and the name of the input.
+  The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
   LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
   with the matching options, which the user can then select.
 
@@ -14,7 +14,7 @@ defmodule LiveSelect do
 
   ## Styles
 
-  You can use the `style` option in `LiveSelect.render/3` to control which style will be used. Currently supported values are 
+  You can use the `style` option in `live_select/3` to control which style will be used. Currently supported values are 
   `:daisyui` (default) or `:none`. LiveSelect styles the following elements:
 
   1. The outer container of the component
@@ -40,7 +40,7 @@ defmodule LiveSelect do
   and a active options with a warning background, you can do this:
 
   ```
-  LiveSelect.render("my_form", "my_input",
+  live_select("my_form", "my_input",
       container_extra_class: "w-full",
       text_input_extra_class: "w-full",
       dropdown_extra_class: "w-full bg-secondary",
@@ -57,12 +57,14 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= LiveSelect.render f, :city_search %> 
+      <%= live_select f, :city_search %> 
   </.form>
   ```
 
   LiveView:
   ```
+  import LiveSelect
+
   @impl true
   def handle_info({"live_select_change", change_msg}, socket) do 
     cities = City.search(change_msg.text)
@@ -87,8 +89,8 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= LiveSelect.render f, :city_search, id: "city-search" %> 
-      <%= LiveSelect.render f, :album_search, id: "album-search" %>
+      <%= live_select f, :city_search, id: "city-search" %> 
+      <%= live_select f, :album_search, id: "album-search" %>
   </.form>
   ```
 
@@ -128,7 +130,7 @@ defmodule LiveSelect do
   * `active_option_class`
     
   """
-  def render(form, field, opts \\ [])
+  def live_select(form, field, opts \\ [])
       when (is_binary(field) or is_atom(field)) and is_list(opts) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 

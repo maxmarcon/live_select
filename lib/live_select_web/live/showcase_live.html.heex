@@ -50,7 +50,7 @@
             <h2>Try out the component here:</h2>
         </div>
         <.form for={@form_name} let={f} phx-change="change" class="w-1/2">
-            <%= LiveSelect.render f, @field_name, @live_select_opts %> 
+            <%= live_select f, @field_name, @live_select_opts %> 
         </.form>
     </div>
 </div>
