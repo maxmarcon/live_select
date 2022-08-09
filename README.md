@@ -60,6 +60,18 @@ That's it! Now your `LiveSelect` component will use pre-configured daisyUI style
 
 **NOTE:** you might need an additional `..` in the path if your application is an umbrella app
 
+## Showcase app
+
+The repository includes a showcase app you can use to play around with the different options and parameter for `LiveSelect`.
+From within the cloned repository, simply run:
+
+`PORT=4001 mix phx.server`
+
+The showcase app also shows the messages and events that your LiveView receives. For each event or message, the app shows function head
+of the callback that your LiveView needs to implement in order to handle the event.
+
+![](priv/static/images/showcase.jpg)
+![](assets/showcase.jpg)
 
 ## Usage
 
@@ -70,6 +82,6 @@ Refer to the [module's documentation](`LiveSelect`).
  - [X] Add `package.json` to enable `import live_select from "live_select"`
  - [X] Make sure component classes are included by tailwind 
  - [ ] Enable custom styling 
- - [ ] Enable tailwind styles
  - [ ] Rename LiveSelect.render
  - [ ] Enable slots
+ - [ ] Enable tailwind styles
