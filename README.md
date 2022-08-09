@@ -97,6 +97,7 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Make sure component classes are included by tailwind 
  - [X] Enable custom styling 
  - [X] Rename LiveSelect.render to live_select
+ - [ ] Customizable placeholder
  - [ ] Enable slots
  - [ ] Enable tailwind styles
  - [ ] Enable styles in showcase app
