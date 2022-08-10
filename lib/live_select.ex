@@ -3,7 +3,7 @@ defmodule LiveSelect do
   Dynamic dropdown input for live view
 
   The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
-  LiveSelect with create a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
+  LiveSelect creates a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
   containing the matching options, which the user can then select.
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
@@ -11,7 +11,11 @@ defmodule LiveSelect do
 
   When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
+  
+  After an option has been selected, the input field can be reset by clicking on it.
 
+  ![demo](assets/demo.gif)
+     
   ## Reacting to user's input
 
   Whenever the user types something in the text input, LiveSelect sends a message with the following format to the LiveView:
@@ -66,7 +70,10 @@ defmodule LiveSelect do
 
   ## Examples
 
-  Here's an example that describes all the moving parts in detail.
+  Here's an example that describes all the moving parts in detail. The user can search for cities.
+  The LiveSelect main form input is called `city_search`.
+  When a city is selected, the coordinates of that city will be the value of the form input.
+  Then name of the selected city is available in the text input field named `city_search_text_input`.
     
   Template:
   ```
@@ -146,6 +153,9 @@ defmodule LiveSelect do
   @doc ~S"""
   Renders a `LiveSelect` input in a `form` with a given `field` name.
 
+  LiveSelect renders a hidden input with name `field` which contains the selected option.
+  The visible text input field will have the name `#{field}_text_input`.
+    
   Opts:
 
   * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Useful for distinguishing among multiple LiveSelect inputs. Defaults to "live_select_change"

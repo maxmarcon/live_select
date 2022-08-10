@@ -16,7 +16,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     field_name: "city_search",
     form_name: "my_form",
     change_msg: "live_select_change",
-    placeholder: nil,
+    placeholder: "Search for a city",
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,
