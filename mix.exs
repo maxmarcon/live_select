@@ -44,7 +44,7 @@ defmodule LiveSelect.MixProject do
     [
       {:phoenix_live_view, "~> 0.17.5"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix, "~> 1.6.10", optional: true},
+      {:phoenix, "~> 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.4", only: :dev},
