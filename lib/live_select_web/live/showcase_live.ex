@@ -10,12 +10,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
     active_option_class: nil,
     container_class: nil,
     container_extra_class: nil,
-    disabled: false,
+    disabled: nil,
     dropdown_class: nil,
     dropdown_extra_class: nil,
-    field_name: "live_select",
+    field_name: "city_search",
     form_name: "my_form",
-    id: "my_form_live_select_component",
     change_msg: "live_select_change",
     placeholder: nil,
     search_term_min_length: 3,
@@ -136,11 +135,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp live_select_opts(params) do
-    keys = Keyword.keys(@params) |> Enum.map(&to_string/1)
+    string_keys = Keyword.keys(@params) |> Enum.map(&to_string/1)
 
     params =
       params
-      |> Map.take(keys)
+      |> Map.take(string_keys)
       |> Keyword.new(fn {param, value} ->
         value =
           cond do

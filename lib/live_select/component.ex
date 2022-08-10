@@ -56,17 +56,9 @@ defmodule LiveSelect.Component do
 
     socket =
       Enum.reduce(@default_opts, socket, fn {opt, default}, socket ->
-        if socket.assigns[opt] do
-          socket
-        else
-          assign(socket, opt, default)
-        end
+        assign_new(socket, opt, fn -> default end)
       end)
-
-    socket =
-      assign_new(socket, :text_input_field, fn ->
-        String.to_atom("#{socket.assigns.field}_text_input")
-      end)
+      |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
 
     {:ok, socket}
   end

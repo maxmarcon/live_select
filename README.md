@@ -1,5 +1,7 @@
 # LiveSelect
 
+[![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
+
 `LiveSelect` is a stateful LiveView component that implements a search and selection
 field with content provided dynamically by your application. It comes with optional pre-configured styles
 for [DaisyUI](https://daisyui.com/).
@@ -47,7 +49,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 of styling is controlled using the `style` option in `LiveSelect.live_select/3`.
 
 If you want to use daisyUI styles, you'll have to install daisyUI. This is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
-Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, you need to add the following line to the `content` section in your `tailwind.config.js`:
+Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
 
 ```
 module.exports = {

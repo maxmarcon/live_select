@@ -9,7 +9,7 @@ defmodule LiveSelect do
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   selecting an option by clicking on it with the mouse.
 
-  When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Example" section
+  When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
 
   ## Reacting to user's input
@@ -22,12 +22,12 @@ defmodule LiveSelect do
 
   Where `change_msg` is a map with, among others, a `text` property containing the current content of the input field.
   The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
-  to update the dropdown's content with the new set of selectable options. See the "Example" section below for details.
+  to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
   ## Styles
 
-  You can use the `style` option in `live_select/3` to control which style will be used. Currently supported values are 
-  `:daisyui` (default) or `:none`. LiveSelect styles the following elements:
+  You can use the `style` option in `live_select/3` to control which style will be used by default. Currently supported values are 
+  `:daisyui` (default) or `:none` (no styles). LiveSelect can style the following elements:
 
   1. The outer container of the component
   2. The text field
@@ -40,7 +40,7 @@ defmodule LiveSelect do
 
   The following table shows the default styles for each component and the options you can use to adjust its CSS classes.
 
-  |Component|Default daisyUI class|class override option|class extend option|
+  |Component|Default daisyUI classes|class override option|class extend option|
   |--|--|--|--|
   |*outer container*|"dropdown"|`container_class`|`container_extra_class`|
   |*text field*|"input input-bordered"|`text_input_class`|`text_input_extra_class`|
@@ -64,7 +64,7 @@ defmodule LiveSelect do
 
   ![](assets/styled.jpg)
 
-  ## Example
+  ## Examples
 
   Here's an example that describes all the moving parts in detail.
     
@@ -97,36 +97,48 @@ defmodule LiveSelect do
   end
 
   @impl true
-  def handle_event("change", %{"my_form" => %{"city_search" => city_coords}}, socket) do 
-    IO.puts("You selected a city located at: #{city_coords}")
-    
+  def handle_event(
+        "change",
+        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
+        socket
+      ) do
+    IO.puts("You selected city #{city_name} located at: #{city_coords}")
+
     {:noreply, socket}
-  end
+  end  
   ```
 
-  If you have multiple LiveSelect elements, you can assign them custom ids to distinguish between them:
+  ### Multiple LiveSelect inputs in the same LiveView  
+    
+  If you have multiple LiveSelect inputs in the same LiveView, you can use different `:change_msg` options to distinguish
+  among them. For example:
 
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= live_select f, :city_search, id: "city-search" %> 
-      <%= live_select f, :album_search, id: "album-search" %>
+      <%= live_select f, :city_search, change_msg: "city-search" %> 
+      <%= live_select f, :album_search, change_msg: "album-search" %>
   </.form>
   ```
 
   LiveView:
   ```
-  def handle_info({"live_select_change", change_msg}, socket) do 
-    options = case chang_msg.id do
-      "city-search" -> City.search(change_msg.text)
-      "album-search" -> Album.search(change_msg.text)
-    end
-   
-    LiveSelect.update(change_msg, options)
+  @impl true
+  def handle_info({"city-search", change_msg}, socket) do 
+    LiveSelect.update(change_msg, City.search(change_msg.text))
+    
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({"album-search", change_msg}, socket) do 
+    LiveSelect.update(change_msg, Album.search(change_msg.text))
     
     {:noreply, socket}
   end
   ```
+
+  As long as you pass the original `change_msg`, `LiveSelect.update/2` takes care of routing the update to the right component.
   """
 
   import Phoenix.LiveView.Helpers
@@ -136,11 +148,10 @@ defmodule LiveSelect do
 
   Opts:
 
-  * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Defaults to "live_select_change"
-  * `disabled` - whether to disable the input field
+  * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Useful for distinguishing among multiple LiveSelect inputs. Defaults to "live_select_change"
+  * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
-  * `id` - assign a specific id to the component. Useful when you have multiple LiveSelect components in the same view. Defaults to: "form_name_field_name_component"
   * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.
   * `container_class` -  See the "Styles" section above for this and the following options.
   * `container_extra_class`
@@ -159,7 +170,7 @@ defmodule LiveSelect do
     assigns =
       opts
       |> Map.new()
-      |> Map.put_new(:id, "#{form_name}_#{field}_component")
+      |> Map.put(:id, "#{form_name}_#{field}_component")
       |> Map.put(:module, LiveSelect.Component)
       # Ecto forms expect atom fields:
       # https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/html.ex#L123

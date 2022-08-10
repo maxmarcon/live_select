@@ -27,7 +27,7 @@ defmodule LiveSelectTest do
 
   @selectors [
     container: "div[name=live-select]",
-    text_input: "input#my_form_live_select_text_input[type=text]",
+    text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > span"
   ]
@@ -35,9 +35,9 @@ defmodule LiveSelectTest do
   test "can be rendered", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    assert has_element?(live, "input#my_form_live_select[type=hidden]")
+    assert has_element?(live, "input#my_form_city_search[type=hidden]")
 
-    assert has_element?(live, "input#my_form_live_select_text_input[type=text]")
+    assert has_element?(live, "input#my_form_city_search_text_input[type=text]")
   end
 
   test "can be rendered with a given field name", %{conn: conn} do
@@ -51,15 +51,9 @@ defmodule LiveSelectTest do
   test "can be rendered with a given form name", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?form_name=special_form")
 
-    assert has_element?(live, "input#special_form_live_select[type=hidden]")
+    assert has_element?(live, "input#special_form_city_search[type=hidden]")
 
-    assert has_element?(live, "input#special_form_live_select_text_input[type=text]")
-  end
-
-  test "can be rendered with a given id", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?id=my-component")
-
-    assert has_element?(live, "div#my-component[phx-hook=LiveSelect]")
+    assert has_element?(live, "input#special_form_city_search_text_input[type=text]")
   end
 
   test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
