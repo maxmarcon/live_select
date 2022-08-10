@@ -78,8 +78,8 @@ from within the cloned repository. The app will be available at http://localhost
 The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows function head
 of the callback that your LiveView needs to implement in order to handle the event.
 
-![](priv/static/images/showcase.png)
-![](assets/showcase.png)
+![](priv/static/images/showcase.gif)
+![](assets/showcase.gif)
 
 This allows you to quickly copy and paste the function definition into your live view.
 
