@@ -171,7 +171,7 @@ defmodule LiveSelect do
   end
 
   @doc ~S"""
-  Update a `LiveSelect` component with new options. `change_msg` must be the message originally sent by the component (i.e the second part of the message tuple),
+  Updates a `LiveSelect` component with new options. `change_msg` must be the message originally sent by the component (i.e the second part of the message tuple),
   and `options` is the new list of options that will be used to fill the dropdown.
 
   The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.

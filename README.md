@@ -48,16 +48,17 @@ Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`,
 module.exports = {
     content: [
         ...
-        '../deps/live_select/lib/live_select/component.*ex'
-    ],
+        '../deps/live_select/lib/live_select/component.*ex' <-- for a standalone app
+        '../../../deps/live_select/lib/live_select/component.*ex' <-- for an umbrella app
+],
 
     ...
 }
 ```
 
-That's it! Now your `LiveSelect` component will use pre-configured daisyUI styles.
+(Notice the different paths for a standalone or umbrella app)
 
-**NOTE:** you might need an additional `..` in the path if your application is an umbrella app
+That's it! Now your `LiveSelect` component will use pre-configured daisyUI styles.
 
 ## Showcase app
 
