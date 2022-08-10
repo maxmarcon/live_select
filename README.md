@@ -27,12 +27,17 @@ In your `app.js` file:
 import live_select from "live_select"
 
 ...
-// if you don't have any other hooks you can do this
+// if you don't have any other hooks do this:
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
 
 
-// if you have other hooks (called "my_hooks") you can do this:
-const hooks = Object.assign(my_hooks, live_select)
+// if you have other hooks do this:
+const hooks = {
+    MyHook: {
+    
+    },
+    ...live_select
+}
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
