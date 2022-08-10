@@ -23,15 +23,13 @@ defmodule LiveSelect.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    case Code.ensure_loaded(LiveSelect.Application) do
-      {:error, :nofile} ->
-        []
-
-      {:module, module} ->
-        [
-          mod: {module, []},
-          extra_applications: [:logger, :runtime_tools]
-        ]
+    if Code.ensure_loaded?(LiveSelect.Application) do
+      [
+        mod: {LiveSelect.Application, []},
+        extra_applications: [:logger, :runtime_tools]
+      ]
+    else
+      []
     end
   end
 

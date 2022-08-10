@@ -137,6 +137,7 @@ defmodule LiveSelect do
   Opts:
 
   * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Defaults to "live_select_change"
+  * `disabled` - whether to disable the input field
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
   * `id` - assign a specific id to the component. Useful when you have multiple LiveSelect components in the same view. Defaults to: "form_name_field_name_component"
   * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.
@@ -159,7 +160,9 @@ defmodule LiveSelect do
       |> Map.new()
       |> Map.put_new(:id, "#{form_name}_#{field}_component")
       |> Map.put(:module, LiveSelect.Component)
-      |> Map.put(:field, field)
+      # Ecto forms expect atom fields:
+      # https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/html.ex#L123
+      |> Map.put(:field, String.to_atom("#{field}"))
       |> Map.put(:form, form)
 
     ~H"""
@@ -173,7 +176,7 @@ defmodule LiveSelect do
 
   The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
   """
-  def update(%{module: module, id: component_id} = change_msg, options)
+  def update(%{module: module, id: component_id} = _change_msg, options)
       when is_list(options),
       do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end

@@ -219,6 +219,15 @@ defmodule LiveSelectTest do
     assert_value_selected(live, "B")
   end
 
+  test "can be disabled", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?disabled=true")
+
+    assert element(live, @selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["true"]
+  end
+
   for style <- [:daisyui, :none, nil] do
     @style style
 

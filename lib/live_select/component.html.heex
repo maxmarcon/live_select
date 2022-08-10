@@ -1,5 +1,5 @@
 <div id={@id} class={class(@style, :container, @container_class, @container_extra_class)} name="live-select" phx-hook="LiveSelect" phx-target={@myself}>
-    <%= text_input(@form, "#{@field}_text_input",
+    <%= text_input(@form, @text_input_field,
                     value: @search_term,
                     class: "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if @selected, do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
                     phx_click: "click",
@@ -9,6 +9,7 @@
                     phx_target: @myself,
                     disabled: @disabled,
                     readonly: !is_nil(@selected),
+                    disabled: @disabled,
                     autocomplete: "off")
     %>
     <%= hidden_input(@form, @field) %>

@@ -6,7 +6,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "can be rendered" do
     component =
-      render_component(Component, id: "live_select", form: :my_form)
+      render_component(Component, id: "live_select", form: :my_form, field: :live_select)
       |> Floki.parse_document!()
 
     assert component

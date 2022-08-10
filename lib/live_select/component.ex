@@ -10,8 +10,8 @@ defmodule LiveSelect.Component do
     container_extra_class: nil,
     dropdown_class: nil,
     dropdown_extra_class: nil,
-    field: "live_select",
     change_msg: "live_select_change",
+    disabled: false,
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,
@@ -37,7 +37,6 @@ defmodule LiveSelect.Component do
         current_focus: -1,
         disabled: false,
         dropdown_mouseover: false,
-        form: nil,
         options: [],
         placeholder: "Type to search...",
         search_term: "",
@@ -62,6 +61,11 @@ defmodule LiveSelect.Component do
         else
           assign(socket, opt, default)
         end
+      end)
+
+    socket =
+      assign_new(socket, :text_input_field, fn ->
+        String.to_atom("#{socket.assigns.field}_text_input")
       end)
 
     {:ok, socket}

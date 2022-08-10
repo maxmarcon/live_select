@@ -10,6 +10,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     active_option_class: nil,
     container_class: nil,
     container_extra_class: nil,
+    disabled: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
     field_name: "live_select",
