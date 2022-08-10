@@ -1,6 +1,7 @@
 # LiveSelect
 
 [![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
+[![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
 `LiveSelect` is a stateful LiveView component that implements a search and selection
 field with content provided dynamically by your application. It comes with optional pre-configured styles
