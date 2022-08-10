@@ -67,7 +67,7 @@ That's it! Now your `LiveSelect` component will use pre-configured daisyUI style
 
 ## Showcase app
 
-The repository includes a showcase app you can use to play around with the different options and parameter for `LiveSelect`.
+The repository includes a showcase app you can use to play around with the different options and parameters for `LiveSelect`.
 To start the showcase app, simply run:
 
 `PORT=4001 mix phx.server`
