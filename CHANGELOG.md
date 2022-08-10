@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 (2022-08-10)
+
+* Disable input field via options
+* Placeholder text via options
+* Improve docs and showcase app
+* Remove setting component id via options
+
+### Bugfixes
+
+* Use atoms as field names, because strings are not accepted by Ecto forms
+
 ## 0.1.1 (2022-08-09)
 
 * Remove all colors from default daisyui styles
