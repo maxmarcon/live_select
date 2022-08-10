@@ -17,6 +17,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     form_name: "my_form",
     id: "my_form_live_select_component",
     change_msg: "live_select_change",
+    placeholder: nil,
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,

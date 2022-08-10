@@ -12,6 +12,7 @@ defmodule LiveSelect.Component do
     dropdown_extra_class: nil,
     change_msg: "live_select_change",
     disabled: false,
+    placeholder: nil,
     search_term_min_length: 3,
     style: :daisyui,
     text_input_class: nil,
@@ -38,7 +39,6 @@ defmodule LiveSelect.Component do
         disabled: false,
         dropdown_mouseover: false,
         options: [],
-        placeholder: "Type to search...",
         search_term: "",
         selected: nil
       )

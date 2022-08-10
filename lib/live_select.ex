@@ -138,6 +138,7 @@ defmodule LiveSelect do
 
   * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Defaults to "live_select_change"
   * `disabled` - whether to disable the input field
+  * `placeholder` - placeholder text for the input field
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
   * `id` - assign a specific id to the component. Useful when you have multiple LiveSelect components in the same view. Defaults to: "form_name_field_name_component"
   * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.

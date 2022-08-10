@@ -228,6 +228,15 @@ defmodule LiveSelectTest do
            |> Floki.attribute("disabled") == ["true"]
   end
 
+  test "can set a placeholder text", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?placeholder=Give it a try")
+
+    assert element(live, @selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("placeholder") == ["Give it a try"]
+  end
+
   for style <- [:daisyui, :none, nil] do
     @style style
 

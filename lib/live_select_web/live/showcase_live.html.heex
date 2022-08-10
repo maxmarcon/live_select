@@ -14,6 +14,10 @@
                 <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name) %>
             </div>
             <div class="form-control max-w-sm">
+                <%= label(f, :placeholder, "placeholder:", class: "label label-text") %>
+                <%= text_input(f, :placeholder, class: "input input-bordered", value: @live_select_opts[:placeholder]) %>
+            </div>
+            <div class="form-control max-w-sm">
                 <%= label(f, :change_msg, "change_msg:", class: "label label-text") %>
                 <%= text_input(f, :change_msg, class: "input input-bordered", value: @live_select_opts[:change_msg]) %>
             </div>
