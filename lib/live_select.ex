@@ -11,7 +11,7 @@ defmodule LiveSelect do
 
   When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
-  
+
   After an option has been selected, the input field can be reset by clicking on it.
 
   ![demo](assets/demo.gif)
