@@ -61,7 +61,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assign(socket,
         events: [],
         new_event: false,
-        params: @params
+        params: @params,
+        selected: nil,
+        selected_text: nil
       )
 
     {:ok, socket}
@@ -73,7 +75,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     socket =
       socket
-      |> assign(:form_name, (params["form_name"] || @params[:form_name]) |> String.to_atom())
+      |> assign(:form_name, params["form_name"] || @params[:form_name])
       |> assign(:field_name, params["field_name"] || @params[:field_name])
       |> assign(:live_select_opts, live_select_opts(params))
 
@@ -96,6 +98,18 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @impl true
   def handle_event(event, params, socket) do
     Process.send_after(self(), :clear_new_event, 1_000)
+
+    socket =
+      if event == "submit" do
+        selected = get_in(params, [socket.assigns.form_name, socket.assigns.field_name])
+
+        selected_text =
+          get_in(params, [socket.assigns.form_name, socket.assigns.field_name <> "_text_input"])
+
+        assign(socket, selected: selected, selected_text: selected_text)
+      else
+        socket
+      end
 
     {:noreply,
      assign(socket,

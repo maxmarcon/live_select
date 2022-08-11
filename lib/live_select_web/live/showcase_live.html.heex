@@ -33,7 +33,7 @@
         </.form>
 
     <div class="prose text-center">
-        <h2>See recent events and messages here:</h2>
+        <h2>See events and messages here:</h2>
     </div>
 
     <div id="event-list" class="flex flex-col gap-y-2">
@@ -45,15 +45,19 @@
 </div>
 </div>
 
-<div class="flex flex-col w-1/2 items-center gap-y-5 bg-blue-300 border rounded-md">
+<div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
     <div class="prose text-center">
         <h2>Try out the component here:</h2>
     </div>
-    <.form for={@form_name} let={f} phx-change="change" phx-submit="submit" class="w-1/2">
+    <.form for={String.to_atom(@form_name)} let={f} phx-change="change" phx-submit="submit" class="w-1/2">
         <div class="flex gap-2 items-center">
             <%= live_select f, @field_name, @live_select_opts %>
             <%= submit "Submit", class: "btn btn-primary" %>
         </div>
     </.form>
+    
+    <%= if @selected do %>
+        <p class="text-info w-1/2">🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉</p>
+    <% end %>
 </div>
 </div>
