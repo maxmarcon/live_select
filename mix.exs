@@ -48,7 +48,7 @@ defmodule LiveSelect.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.4", only: :dev},
-      {:telemetry_metrics, "~> 0.6", only: :dev},
+      {:telemetry_metrics, "~> 0.6", only: [:dev, :test]},
       {:telemetry_poller, "~> 1.0", only: [:dev, :test]},
       {:jason, "~> 1.2", only: [:dev, :test]},
       {:plug_cowboy, "~> 2.5", only: :dev},
