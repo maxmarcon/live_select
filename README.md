@@ -3,9 +3,9 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
-`LiveSelect` is a stateful LiveView component that implements a search and selection
-field with content provided dynamically by your application. It comes with optional pre-configured styles
-for [DaisyUI](https://daisyui.com/).
+`LiveSelect` is a LiveView component that implements a search and selection
+field with content provided dynamically by your application. It comes with reasonable default styles
+for [DaisyUI](https://daisyui.com/), which can be either extended or completely overridden.
 
 ![](assets/demo.gif)
 ![](priv/static/images/demo.gif)
@@ -49,7 +49,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 `LiveSelect` supports 2 styling options: styling with [daisyUI](https://daisyui.com/) or custom styling. The choice
 of styling is controlled using the `style` option in `LiveSelect.live_select/3`.
 
-If you want to use daisyUI styles, you'll have to install daisyUI. This is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
+If you use daisyUI styles, you need to install daisyUI. If you're already using Tailwind, this is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
 Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
 
 ```

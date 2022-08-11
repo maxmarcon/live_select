@@ -24,11 +24,11 @@ defmodule LiveSelect do
   {"live_select_change", change_msg}
   ```
 
-  Where `change_msg` is a map with, among others, a `text` property containing the current content of the input field.
+  Where change_msg is a `t:LiveSelect.ChangeMsg.t/0` struct with a `text` property containing the current content of the input field, and a `field` property with the name of the input field.
   The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
-  ## Styles
+  ## Styling
 
   You can use the `style` option in `live_select/3` to control which style will be used by default. Currently supported values are 
   `:daisyui` (default) or `:none` (no styles). LiveSelect can style the following elements:
@@ -117,8 +117,8 @@ defmodule LiveSelect do
 
   ### Multiple LiveSelect inputs in the same LiveView  
     
-  If you have multiple LiveSelect inputs in the same LiveView, you can use different `:change_msg` options to distinguish
-  among them. For example:
+  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the input field. 
+  For example:
 
   Template:
   ```
@@ -131,21 +131,18 @@ defmodule LiveSelect do
   LiveView:
   ```
   @impl true
-  def handle_info({"city-search", change_msg}, socket) do 
-    LiveSelect.update(change_msg, City.search(change_msg.text))
-    
-    {:noreply, socket}
-  end
+  def handle_info({"city-search", change_msg}, socket) do
+    options =
+      case change_msg.field do
+        :city_search -> City.search(change_msg.text)
+        :album_search -> Album.search(change_msg.text)
+      end
 
-  @impl true
-  def handle_info({"album-search", change_msg}, socket) do 
-    LiveSelect.update(change_msg, Album.search(change_msg.text))
-    
+    LiveSelect.update(change_msg, options)
+
     {:noreply, socket}
   end
   ```
-
-  As long as you pass the original `change_msg`, `LiveSelect.update/2` takes care of routing the update to the right component.
   """
 
   import Phoenix.LiveView.Helpers

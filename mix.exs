@@ -80,7 +80,7 @@ defmodule LiveSelect.MixProject do
         "GitHub" => "https://github.com/maxmarcon/live_select"
       },
       files:
-        ~w(mix.exs lib/live_select/component.* lib/live_select.ex package.json priv/static/live_select.min.js)
+        ~w(mix.exs lib/live_select/component.* lib/live_select/change_msg.ex lib/live_select.ex package.json priv/static/live_select.min.js)
     ]
   end
 
@@ -90,7 +90,7 @@ defmodule LiveSelect.MixProject do
         "README.md",
         "CHANGELOG.md"
       ],
-      filter_modules: "LiveSelect$",
+      filter_modules: ~r/LiveSelect($|\.)/,
       assets: "priv/static/images",
       main: "readme"
     ]

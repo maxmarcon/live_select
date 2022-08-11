@@ -4,6 +4,8 @@ defmodule LiveSelect.Component do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
 
+  alias LiveSelect.ChangeMsg
+
   @default_opts [
     active_option_class: nil,
     container_class: nil,
@@ -76,17 +78,22 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keyup", %{"value" => search_term, "key" => key}, socket)
+  def handle_event("keyup", %{"value" => text, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab"] do
     socket =
       if socket.assigns.selected do
         socket
       else
-        if String.length(search_term) >= socket.assigns.search_term_min_length do
+        if String.length(text) >= socket.assigns.search_term_min_length do
           send(
             self(),
             {socket.assigns.change_msg,
-             %{module: __MODULE__, id: socket.assigns.id, text: search_term}}
+             %ChangeMsg{
+               module: __MODULE__,
+               id: socket.assigns.id,
+               text: text,
+               field: socket.assigns.field
+             }}
           )
 
           socket
