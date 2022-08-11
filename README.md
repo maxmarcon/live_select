@@ -30,14 +30,14 @@ In your `app.js` file:
 import live_select from "live_select"
 
 ...
-// if you don't have any other hooks do this:
+// if you don't have any other hooks:
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
 
 
-// if you have other hooks do this:
+// if you have other hooks:
 const hooks = {
     MyHook: {
-    
+      // ...
     },
     ...live_select
 }
@@ -55,12 +55,11 @@ Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`,
 ```
 module.exports = {
     content: [
-        ...
+        //...
         '../deps/live_select/lib/live_select/component.*ex' <-- for a standalone app
         '../../../deps/live_select/lib/live_select/component.*ex' <-- for an umbrella app
-],
-
-    ...
+    ]
+    //..
 }
 ```
 
@@ -106,7 +105,7 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Make sure component classes are included by tailwind 
  - [X] Enable custom styling 
  - [X] Rename LiveSelect.render to live_select
- - [ ] Customizable placeholder
+ - [X] Customizable placeholder
  - [ ] Enable slots
  - [ ] Enable tailwind styles
  - [ ] Enable styles in showcase app
