@@ -7,7 +7,7 @@ defmodule LiveSelect do
   containing the matching options, which the user can then select.
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
-  selecting an option by clicking on it with the mouse.
+  clicking an option with the mouse.
 
   When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
@@ -31,7 +31,7 @@ defmodule LiveSelect do
   ## Styling
 
   You can use the `style` option in `live_select/3` to control which style will be used by default. Currently supported values are 
-  `:daisyui` (default) or `:none` (no styles). LiveSelect can style the following elements:
+  `:daisyui` (default) or `:none` (no predefined styles). LiveSelect can style the following elements:
 
   1. The outer container of the component
   2. The text field
