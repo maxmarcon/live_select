@@ -21,7 +21,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     style: :daisyui,
     text_input_class: nil,
     text_input_extra_class: nil,
-    text_input_selected_class: nil
+    text_input_selected_class: nil,
+    search_delay: 0
   ]
 
   defmodule Render do
@@ -77,6 +78,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
       socket
       |> assign(:form_name, params["form_name"] || @params[:form_name])
       |> assign(:field_name, params["field_name"] || @params[:field_name])
+      |> assign(
+        :search_delay,
+        (params["search_delay"] && String.to_integer(params["search_delay"])) ||
+          @params[:search_delay]
+      )
       |> assign(:live_select_opts, live_select_opts(params))
 
     {:noreply, socket}
@@ -124,16 +130,23 @@ defmodule LiveSelectWeb.ShowcaseLive do
     {:noreply, assign(socket, :new_event, false)}
   end
 
+  def handle_info({:update_live_select, change_msg, options}, socket) do
+    LiveSelect.update(change_msg, options)
+
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_info(message, socket) do
     case message do
       %ChangeMsg{text: text} = change_msg ->
-        LiveSelect.update(
-          change_msg,
-          change_handler().handle_change(text)
-        )
-
         Process.send_after(self(), :clear_new_event, 1_000)
+
+        Process.send_after(
+          self(),
+          {:update_live_select, change_msg, change_handler().handle_change(text)},
+          socket.assigns.search_delay
+        )
 
         {:noreply,
          assign(socket,
