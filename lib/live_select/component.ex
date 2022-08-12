@@ -13,6 +13,7 @@ defmodule LiveSelect.Component do
     dropdown_class: nil,
     dropdown_extra_class: nil,
     disabled: false,
+    debounce: 100,
     placeholder: nil,
     search_term_min_length: 3,
     style: :daisyui,

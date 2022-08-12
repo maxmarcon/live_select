@@ -22,6 +22,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil,
+    debounce: 100,
     search_delay: 0
   ]
 

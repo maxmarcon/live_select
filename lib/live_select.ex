@@ -153,7 +153,8 @@ defmodule LiveSelect do
   Opts:
 
   * `disabled` - set this to a truthy value to disable the input field
-  * `placeholder` - placeholder text for the input field
+  * `placeholder` - placeholder text for the input field  
+  * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms.
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
   * `style` - either `:daisyui` for daisyui styling (default) or `:none` for no styling. See the "Styles" section above.
   * `container_class` -  See the "Styles" section above for this and the following options.

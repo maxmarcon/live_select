@@ -4,7 +4,7 @@
                     class: "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if @selected, do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
                     phx_click: "click",
                     placeholder: @placeholder,
-                    phx_debounce: 200,
+                    phx_debounce: @debounce,
                     phx_keyup: "keyup",
                     phx_target: @myself,
                     disabled: @disabled,

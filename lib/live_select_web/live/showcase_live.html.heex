@@ -26,6 +26,10 @@
                 <%= text_input(f, :search_term_min_length, class: "input input-bordered", value: @live_select_opts[:search_term_min_length]) %>
             </div>
             <div class="form-control max-w-sm">
+                <%= label(f, :debounce, "debounce:", class: "label label-text") %>
+                <%= text_input(f, :debounce, class: "input input-bordered", value: @live_select_opts[:debounce]) %>
+            </div>
+            <div class="form-control max-w-sm">
                 <%= label(f, :style, "style:", class: "label label-text") %>
                 <%= select(f, :style, [:daisyui, :none], class: "select select-bordered", selected: @live_select_opts[:style]) %>
             </div>

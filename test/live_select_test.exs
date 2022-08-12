@@ -222,6 +222,15 @@ defmodule LiveSelectTest do
            |> Floki.attribute("disabled") == ["true"]
   end
 
+  test "can set the debounce value", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?debounce=500")
+
+    assert element(live, @selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("phx-debounce") == ["500"]
+  end
+
   test "can set a placeholder text", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?placeholder=Give it a try")
 
