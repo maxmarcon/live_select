@@ -27,7 +27,7 @@ defmodule LiveSelect do
   ## Styling
 
   You can use the `style` option in `live_select/3` to control which style will be used by default. Currently supported values are 
-  `:daisyui` (default) or `:none` (no predefined styles). LiveSelect can style the following elements:
+  `:daisyui` (default) or `:none` (no predefined styles). Support for vanilla Tailwind styles is planned for the future. LiveSelect can style the following elements:
 
   1. The outer container of the component
   2. The text field

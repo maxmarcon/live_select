@@ -19,13 +19,7 @@ export default {
         },
         setHiddenInputValue(value) {
             const hidden_input = this.el.querySelector("input[type=hidden]")
-            switch (typeof (value)) {
-                case "string":
-                    break;
-                default:
-                    value = JSON.stringify(value)
-            }
-            hidden_input.value = value
+            hidden_input.value = typeof (value) === 'string' ? value : JSON.stringify(value)
             hidden_input.dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {

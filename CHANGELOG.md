@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3 (2022-08-12)
+
+* rename LiveSelect.update/2 to LiveSelect.update_options/2
+* add debounce option
+* add search delay option to showcase app
+* JSON-encode option values before assigning them to the hidden input field
+* add LiveSelect.ChangeMsg struct to be used as change message
+
 ## 0.1.2 (2022-08-10)
 
 * Disable input field via options

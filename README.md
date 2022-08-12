@@ -45,8 +45,10 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 
 ## Styling
 
-`LiveSelect` supports 2 styling options: styling with [daisyUI](https://daisyui.com/) or custom styling. The choice
+For the time being, `LiveSelect` supports 2 styling options: styling with [daisyUI](https://daisyui.com/) or custom styling. The choice
 of styling is controlled using the `style` option in `LiveSelect.live_select/3`.
+
+Support for vanilla Tailwind styles is planned for the future.
 
 If you use daisyUI styles, you need to install daisyUI. If you're already using Tailwind, this is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
 Moreover, in order for Tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
@@ -105,6 +107,6 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Enable custom styling 
  - [X] Rename LiveSelect.render to live_select
  - [X] Customizable placeholder
- - [ ] Enable slots
- - [ ] Enable tailwind styles
- - [ ] Enable styles in showcase app
+ - [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
+ - [ ] Add support for vanilla tailwind styles
+ - [ ] Enable configuring different styles in the showcase app
