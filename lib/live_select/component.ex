@@ -12,7 +12,6 @@ defmodule LiveSelect.Component do
     container_extra_class: nil,
     dropdown_class: nil,
     dropdown_extra_class: nil,
-    change_msg: "live_select_change",
     disabled: false,
     placeholder: nil,
     search_term_min_length: 3,
@@ -87,13 +86,12 @@ defmodule LiveSelect.Component do
         if String.length(text) >= socket.assigns.search_term_min_length do
           send(
             self(),
-            {socket.assigns.change_msg,
-             %ChangeMsg{
-               module: __MODULE__,
-               id: socket.assigns.id,
-               text: text,
-               field: socket.assigns.field
-             }}
+            %ChangeMsg{
+              module: __MODULE__,
+              id: socket.assigns.id,
+              text: text,
+              field: socket.assigns.field
+            }
           )
 
           socket

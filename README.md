@@ -5,7 +5,7 @@
 
 `LiveSelect` is a LiveView component that implements a search and selection
 field with content provided dynamically by your application. It comes with reasonable default styles
-for [DaisyUI](https://daisyui.com/), which can be either extended or completely overridden.
+that use [DaisyUI](https://daisyui.com/). The default styles can be either extended or completely overridden.
 
 ![](assets/demo.gif)
 ![](priv/static/images/demo.gif)
@@ -29,7 +29,6 @@ In your `app.js` file:
 ```
 import live_select from "live_select"
 
-...
 // if you don't have any other hooks:
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
 
@@ -50,7 +49,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 of styling is controlled using the `style` option in `LiveSelect.live_select/3`.
 
 If you use daisyUI styles, you need to install daisyUI. If you're already using Tailwind, this is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
-Moreover, in order for tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
+Moreover, in order for Tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
 
 ```
 module.exports = {

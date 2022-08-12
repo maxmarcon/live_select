@@ -3,28 +3,24 @@ defmodule LiveSelect do
   Dynamic dropdown input for live view
 
   The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
-  LiveSelect creates a text input field in which the user can type text. As the text changes, LiveSelect will render a dropdown below the text input
+  LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option.
+  As the text changes, LiveSelect will render a dropdown below the text input
   containing the matching options, which the user can then select.
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
-
-  When an option has been selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
+    
+  Whenever an option is selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
 
-  After an option has been selected, the input field can be reset by clicking on it.
+  After an option has been selected, the selection can be undone by clicking on text field.
 
   ![demo](assets/demo.gif)
      
   ## Reacting to user's input
 
-  Whenever the user types something in the text input, LiveSelect sends a message with the following format to the LiveView:
-
-  ```
-  {"live_select_change", change_msg}
-  ```
-
-  Where change_msg is a `t:LiveSelect.ChangeMsg.t/0` struct with a `text` property containing the current content of the input field, and a `field` property with the name of the input field.
+  Whenever the user types something in the text input, LiveSelect sends `t:LiveSelect.ChangeMsg.t/0` a message to your LiveView.
+  The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect input field.
   The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
@@ -87,7 +83,7 @@ defmodule LiveSelect do
   import LiveSelect
 
   @impl true
-  def handle_info({"live_select_change", change_msg}, socket) do 
+  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
     cities = City.search(change_msg.text)
     # cities could be:
     # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
@@ -123,15 +119,15 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} let={f} phx-change="change">
-      <%= live_select f, :city_search, change_msg: "city-search" %> 
-      <%= live_select f, :album_search, change_msg: "album-search" %>
+      <%= live_select f, :city_search %> 
+      <%= live_select f, :album_search %>
   </.form>
   ```
 
   LiveView:
   ```
   @impl true
-  def handle_info({"city-search", change_msg}, socket) do
+  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do
     options =
       case change_msg.field do
         :city_search -> City.search(change_msg.text)
@@ -146,6 +142,7 @@ defmodule LiveSelect do
   """
 
   import Phoenix.LiveView.Helpers
+  alias LiveSelect.ChangeMsg
 
   @doc ~S"""
   Renders a `LiveSelect` input in a `form` with a given `field` name.
@@ -155,7 +152,6 @@ defmodule LiveSelect do
     
   Opts:
 
-  * `change_msg` - the name of the message sent by `LiveSelect` to the parent component when an update is required (i.e. the first part of the message tuple). Useful for distinguishing among multiple LiveSelect inputs. Defaults to "live_select_change"
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field
   * `search_term_min_length` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3.
@@ -190,12 +186,12 @@ defmodule LiveSelect do
   end
 
   @doc ~S"""
-  Updates a `LiveSelect` component with new options. `change_msg` must be the message originally sent by the component (i.e the second part of the message tuple),
+  Updates a `LiveSelect` component with new options. `change_msg` must be the `t:LiveSelect.ChangeMsg.t/0` originally sent by the LiveSelect,
   and `options` is the new list of options that will be used to fill the dropdown.
 
   The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
   """
-  def update(%{module: module, id: component_id} = _change_msg, options)
+  def update(%ChangeMsg{module: module, id: component_id} = _change_msg, options)
       when is_list(options),
       do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end

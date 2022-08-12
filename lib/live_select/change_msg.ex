@@ -1,5 +1,7 @@
 defmodule LiveSelect.ChangeMsg do
-  @moduledoc ~S"Message sent by `LiveSelect` components when the user has edited the search field"
+  @moduledoc "LiveSelect.ChangeMsg"
+
+  @typedoc ~S"Message sent by `LiveSelect` components in response to text entered by the user in the text input field"
 
   @type t :: %__MODULE__{
           id: term(),
