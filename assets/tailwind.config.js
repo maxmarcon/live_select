@@ -4,8 +4,8 @@ module.exports = {
     content: [
         './js/**/*.js',
         '../config/*.exs',
-        '../lib/*_web.ex',
-        '../lib/*_web/**/*.*ex',
+        '../lib/support/*_web.ex',
+        '../lib/support/*_web/**/*.*ex',
         '../lib/live_select/*.*ex'
     ],
     theme: {

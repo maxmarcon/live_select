@@ -29,7 +29,7 @@ defmodule LiveSelectWeb do
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/live_select_web/templates",
+        root: "lib/support/live_select_web/templates",
         namespace: LiveSelectWeb
 
       # Import convenience functions from controllers
