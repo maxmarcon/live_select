@@ -131,7 +131,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   def handle_info({:update_live_select, change_msg, options}, socket) do
-    LiveSelect.update(change_msg, options)
+    update_options(change_msg, options)
 
     {:noreply, socket}
   end

@@ -21,7 +21,7 @@ defmodule LiveSelect do
 
   Whenever the user types something in the text input, LiveSelect sends `t:LiveSelect.ChangeMsg.t/0` a message to your LiveView.
   The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect input field.
-  The LiveView's job is to [handle_info/2](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveSelect.update/2`
+  The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `update_options/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
   ## Styling
@@ -94,7 +94,7 @@ defmodule LiveSelect do
     # or:
     # [ [key: "city name 1", value: [lat_1, long_1]], [key: "city name 2", value: [lat_2, long_2]], ... ] 
 
-    LiveSelect.update(change_msg, cities)
+    update_options(change_msg, cities)
     
     {:noreply, socket}
   end
@@ -134,7 +134,7 @@ defmodule LiveSelect do
         :album_search -> Album.search(change_msg.text)
       end
 
-    LiveSelect.update(change_msg, options)
+    update_options(change_msg, options)
 
     {:noreply, socket}
   end
@@ -191,9 +191,9 @@ defmodule LiveSelect do
 
   The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
 
-  Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `change` and `submit` events.
+  Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
   """
-  def update(%ChangeMsg{module: module, id: component_id} = _change_msg, options)
+  def update_options(%ChangeMsg{module: module, id: component_id} = _change_msg, options)
       when is_list(options),
       do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end
