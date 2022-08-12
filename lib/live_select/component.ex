@@ -160,6 +160,11 @@ defmodule LiveSelect.Component do
     {:noreply, assign(socket, dropdown_mouseover: false)}
   end
 
+  @impl true
+  def handle_event(_event, _params, socket) do
+    {:noreply, socket}
+  end
+
   defp select(socket, -1), do: socket
 
   defp select(socket, selected_position) do
