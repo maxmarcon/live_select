@@ -190,6 +190,8 @@ defmodule LiveSelect do
   and `options` is the new list of options that will be used to fill the dropdown.
 
   The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
+
+  Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `change` and `submit` events.
   """
   def update(%ChangeMsg{module: module, id: component_id} = _change_msg, options)
       when is_list(options),
