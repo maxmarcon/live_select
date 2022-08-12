@@ -1,6 +1,6 @@
 defmodule LiveSelect do
   @moduledoc ~S"""
-  Dynamic dropdown input for live view
+  Dynamic search and selection component for LiveView.
 
   The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
   LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option.
