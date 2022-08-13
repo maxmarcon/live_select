@@ -143,9 +143,6 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keydown", _params, socket), do: {:noreply, socket}
-
-  @impl true
   def handle_event("option-click", %{"idx" => idx}, socket) do
     {:noreply, select(socket, String.to_integer(idx))}
   end
