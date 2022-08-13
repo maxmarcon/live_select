@@ -81,7 +81,7 @@ PORT=4001 mix phx.server
 ```
 
 from within the cloned repository. The app will be available at http://localhost:4001.
-The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows function head
+The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows the function head
 of the callback that your LiveView needs to implement in order to handle the event.
 
 ![](priv/static/images/showcase.gif)

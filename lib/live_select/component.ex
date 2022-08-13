@@ -186,11 +186,11 @@ defmodule LiveSelect.Component do
     |> push_event("reset", %{})
   end
 
-  defp normalize_options(option_list) do
-    option_list
+  defp normalize_options(options) do
+    options
     |> Enum.map(fn
-      option when is_list(option) ->
-        {option[:key], option[:value]}
+      option when is_list(option) or is_map(option) ->
+        {option[:label] || option[:key], option[:value]}
 
       {_key, _value} = option ->
         option
@@ -199,7 +199,14 @@ defmodule LiveSelect.Component do
         {option, option}
 
       option ->
-        raise "invalid option: #{option}"
+        raise """
+        invalid option: #{inspect(option)}
+        options must enumerate to:
+
+        a list of atom, strings or numbers
+        a list of maps or keywords with label and value keys
+        a list of tuples
+        """
     end)
   end
 

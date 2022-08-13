@@ -92,7 +92,10 @@ defmodule LiveSelect do
     # [ "city name 1", "city name 2", ... ]
     #
     # or:
-    # [ [key: "city name 1", value: [lat_1, long_1]], [key: "city name 2", value: [lat_2, long_2]], ... ] 
+    # [ [label: "city name 1", value: [lat_1, long_1]], [label: "city name 2", value: [lat_2, long_2]], ... ] 
+    #
+    # or even:
+    # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
 
     update_options(change_msg, cities)
     
@@ -150,7 +153,7 @@ defmodule LiveSelect do
   LiveSelect renders a hidden input with name `field` which contains the selected option.
   The visible text input field will have the name `#{field}_text_input`.
     
-  Opts:
+  **Opts:**
 
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
@@ -190,7 +193,23 @@ defmodule LiveSelect do
   Updates a `LiveSelect` component with new options. `change_msg` must be the `t:LiveSelect.ChangeMsg.t/0` originally sent by the LiveSelect,
   and `options` is the new list of options that will be used to fill the dropdown.
 
-  The set of accepted `options` values are the same as for `Phoenix.HTML.Form.select/4`, with the exception that optgroups are not supported yet.
+  Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
+  LiveSelect input when the option is selected.
+   
+  `options` can be any enumerable of the following elements:
+
+  * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
+  * _tuples_: `{label, value}` corresponding to label and value for the option
+  * _maps_: `%{label: label, value: value}`
+  * _keywords_: `[label: label, value: value]`
+
+  This means you can use maps and keyword lists to pass the list of options, for example:
+
+  ```
+  %{Red: 1, Yellow: 2, Green: 3}
+  ```
+
+  Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
   """

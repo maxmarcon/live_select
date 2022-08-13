@@ -216,7 +216,7 @@ defmodule LiveSelectTest do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
-        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
       )
     end)
 
@@ -271,11 +271,68 @@ defmodule LiveSelectTest do
     assert_option_selected(live, :B, 2)
   end
 
-  test "can navigate options with arrows", %{conn: conn} do
+  test "supports dropdown filled from an enumerable of maps", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [%{label: "A", value: 1}, %{label: "B", value: 2}, %{label: "C", value: 3}]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B", 2)
+  end
+
+  test "supports dropdown filled from an enumerable of keywords", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B", 2)
+  end
+
+  test "supports dropdown filled with keywords with key as the label", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
         [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B", 2)
+  end
+
+  test "can navigate options with arrows", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
       )
     end)
 
@@ -293,7 +350,7 @@ defmodule LiveSelectTest do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
-        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
       )
     end)
 
@@ -400,7 +457,7 @@ defmodule LiveSelectTest do
         Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
           update_options(
             change_msg,
-            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
           )
         end)
 
@@ -421,7 +478,7 @@ defmodule LiveSelectTest do
         Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
           update_options(
             change_msg,
-            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
           )
         end)
 
@@ -442,7 +499,7 @@ defmodule LiveSelectTest do
         Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
           update_options(
             change_msg,
-            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
           )
         end)
 
@@ -469,7 +526,7 @@ defmodule LiveSelectTest do
         Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
           update_options(
             change_msg,
-            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
           )
         end)
 
