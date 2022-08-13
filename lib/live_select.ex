@@ -52,7 +52,7 @@ defmodule LiveSelect do
   and active options with a warning background, you can do this:
 
   ```
-  live_select("my_form", "my_input",
+  live_select(form, field,
       container_extra_class: "w-full",
       text_input_extra_class: "w-full",
       dropdown_extra_class: "w-full bg-secondary",
