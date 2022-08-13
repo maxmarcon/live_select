@@ -68,7 +68,7 @@ defmodule LiveSelect.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"],
+      setup: ["deps.get", "cmd --cd assets yarn"],
       "assets.deploy": ["esbuild module"]
     ]
   end
