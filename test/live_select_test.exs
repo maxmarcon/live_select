@@ -132,7 +132,7 @@ defmodule LiveSelectTest do
     assert_dropdown_has_elements(live, ["A", "B", "C"])
   end
 
-  test "supports dropdown filled strings", %{conn: conn} do
+  test "supports dropdown filled with strings", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
@@ -147,7 +147,7 @@ defmodule LiveSelectTest do
     assert_dropdown_has_elements(live, ["A", "B", "C"])
   end
 
-  test "supports dropdown filled atoms", %{conn: conn} do
+  test "supports dropdown filled with atoms", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
@@ -162,7 +162,7 @@ defmodule LiveSelectTest do
     assert_dropdown_has_elements(live, ["A", "B", "C"])
   end
 
-  test "supports dropdown filled integers", %{conn: conn} do
+  test "supports dropdown filled with integers", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
@@ -182,6 +182,38 @@ defmodule LiveSelectTest do
       update_options(
         change_msg,
         [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_dropdown_has_elements(live, ["A", "B", "C"])
+  end
+
+  test "supports dropdown filled with values from keyword list", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        A: 1,
+        B: 2,
+        C: 3
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_dropdown_has_elements(live, ["A", "B", "C"])
+  end
+
+  test "supports dropdown filled with values from map", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        %{A: 1, B: 2, C: 3}
       )
     end)
 

@@ -194,7 +194,6 @@ defmodule LiveSelect do
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
   """
-  def update_options(%ChangeMsg{module: module, id: component_id} = _change_msg, options)
-      when is_list(options),
-      do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
+  def update_options(%ChangeMsg{module: module, id: component_id} = _change_msg, options),
+    do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
 end
