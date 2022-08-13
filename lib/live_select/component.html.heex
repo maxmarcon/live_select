@@ -17,7 +17,7 @@
     <ul class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}  
     style={if Enum.empty?(@options), do: "display: none;", else: ""} name="live-select-dropdown">
     <%= for {{label, _}, idx} <- Enum.with_index(@options) do %>
-        <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself}>
+        <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself} name={"option-#{idx+1}"}>
             <span class={"#{if idx == @current_focus, do: class(@style, :active_option, @active_option_class)}"}>
             <%= label %>
             </span>

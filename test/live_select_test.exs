@@ -86,7 +86,7 @@ defmodule LiveSelectTest do
 
     type(live, "Be")
 
-    assert_dropdown_has_size(live, 0)
+    assert_option_size(live, 0)
   end
 
   test "with at least 3 keystrokes in the input field it does show the dropdown", %{conn: conn} do
@@ -98,7 +98,7 @@ defmodule LiveSelectTest do
 
     type(live, "Ber")
 
-    assert_dropdown_has_size(live, &(&1 > 0))
+    assert_option_size(live, &(&1 > 0))
   end
 
   test "number of minimum keystrokes can be configured", %{conn: conn} do
@@ -110,11 +110,11 @@ defmodule LiveSelectTest do
 
     type(live, "Ber")
 
-    assert_dropdown_has_size(live, 0)
+    assert_option_size(live, 0)
 
     type(live, "Berl")
 
-    assert_dropdown_has_size(live, &(&1 > 0))
+    assert_option_size(live, &(&1 > 0))
   end
 
   test "supports dropdown filled with tuples", %{conn: conn} do
@@ -129,7 +129,30 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B", 2)
+  end
+
+  test "can select option with mouseclick", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [{"A", 1}, {"B", 2}, {"C", 3}]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2, :click)
+
+    assert_option_selected(live, "B", 2)
   end
 
   test "supports dropdown filled with strings", %{conn: conn} do
@@ -144,7 +167,11 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B")
   end
 
   test "supports dropdown filled with atoms", %{conn: conn} do
@@ -159,7 +186,11 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, :B)
   end
 
   test "supports dropdown filled with integers", %{conn: conn} do
@@ -174,7 +205,11 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, [1, 2, 3])
+    assert_options(live, [1, 2, 3])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, 2)
   end
 
   test "supports dropdown filled with keywords", %{conn: conn} do
@@ -189,7 +224,11 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, "B", 2)
   end
 
   test "supports dropdown filled with values from keyword list", %{conn: conn} do
@@ -206,7 +245,11 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, :B, 2)
   end
 
   test "supports dropdown filled with values from map", %{conn: conn} do
@@ -221,10 +264,14 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    assert_dropdown_has_elements(live, ["A", "B", "C"])
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, :B, 2)
   end
 
-  test "can navigate dropdown elements with arrows", %{conn: conn} do
+  test "can navigate options with arrows", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
@@ -236,21 +283,13 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    # pos: 0
-    keydown(live, "ArrowDown")
-    # pos: 1
-    keydown(live, "ArrowDown")
-    # pos: 2
-    keydown(live, "ArrowDown")
-    # pos: 2
-    keydown(live, "ArrowDown")
-    # pos: 1
-    keydown(live, "ArrowUp")
+    navigate(live, 4, :down)
+    navigate(live, 1, :up)
 
-    assert_dropdown_element_active(live, 1)
+    assert_option_active(live, 1)
   end
 
-  test "moving the mouse on the dropdown deactivate elements", %{conn: conn} do
+  test "moving the mouse on the dropdown deactivate option", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
@@ -262,38 +301,13 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    # pos: 0
-    keydown(live, "ArrowDown")
+    navigate(live, 1, :down)
 
-    assert_dropdown_element_active(live, 0)
+    assert_option_active(live, 0)
 
     dropdown_mouseover(live)
 
-    assert_dropdown_element_active(live, -1)
-  end
-
-  test "can select an element", %{conn: conn} do
-    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
-      update_options(
-        change_msg,
-        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
-      )
-    end)
-
-    {:ok, live, _html} = live(conn, "/")
-
-    type(live, "ABC")
-
-    # pos: 0
-    keydown(live, "ArrowDown")
-    # pos: 1
-    keydown(live, "ArrowDown")
-
-    keydown(live, "Enter")
-
-    render(live)
-
-    assert_value_selected(live, "B")
+    assert_option_active(live, -1)
   end
 
   test "can be disabled", %{conn: conn} do
@@ -392,9 +406,9 @@ defmodule LiveSelectTest do
 
         type(live, "ABC")
 
-        keydown(live, "ArrowDown")
+        navigate(live, 1, :down)
 
-        assert_dropdown_element_active(
+        assert_option_active(
           live,
           0,
           get_in(@expected_class, [@style || :daisyui, :active_option]) || ""
@@ -413,9 +427,9 @@ defmodule LiveSelectTest do
 
         type(live, "ABC")
 
-        keydown(live, "ArrowDown")
+        navigate(live, 1, :down)
 
-        assert_dropdown_element_active(
+        assert_option_active(
           live,
           0,
           "foo"
@@ -434,9 +448,7 @@ defmodule LiveSelectTest do
 
         type(live, "ABC")
 
-        keydown(live, "ArrowDown")
-
-        keydown(live, "Enter")
+        select_nth_option(live, 1)
 
         expected_class =
           (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
@@ -463,9 +475,7 @@ defmodule LiveSelectTest do
 
         type(live, "ABC")
 
-        keydown(live, "ArrowDown")
-
-        keydown(live, "Enter")
+        select_nth_option(live, 1)
 
         expected_class =
           (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
@@ -481,11 +491,11 @@ defmodule LiveSelectTest do
     end
   end
 
-  defp assert_dropdown_has_size(live, size) when is_integer(size) do
-    assert_dropdown_has_size(live, &(&1 == size))
+  defp assert_option_size(live, size) when is_integer(size) do
+    assert_option_size(live, &(&1 == size))
   end
 
-  defp assert_dropdown_has_size(live, fun) when is_function(fun, 1) do
+  defp assert_option_size(live, fun) when is_function(fun, 1) do
     render(live)
 
     assert render(live)
@@ -503,7 +513,7 @@ defmodule LiveSelectTest do
     end)
   end
 
-  defp assert_dropdown_has_elements(live, elements) do
+  defp assert_options(live, elements) do
     assert render(live)
            |> Floki.parse_document!()
            |> Floki.find(@selectors[:dropdown_entries])
@@ -512,7 +522,7 @@ defmodule LiveSelectTest do
              Enum.join(elements)
   end
 
-  defp assert_dropdown_element_active(live, pos, active_class \\ "active") do
+  defp assert_option_active(live, pos, active_class \\ "active") do
     attributes =
       render(live)
       |> Floki.parse_document!()
@@ -526,7 +536,7 @@ defmodule LiveSelectTest do
     assert attributes == expected_attributes
   end
 
-  defp assert_value_selected(live, value) do
+  defp assert_option_selected(live, label, value \\ nil) do
     # would be nice to check the value of the hidden input field, but this
     # is set by the JS hook
     assert live
@@ -534,7 +544,35 @@ defmodule LiveSelectTest do
            |> render()
            |> Floki.parse_fragment!()
            |> Floki.attribute("value") ==
-             [value]
+             [to_string(label)]
+
+    value = if value, do: value, else: label
+
+    assert_push_event(live, "selected", %{selected: [^label, ^value]})
+  end
+
+  defp navigate(live, n, dir) do
+    key =
+      case dir do
+        :down -> "ArrowDown"
+        :up -> "ArrowUp"
+      end
+
+    for _ <- 1..n do
+      keydown(live, key)
+    end
+  end
+
+  defp select_nth_option(live, n, method \\ :key) do
+    case method do
+      :key ->
+        navigate(live, n, :down)
+        keydown(live, "Enter")
+
+      :click ->
+        element(live, "li[name=option-#{n}")
+        |> render_click()
+    end
   end
 
   defp keydown(live, key) do
