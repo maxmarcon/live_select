@@ -1,3 +1,3 @@
 ExUnit.start()
 
-Mox.defmock(LiveSelect.ChangeHandlerMock, for: LiveSelect.ChangeHandler.Behaviour)
+Mox.defmock(LiveSelect.MessageHandlerMock, for: LiveSelect.MessageHandler.Behaviour)

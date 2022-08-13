@@ -2,7 +2,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
   import LiveSelect
-  alias LiveSelect.ChangeMsg
 
   @max_events 3
 
@@ -139,25 +138,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    case message do
-      %ChangeMsg{text: text} = change_msg ->
-        Process.send_after(self(), :clear_new_event, 1_000)
+    Process.send_after(self(), :clear_new_event, 1_000)
 
-        Process.send_after(
-          self(),
-          {:update_live_select, change_msg, change_handler().handle_change(text)},
-          socket.assigns.search_delay
-        )
+    message_handler().handle(message, delay: socket.assigns.search_delay)
 
-        {:noreply,
-         assign(socket,
-           events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
-           new_event: true
-         )}
-
-      _ ->
-        {:noreply, socket}
-    end
+    {:noreply,
+     assign(socket,
+       events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
+       new_event: true
+     )}
   end
 
   defp live_select_opts(params) do
@@ -184,8 +173,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end)
   end
 
-  defp change_handler() do
-    Application.get_env(:live_select, :change_handler) ||
-      raise "you need to specify a :change_handler in your :live_select config"
+  defp message_handler() do
+    Application.get_env(:live_select, :message_handler) ||
+      raise "you need to specify a :message_handler in your :live_select config"
   end
 end

@@ -3,6 +3,11 @@ defmodule LiveSelectTest do
 
   use LiveSelectWeb.ConnCase
 
+  import LiveSelect
+  import Mox
+
+  alias LiveSelect.ChangeMsg
+
   @expected_class [
     daisyui: [
       container: ~S(dropdown),
@@ -32,6 +37,8 @@ defmodule LiveSelectTest do
     dropdown_entries: "ul[name=live-select-dropdown] > li > span"
   ]
 
+  setup :verify_on_exit!
+
   test "can be rendered", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
@@ -56,6 +63,22 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#special_form_city_search_text_input[type=text]")
   end
 
+  test "sends a ChangeMsg message as reaction to user's input", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/")
+
+    Mox.expect(LiveSelect.MessageHandlerMock, :handle, fn %ChangeMsg{
+                                                            id: "my_form_city_search_component",
+                                                            text: "Ber",
+                                                            module: LiveSelect.Component,
+                                                            field: :city_search
+                                                          },
+                                                          _ ->
+      nil
+    end)
+
+    type(live, "Ber")
+  end
+
   test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
     conn: conn
   } do
@@ -67,7 +90,9 @@ defmodule LiveSelectTest do
   end
 
   test "with at least 3 keystrokes in the input field it does show the dropdown", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ -> ["A", "B", "C"] end)
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(change_msg, ["A", "B", "C"])
+    end)
 
     {:ok, live, _html} = live(conn, "/")
 
@@ -77,7 +102,9 @@ defmodule LiveSelectTest do
   end
 
   test "number of minimum keystrokes can be configured", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ -> ["A", "B", "C"] end)
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(change_msg, ["A", "B", "C"])
+    end)
 
     {:ok, live, _html} = live(conn, "/?search_term_min_length=4")
 
@@ -91,8 +118,11 @@ defmodule LiveSelectTest do
   end
 
   test "supports dropdown filled with tuples", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [{"A", 1}, {"B", 2}, {"C", 3}]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [{"A", 1}, {"B", 2}, {"C", 3}]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -103,8 +133,11 @@ defmodule LiveSelectTest do
   end
 
   test "supports dropdown filled strings", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      ["A", "B", "C"]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        ["A", "B", "C"]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -115,8 +148,11 @@ defmodule LiveSelectTest do
   end
 
   test "supports dropdown filled atoms", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [:A, :B, :C]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [:A, :B, :C]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -127,8 +163,11 @@ defmodule LiveSelectTest do
   end
 
   test "supports dropdown filled integers", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [1, 2, 3]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [1, 2, 3]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -139,8 +178,11 @@ defmodule LiveSelectTest do
   end
 
   test "supports dropdown filled with keywords", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -151,8 +193,11 @@ defmodule LiveSelectTest do
   end
 
   test "can navigate dropdown elements with arrows", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -174,8 +219,11 @@ defmodule LiveSelectTest do
   end
 
   test "moving the mouse on the dropdown deactivate elements", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -193,8 +241,11 @@ defmodule LiveSelectTest do
   end
 
   test "can select an element", %{conn: conn} do
-    Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-      [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+      )
     end)
 
     {:ok, live, _html} = live(conn, "/")
@@ -300,8 +351,11 @@ defmodule LiveSelectTest do
       test "class for active option is set", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}")
 
-        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+          update_options(
+            change_msg,
+            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+          )
         end)
 
         type(live, "ABC")
@@ -318,8 +372,11 @@ defmodule LiveSelectTest do
       test "class for active option can be overriden", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}&active_option_class=foo")
 
-        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+          update_options(
+            change_msg,
+            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+          )
         end)
 
         type(live, "ABC")
@@ -336,8 +393,11 @@ defmodule LiveSelectTest do
       test "additional class for text input selected is set", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}")
 
-        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+          update_options(
+            change_msg,
+            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+          )
         end)
 
         type(live, "ABC")
@@ -362,8 +422,11 @@ defmodule LiveSelectTest do
       test "additional class for text input selected can be overridden", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}&text_input_selected_class=foo")
 
-        Mox.stub(LiveSelect.ChangeHandlerMock, :handle_change, fn _ ->
-          [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+          update_options(
+            change_msg,
+            [[key: "A", value: 1], [key: "B", value: 2], [key: "C", value: 3]]
+          )
         end)
 
         type(live, "ABC")

@@ -1,19 +1,25 @@
-defmodule LiveSelect.ChangeHandler do
+defmodule LiveSelect.MessageHandler do
   @moduledoc false
+
+  alias LiveSelect.ChangeMsg
 
   defmodule Behaviour do
     @moduledoc false
 
-    @callback handle_change(search_term :: String.t()) :: list()
+    @callback handle(change_msg :: ChangeMsg.t(), opts :: Keyword.t()) :: any()
   end
 
   @behaviour Behaviour
 
   @impl true
-  def handle_change(search_term) do
+  def handle(%ChangeMsg{text: text} = change_msg, opts) do
     populate_cities()
 
-    find_cities(search_term)
+    Process.send_after(
+      self(),
+      {:update_live_select, change_msg, find_cities(text)},
+      opts[:delay]
+    )
   end
 
   defp populate_cities() do

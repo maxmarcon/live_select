@@ -1,6 +1,6 @@
 import Config
 
-config :live_select, :change_handler, LiveSelect.ChangeHandler
+config :live_select, :message_handler, LiveSelect.MessageHandler
 
 config :live_select, :default_styles,
   container_extra_class: "w-full",
