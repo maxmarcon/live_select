@@ -25,7 +25,7 @@ export default {
         mounted() {
             this.handleEvent("reset", () => {
                 this.setSearchInputValue("")
-                this.setHiddenInputValue(null)
+                this.setHiddenInputValue("")
             })
             this.handleEvent("selected", ({selected: [label, selected]}) => {
                 this.setSearchInputValue(label);
