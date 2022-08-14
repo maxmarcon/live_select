@@ -328,6 +328,30 @@ defmodule LiveSelectTest do
     assert_option_selected(live, "B", 2)
   end
 
+  test "clicking on the text input field resets the selection", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        A: 1,
+        B: 2,
+        C: 3
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, :B, 2)
+
+    element(live, @selectors[:text_input])
+    |> render_click()
+
+    assert_reset(live)
+  end
+
   test "can navigate options with arrows", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
@@ -553,8 +577,6 @@ defmodule LiveSelectTest do
   end
 
   defp assert_option_size(live, fun) when is_function(fun, 1) do
-    render(live)
-
     assert render(live)
            |> Floki.parse_document!()
            |> Floki.find(@selectors[:dropdown_entries])
@@ -596,16 +618,41 @@ defmodule LiveSelectTest do
   defp assert_option_selected(live, label, value \\ nil) do
     # would be nice to check the value of the hidden input field, but this
     # is set by the JS hook
-    assert live
-           |> element(@selectors[:text_input])
-           |> render()
-           |> Floki.parse_fragment!()
+    text_input =
+      live
+      |> element(@selectors[:text_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert text_input
            |> Floki.attribute("value") ==
              [to_string(label)]
+
+    assert text_input
+           |> Floki.attribute("readonly") ==
+             ["readonly"]
 
     value = if value, do: value, else: label
 
     assert_push_event(live, "selected", %{selected: [^label, ^value]})
+  end
+
+  defp assert_reset(live) do
+    text_input =
+      live
+      |> element(@selectors[:text_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert text_input
+           |> Floki.attribute("value") ==
+             [""]
+
+    assert text_input
+           |> Floki.attribute("readonly") ==
+             []
+
+    assert_push_event(live, "reset", %{})
   end
 
   defp navigate(live, n, dir) do
