@@ -167,17 +167,14 @@ defmodule LiveSelect.Component do
   defp select(socket, selected_position) do
     {label, selected} = Enum.at(socket.assigns.options, selected_position)
 
-    socket =
-      socket
-      |> assign(
-        options: [],
-        current_focus: -1,
-        search_term: label,
-        selected: selected
-      )
-      |> push_event("selected", %{selected: [label, selected]})
-
     socket
+    |> assign(
+      options: [],
+      current_focus: -1,
+      search_term: label,
+      selected: selected
+    )
+    |> push_event("selected", %{selected: [label, selected]})
   end
 
   defp reset_input(socket) do
