@@ -34,7 +34,7 @@ defmodule LiveSelectTest do
     container: "div[name=live-select]",
     text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
-    dropdown_entries: "ul[name=live-select-dropdown] > li > span"
+    dropdown_entries: "ul[name=live-select-dropdown] > li > div"
   ]
 
   setup :verify_on_exit!
