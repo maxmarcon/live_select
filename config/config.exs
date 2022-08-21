@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :live_select, :start_application, true
+
 # Configures the endpoint
 config :live_select, LiveSelectWeb.Endpoint,
   url: [host: "localhost"],

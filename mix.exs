@@ -3,7 +3,7 @@ defmodule LiveSelect.MixProject do
 
   def project do
     [
-      app: :live_select,
+      app: app(),
       version: "0.1.3",
       elixir: "~> 1.13",
       description: "Dynamic search and selection input field for LiveView",
@@ -23,7 +23,7 @@ defmodule LiveSelect.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    if Code.ensure_loaded?(LiveSelect.Application) do
+    if Application.get_env(app(), :start_application) do
       [
         mod: {LiveSelect.Application, []},
         extra_applications: [:logger, :runtime_tools]
@@ -32,6 +32,8 @@ defmodule LiveSelect.MixProject do
       []
     end
   end
+
+  defp app(), do: :live_select
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
