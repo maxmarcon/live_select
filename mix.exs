@@ -4,7 +4,7 @@ defmodule LiveSelect.MixProject do
   def project do
     [
       app: app(),
-      version: "0.1.3",
+      version: "0.1.4",
       elixir: "~> 1.13",
       description: "Dynamic search and selection input field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),

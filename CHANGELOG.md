@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4 (2022-09-20)
+
+* raise if class and extra_class options are used in invalid combinations (https://github.com/maxmarcon/live_select/issues/2)
+
+### Bugfixes
+
+* route server events to the right live select component using the component `id` (https://github.com/maxmarcon/live_select/issues/1)
+
 ## 0.1.3 (2022-08-12)
 
 * rename LiveSelect.update/2 to LiveSelect.update_options/2
