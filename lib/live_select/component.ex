@@ -214,16 +214,22 @@ defmodule LiveSelect.Component do
     class_override
   end
 
+  defp class(:none, element, nil, _class_extend) do
+    raise """
+    When using `style: :none`, please use only `#{element}_class` and not `#{element}_extra_class`
+    """
+  end
+
   defp class(style, element, nil, class_extend) do
     (get_in(@styles, [style, element]) || "") <> " #{class_extend}"
   end
 
   defp class(_style, element, _class_override, _class_extend) do
     raise """
-    You specified both "#{element}_class" and "#{element}_extra_class" options.
-    The "#{element}_class" and "#{element}_extra_class" options can't be used together.
-    Use "#{element}_class" if you want to completely override the default class for the "#{element}".
-    Use "#{element}_extra_class" if you want to extend the default class for the element with additional classes.
+    You specified both `#{element}_class` and `#{element}_extra_class` options.
+    The `#{element}_class` and `#{element}_extra_class` options can't be used together.
+    Use `#{element}_class` if you want to completely override the default class for `#{element}`.
+    Use `#{element}_extra_class` if you want to extend the default class for the element with additional classes.
     """
   end
 end

@@ -418,10 +418,30 @@ defmodule LiveSelectTest do
            |> Floki.attribute("placeholder") == ["Give it a try"]
   end
 
+  test "using both _class and _extra_class options raises", %{conn: conn} do
+    assert_raise(
+      RuntimeError,
+      ~r/`container_class` and `container_extra_class` options can't be used together/,
+      fn ->
+        live(conn, "/?container_class=foo&container_extra_class=boo")
+      end
+    )
+  end
+
   for style <- [:daisyui, :none, nil] do
     @style style
 
     describe "when style = #{@style || "default"}" do
+      if @style == :none do
+        test "using _extra_class option raises", %{conn: conn} do
+          assert_raise RuntimeError,
+                       ~r/when using `style: :none`, please use only `container_class`/i,
+                       fn ->
+                         live(conn, "/?style=#{@style}&container_extra_class=boo")
+                       end
+        end
+      end
+
       for element <- [
             :container,
             :text_input,
@@ -457,7 +477,7 @@ defmodule LiveSelectTest do
           end
         end
 
-        if @extend_class_option[@element] do
+        if @extend_class_option[@element] && @style != :none do
           test "#{@element} class can be extended with #{@extend_class_option[@element]}", %{
             conn: conn
           } do

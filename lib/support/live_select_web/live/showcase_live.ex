@@ -166,8 +166,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
         {String.to_atom(param), value}
       end)
 
+    default_styles =
+      if params[:style] == :daisyui do
+        Application.get_env(:live_select, :default_styles, [])
+      else
+        []
+      end
+
     @params
-    |> Keyword.merge(Application.get_env(:live_select, :default_styles, []))
+    |> Keyword.merge(default_styles)
     |> Enum.reduce(params, fn {param, default}, params ->
       Keyword.put_new(params, param, default)
     end)
