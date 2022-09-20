@@ -36,7 +36,8 @@ defmodule LiveSelect do
   5. The active option the user navigated to using the arrow keys
 
   For each of these components there is a `{component}_class` and for some a `{component}_extra_class` option, which can be used
-  to either override or extend the default CSS classes for the component
+  to either override or extend the default CSS classes for the component. You can't use both options together: use `{component}_class`
+  to completely override the default classes, or use `{component}_extra_class` to extend the default.
 
   The following table shows the default styles for each component and the options you can use to adjust its CSS classes.
 
