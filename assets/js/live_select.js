@@ -23,13 +23,17 @@ export default {
             hidden_input.dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.handleEvent("reset", () => {
-                this.setSearchInputValue("")
-                this.setHiddenInputValue("")
+            this.handleEvent("reset", ({id: id}) => {
+                if (this.el.id === id) {
+                    this.setSearchInputValue("")
+                    this.setHiddenInputValue("")
+                }
             })
-            this.handleEvent("selected", ({selected: [label, selected]}) => {
-                this.setSearchInputValue(label);
-                this.setHiddenInputValue(selected)
+            this.handleEvent("selected", ({id: id, selected: [label, selected]}) => {
+                if (this.el.id === id) {
+                    this.setSearchInputValue(label);
+                    this.setHiddenInputValue(selected)
+                }
             })
             this.attachDomEventHandlers()
         },

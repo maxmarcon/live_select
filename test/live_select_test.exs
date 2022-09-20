@@ -654,7 +654,10 @@ defmodule LiveSelectTest do
 
     value = if value, do: value, else: label
 
-    assert_push_event(live, "selected", %{selected: [^label, ^value]})
+    assert_push_event(live, "selected", %{
+      id: "my_form_city_search_component",
+      selected: [^label, ^value]
+    })
   end
 
   defp assert_reset(live) do
@@ -672,7 +675,7 @@ defmodule LiveSelectTest do
            |> Floki.attribute("readonly") ==
              []
 
-    assert_push_event(live, "reset", %{})
+    assert_push_event(live, "reset", %{id: "my_form_city_search_component"})
   end
 
   defp navigate(live, n, dir) do

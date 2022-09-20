@@ -171,13 +171,13 @@ defmodule LiveSelect.Component do
       search_term: label,
       selected: selected
     )
-    |> push_event("selected", %{selected: [label, selected]})
+    |> push_event("selected", %{id: socket.assigns.id, selected: [label, selected]})
   end
 
   defp reset_input(socket) do
     socket
     |> assign(options: [], selected: nil, search_term: "")
-    |> push_event("reset", %{})
+    |> push_event("reset", %{id: socket.assigns.id})
   end
 
   defp normalize_options(options) do
