@@ -1,67 +1,162 @@
 <div class="flex w-full p-5 gap-2">
-    <div class="flex flex-col w-1/2 gap-y-5">
-        <div class="prose text-center">
-            <h2>Change settings here:</h2>
+  <div class="flex flex-col w-1/2">
+    <div class="prose text-center">
+      <h4>Change settings here:</h4>
+    </div>
+    <.form for={@changeset} let={f} phx-change="update-settings">
+      <div class="flex flex-wrap p-5 gap-2">
+        <div class="form-control max-w-sm">
+          <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
+          <%= text_input(f, :form_name, class: "input input-sm input-bordered") %>
+          <%= error_tag(f, :form_name) %>
         </div>
-        <.form for={:settings} let={f} phx-change="update-settings">
-        <div class="flex flex-wrap p-5 gap-2">
-            <div class="form-control max-w-sm">
-                <%= label(f, :form_name, "Form name:", class: "label label-text") %>
-                <%= text_input(f, :form_name, class: "input input-bordered", value: @form_name) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :field_name, "Field name:", class: "label label-text") %>
-                <%= text_input(f, :field_name, class: "input input-bordered", value: @field_name) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :search_delay, "Search delay in ms:", class: "label label-text") %>
-                <%= text_input(f, :search_delay, class: "input input-bordered", value: @live_select_opts[:search_delay]) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :placeholder, "placeholder:", class: "label label-text") %>
-                <%= text_input(f, :placeholder, class: "input input-bordered", value: @live_select_opts[:placeholder]) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :search_term_min_length, "search_term_min_length:", class: "label label-text") %>
-                <%= text_input(f, :search_term_min_length, class: "input input-bordered", value: @live_select_opts[:search_term_min_length]) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :debounce, "debounce:", class: "label label-text") %>
-                <%= text_input(f, :debounce, class: "input input-bordered", value: @live_select_opts[:debounce]) %>
-            </div>
-            <div class="form-control max-w-sm">
-                <%= label(f, :style, "style:", class: "label label-text") %>
-                <%= select(f, :style, [:daisyui, :none], class: "select select-bordered", selected: @live_select_opts[:style]) %>
-            </div>
+        <div class="form-control max-w-sm">
+          <%= label(f, :field_name, "Field name:", class: "label label-text font-semibold") %>
+          <%= text_input(f, :field_name, class: "input input-sm input-bordered") %>
+          <%= error_tag(f, :field_name) %>
         </div>
-        </.form>
+        <div class="form-control max-w-sm">
+          <%= label(f, :search_delay, "Search delay in ms:",
+            class: "label label-text font-semibold"
+          ) %>
+          <%= text_input(f, :search_delay, class: "input input-sm input-bordered") %>
+          <%= error_tag(f, :search_delay) %>
+        </div>
+        <div class=" max-w-sm flex flex-col justify-end">
+          <%= live_patch("Reset",
+            to: Routes.live_path(@socket, __MODULE__, reset: true),
+            class: "btn btn-warning btn-sm"
+          ) %>
+        </div>
+        <div class="form-control max-w-sm">
+          <%= label(f, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
+          <%= text_input(f, :placeholder, class: "input input-sm input-bordered") %>
+          <%= label(f, :placeholder, default_value_descr(:placeholder), class: "label label-text") %>
+          <%= error_tag(f, :placeholder) %>
+        </div>
+        <div class="form-control max-w-sm">
+          <%= label(f, :search_term_min_length, "search_term_min_length:",
+            class: "label label-text font-semibold"
+          ) %>
+          <%= text_input(f, :search_term_min_length, class: "input input-sm input-bordered") %>
+          <%= label(f, :search_term_min_length, default_value_descr(:search_term_min_length),
+            class: "label label-text font-semibold"
+          ) %>
+          <%= error_tag(f, :search_term_min_length) %>
+        </div>
+        <div class="form-control max-w-sm">
+          <%= label(f, :debounce, "debounce:", class: "label label-text font-semibold") %>
+          <%= text_input(f, :debounce, class: "input input-sm input-bordered") %>
+          <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
+          <%= error_tag(f, :debounce) %>
+        </div>
+        <div class="form-control max-w-sm">
+          <%= label(f, :style, "style:", class: "label label-text font-semibold") %>
+          <%= select(f, :style, [:daisyui, :none],
+            class: "select select-sm select-bordered text-xs"
+          ) %>
+        </div>
+
+        <div
+          id="style-dropdown"
+          class={
+            "w-full collapse collapse-arrow #{if @show_styles, do: "collapse-open", else: "collapse-close"} border
+            border-base-300 bg-base-100 rounded-box"
+          }
+        >
+          <%= checkbox(f, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
+          <div class="collapse-title text-sm font-medium">
+            style options
+          </div>
+          <div class="collapse-content">
+            <%= for class <- [:text_input_class, :text_input_extra_class, :text_input_selected_class, :dropdown_class, :dropdown_extra_class, :active_option_class, :container_class, :container_extra_class] do %>
+              <%= if valid_class(@changeset, class) do %>
+                <div class="form-control w-full">
+                  <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
+                  <%= text_input(f, class, class: "input input-sm input-bordered") %>
+                  <%= label(
+                    f,
+                    class,
+                    default_class(Ecto.Changeset.get_field(@changeset, :style), class),
+                    class: "label label-text"
+                  ) %>
+                  <%= error_tag(f, class) %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </.form>
 
     <div class="prose text-center">
-        <h2>See events and messages here:</h2>
+      <h4>See events and messages here:</h4>
     </div>
 
     <div id="event-list" class="flex flex-col gap-y-2">
-        <%= for {event, idx} <- Enum.with_index(@events) do %>
-            <div class={"#{if @new_event && idx== 0, do: "animate-bounce"} ml-10 border-info border-2 rounded p-2"}>
-        <Render.event {event}/>
-    </div>
-    <% end %>
-</div>
-</div>
-
-<div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
-    <div class="prose text-center">
-        <h2>Try out the component here:</h2>
-    </div>
-    <.form for={String.to_atom(@form_name)} let={f} phx-change="change" phx-submit="submit" class="w-1/2">
-        <div class="flex gap-2 items-center">
-            <%= live_select f, @field_name, @live_select_opts %>
-            <%= submit "Submit", class: "btn btn-primary" %>
+      <%= for {event, idx} <- Enum.with_index(@events) do %>
+        <div class={
+          "#{if @new_event && idx == 0, do: "animate-bounce"} ml-10 border-info border-2 rounded p-2"
+        }>
+          <Render.event {event} />
         </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
+    <div class="prose text-center mt-2">
+      <h4>Try out the component here:</h4>
+    </div>
+    <.form
+      for={String.to_atom(@changeset.data.form_name)}
+      let={f}
+      phx-change="change"
+      phx-submit="submit"
+      class="w-1/2"
+    >
+      <div class="flex gap-2 items-center">
+        <%= live_select(
+          f,
+          @changeset.data.field_name,
+          Settings.live_select_opts(@changeset.data)
+          |> Keyword.update(:disabled, !@changeset.valid?, fn
+            true -> true
+            _ -> !@changeset.valid?
+          end)
+        ) %>
+        <%= submit("Submit",
+          class: "btn btn-primary",
+          disabled: @selected == "" || !@changeset.valid?
+        ) %>
+      </div>
     </.form>
-    
-    <%= if @selected do %>
-        <p class="text-info w-1/2">🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉</p>
+
+    <%= if @submitted do %>
+      <p class="text-info w-1/2">
+        🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
+      </p>
     <% end %>
-</div>
+
+    <div class="my-5 relative border-info border-2 rounded p-2" id="live-select-code">
+      <div
+        id="copy-to-clipboard-tooltip"
+        class="tooltip-success absolute top-0 right-0 "
+        data-tip="Copied to clipboard!"
+      >
+        <button
+          id="copy-to-clipboard"
+          data-clipboard-target="#live-select-code"
+          class="btn bg-opacity-0"
+        >
+          <.copy_to_clipboard_icon />
+        </button>
+      </div>
+      <Render.live_select
+        form_name={@changeset.data.form_name}
+        field_name={@changeset.data.field_name}
+        opts={Settings.live_select_opts(@changeset.data)}
+      />
+    </div>
+  </div>
 </div>

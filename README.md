@@ -112,6 +112,13 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Enable custom styling 
  - [X] Rename LiveSelect.render to live_select
  - [X] Customizable placeholder
- - [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
+ - [X] Enable configuration of styles in the showcase app
  - [ ] Add support for vanilla tailwind styles
- - [ ] Enable configuring different styles in the showcase app
+ - [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
+
+## Notes
+
+- disable extra class field when class is set (for example disable text_input_extra_class when text_input_class is set)
+- how to offer a standard tailwind style? Idea: pick a color for foreground, background and active options and tell the user how to change it
+  - event better: add a "color" option and style according to the color
+- we probably need an option-class

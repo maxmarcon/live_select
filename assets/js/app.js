@@ -25,9 +25,18 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import live_select from "./live_select";
 import topbar from "../vendor/topbar"
+import ClipboardJS from "clipboard";
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
+let clipboard = new ClipboardJS("button#copy-to-clipboard")
+clipboard.on("success", () => {
+    const tooltip = document.querySelector("#copy-to-clipboard-tooltip")
+    tooltip.classList.add("tooltip", "tooltip-open")
+    setTimeout(() => {
+        tooltip.classList.remove("tooltip", "tooltip-open")
+    }, 1000)
+})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})

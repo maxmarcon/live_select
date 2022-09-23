@@ -13,9 +13,10 @@ defmodule LiveSelect.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: LiveSelect.PubSub},
       # Start the Endpoint (http/https)
-      LiveSelectWeb.Endpoint
+      LiveSelectWeb.Endpoint,
       # Start a worker by calling: LiveSelect.Worker.start_link(arg)
       # {LiveSelect.Worker, arg}
+      {Task.Supervisor, name: LiveSelectWeb.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

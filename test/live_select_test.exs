@@ -397,7 +397,7 @@ defmodule LiveSelectTest do
     assert element(live, @selectors[:text_input])
            |> render()
            |> Floki.parse_fragment!()
-           |> Floki.attribute("disabled") == ["true"]
+           |> Floki.attribute("disabled") == ["disabled"]
   end
 
   test "can set the debounce value", %{conn: conn} do
@@ -423,7 +423,7 @@ defmodule LiveSelectTest do
       RuntimeError,
       ~r/`container_class` and `container_extra_class` options can't be used together/,
       fn ->
-        live(conn, "/?container_class=foo&container_extra_class=boo")
+        live(conn, "/?container_class=foo&container_extra_class=boo&skip_validation=true")
       end
     )
   end

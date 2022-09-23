@@ -6,7 +6,8 @@ module.exports = {
         '../config/*.exs',
         '../lib/support/*_web.ex',
         '../lib/support/*_web/**/*.*ex',
-        '../lib/live_select/*.*ex'
+        '../lib/live_select/*.*ex',
+        '../priv/static/assets/class.txt'
     ],
     theme: {
         extend: {},

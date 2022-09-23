@@ -8,13 +8,13 @@
 }
 
 .invalid-feedback {
-    @apply label text-error
+    @apply label text-error text-sm
 }
 
-/* LiveView specific classes for your customization */
+ LiveView specific classes for your customization 
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
-    display: none;
+    display: block;
 }
 
 .phx-click-loading {

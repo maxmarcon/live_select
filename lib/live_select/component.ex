@@ -48,6 +48,18 @@ defmodule LiveSelect.Component do
     {:ok, socket}
   end
 
+  @doc false
+  def default_opts(), do: @default_opts
+
+  @doc false
+  def default_class(style, class) do
+    element =
+      String.replace_trailing(to_string(class), "_class", "")
+      |> String.to_atom()
+
+    get_in(@styles, [style, element])
+  end
+
   @impl true
   def update(assigns, socket) do
     socket =
@@ -58,7 +70,12 @@ defmodule LiveSelect.Component do
 
     socket =
       Enum.reduce(@default_opts, socket, fn {opt, default}, socket ->
-        assign_new(socket, opt, fn -> default end)
+        socket
+        |> assign_new(opt, fn -> default end)
+      end)
+      |> update(:search_term_min_length, fn
+        nil -> @default_opts[:search_term_min_length]
+        val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
 
@@ -84,7 +101,8 @@ defmodule LiveSelect.Component do
       if socket.assigns.selected do
         socket
       else
-        if String.length(text) >= socket.assigns.search_term_min_length do
+        if String.length(text) >=
+             socket.assigns.search_term_min_length do
           send(
             self(),
             %ChangeMsg{
