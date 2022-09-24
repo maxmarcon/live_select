@@ -132,13 +132,11 @@
       </div>
     </.form>
 
-    <%= if @submitted do %>
-      <p class="text-info w-1/2">
-        🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
-      </p>
-    <% end %>
+    <p class={"text-info w-1/2 h-0 #{unless @submitted, do: "invisible"}"}>
+      🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
+    </p>
 
-    <div class="my-5 relative border-info border-2 rounded p-2" id="live-select-code">
+    <div class="mt-36 mb-5 relative border-info border-2 rounded p-2" id="live-select-code">
       <div
         id="copy-to-clipboard-tooltip"
         class="tooltip-success absolute top-0 right-0 "
@@ -147,7 +145,7 @@
         <button
           id="copy-to-clipboard"
           data-clipboard-target="#live-select-code"
-          class="btn bg-opacity-0"
+          class="btn bg-inherit text-inherit hover:bg-base-300"
         >
           <.copy_to_clipboard_icon />
         </button>

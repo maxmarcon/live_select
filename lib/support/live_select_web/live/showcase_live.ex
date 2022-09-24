@@ -117,8 +117,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     defp maybe_apply_initial_styles(changeset) do
-      style_changed = get_change(changeset, :style)
-      new_settings = get_field(changeset, :new)
+      style_changed = get_change(changeset, :style) |> IO.inspect()
+      new_settings = get_field(changeset, :new) |> IO.inspect()
 
       if style_changed || new_settings do
         initial_classes =
@@ -218,13 +218,18 @@ defmodule LiveSelectWeb.ShowcaseLive do
       params
       |> Map.new(fn {k, v} -> if v == "", do: {k, nil}, else: {k, v} end)
 
-    settings =
+    socket =
       if params["reset"] do
-        %Settings{}
+        socket
+        |> assign(:changeset, nil)
+        |> assign(:events, [])
       else
-        get_in(socket.assigns, [Access.key(:changeset), Access.key(:data)]) ||
-          %Settings{}
+        socket
       end
+
+    settings =
+      get_in(socket.assigns, [Access.key(:changeset), Access.key(:data)]) ||
+        %Settings{}
 
     changeset =
       Settings.changeset(

@@ -33,9 +33,7 @@ let clipboard = new ClipboardJS("button#copy-to-clipboard")
 clipboard.on("success", () => {
     const tooltip = document.querySelector("#copy-to-clipboard-tooltip")
     tooltip.classList.add("tooltip", "tooltip-open")
-    setTimeout(() => {
-        tooltip.classList.remove("tooltip", "tooltip-open")
-    }, 1000)
+    setTimeout(() => tooltip.classList.remove("tooltip", "tooltip-open"), 1000)
 })
 
 // Show progress bar on live navigation and form submits
