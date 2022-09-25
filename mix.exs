@@ -96,8 +96,7 @@ defmodule LiveSelect.MixProject do
         "CHANGELOG.md"
       ],
       filter_modules: ~r/LiveSelect($|\.)/,
-      assets: "priv/static/images",
-      main: "readme"
+      assets: "priv/static/images"
     ]
   end
 end
