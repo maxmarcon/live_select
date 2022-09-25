@@ -91,6 +91,7 @@ defmodule LiveSelect.MixProject do
 
   defp docs() do
     [
+      main: "README.md",
       extras: [
         "README.md": [filename: "README.md", title: "Readme"],
         "CHANGELOG.md": []
