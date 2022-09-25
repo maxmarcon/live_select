@@ -223,6 +223,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
         |> assign(:changeset, nil)
         |> assign(:events, [])
+        |> assign(:show_styles, false)
       else
         socket
       end
