@@ -108,35 +108,35 @@
     <div class="prose text-center mt-2">
       <h4>Try out the component here:</h4>
     </div>
-    <.form
-      for={String.to_atom(@changeset.data.form_name)}
-      let={f}
-      phx-change="change"
-      phx-submit="submit"
-      class="w-1/2"
-    >
-      <div class="flex gap-2 items-center">
-        <%= live_select(
-          f,
-          @changeset.data.field_name,
-          Settings.live_select_opts(@changeset.data)
-          |> Keyword.update(:disabled, !@changeset.valid?, fn
-            true -> true
-            _ -> !@changeset.valid?
-          end)
-        ) %>
-        <%= submit("Submit",
-          class: "btn btn-primary",
-          disabled: @selected == "" || !@changeset.valid?
-        ) %>
+    <div class="h-60 w-1/2">
+      <.form
+        for={String.to_atom(@changeset.data.form_name)}
+        let={f}
+        phx-change="change"
+        phx-submit="submit"
+      >
+        <div class="flex gap-2">
+          <%= live_select(
+            f,
+            @changeset.data.field_name,
+            Settings.live_select_opts(@changeset.data)
+            |> Keyword.update(:disabled, !@changeset.valid?, fn
+              true -> true
+              _ -> !@changeset.valid?
+            end)
+          ) %>
+          <%= submit("Submit",
+            class: "btn btn-primary",
+            disabled: @selected == "" || !@changeset.valid?
+          ) %>
+        </div>
+      </.form>
+      <div class={"text-info w-1/2 #{unless @submitted, do: "invisible"}"}>
+        🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
       </div>
-    </.form>
+    </div>
 
-    <p class={"text-info w-1/2 h-0 #{unless @submitted, do: "invisible"}"}>
-      🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
-    </p>
-
-    <div class="mt-36 mb-5 relative border-info border-2 rounded p-2" id="live-select-code">
+    <div class="w-2/3 mb-5 relative border-info border-2 rounded p-2" id="live-select-code">
       <div
         id="copy-to-clipboard-tooltip"
         class="tooltip-success absolute top-0 right-0 "
