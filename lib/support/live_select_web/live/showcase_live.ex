@@ -265,7 +265,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ) do
     socket =
       socket
-      |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
+      |> push_patch(to: Routes.live_path(socket, __MODULE__, prune_params(params)))
 
     {:noreply, socket}
   end
@@ -416,4 +416,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
     </svg>
     """
   end
+
+  defp prune_params(%{"style" => "none"} = params) do
+    Map.drop(
+      params,
+      ["container_extra_class", "dropdown_extra_class", "text_input_extra_class"]
+    )
+  end
+
+  defp prune_params(params), do: params
 end
