@@ -32,7 +32,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:search_term_min_length, :integer)
-      field(:style, Ecto.Enum, values: [:daisyui, :none])
+      field(:style, Ecto.Enum, values: [:daisyui, :none], default: :daisyui)
       field(:text_input_class, :string)
       field(:text_input_extra_class, :string)
       field(:text_input_selected_class, :string)
