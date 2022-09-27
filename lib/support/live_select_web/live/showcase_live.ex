@@ -80,6 +80,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> Keyword.new()
     end
 
+    def has_style_errors?(%Ecto.Changeset{errors: errors}) do
+      errors
+      |> Keyword.take(Keyword.keys(@empty_styles))
+      |> Enum.any?()
+    end
+
     defp maybe_validate(changeset, true), do: changeset
 
     defp maybe_validate(changeset, false) do
@@ -223,7 +229,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
         |> assign(:changeset, nil)
         |> assign(:events, [])
-        |> assign(:show_styles, false)
       else
         socket
       end
@@ -252,6 +257,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket =
           socket
           |> assign(:changeset, changeset)
+          |> assign(
+            :show_styles,
+            socket.assigns.show_styles || Settings.has_style_errors?(changeset)
+          )
 
         {:noreply, socket}
     end
