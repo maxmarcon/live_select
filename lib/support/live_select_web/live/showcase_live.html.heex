@@ -69,7 +69,7 @@
             style options
           </div>
           <div class="collapse-content">
-            <%= for class <- [:text_input_class, :text_input_extra_class, :text_input_selected_class, :dropdown_class, :dropdown_extra_class, :active_option_class, :container_class, :container_extra_class] do %>
+            <%= for class <- @style_options do %>
               <%= if valid_class(@changeset, class) do %>
                 <div class="form-control w-full">
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>

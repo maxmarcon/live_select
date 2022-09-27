@@ -14,6 +14,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       container_extra_class: nil,
       dropdown_class: nil,
       dropdown_extra_class: nil,
+      option_class: nil,
+      option_extra_class: nil,
       text_input_class: nil,
       text_input_extra_class: nil,
       text_input_selected_class: nil
@@ -25,10 +27,14 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:container_class, :string)
       field(:container_extra_class, :string)
       field(:debounce, :integer, default: 100)
+      field(:disabled, :boolean)
       field(:dropdown_class, :string)
       field(:dropdown_extra_class, :string)
-      field(:form_name, :string, default: "my_form")
       field(:field_name, :string, default: "city_search")
+      field(:form_name, :string, default: "my_form")
+      field(:new, :boolean, default: true)
+      field(:option_class, :string)
+      field(:option_extra_class, :string)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:search_term_min_length, :integer)
@@ -36,8 +42,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:text_input_class, :string)
       field(:text_input_extra_class, :string)
       field(:text_input_selected_class, :string)
-      field(:new, :boolean, default: true)
-      field(:disabled, :boolean)
     end
 
     def changeset(source \\ %__MODULE__{}, params, opts \\ []) do
@@ -49,18 +53,20 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :container_class,
         :container_extra_class,
         :debounce,
+        :disabled,
         :dropdown_class,
         :dropdown_extra_class,
         :field_name,
         :form_name,
+        :option_class,
+        :option_extra_class,
         :placeholder,
         :search_delay,
         :search_term_min_length,
         :style,
         :text_input_class,
         :text_input_extra_class,
-        :text_input_selected_class,
-        :disabled
+        :text_input_selected_class
       ])
       |> maybe_validate(opts[:skip_validation])
       |> put_change(:new, false)
@@ -86,6 +92,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> Enum.any?()
     end
 
+    def style_options(), do: Keyword.keys(@empty_styles)
+
     defp maybe_validate(changeset, true), do: changeset
 
     defp maybe_validate(changeset, false) do
@@ -105,7 +113,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         for {class, extra_class} <- [
               {:container_class, :container_extra_class},
               {:dropdown_class, :dropdown_extra_class},
-              {:text_input_class, :text_input_extra_class}
+              {:text_input_class, :text_input_extra_class},
+              {:option_class, :option_extra_class}
             ],
             reduce: changeset do
           changeset ->
@@ -210,7 +219,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         selected_text: "",
         submitted: false,
         save_classes_pid: nil,
-        show_styles: false
+        show_styles: false,
+        style_options: Settings.style_options()
       )
 
     {:ok, socket}

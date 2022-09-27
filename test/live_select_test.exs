@@ -21,20 +21,23 @@ defmodule LiveSelectTest do
   @override_class_option [
     container: :container_class,
     text_input: :text_input_class,
-    dropdown: :dropdown_class
+    dropdown: :dropdown_class,
+    option: :option_class
   ]
 
   @extend_class_option [
     container: :container_extra_class,
     text_input: :text_input_extra_class,
-    dropdown: :dropdown_extra_class
+    dropdown: :dropdown_extra_class,
+    option: :option_extra_class
   ]
 
   @selectors [
     container: "div[name=live-select]",
     text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
-    dropdown_entries: "ul[name=live-select-dropdown] > li > div"
+    dropdown_entries: "ul[name=live-select-dropdown] > li > div",
+    option: "ul[name=live-select-dropdown] > li:first-of-type"
   ]
 
   setup :verify_on_exit!
@@ -418,20 +421,40 @@ defmodule LiveSelectTest do
            |> Floki.attribute("placeholder") == ["Give it a try"]
   end
 
-  test "using both _class and _extra_class options raises", %{conn: conn} do
-    assert_raise(
-      RuntimeError,
-      ~r/`container_class` and `container_extra_class` options can't be used together/,
-      fn ->
-        live(conn, "/?container_class=foo&container_extra_class=boo&skip_validation=true")
-      end
-    )
+  for {override_class, extend_class} <-
+        Enum.zip(Keyword.values(@override_class_option), Keyword.values(@extend_class_option)),
+      # we must open the dropdown to test option_class
+      override_class != :option_class do
+    @override_class override_class
+    @extend_class extend_class
+
+    test "using both #{@override_class} and #{@extend_class} options raises", %{conn: conn} do
+      assert_raise(
+        RuntimeError,
+        ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
+        fn ->
+          {:ok, view, _html} =
+            live(conn, "/?#{@override_class}=foo&#{@extend_class}=boo&skip_validation=true")
+        end
+      )
+    end
   end
 
   for style <- [:daisyui, :none, nil] do
     @style style
 
     describe "when style = #{@style || "default"}" do
+      setup do
+        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+          update_options(
+            change_msg,
+            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+          )
+        end)
+
+        :ok
+      end
+
       if @style == :none do
         test "using _extra_class option raises", %{conn: conn} do
           assert_raise RuntimeError,
@@ -445,12 +468,15 @@ defmodule LiveSelectTest do
       for element <- [
             :container,
             :text_input,
-            :dropdown
+            :dropdown,
+            :option
           ] do
         @element element
 
         test "#{@element} has default class", %{conn: conn} do
           {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+          type(live, "ABC")
 
           assert element(live, @selectors[@element])
                  |> render()
@@ -467,6 +493,8 @@ defmodule LiveSelectTest do
             option = @override_class_option[@element]
 
             {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=foo")
+
+            type(live, "ABC")
 
             assert element(live, @selectors[@element])
                    |> render()
@@ -485,6 +513,8 @@ defmodule LiveSelectTest do
 
             {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=foo")
 
+            type(live, "ABC")
+
             assert element(live, @selectors[@element])
                    |> render()
                    |> Floki.parse_fragment!()
@@ -497,13 +527,6 @@ defmodule LiveSelectTest do
 
       test "class for active option is set", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}")
-
-        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
-          update_options(
-            change_msg,
-            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
-          )
-        end)
 
         type(live, "ABC")
 
@@ -519,13 +542,6 @@ defmodule LiveSelectTest do
       test "class for active option can be overriden", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}&active_option_class=foo")
 
-        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
-          update_options(
-            change_msg,
-            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
-          )
-        end)
-
         type(live, "ABC")
 
         navigate(live, 1, :down)
@@ -539,13 +555,6 @@ defmodule LiveSelectTest do
 
       test "additional class for text input selected is set", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}")
-
-        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
-          update_options(
-            change_msg,
-            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
-          )
-        end)
 
         type(live, "ABC")
 
@@ -566,13 +575,6 @@ defmodule LiveSelectTest do
 
       test "additional class for text input selected can be overridden", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}&text_input_selected_class=foo")
-
-        Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
-          update_options(
-            change_msg,
-            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
-          )
-        end)
 
         type(live, "ABC")
 
