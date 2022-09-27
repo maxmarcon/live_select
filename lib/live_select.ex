@@ -70,7 +70,7 @@ defmodule LiveSelect do
   Here's an example that describes all the moving parts in detail. The user can search for cities.
   The LiveSelect main form input is called `city_search`.
   When a city is selected, the coordinates of that city will be the value of the form input.
-  Then name of the selected city is available in the text input field named `city_search_text_input`.
+  The name of the selected city is available in the text input field named `city_search_text_input`.
     
   Template:
   ```
