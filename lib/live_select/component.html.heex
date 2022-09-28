@@ -32,10 +32,12 @@
         phx-value-idx={idx}
         phx-target={@myself}
         name={"option-#{idx + 1}"}
-        class={class(@style, :option, @option_class, @option_extra_class)}
       >
         <div class={
-          "#{if idx == @current_focus, do: class(@style, :active_option, @active_option_class)}"
+          [
+            class(@style, :option, @option_class, @option_extra_class),
+            if(idx == @current_focus, do: class(@style, :active_option, @active_option_class))
+          ]
         }>
           <%= label %>
         </div>
