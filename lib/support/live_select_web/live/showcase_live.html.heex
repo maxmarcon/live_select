@@ -52,7 +52,7 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :style, "style:", class: "label label-text font-semibold") %>
-          <%= select(f, :style, [:daisyui, :none],
+          <%= select(f, :style, [:daisyui, :tailwind, :none],
             class: "select select-sm select-bordered text-xs"
           ) %>
         </div>
@@ -74,12 +74,16 @@
                 <div class="form-control w-full">
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
                   <%= text_input(f, class, class: "input input-sm input-bordered") %>
-                  <%= label(
-                    f,
-                    class,
-                    default_class(Ecto.Changeset.get_field(@changeset, :style), class),
-                    class: "label label-text"
-                  ) %>
+                  <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
+                    <label class="label label-text">
+                      <div>
+                        Default from style:
+                        <span class="font-semibold">
+                          <%= default_class(Ecto.Changeset.get_field(@changeset, :style), class) %>
+                        </span>
+                      </div>
+                    </label>
+                  <% end %>
                   <%= error_tag(f, class) %>
                 </div>
               <% end %>

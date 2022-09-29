@@ -38,7 +38,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:search_term_min_length, :integer)
-      field(:style, Ecto.Enum, values: [:daisyui, :none], default: :daisyui)
+      field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :daisyui)
       field(:text_input_class, :string)
       field(:text_input_extra_class, :string)
       field(:text_input_selected_class, :string)
@@ -360,13 +360,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
   end
 
-  def default_class(style, class) do
-    if default = LiveSelect.Component.default_class(style, class) do
-      "default: #{default}"
-    else
-      ""
-    end
-  end
+  def default_class(style, class), do: LiveSelect.Component.default_class(style, class)
 
   defp spawn_save_classes_task(socket, %Settings{} = settings) do
     if connected?(socket) do

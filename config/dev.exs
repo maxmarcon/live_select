@@ -7,6 +7,12 @@ config :live_select, :initial_classes,
     container_extra_class: "w-full",
     dropdown_extra_class: "w-full bg-base-200 p-2",
     text_input_extra_class: "w-full"
+  ],
+  tailwind: [
+    container_extra_class: "w-full",
+    dropdown_extra_class: "w-full bg-gray-100 p-2",
+    text_input_extra_class: "w-full",
+    active_option_class: "text-white bg-gray-600"
   ]
 
 # For development, we disable any cache and enable

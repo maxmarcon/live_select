@@ -31,6 +31,12 @@ defmodule LiveSelect.Component do
       text_input_selected: ~S(input-primary text-primary),
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box),
       active_option: ~S(active)
+    ],
+    tailwind: [
+      container: ~S(relative),
+      option: ~S(rounded-lg px-4 py-2),
+      text_input: ~S(rounded-md),
+      dropdown: ~S(absolute rounded-xl shadow z-50)
     ]
   ]
 

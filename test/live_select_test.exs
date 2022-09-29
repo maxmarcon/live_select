@@ -15,6 +15,12 @@ defmodule LiveSelectTest do
       text_input_selected: ~S(input-primary text-primary),
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box),
       active_option: ~S(active)
+    ],
+    tailwind: [
+      container: ~S(relative),
+      option: ~S(rounded-lg px-4 py-2),
+      text_input: ~S(rounded-md),
+      dropdown: ~S(absolute rounded-xl shadow z-50)
     ]
   ]
 
@@ -440,7 +446,7 @@ defmodule LiveSelectTest do
     end
   end
 
-  for style <- [:daisyui, :none, nil] do
+  for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
 
     describe "when style = #{@style || "default"}" do
@@ -623,18 +629,26 @@ defmodule LiveSelectTest do
              Enum.join(elements)
   end
 
-  defp assert_option_active(live, pos, active_class \\ "active") do
-    attributes =
+  defp assert_option_active(live, pos, active_class \\ "active")
+
+  defp assert_option_active(live, pos, "") do
+    assert true
+  end
+
+  defp assert_option_active(live, pos, active_class) do
+    element_classes =
       render(live)
       |> Floki.parse_document!()
       |> Floki.attribute(@selectors[:dropdown_entries], "class")
       |> Enum.map(&String.trim/1)
 
-    expected_attributes =
-      0..(Enum.count(attributes) - 1)
-      |> Enum.map(&if &1 == pos, do: active_class, else: "")
-
-    assert attributes == expected_attributes
+    for {element_class, idx} <- Enum.with_index(element_classes) do
+      if idx == pos do
+        assert String.contains?(element_class, active_class)
+      else
+        refute String.contains?(element_class, active_class)
+      end
+    end
   end
 
   defp assert_option_selected(live, label, value \\ nil) do
