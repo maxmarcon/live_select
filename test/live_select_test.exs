@@ -19,7 +19,7 @@ defmodule LiveSelectTest do
     tailwind: [
       container: ~S(relative),
       option: ~S(rounded-lg px-4 py-2),
-      text_input: ~S(rounded-md),
+      text_input: ~S(rounded-md h-full),
       dropdown: ~S(absolute rounded-xl shadow z-50)
     ]
   ]
