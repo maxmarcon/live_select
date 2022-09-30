@@ -2,6 +2,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
   import LiveSelect
+  alias Phoenix.LiveView.JS
 
   defmodule Settings do
     use Ecto.Schema
@@ -214,9 +215,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       assign(socket,
         events: [],
-        new_event: false,
         selected: "",
         selected_text: "",
+        next_event_id: 0,
         submitted: false,
         save_classes_pid: nil,
         show_styles: false,
@@ -299,8 +300,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_event(event, params, socket) do
-    Process.send_after(self(), :clear_new_event, 1_000)
-
     socket =
       case event do
         "change" ->
@@ -320,17 +319,20 @@ defmodule LiveSelectWeb.ShowcaseLive do
           socket
       end
 
-    {:noreply,
-     assign(socket,
-       events:
-         [%{params: params, event: event} | socket.assigns.events] |> Enum.take(@max_events),
-       new_event: true
-     )}
-  end
+    socket =
+      socket
+      |> update(:next_event_id, &(&1 + 1))
+      |> assign(
+        events:
+          [
+            %{params: params, event: event, id: socket.assigns.next_event_id}
+            | socket.assigns.events
+          ]
+          |> Enum.take(@max_events)
+      )
+      |> push_event("show", %{target: "#event-#{socket.assigns.next_event_id}"})
 
-  @impl true
-  def handle_info(:clear_new_event, socket) do
-    {:noreply, assign(socket, :new_event, false)}
+    {:noreply, socket}
   end
 
   def handle_info({:update_live_select, change_msg, options}, socket) do
@@ -341,15 +343,19 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    Process.send_after(self(), :clear_new_event, 1_000)
-
     message_handler().handle(message, delay: socket.assigns.changeset.data.search_delay)
 
-    {:noreply,
-     assign(socket,
-       events: [%{msg: message} | socket.assigns.events] |> Enum.take(@max_events),
-       new_event: true
-     )}
+    socket =
+      socket
+      |> update(:next_event_id, &(&1 + 1))
+      |> assign(
+        events:
+          [%{msg: message, id: socket.assigns.next_event_id} | socket.assigns.events]
+          |> Enum.take(@max_events)
+      )
+      |> push_event("show", %{target: "#event-#{socket.assigns.next_event_id}"})
+
+    {:noreply, socket}
   end
 
   defp default_value_descr(field) do
@@ -386,16 +392,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   defp save_classes(%Settings{} = settings) do
     settings
-    |> Map.take([
-      :active_option_class,
-      :container_class,
-      :container_extra_class,
-      :dropdown_class,
-      :dropdown_extra_class,
-      :text_input_class,
-      :text_input_extra_class,
-      :text_input_selected_class
-    ])
+    |> Map.take(Settings.style_options())
     |> Enum.reject(fn {_key, classes} -> is_nil(classes) end)
     |> Enum.map(fn {_key, classes} -> classes <> "\n" end)
     |> Enum.into(File.stream!(@class_file))

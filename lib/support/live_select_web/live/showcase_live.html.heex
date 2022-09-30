@@ -22,7 +22,7 @@
           <%= text_input(f, :search_delay, class: "input input-sm input-bordered") %>
           <%= error_tag(f, :search_delay) %>
         </div>
-        <div class=" max-w-sm flex flex-col justify-end">
+        <div class="max-w-sm flex flex-col justify-end">
           <%= live_patch("Reset",
             to: Routes.live_path(@socket, __MODULE__, reset: true),
             class: "btn btn-warning btn-sm"
@@ -66,14 +66,23 @@
         >
           <%= checkbox(f, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
           <div class="collapse-title text-sm font-medium">
-            style options
+            Styling options
           </div>
           <div class="collapse-content">
+            <p class="whitespace-normal font-light text-sm">
+              Set or override styling options. The defaults are set by the selected style. 
+              <!-- Classes in the defaults can be selectively
+              excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation -->
+            </p>
             <%= for class <- @style_options do %>
               <%= if valid_class(@changeset, class) do %>
                 <div class="form-control w-full">
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
-                  <%= text_input(f, class, class: "input input-sm input-bordered") %>
+                  <%= text_input(f, class,
+                    class: "input input-sm input-bordered",
+                    placeholder:
+                      default_class(Ecto.Changeset.get_field(@changeset, :style), class)
+                  ) %>
                   <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
                     <label class="label label-text">
                       <div>
@@ -98,10 +107,16 @@
     </div>
 
     <div id="event-list" class="flex flex-col gap-y-2">
-      <%= for {event, idx} <- Enum.with_index(@events) do %>
-        <div class={
-          "#{if @new_event && idx == 0, do: "animate-bounce"} ml-10 border-info border-2 rounded p-2"
-        }>
+      <%= for {event, position} <- Enum.with_index(@events) do %>
+        <div
+          id={"event-#{event.id}"}
+          class={
+            [if(position == 0, do: "hidden"), "ml-10 border-info rounded-lg border rounded p-2"]
+          }
+          data-show={
+            JS.show(transition: {"ease-in duration-500", "opacity-0", "opacity-100"}, time: 500)
+          }
+        >
           <Render.event {event} />
         </div>
       <% end %>
@@ -119,31 +134,35 @@
         phx-change="change"
         phx-submit="submit"
       >
-        <div class="flex gap-2">
-          <%= live_select(
-            f,
-            @changeset.data.field_name,
-            Settings.live_select_opts(@changeset.data)
-            |> Keyword.update(:disabled, !@changeset.valid?, fn
-              true -> true
-              _ -> !@changeset.valid?
-            end)
-          ) %>
+        <div class="grid grid-cols-4 gap-1">
+          <div class="col-span-3 form-cntrol">
+            <%= live_select(
+              f,
+              @changeset.data.field_name,
+              Settings.live_select_opts(@changeset.data)
+              |> Keyword.update(:disabled, !@changeset.valid?, fn
+                true -> true
+                _ -> !@changeset.valid?
+              end)
+            ) %>
+          </div>
           <%= submit("Submit",
-            class: "btn btn-primary",
+            class: "btn btn-primary col-span-1",
             disabled: @selected == "" || !@changeset.valid?
           ) %>
+          <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
+            !! This should not move when the dropdown opens !!
+          </div>
+          <div class={
+            "col-span-4 text-info text-center mt-5 w-full #{unless @submitted, do: "invisible"}"
+          }>
+            ✅ You selected city <%= @selected_text %> located at <%= @selected %>
+          </div>
         </div>
       </.form>
-      <div class="mt-2 badge badge-neutral">
-        !! This should not move when the dropdown opens !!
-      </div>
-      <div class={"text-info mt-5 w-full #{unless @submitted, do: "invisible"}"}>
-        🎉 You selected city <%= @selected_text %> located at <%= @selected %> 🎉
-      </div>
     </div>
 
-    <div class="w-2/3 mb-5 relative border-info border-2 rounded p-2" id="live-select-code">
+    <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
       <div
         id="copy-to-clipboard-tooltip"
         class="tooltip-success absolute top-0 right-0 "
