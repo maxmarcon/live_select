@@ -45,9 +45,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:text_input_selected_class, :string)
     end
 
-    def changeset(source \\ %__MODULE__{}, params, opts \\ []) do
-      opts = Keyword.validate!(opts, skip_validation: false)
-
+    def changeset(source \\ %__MODULE__{}, params) do
       source
       |> cast(params, [
         :active_option_class,
@@ -69,7 +67,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :text_input_extra_class,
         :text_input_selected_class
       ])
-      |> maybe_validate(opts[:skip_validation])
+      |> validate_required([:field_name, :form_name])
+      |> validate_number(:debounce, greater_than_or_equal_to: 0)
+      |> validate_number(:search_delay, greater_than_or_equal_to: 0)
+      |> validate_number(:search_term_min_length, greater_than: 0)
+      |> maybe_apply_initial_styles()
+      |> validate_styles()
       |> put_change(:new, false)
     end
 
@@ -94,19 +97,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     def style_options(), do: Keyword.keys(@empty_styles)
-
-    defp maybe_validate(changeset, true), do: changeset
-
-    defp maybe_validate(changeset, false) do
-      changeset
-      |> validate_required([:field_name, :form_name])
-      |> validate_number(:debounce, greater_than_or_equal_to: 0)
-      |> validate_number(:search_delay, greater_than_or_equal_to: 0)
-      |> validate_number(:search_term_min_length, greater_than: 0)
-      |> maybe_apply_initial_styles()
-      |> validate_styles()
-    end
-
+    
     defp validate_styles(changeset) do
       if get_field(changeset, :style) == :none do
         changeset
@@ -251,8 +242,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     changeset =
       Settings.changeset(
         settings,
-        params,
-        skip_validation: !!params["skip_validation"]
+        params
       )
 
     case Ecto.Changeset.apply_action(changeset, :create) do
