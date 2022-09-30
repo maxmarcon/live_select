@@ -547,6 +547,36 @@ defmodule LiveSelectTest do
                      (get_in(@expected_class, [@style || :daisyui, @element]) || "") <> " foo"
                    ]
           end
+
+          @tag skip: "to be implemnted"
+          test "single classes of #{@element} class can be removed with !class_name in #{@extend_class_option[@element]}",
+               %{
+                 conn: conn
+               } do
+            option = @extend_class_option[@element]
+
+            base_classes = get_in(@expected_class, [@style || :daisyui, @element])
+
+            if base_classes do
+              class_to_remove = String.split(base_classes) |> List.first()
+
+              expected_classes =
+                String.split(base_classes)
+                |> Enum.drop(1)
+                |> Enum.join(" ")
+
+              {:ok, live, _html} = live(conn, "/?style=#{@style}&#{option}=!#{class_to_remove}")
+
+              type(live, "ABC")
+
+              assert element(live, @selectors[@element])
+                     |> render()
+                     |> Floki.parse_fragment!()
+                     |> Floki.attribute("class") == [
+                       expected_classes
+                     ]
+            end
+          end
         end
       end
 
