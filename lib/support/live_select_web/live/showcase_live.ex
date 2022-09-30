@@ -97,7 +97,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     def style_options(), do: Keyword.keys(@empty_styles)
-    
+
     defp validate_styles(changeset) do
       if get_field(changeset, :style) == :none do
         changeset
