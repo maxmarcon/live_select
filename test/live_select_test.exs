@@ -427,6 +427,21 @@ defmodule LiveSelectTest do
            |> Floki.attribute("placeholder") == ["Give it a try"]
   end
 
+  test "raises if unknown style is given", %{conn: conn} do
+    assert_raise(
+      RuntimeError,
+      ~s(Invalid style "not_a_valid_style". Style must be one of: [:daisyui, :tailwind, :none]),
+      fn ->
+        render_component(LiveSelect.Component,
+          id: "1",
+          form: :form,
+          field: :input,
+          style: :not_a_valid_style
+        )
+      end
+    )
+  end
+
   for {override_class, extend_class} <-
         Enum.zip(Keyword.values(@override_class_option), Keyword.values(@extend_class_option)),
       # we must open the dropdown to test option_class
@@ -439,8 +454,12 @@ defmodule LiveSelectTest do
         RuntimeError,
         ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
         fn ->
-          {:ok, view, _html} =
-            live(conn, "/?#{@override_class}=foo&#{@extend_class}=boo&skip_validation=true")
+          opts =
+            [id: "1", form: :form, field: :input]
+            |> Keyword.put(@override_class, "foo")
+            |> Keyword.put(@extend_class, "boo")
+
+          render_component(LiveSelect.Component, opts)
         end
       )
     end

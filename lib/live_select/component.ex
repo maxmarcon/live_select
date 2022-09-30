@@ -37,7 +37,8 @@ defmodule LiveSelect.Component do
       option: ~S(rounded-lg px-4 py-2),
       text_input: ~S(rounded-md h-full),
       dropdown: ~S(absolute rounded-xl shadow z-50)
-    ]
+    ],
+    none: []
   ]
 
   @impl true
@@ -77,7 +78,8 @@ defmodule LiveSelect.Component do
       |> update(:options, &normalize_options/1)
 
     socket =
-      Enum.reduce(@default_opts, socket, fn {opt, default}, socket ->
+      @default_opts
+      |> Enum.reduce(socket, fn {opt, default}, socket ->
         socket
         |> assign_new(opt, fn -> default end)
       end)
@@ -86,6 +88,10 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
+
+    unless socket.assigns.style in Keyword.keys(@styles) do
+      raise ~s(Invalid style "#{socket.assigns.style}". Style must be one of: #{inspect(Keyword.keys(@styles))})
+    end
 
     {:ok, socket}
   end
