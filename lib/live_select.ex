@@ -65,6 +65,17 @@ defmodule LiveSelect do
 
   ![](assets/styled.jpg)
 
+  You can remove classes included by the style's defaults using the "!class_name" notation.
+
+  For example, to remove the border from the default styles for the text input in daisyui and make the background white
+  , you can do:
+
+  ```
+  live_select(form, field,
+      text_input_extra_class: "!input-bordered bg-white",
+    )
+  ```
+
   ## Examples
 
   Here's an example that describes all the moving parts in detail. The user can search for cities.

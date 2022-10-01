@@ -1,10 +1,11 @@
 defmodule LiveSelect.Component do
   @moduledoc false
 
+  alias LiveSelect.ChangeMsg
+
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
-
-  alias LiveSelect.ChangeMsg
+  import LiveSelect.ClassUtil
 
   @default_opts [
     active_option_class: nil,
@@ -253,7 +254,10 @@ defmodule LiveSelect.Component do
   end
 
   defp class(style, element, nil, class_extend) do
-    (get_in(@styles, [style, element]) || "") <> " #{class_extend}"
+    extend(
+      get_in(@styles, [style, element]) || "",
+      class_extend
+    )
   end
 
   defp class(_style, element, _class_override, _class_extend) do

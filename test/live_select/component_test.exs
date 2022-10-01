@@ -1,7 +1,7 @@
 defmodule LiveSelect.ComponentTest do
   @moduledoc false
 
-  use LiveSelectWeb.ConnCase
+  use LiveSelectWeb.ConnCase, async: true
   alias LiveSelect.Component
 
   test "can be rendered" do

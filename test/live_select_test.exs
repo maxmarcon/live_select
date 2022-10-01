@@ -1,7 +1,7 @@
 defmodule LiveSelectTest do
   @moduledoc false
 
-  use LiveSelectWeb.ConnCase
+  use LiveSelectWeb.ConnCase, async: true
 
   import LiveSelect
   import Mox
@@ -544,11 +544,11 @@ defmodule LiveSelectTest do
                    |> render()
                    |> Floki.parse_fragment!()
                    |> Floki.attribute("class") == [
-                     (get_in(@expected_class, [@style || :daisyui, @element]) || "") <> " foo"
+                     ((get_in(@expected_class, [@style || :daisyui, @element]) || "") <> " foo")
+                     |> String.trim()
                    ]
           end
 
-          @tag skip: "to be implemnted"
           test "single classes of #{@element} class can be removed with !class_name in #{@extend_class_option[@element]}",
                %{
                  conn: conn
