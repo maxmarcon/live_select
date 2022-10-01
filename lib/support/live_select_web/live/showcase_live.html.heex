@@ -7,19 +7,28 @@
       <div class="flex flex-wrap p-5 gap-2">
         <div class="form-control max-w-sm">
           <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :form_name, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :form_name,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= error_tag(f, :form_name) %>
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :field_name, "Field name:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :field_name, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :field_name,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= error_tag(f, :field_name) %>
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :search_delay, "Search delay in ms:",
             class: "label label-text font-semibold"
           ) %>
-          <%= text_input(f, :search_delay, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :search_delay,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= error_tag(f, :search_delay) %>
         </div>
         <div class="max-w-sm flex flex-col justify-end">
@@ -30,13 +39,19 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :placeholder, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :placeholder,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= label(f, :placeholder, default_value_descr(:placeholder), class: "label label-text") %>
           <%= error_tag(f, :placeholder) %>
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :update_min_len, "update_min_len:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :update_min_len, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :update_min_len,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= label(f, :update_min_len, default_value_descr(:update_min_len),
             class: "label label-text font-semibold"
           ) %>
@@ -44,7 +59,7 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :debounce, "debounce:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :debounce, class: "input input-sm input-bordered") %>
+          <%= text_input(f, :debounce, class: "input input-sm input-bordered", spellcheck: "false") %>
           <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
           <%= error_tag(f, :debounce) %>
         </div>
@@ -78,6 +93,7 @@
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
                   <%= text_input(f, class,
                     class: "input input-sm input-bordered",
+                    spellcheck: "false",
                     placeholder:
                       default_class(Ecto.Changeset.get_field(@changeset, :style), class)
                   ) %>
