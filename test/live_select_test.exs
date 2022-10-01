@@ -8,6 +8,8 @@ defmodule LiveSelectTest do
 
   alias LiveSelect.ChangeMsg
 
+  @default_style :tailwind
+
   @expected_class [
     daisyui: [
       container: ~S(dropdown),
@@ -369,7 +371,7 @@ defmodule LiveSelectTest do
       )
     end)
 
-    {:ok, live, _html} = live(conn, "/")
+    {:ok, live, _html} = live(conn, "/?style=daisyui")
 
     type(live, "ABC")
 
@@ -387,7 +389,7 @@ defmodule LiveSelectTest do
       )
     end)
 
-    {:ok, live, _html} = live(conn, "/")
+    {:ok, live, _html} = live(conn, "/?style=daisyui")
 
     type(live, "ABC")
 
@@ -507,7 +509,7 @@ defmodule LiveSelectTest do
                  |> render()
                  |> Floki.parse_fragment!()
                  |> Floki.attribute("class") == [
-                   get_in(@expected_class, [@style || :daisyui, @element]) || ""
+                   get_in(@expected_class, [@style || @default_style, @element]) || ""
                  ]
         end
 
@@ -544,7 +546,8 @@ defmodule LiveSelectTest do
                    |> render()
                    |> Floki.parse_fragment!()
                    |> Floki.attribute("class") == [
-                     ((get_in(@expected_class, [@style || :daisyui, @element]) || "") <> " foo")
+                     ((get_in(@expected_class, [@style || @default_style, @element]) || "") <>
+                        " foo")
                      |> String.trim()
                    ]
           end
@@ -555,7 +558,7 @@ defmodule LiveSelectTest do
                } do
             option = @extend_class_option[@element]
 
-            base_classes = get_in(@expected_class, [@style || :daisyui, @element])
+            base_classes = get_in(@expected_class, [@style || @default_style, @element])
 
             if base_classes do
               class_to_remove = String.split(base_classes) |> List.first()
@@ -590,7 +593,7 @@ defmodule LiveSelectTest do
         assert_option_active(
           live,
           0,
-          get_in(@expected_class, [@style || :daisyui, :active_option]) || ""
+          get_in(@expected_class, [@style || @default_style, :active_option]) || ""
         )
       end
 
@@ -616,9 +619,9 @@ defmodule LiveSelectTest do
         select_nth_option(live, 1)
 
         expected_class =
-          (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
+          (get_in(@expected_class, [@style || @default_style, :text_input]) || "") <>
             " " <>
-            (get_in(@expected_class, [@style || :daisyui, :text_input_selected]) || "")
+            (get_in(@expected_class, [@style || @default_style, :text_input_selected]) || "")
 
         assert element(live, @selectors[:text_input])
                |> render()
@@ -636,7 +639,7 @@ defmodule LiveSelectTest do
         select_nth_option(live, 1)
 
         expected_class =
-          (get_in(@expected_class, [@style || :daisyui, :text_input]) || "") <>
+          (get_in(@expected_class, [@style || @default_style, :text_input]) || "") <>
             " foo"
 
         assert element(live, @selectors[:text_input])

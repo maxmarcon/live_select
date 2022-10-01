@@ -50,7 +50,7 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :style, "style:", class: "label label-text font-semibold") %>
-          <%= select(f, :style, [:daisyui, :tailwind, :none],
+          <%= select(f, :style, [:tailwind, :daisyui, :none],
             class: "select select-sm select-bordered text-xs"
           ) %>
         </div>
@@ -68,9 +68,9 @@
           </div>
           <div class="collapse-content">
             <p class="whitespace-normal font-light text-sm">
-              Set or override styling options. The defaults are set by the selected style. 
-              <!-- Classes in the defaults can be selectively
-              excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation -->
+              Set or override styling options. The defaults are set by the selected style.
+              Classes in the defaults can be selectively
+              excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
             </p>
             <%= for class <- @style_options do %>
               <%= if valid_class(@changeset, class) do %>

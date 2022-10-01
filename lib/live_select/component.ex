@@ -19,7 +19,7 @@ defmodule LiveSelect.Component do
     option_extra_class: nil,
     placeholder: nil,
     update_min_len: 3,
-    style: :daisyui,
+    style: :tailwind,
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil
