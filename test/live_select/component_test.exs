@@ -17,4 +17,15 @@ defmodule LiveSelect.ComponentTest do
            |> Floki.find("input#my_form_live_select_text_input[type=text]")
            |> Enum.any?()
   end
+
+  test "raises if invalid assign is passed" do
+    assert_raise(RuntimeError, ~s(Invalid option: "invalid_option"), fn ->
+      render_component(Component,
+        id: "live_select",
+        form: :my_form,
+        field: :live_select,
+        invalid_option: "foo"
+      )
+    end)
+  end
 end

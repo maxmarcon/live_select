@@ -72,6 +72,8 @@ defmodule LiveSelect.Component do
 
   @impl true
   def update(assigns, socket) do
+    validate_assigns!(assigns)
+
     socket =
       socket
       |> assign(assigns)
@@ -89,10 +91,6 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
-
-    unless socket.assigns.style in Keyword.keys(@styles) do
-      raise ~s(Invalid style "#{socket.assigns.style}". Style must be one of: #{inspect(Keyword.keys(@styles))})
-    end
 
     {:ok, socket}
   end
@@ -190,6 +188,24 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event(_event, _params, socket) do
     {:noreply, socket}
+  end
+
+  defp validate_assigns!(assigns) do
+    if style = assigns[:style] do
+      unless style in Keyword.keys(@styles) do
+        raise(
+          ~s(Invalid style: "#{assigns.style}". Style must be one of: #{inspect(Keyword.keys(@styles))})
+        )
+      end
+    end
+
+    valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options]
+
+    for {key, _} <- assigns_to_attributes(assigns) do
+      unless key in valid_assigns do
+        raise ~s(Invalid option: "#{key}")
+      end
+    end
   end
 
   defp select(socket, -1), do: socket

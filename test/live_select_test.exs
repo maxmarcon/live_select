@@ -430,10 +430,10 @@ defmodule LiveSelectTest do
   test "raises if unknown style is given" do
     assert_raise(
       RuntimeError,
-      ~s(Invalid style "not_a_valid_style". Style must be one of: [:daisyui, :tailwind, :none]),
+      ~s(Invalid style: "not_a_valid_style". Style must be one of: [:daisyui, :tailwind, :none]),
       fn ->
         render_component(LiveSelect.Component,
-          id: "1",
+          id: "live_select",
           form: :form,
           field: :input,
           style: :not_a_valid_style
@@ -455,7 +455,7 @@ defmodule LiveSelectTest do
         ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
         fn ->
           opts =
-            [id: "1", form: :form, field: :input]
+            [id: "live_select", form: :form, field: :input]
             |> Keyword.put(@override_class, "foo")
             |> Keyword.put(@extend_class, "boo")
 
