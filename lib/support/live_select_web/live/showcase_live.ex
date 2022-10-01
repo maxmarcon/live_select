@@ -38,7 +38,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:option_extra_class, :string)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
-      field(:search_term_min_length, :integer)
+      field(:update_min_len, :integer)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :daisyui)
       field(:text_input_class, :string)
       field(:text_input_extra_class, :string)
@@ -61,7 +61,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :option_extra_class,
         :placeholder,
         :search_delay,
-        :search_term_min_length,
+        :update_min_len,
         :style,
         :text_input_class,
         :text_input_extra_class,
@@ -70,7 +70,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> validate_required([:field_name, :form_name])
       |> validate_number(:debounce, greater_than_or_equal_to: 0)
       |> validate_number(:search_delay, greater_than_or_equal_to: 0)
-      |> validate_number(:search_term_min_length, greater_than: 0)
+      |> validate_number(:update_min_len, greater_than: 0)
       |> maybe_apply_initial_styles()
       |> validate_styles()
       |> put_change(:new, false)

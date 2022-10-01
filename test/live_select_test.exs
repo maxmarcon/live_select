@@ -115,7 +115,7 @@ defmodule LiveSelectTest do
       update_options(change_msg, ["A", "B", "C"])
     end)
 
-    {:ok, live, _html} = live(conn, "/?search_term_min_length=4")
+    {:ok, live, _html} = live(conn, "/?update_min_len=4")
 
     type(live, "Ber")
 
@@ -427,7 +427,7 @@ defmodule LiveSelectTest do
            |> Floki.attribute("placeholder") == ["Give it a try"]
   end
 
-  test "raises if unknown style is given", %{conn: conn} do
+  test "raises if unknown style is given" do
     assert_raise(
       RuntimeError,
       ~s(Invalid style "not_a_valid_style". Style must be one of: [:daisyui, :tailwind, :none]),
@@ -449,7 +449,7 @@ defmodule LiveSelectTest do
     @override_class override_class
     @extend_class extend_class
 
-    test "using both #{@override_class} and #{@extend_class} options raises", %{conn: conn} do
+    test "using both #{@override_class} and #{@extend_class} options raises" do
       assert_raise(
         RuntimeError,
         ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
@@ -680,7 +680,7 @@ defmodule LiveSelectTest do
 
   defp assert_option_active(live, pos, active_class \\ "active")
 
-  defp assert_option_active(live, pos, "") do
+  defp assert_option_active(_live, _pos, "") do
     assert true
   end
 

@@ -18,7 +18,7 @@ defmodule LiveSelect.Component do
     option_class: nil,
     option_extra_class: nil,
     placeholder: nil,
-    search_term_min_length: 3,
+    update_min_len: 3,
     style: :daisyui,
     text_input_class: nil,
     text_input_extra_class: nil,
@@ -51,7 +51,7 @@ defmodule LiveSelect.Component do
         disabled: false,
         dropdown_mouseover: false,
         options: [],
-        search_term: "",
+        input: "",
         selected: nil
       )
 
@@ -84,8 +84,8 @@ defmodule LiveSelect.Component do
         socket
         |> assign_new(opt, fn -> default end)
       end)
-      |> update(:search_term_min_length, fn
-        nil -> @default_opts[:search_term_min_length]
+      |> update(:update_min_len, fn
+        nil -> @default_opts[:update_min_len]
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
@@ -117,7 +117,7 @@ defmodule LiveSelect.Component do
         socket
       else
         if String.length(text) >=
-             socket.assigns.search_term_min_length do
+             socket.assigns.update_min_len do
           send(
             self(),
             %ChangeMsg{
@@ -201,7 +201,7 @@ defmodule LiveSelect.Component do
     |> assign(
       options: [],
       current_focus: -1,
-      search_term: label,
+      input: label,
       selected: selected
     )
     |> push_event("selected", %{id: socket.assigns.id, selected: [label, selected]})
@@ -209,7 +209,7 @@ defmodule LiveSelect.Component do
 
   defp reset_input(socket) do
     socket
-    |> assign(options: [], selected: nil, search_term: "")
+    |> assign(options: [], selected: nil, input: "")
     |> push_event("reset", %{id: socket.assigns.id})
   end
 

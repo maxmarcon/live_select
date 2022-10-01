@@ -6,7 +6,7 @@
   phx-target={@myself}
 >
   <%= text_input(@form, @text_input_field,
-    value: @search_term,
+    value: @input,
     class:
       "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if @selected, do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
     phx_click: "click",

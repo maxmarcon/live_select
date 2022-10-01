@@ -14,7 +14,7 @@ export default {
                 this.pushEventTo(this.el, 'dropdown-mouseleave', {})
             }
         },
-        setSearchInputValue(value) {
+        setInputValue(value) {
             this.el.querySelector("input[type=text]").value = value;
         },
         setHiddenInputValue(value) {
@@ -25,13 +25,13 @@ export default {
         mounted() {
             this.handleEvent("reset", ({id: id}) => {
                 if (this.el.id === id) {
-                    this.setSearchInputValue("")
+                    this.setInputValue("")
                     this.setHiddenInputValue("")
                 }
             })
             this.handleEvent("selected", ({id: id, selected: [label, selected]}) => {
                 if (this.el.id === id) {
-                    this.setSearchInputValue(label);
+                    this.setInputValue(label);
                     this.setHiddenInputValue(selected)
                 }
             })
