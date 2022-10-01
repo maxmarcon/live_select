@@ -104,7 +104,7 @@
       <h4>See events and messages here:</h4>
     </div>
 
-    <div id="event-list" class="flex flex-col gap-y-2">
+    <div id="event-list" class="flex flex-col gap-y-2 mt-2">
       <%= for {event, position} <- Enum.with_index(@events) do %>
         <div
           id={"event-#{event.id}"}
@@ -133,7 +133,7 @@
         phx-submit="submit"
       >
         <div class="grid grid-cols-4 gap-1">
-          <div class="col-span-3 form-cntrol">
+          <div class="col-span-3 form-control">
             <%= live_select(
               f,
               @changeset.data.field_name,

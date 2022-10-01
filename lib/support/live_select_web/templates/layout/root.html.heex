@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content={csrf_token_value()} />
-    <%= live_title_tag(assigns[:page_title] || "LiveSelect", suffix: " · Phoenix Framework") %>
+    <%= live_title_tag(assigns[:page_title] || "LiveSelect", suffix: " · Showcase") %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
     <script
       defer
@@ -18,7 +18,7 @@
   <body>
     <header>
       <article class="container prose-lg text-center my-5">
-        <h1>LiveSelect showcase app</h1>
+        <h1>LiveSelect Showcase App</h1>
       </article>
     </header>
     <%= @inner_content %>
