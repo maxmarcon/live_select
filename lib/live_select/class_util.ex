@@ -25,7 +25,9 @@ defmodule LiveSelect.ClassUtil do
   """
   @spec extend(String.t(), String.t()) :: String.t()
   def extend(base, extend) do
-    base_classes = String.split(base)
+    base_classes =
+      String.split(base)
+      |> Enum.uniq()
 
     {remove, add} =
       extend
@@ -35,12 +37,14 @@ defmodule LiveSelect.ClassUtil do
     add =
       add
       |> Enum.reject(&(&1 in base_classes))
+      |> Enum.uniq()
 
-    remove = remove |> Enum.map(&String.trim_leading(&1, "!"))
+    remove =
+      remove
+      |> Enum.map(&String.trim_leading(&1, "!"))
+      |> Enum.uniq()
 
-    base_classes
-    |> Enum.reject(&(&1 in remove))
-    |> Enum.concat(add)
+    ((base_classes -- remove) ++ add)
     |> Enum.join(" ")
   end
 end
