@@ -72,7 +72,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def update(assigns, socket) do
-    validate_assigns!(assigns)
+    validate_options!(assigns)
 
     socket =
       socket
@@ -190,7 +190,7 @@ defmodule LiveSelect.Component do
     {:noreply, socket}
   end
 
-  defp validate_assigns!(assigns) do
+  defp validate_options!(assigns) do
     if style = assigns[:style] do
       unless style in Keyword.keys(@styles) do
         raise(
@@ -201,9 +201,14 @@ defmodule LiveSelect.Component do
 
     valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options]
 
-    for {key, _} <- assigns_to_attributes(assigns) do
-      unless key in valid_assigns do
-        raise ~s(Invalid option: "#{key}")
+    for {option, _} <- assigns_to_attributes(assigns) do
+      unless option in valid_assigns do
+        most_similar =
+          (valid_assigns -- [:field, :form, :id, :options])
+          |> Enum.sort_by(&String.jaro_distance(to_string(&1), to_string(option)))
+          |> List.last()
+
+        raise ~s(Invalid option: "#{option}". Did you mean "#{most_similar}"?")
       end
     end
   end

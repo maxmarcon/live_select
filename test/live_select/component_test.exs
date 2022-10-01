@@ -18,8 +18,8 @@ defmodule LiveSelect.ComponentTest do
            |> Enum.any?()
   end
 
-  test "raises if invalid assign is passed" do
-    assert_raise(RuntimeError, ~s(Invalid option: "invalid_option"), fn ->
+  test "raises if invalid option is passed" do
+    assert_raise(RuntimeError, ~r(Invalid option: "invalid_option"), fn ->
       render_component(Component,
         id: "live_select",
         form: :my_form,
