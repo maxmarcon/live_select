@@ -3,10 +3,10 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
-Dynamic search and selection component for LiveView.
+Dynamic selection input field for LiveView.
 
-`LiveSelect` is a LiveView component that implements a search and selection
-field with content provided dynamically by your application. It comes with reasonable default styles
+`LiveSelect` is a LiveView component that implements a dynamic selection
+field. It comes with reasonable default styles
 that use [DaisyUI](https://daisyui.com/). The default styles can be either extended or completely overridden.
 
 ![](assets/demo.gif)
