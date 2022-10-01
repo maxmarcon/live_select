@@ -113,5 +113,5 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
  - [X] Rename LiveSelect.render to live_select
  - [X] Customizable placeholder
  - [X] Enable configuration of styles in the showcase app
- - [ ] Add support for vanilla tailwind styles
+ - [X] Add support for vanilla tailwind styles
  - [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
