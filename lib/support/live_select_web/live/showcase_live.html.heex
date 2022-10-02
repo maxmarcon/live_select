@@ -1,6 +1,12 @@
-<div class="flex w-full p-5 gap-2">
+<div class="flex w-full p-5 gap-2" xmlns="http://www.w3.org/1999/html">
   <div class="flex flex-col w-1/2">
-    <div class="prose text-center">
+    <div class="form-control w-1/4">
+      <label class="label cursor-pointer">
+        <span class="label-text">Toggle dark mode</span>
+        <input data-toggle-theme="light,dark" type="checkbox" class="toggle" />
+      </label>
+    </div>
+    <div class="prose text-center flex flex-row justify-center">
       <h4>Change settings here:</h4>
     </div>
     <.form for={@changeset} let={f} phx-change="update-settings">
@@ -53,7 +59,7 @@
             spellcheck: "false"
           ) %>
           <%= label(f, :update_min_len, default_value_descr(:update_min_len),
-            class: "label label-text font-semibold"
+            class: "label label-text"
           ) %>
           <%= error_tag(f, :update_min_len) %>
         </div>
@@ -99,7 +105,7 @@
                   ) %>
                   <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
                     <label class="label label-text">
-                        default set from style
+                      default set from style
                     </label>
                   <% end %>
                   <%= error_tag(f, class) %>
@@ -169,27 +175,6 @@
           </div>
         </div>
       </.form>
-    </div>
-
-    <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
-      <div
-        id="copy-to-clipboard-tooltip"
-        class="tooltip-success absolute top-0 right-0 "
-        data-tip="Copied to clipboard!"
-      >
-        <button
-          id="copy-to-clipboard"
-          data-clipboard-target="#live-select-code"
-          class="btn bg-inherit text-inherit hover:bg-base-300"
-        >
-          <.copy_to_clipboard_icon />
-        </button>
-      </div>
-      <Render.live_select
-        form_name={@changeset.data.form_name}
-        field_name={@changeset.data.field_name}
-        opts={Settings.live_select_opts(@changeset.data)}
-      />
     </div>
   </div>
 </div>

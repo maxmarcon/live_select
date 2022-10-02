@@ -23,7 +23,7 @@ defmodule LiveSelect do
   The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect input field.
   The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `update_options/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
-  
+
   ## Examples
 
   Here's an example that describes all the moving parts in detail. The user can search for cities.
