@@ -3,11 +3,10 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
-Dynamic selection input field for LiveView.
+Dynamic selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection
-field. It comes with reasonable default styles
-that use [DaisyUI](https://daisyui.com/). The default styles can be either extended or completely overridden.
+field with a dropdown. The content dropdown is filled dynamically by your LiveView.
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif)
 
@@ -44,15 +43,19 @@ const hooks = {
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
-## Styling
+## Tailwind configuration   
 
-For the time being, `LiveSelect` supports 2 styling options: styling with [daisyUI](https://daisyui.com/) or custom styling. The choice
-of styling is controlled using the `style` option in `LiveSelect.live_select/3`.
+`LiveSelect` supports 3 styling modes:
 
-Support for vanilla Tailwind styles is planned for the future.
+* `tailwind`: uses standard tailwind utility classes (the default)
+* `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
+* `none`: no styling at all.
 
-If you use daisyUI styles, you need to install daisyUI. If you're already using Tailwind, this is as simple as [adding an additional plugin](https://daisyui.com/docs/install/) to your `tailwind.config.js`
-Moreover, in order for Tailwind to see the daisyUI classes used by `LiveSelect`, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
+The choice of style is controlled by the `style` option in `LiveSelect.live_select/3`.
+`tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
+
+If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
+your `tailwind.config.js`:
 
 ```
 module.exports = {
@@ -65,14 +68,14 @@ module.exports = {
 }
 ```
 
-(Notice the different paths for a standalone or umbrella app)
+Notice the different paths for a standalone or umbrella app.
 
-That's it! Now your `LiveSelect` component will use pre-configured daisyUI styles.
+Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
 
 ## Showcase app
 
-The repository includes a showcase app you can use to play around with the different options and parameters for `LiveSelect`.
-To start the showcase app, simply run:
+The repository includes a showcase app that you can use to experiment with the different options and parameters
+for `LiveSelect`. To start the showcase app, simply run:
 
 ```
 mix setup
@@ -80,24 +83,12 @@ PORT=4001 mix phx.server
 ```
 
 from within the cloned repository. The app will be available at http://localhost:4001.
-The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows the function head
-of the callback that your LiveView needs to implement in order to handle the event.
+The showcase app allows you to quickly experiment with options and styles, providing an easy way to fine tune
+your `LiveSelect` component.
+The app also shows the messages and events that your `LiveView` receives. For each event or message, the app shows the
+function head of the callback that your LiveView needs to implement in order to handle the event.
 
 ![SHOWCASE_APP](https://github.com/maxmarcon/live_select/raw/main/priv/static/images/showcase.gif)
-
-This allows you to quickly copy and paste the function definition into your live view.
-
-Note that the showcase app uses the following styling options:
-
-```elixir
-[
-    container_extra_class: "w-full",
-    dropdown_extra_class: "w-full bg-base-200 p-2",
-    text_input_extra_class: "w-full"
-]
-```
-
-See [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3) for details.
 
 ## Usage
 
@@ -105,11 +96,11 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
 
 ## TODO
 
- - [X] Add `package.json` to enable `import live_select from "live_select"`
- - [X] Make sure component classes are included by tailwind 
- - [X] Enable custom styling 
- - [X] Rename LiveSelect.render to live_select
- - [X] Customizable placeholder
- - [X] Enable configuration of styles in the showcase app
- - [X] Add support for vanilla tailwind styles
- - [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
+- [X] Add `package.json` to enable `import live_select from "live_select"`
+- [X] Make sure component classes are included by tailwind
+- [X] Enable custom styling
+- [X] Rename LiveSelect.render to live_select
+- [X] Customizable placeholder
+- [X] Enable configuration of styles in the showcase app
+- [X] Add support for vanilla tailwind styles
+- [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
