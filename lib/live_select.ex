@@ -113,7 +113,7 @@ defmodule LiveSelect do
   LiveSelect renders a hidden input with name `field` which contains the selected option.
   The visible text input field will have the name `#{field}_text_input`.
     
-  **Opts:**
+  **Options:**
 
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
