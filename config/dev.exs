@@ -5,14 +5,12 @@ config :live_select, :message_handler, LiveSelect.MessageHandler
 config :live_select, :initial_classes,
   daisyui: [
     container_extra_class: "w-full",
-    dropdown_extra_class: "w-full bg-base-200 p-2",
+    dropdown_extra_class: "w-full",
     text_input_extra_class: "w-full"
   ],
   tailwind: [
-    dropdown_extra_class: "w-full bg-gray-100 p-2",
+    dropdown_extra_class: "w-full",
     text_input_extra_class: "w-full",
-    active_option_class: "text-white bg-gray-600",
-    option_extra_class: "hover:bg-gray-400"
   ]
 
 # For development, we disable any cache and enable

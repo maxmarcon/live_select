@@ -96,8 +96,7 @@ defmodule LiveSelect.MixProject do
         "README.md": [filename: "README.md", title: "Readme"],
         "CHANGELOG.md": []
       ],
-      filter_modules: ~r/LiveSelect($|\.)/,
-      assets: "priv/static/images"
+      filter_modules: ~r/LiveSelect($|\.)/
     ]
   end
 end

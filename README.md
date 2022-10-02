@@ -9,8 +9,7 @@ Dynamic selection input field for LiveView.
 field. It comes with reasonable default styles
 that use [DaisyUI](https://daisyui.com/). The default styles can be either extended or completely overridden.
 
-![](assets/demo.gif)
-![](priv/static/images/demo.gif)
+![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif)
 
 ## Installation
 
@@ -84,8 +83,7 @@ from within the cloned repository. The app will be available at http://localhost
 The showcase app shows the messages and events that your LiveView receives. For each event or message, the app shows the function head
 of the callback that your LiveView needs to implement in order to handle the event.
 
-![](priv/static/images/showcase.gif)
-![](assets/showcase.gif)
+![SHOWCASE_APP](https://github.com/maxmarcon/live_select/raw/main/priv/static/images/showcase.gif)
 
 This allows you to quickly copy and paste the function definition into your live view.
 

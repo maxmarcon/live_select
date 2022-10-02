@@ -99,12 +99,7 @@
                   ) %>
                   <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
                     <label class="label label-text">
-                      <div>
-                        Default from style:
-                        <span class="font-semibold">
-                          <%= default_class(Ecto.Changeset.get_field(@changeset, :style), class) %>
-                        </span>
-                      </div>
+                        default set from style
                     </label>
                   <% end %>
                   <%= error_tag(f, class) %>
