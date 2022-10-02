@@ -176,5 +176,26 @@
         </div>
       </.form>
     </div>
+
+    <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
+      <div
+        id="copy-to-clipboard-tooltip"
+        class="tooltip-success absolute top-0 right-0 "
+        data-tip="Copied to clipboard!"
+      >
+        <button
+          id="copy-to-clipboard"
+          data-clipboard-target="#live-select-code"
+          class="btn bg-inherit text-inherit hover:bg-base-300"
+        >
+          <.copy_to_clipboard_icon />
+        </button>
+      </div>
+      <Render.live_select
+        form_name={@changeset.data.form_name}
+        field_name={@changeset.data.field_name}
+        opts={Settings.live_select_opts(@changeset.data)}
+      />
+    </div>
   </div>
 </div>
