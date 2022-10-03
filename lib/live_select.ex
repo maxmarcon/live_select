@@ -1,4 +1,6 @@
 defmodule LiveSelect do
+  import Phoenix.Component
+
   @moduledoc ~S"""
   Dynamic selection input field for LiveView.
 
@@ -118,7 +120,7 @@ defmodule LiveSelect do
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
-  * `update_min_len` - the minimum length of text in the search field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3
+  * `update_min_len` - the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3
   * `style` - one of `tailwind` (the default), `daisyui` or `none`. See the [Styling section](styling.html) for details
   * `active_option_class`, `container_class`, `container_extra_class`, `dropdown_class`, `dropdown_extra_class`, `option_class`, `option_extra_class`, `text_input_class`, `text_input_extra_class`, `text_input_selected_class` - see the [Styling section](styling.html) for details
     

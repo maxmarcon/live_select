@@ -1,6 +1,6 @@
 {
   "name": "live_select",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "JS hooks for LiveSelect",
   "main": "priv/static/live_select.min.js",
   "repository": "git@github.com:maxmarcon/live_select.git",

@@ -4,7 +4,7 @@ defmodule LiveSelect.MixProject do
   def project do
     [
       app: app(),
-      version: "0.1.4",
+      version: "0.2.0",
       elixir: "~> 1.13",
       description: "Dynamic selection input field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -44,7 +44,7 @@ defmodule LiveSelect.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix_live_view, "~> 0.17.5"},
+      {:phoenix_live_view, "~> 0.17"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix, "~> 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

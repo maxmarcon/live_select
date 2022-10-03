@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 (2022-10-03)
+
+* support for tailwind styles (now the default)
+* more opinionated default styles
+* ability to selectively remove classes from style defaults using the !class_name notation
+* rename option search_term_min_length to update_min_len
+* better error messages
+* various improvements to the showcase app
+
 ## 0.1.4 (2022-09-20)
 
 * raise if class and extra_class options are used in invalid combinations (https://github.com/maxmarcon/live_select/issues/2)

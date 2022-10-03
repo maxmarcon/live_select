@@ -70,7 +70,7 @@ module.exports = {
 
 Notice the different paths for a standalone or umbrella app.
 
-Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
+Refer to the [Styling section](styling.html) for further details.
 
 ## Showcase app
 
