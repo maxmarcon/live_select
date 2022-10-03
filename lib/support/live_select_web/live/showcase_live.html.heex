@@ -99,13 +99,14 @@
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
                   <%= text_input(f, class,
                     class: "input input-sm input-bordered",
-                    spellcheck: "false",
-                    placeholder:
-                      default_class(Ecto.Changeset.get_field(@changeset, :style), class)
+                    spellcheck: "false"
                   ) %>
                   <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
                     <label class="label label-text">
-                      default set from style
+                      default from style: &ldquo;<%= default_class(
+                        Ecto.Changeset.get_field(@changeset, :style),
+                        class
+                      ) %>&rdquo;
                     </label>
                   <% end %>
                   <%= error_tag(f, class) %>
@@ -161,41 +162,8 @@
               end)
             ) %>
           </div>
-          <%= submit("Submit",
-            class: "btn btn-primary col-span-1",
-            disabled: @selected == "" || !@changeset.valid?
-          ) %>
-          <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
-            !! This should not move when the dropdown opens !!
-          </div>
-          <div class={
-            "col-span-4 text-info text-center mt-5 w-full #{unless @submitted, do: "invisible"}"
-          }>
-            ✅ You selected city <%= @selected_text %> located at <%= @selected %>
-          </div>
         </div>
       </.form>
-    </div>
-
-    <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
-      <div
-        id="copy-to-clipboard-tooltip"
-        class="tooltip-success absolute top-0 right-0 "
-        data-tip="Copied to clipboard!"
-      >
-        <button
-          id="copy-to-clipboard"
-          data-clipboard-target="#live-select-code"
-          class="btn bg-inherit text-inherit hover:bg-base-300"
-        >
-          <.copy_to_clipboard_icon />
-        </button>
-      </div>
-      <Render.live_select
-        form_name={@changeset.data.form_name}
-        field_name={@changeset.data.field_name}
-        opts={Settings.live_select_opts(@changeset.data)}
-      />
     </div>
   </div>
 </div>
