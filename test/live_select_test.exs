@@ -14,16 +14,17 @@ defmodule LiveSelectTest do
     daisyui: [
       active_option: ~S(active),
       container: ~S(dropdown),
-      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1),
-      text_input: ~S(input input-bordered),
+      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
+      text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary text-primary)
     ],
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
       container: ~S(relative h-full),
-      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100),
+      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full),
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
-      text_input: ~S(rounded-md h-full)
+      text_input: ~S(rounded-md h-full w-full),
+      text_input_selected: ~S(border-gray-600 text-gray-600 border-2)
     ]
   ]
 
