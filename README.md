@@ -16,7 +16,7 @@ To install, add this to your dependencies:
 
 ```
 [
-    {:live_select, "~> 0.1.0"}
+    {:live_select, "~> 0.2.0"}
 ]
 ```
 
