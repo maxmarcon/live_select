@@ -26,8 +26,11 @@ import {LiveSocket} from "phoenix_live_view"
 import live_select from "./live_select";
 import topbar from "../vendor/topbar"
 import ClipboardJS from "clipboard";
-import { themeChange } from 'theme-change'
+import {themeChange} from 'theme-change'
 
+// theme-change stores the theme in local storage, this ensures that
+// we only start with the system defaults when reloading the page
+localStorage.removeItem('theme')
 themeChange()
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
