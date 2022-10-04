@@ -320,7 +320,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
           ]
           |> Enum.take(@max_events)
       )
-      |> push_event("show", %{target: "#event-#{socket.assigns.next_event_id}"})
 
     {:noreply, socket}
   end
@@ -343,7 +342,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
           [%{msg: message, id: socket.assigns.next_event_id} | socket.assigns.events]
           |> Enum.take(@max_events)
       )
-      |> push_event("show", %{target: "#event-#{socket.assigns.next_event_id}"})
 
     {:noreply, socket}
   end

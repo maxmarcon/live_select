@@ -132,7 +132,7 @@
             if(position == 0, do: "hidden"),
             "ml-10 border-info rounded-lg border rounded p-2"
           ]}
-          data-show={
+          phx-mounted={
             JS.show(transition: {"ease-in duration-500", "opacity-0", "opacity-100"}, time: 500)
           }
         >
