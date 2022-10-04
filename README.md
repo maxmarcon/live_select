@@ -51,7 +51,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 * `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
 * `none`: no styling at all.
 
-The choice of style is controlled by the `style` option in [live_select/3](`LiveSelect.live_select/3`).
+The choice of style is controlled by the `style` option in [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3).
 `tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
 
 If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
