@@ -1,15 +1,23 @@
 <div class="flex w-full p-5 gap-2" xmlns="http://www.w3.org/1999/html">
   <div class="flex flex-col w-1/2">
-    <div class="form-control w-1/4">
-      <label class="label cursor-pointer">
-        <span class="label-text">Toggle dark mode</span>
-        <input data-toggle-theme="light,dark" type="checkbox" class="toggle" />
-      </label>
+    <div class="flex gap-2">
+      <div class="form-control w-1/4">
+        <label class="label cursor-pointer">
+          <span class="label-text">Toggle dark mode</span>
+          <input data-toggle-theme="light,dark" type="checkbox" class="toggle" />
+        </label>
+      </div>
+      <div class="form-control">
+        <%= live_patch("Reset",
+          to: Routes.live_path(@socket, __MODULE__, reset: true),
+          class: "btn btn-warning btn-sm mt-1"
+        ) %>
+      </div>
     </div>
     <div class="prose text-center flex flex-row justify-center">
       <h4>Change settings here:</h4>
     </div>
-    <.form for={@changeset} let={f} phx-change="update-settings">
+    <.form :let={f} for={@changeset} phx-change="update-settings">
       <div class="flex flex-wrap p-5 gap-2">
         <div class="form-control max-w-sm">
           <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
@@ -36,12 +44,6 @@
             spellcheck: "false"
           ) %>
           <%= error_tag(f, :search_delay) %>
-        </div>
-        <div class="max-w-sm flex flex-col justify-end">
-          <%= live_patch("Reset",
-            to: Routes.live_path(@socket, __MODULE__, reset: true),
-            class: "btn btn-warning btn-sm"
-          ) %>
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
@@ -126,9 +128,10 @@
       <%= for {event, position} <- Enum.with_index(@events) do %>
         <div
           id={"event-#{event.id}"}
-          class={
-            [if(position == 0, do: "hidden"), "ml-10 border-info rounded-lg border rounded p-2"]
-          }
+          class={[
+            if(position == 0, do: "hidden"),
+            "ml-10 border-info rounded-lg border rounded p-2"
+          ]}
           data-show={
             JS.show(transition: {"ease-in duration-500", "opacity-0", "opacity-100"}, time: 500)
           }
@@ -145,8 +148,8 @@
     </div>
     <div class="h-60 w-1/2">
       <.form
+        :let={f}
         for={String.to_atom(@changeset.data.form_name)}
-        let={f}
         phx-change="change"
         phx-submit="submit"
       >

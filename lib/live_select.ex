@@ -17,7 +17,7 @@ defmodule LiveSelect do
 
   After an option has been selected, the selection can be undone by clicking on text field.
 
-  ![demo](assets/demo.gif)
+  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif" width="300" />
      
   ## Reacting to user's input
 
@@ -106,7 +106,6 @@ defmodule LiveSelect do
   ```
   """
 
-  import Phoenix.LiveView.Helpers
   alias LiveSelect.ChangeMsg
 
   @doc ~S"""
@@ -115,13 +114,13 @@ defmodule LiveSelect do
   LiveSelect renders a hidden input with name `field` which contains the selected option.
   The visible text input field will have the name `#{field}_text_input`.
     
-  **Options:**
+  **Opts:**
 
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
   * `update_min_len` - the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3
-  * `style` - one of `tailwind` (the default), `daisyui` or `none`. See the [Styling section](styling.html) for details
+  * `style` - one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details
   * `active_option_class`, `container_class`, `container_extra_class`, `dropdown_class`, `dropdown_extra_class`, `option_class`, `option_extra_class`, `text_input_class`, `text_input_extra_class`, `text_input_selected_class` - see the [Styling section](styling.html) for details
     
   """

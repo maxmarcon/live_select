@@ -6,7 +6,7 @@
 * `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
 * `none`: no styling at all.
 
-The choice of style is controlled by the `style` option in `LiveSelect.live_select/3`.
+The choice of style is controlled by the `style` option in [live_select/3](`LiveSelect.live_select/3`).
 `tailwind` and `daisyui` styles come with sensible defaults which can be extended or overridden via options.
 
 This is what each default style looks like:
@@ -21,8 +21,8 @@ This is what each default style looks like:
 
 <img alt="tailwind example" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/tailwind.png" width="200">
 
-These defaults can be _selectively overridden or completely extended_ using the appropriate options
-to `LiveSelect.live_select/3`.
+These defaults can be _selectively overridden or extended_ using the appropriate options
+to [live_select/3](`LiveSelect.live_select/3`).
 
 You can control the style of the following element of the component:
 
@@ -62,10 +62,8 @@ like this:
 ```
 live_select(my_form, city_search,
       active_option_class: "text-white bg-red-800",
-      debounce: 100,
       dropdown_extra_class: "!rounded-xl",
       option_extra_class: "!rounded-lg text-black",
-      placeholder: "Search for a city",
       style: :tailwind
 )
 ```
