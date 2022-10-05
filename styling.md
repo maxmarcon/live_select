@@ -15,7 +15,7 @@ This is what each default style looks like:
 
 <img alt="daisyui example" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/daisyui.png"  width="200">
 
-(actual colors may differ depending on the selected [daisyui theme](https://daisyui.com/docs/themes/))
+(the actual colors may differ depending on the selected [daisyui theme](https://daisyui.com/docs/themes/))
 
 ### tailwind:
 
@@ -24,29 +24,29 @@ This is what each default style looks like:
 These defaults can be _selectively overridden or extended_ using the appropriate options
 to [live_select/3](`LiveSelect.live_select/3`).
 
-You can control the style of the following element of the component:
+You can control the style of the following elements:
 
-1. The outer **container** of the component
+1. The outer **container** of the live_select component
 2. The **text input** field
 3. The **text input** field when an option has been selected
 4. The **dropdown** containing the selectable options
 5. The single selectable **option**(s)
 6. The currently **active option**
 
-Here's a visual representation of these elements:
+Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
 For each of these elements there is an `{element}_class` and for some also an `{element}_extra_class` option, which can
 be used
-to either override or extend the default CSS classes for the component, respectively.
+to override or extend the default CSS classes for the element, respectively.
 You can't use both options together:
 use `{element}_class`
 to completely override the default classes, or use `{element}_extra_class` to extend the default.
 
-The following table shows the default styles for each component and the options you can use to adjust its CSS classes.
+The following table shows the default styles for each element and the options you can use to adjust its CSS classes.
 
-| Element               | Default talwind classes                            | Default daisyUI classes                                                      | Class override option       | Class extend option      |
+| Element               | Default tailwind classes                           | Default daisyUI classes                                                      | Class override option       | Class extend option      |
 |-----------------------|----------------------------------------------------|------------------------------------------------------------------------------|-----------------------------|--------------------------|
 | *container*           | relative h-full                                    | dropdown                                                                     | `container_class`           | `container_extra_class`  |
 | *text input*          | rounded-md h-full w-full                           | input input-bordered w-full                                                  | `text_input_class`          | `text_input_extra_class` |
@@ -56,11 +56,11 @@ The following table shows the default styles for each component and the options 
 | *active option*       | text-white bg-gray-600                             | active                                                                       | `active_option_class`       |                          |
 
 For example, if you want the options to use black text, the active option to have a red background,
-and remove rounded borders from both the dropdown and the active option, you can call `LiveSelect.live_select/3`
+and remove rounded borders from both the dropdown and the active option, call [live_select/3](`LiveSelect.live_select/3`)
 like this:
 
 ```
-live_select(my_form, city_search,
+live_select(form, field,
       active_option_class: "text-white bg-red-800",
       dropdown_extra_class: "!rounded-xl",
       option_extra_class: "!rounded-lg text-black",
@@ -72,7 +72,8 @@ live_select(my_form, city_search,
 > 
 > You can remove classes included with the style's defaults by using the *!class_name* notation
 > in an *{element}_extra_class* option. For example, if a default style is `rounded-lg px-4`,
-> using an extra class option of `!rounded-lg text-black` will result in the following final class:
+> using an extra class option of `!rounded-lg text-black` will result in the following final class 
+> being applied to the element:
 > 
 >  `px-4 text-black`
 

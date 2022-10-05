@@ -2,9 +2,7 @@ defmodule LiveSelect do
   import Phoenix.Component
 
   @moduledoc ~S"""
-  Dynamic selection input field for LiveView.
-
-  The `LiveSelect` input is rendered by calling the `live_select/3` function and passing it a form and the name of the input.
+  The `LiveSelect` field is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
   LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option.
   As the text changes, LiveSelect will render a dropdown below the text input
   containing the matching options, which the user can then select.
@@ -22,7 +20,7 @@ defmodule LiveSelect do
   ## Reacting to user's input
 
   Whenever the user types something in the text input, LiveSelect sends a `t:LiveSelect.ChangeMsg.t/0` message to your LiveView.
-  The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect input field.
+  The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect field.
   The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `update_options/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
@@ -78,7 +76,7 @@ defmodule LiveSelect do
 
   ### Multiple LiveSelect inputs in the same LiveView  
     
-  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the input field. 
+  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field. 
   For example:
 
   Template:
