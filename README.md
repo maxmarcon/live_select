@@ -103,4 +103,5 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
 - [X] Customizable placeholder
 - [X] Enable configuration of styles in the showcase app
 - [X] Add support for vanilla tailwind styles
-- [ ] Enable slots to customize the appearance of the options, for example to implement type ahead hints
+- [ ] Enable multiple options mode ([example](https://slimselectjs.com/))
+- [ ] Enable using custom HTML to display options
