@@ -28,9 +28,6 @@ import topbar from "../vendor/topbar"
 import ClipboardJS from "clipboard";
 import {themeChange} from 'theme-change'
 
-// theme-change stores the theme in local storage, this ensures that
-// we only start with the system defaults when reloading the page
-localStorage.removeItem('theme')
 themeChange()
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
@@ -46,6 +43,7 @@ clipboard.on("success", () => {
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", info => topbar.show())
 window.addEventListener("phx:page-loading-stop", info => topbar.hide())
+
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
