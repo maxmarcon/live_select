@@ -4,7 +4,13 @@
       <div class="form-control w-1/4">
         <label class="label cursor-pointer">
           <span class="label-text">Toggle dark mode</span>
-          <input data-toggle-theme="light,dark" type="checkbox" class="toggle" />
+          <input
+            id="dark-mode-toggle"
+            type="checkbox"
+            class="toggle"
+            data-toggle-theme="dark,light"
+            phx-hook="watchThemeChanges"
+          />
         </label>
       </div>
       <div class="form-control">
@@ -146,7 +152,7 @@
     <div class="prose text-center mt-2">
       <h4>Try out the component here:</h4>
     </div>
-    <div class="h-60 w-1/2">
+    <div class={"h-60 w-1/2 #{if @dark_mode, do: "dark"}"}>
       <.form
         :let={f}
         for={String.to_atom(@changeset.data.form_name)}

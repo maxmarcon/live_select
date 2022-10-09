@@ -212,7 +212,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         submitted: false,
         save_classes_pid: nil,
         show_styles: false,
-        style_options: Settings.style_options()
+        style_options: Settings.style_options(),
+        dark_mode: false
       )
 
     {:ok, socket}
@@ -286,6 +287,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
       ) do
     {:noreply, assign(socket, :show_styles, show_styles == "true")}
+  end
+
+  def handle_event("dark-mode", value, socket) do
+    {:noreply, assign(socket, :dark_mode, value)}
   end
 
   @impl true

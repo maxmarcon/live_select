@@ -30,14 +30,29 @@ import {themeChange} from 'theme-change'
 
 themeChange()
 
+const hooks = {
+    watchThemeChanges: {
+        mounted() {
+            this.setDarkMode()
+            this.el.onclick = () => this.setDarkMode()
+        },
+        setDarkMode() {
+            const theme = localStorage.getItem("theme")
+            this.pushEvent("dark-mode", theme === 'dark')
+        }
+    },
+    ...live_select
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 let clipboard = new ClipboardJS("button#copy-to-clipboard")
 clipboard.on("success", () => {
     const tooltip = document.querySelector("#copy-to-clipboard-tooltip")
     tooltip.classList.add("tooltip", "tooltip-open")
     setTimeout(() => tooltip.classList.remove("tooltip", "tooltip-open"), 1000)
 })
+
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
