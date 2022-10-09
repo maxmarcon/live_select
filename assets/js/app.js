@@ -28,6 +28,10 @@ import topbar from "../vendor/topbar"
 import ClipboardJS from "clipboard";
 import {themeChange} from 'theme-change'
 
+if (!localStorage.getItem("theme")) {
+    localStorage.setItem("theme", "light")
+}
+
 themeChange()
 
 const hooks = {
@@ -53,12 +57,10 @@ clipboard.on("success", () => {
     setTimeout(() => tooltip.classList.remove("tooltip", "tooltip-open"), 1000)
 })
 
-
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", info => topbar.show())
 window.addEventListener("phx:page-loading-stop", info => topbar.hide())
-
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
