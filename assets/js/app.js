@@ -28,9 +28,9 @@ import topbar from "../vendor/topbar"
 import ClipboardJS from "clipboard";
 import {themeChange} from 'theme-change'
 
-if (!localStorage.getItem("theme")) {
-    localStorage.setItem("theme", "light")
-}
+const initialTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light"
+
+localStorage.setItem("theme", initialTheme)
 
 themeChange()
 
