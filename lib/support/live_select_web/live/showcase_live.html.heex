@@ -79,10 +79,18 @@
           <%= error_tag(f, :debounce) %>
         </div>
         <div class="form-control max-w-sm">
-          <%= label(f, :style, "style:", class: "label label-text font-semibold") %>
-          <%= select(f, :style, [:tailwind, :daisyui, :none],
-            class: "select select-sm select-bordered text-xs"
-          ) %>
+          <%= label class: "label cursor-pointer" do %>
+            <span class="label-text font-semibold">disabled:&nbsp;</span>
+            <%= checkbox(f, :disabled, class: "checkbox") %>
+          <% end %>
+        </div>
+        <div class="form-control max-w-sm">
+          <%= label class: "label cursor-pointer" do %>
+            <span class="label-text font-semibold">style:&nbsp;</span>
+            <%= select(f, :style, [:tailwind, :daisyui, :none],
+              class: "select select-sm select-bordered text-xs"
+            ) %>
+          <% end %>
         </div>
 
         <div
