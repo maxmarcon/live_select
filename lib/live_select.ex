@@ -1,4 +1,5 @@
 defmodule LiveSelect do
+  alias LiveSelect.ChangeMsg
   import Phoenix.Component
 
   @moduledoc ~S"""
@@ -104,8 +105,6 @@ defmodule LiveSelect do
   ```
   """
 
-  alias LiveSelect.ChangeMsg
-
   @doc ~S"""
   Renders a `LiveSelect` input in a `form` with a given `field` name.
 
@@ -165,6 +164,7 @@ defmodule LiveSelect do
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
   """
-  def update_options(%ChangeMsg{module: module, id: component_id} = _change_msg, options),
-    do: Phoenix.LiveView.send_update(module, id: component_id, options: options)
+  def update_options(%ChangeMsg{} = change_msg, options) do
+    Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
+  end
 end

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+* also disable hidden input when disabled option is used
+
 ## 0.2.0 (2022-10-03)
 
 * support for tailwind styles (now the default)

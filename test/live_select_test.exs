@@ -47,7 +47,8 @@ defmodule LiveSelectTest do
     text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
-    option: "ul[name=live-select-dropdown] > li:first-of-type > div"
+    option: "ul[name=live-select-dropdown] > li:first-of-type > div",
+    hidden_input: "input#my_form_city_search[type=hidden]"
   ]
 
   setup :verify_on_exit!
@@ -408,6 +409,11 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/?disabled=true")
 
     assert element(live, @selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
+
+    assert element(live, @selectors[:hidden_input])
            |> render()
            |> Floki.parse_fragment!()
            |> Floki.attribute("disabled") == ["disabled"]

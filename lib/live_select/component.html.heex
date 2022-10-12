@@ -20,7 +20,7 @@
     disabled: @disabled,
     autocomplete: "off"
   ) %>
-  <%= hidden_input(@form, @field) %>
+  <%= hidden_input(@form, @field, disabled: @disabled) %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
     style={if Enum.empty?(@options), do: "display: none;", else: ""}
