@@ -3,6 +3,7 @@
 ## 0.2.1
 
 * also disable hidden input when disabled option is used
+* style disabled text input in tailwind mode
 
 ## 0.2.0 (2022-10-03)
 
