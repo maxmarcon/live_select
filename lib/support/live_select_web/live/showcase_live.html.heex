@@ -24,7 +24,7 @@
     <div class="prose text-center flex flex-row justify-center">
       <h4>Change settings here:</h4>
     </div>
-    <.form let={f} for={@changeset} phx-change="update-settings">
+    <.form :let={f} for={@changeset} phx-change="update-settings">
       <div class="flex flex-wrap p-5 gap-2">
         <div class="form-control max-w-sm">
           <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
@@ -163,7 +163,7 @@
     </div>
     <div class={"h-60 w-1/2 #{if @dark_mode, do: "dark"}"}>
       <.form
-        let={f}
+        :let={f}
         for={String.to_atom(@changeset.data.form_name)}
         phx-change="change"
         phx-submit="submit"
