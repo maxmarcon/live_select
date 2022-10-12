@@ -1,6 +1,9 @@
 defmodule LiveSelect do
   alias LiveSelect.ChangeMsg
   import Phoenix.Component
+  # for backward compatibility with LiveView 0.17
+  # generates compile warning if run with LiveView 0.18
+  import Phoenix.LiveView.Helpers
 
   @moduledoc ~S"""
   The `LiveSelect` field is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
