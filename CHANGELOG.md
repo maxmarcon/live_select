@@ -2,8 +2,11 @@
 
 ## 0.2.1
 
-* also disable hidden input when disabled option is used
+* when disabled option is used, also disable hidden input
 * style disabled text input in tailwind mode
+* fix problem with selection via mouseclick when an input field is underneath the dropdown
+* hide dropdown when user clicks away from component or input loses focus
+* show dropdown when input obtains focus again
 
 ## 0.2.0 (2022-10-03)
 

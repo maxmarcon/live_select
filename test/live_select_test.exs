@@ -13,7 +13,7 @@ defmodule LiveSelectTest do
   @expected_class [
     daisyui: [
       active_option: ~S(active),
-      container: ~S(dropdown),
+      container: ~S(dropdown dropdown-open),
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary text-primary)
@@ -406,6 +406,79 @@ defmodule LiveSelectTest do
     assert_option_active(live, -1)
   end
 
+  test "dropdown becomes visible when typing", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/?style=daisyui")
+
+    type(live, "ABC")
+
+    assert dropdown_visible(live)
+  end
+
+  describe "when the dropdown is visible" do
+    setup %{conn: conn} do
+      Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+        update_options(
+          change_msg,
+          [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+        )
+      end)
+
+      {:ok, live, _html} = live(conn, "/?style=daisyui")
+
+      type(live, "ABC")
+
+      assert dropdown_visible(live)
+
+      %{live: live}
+    end
+
+    test "blur on text input hides it", %{live: live} do
+      render_blur(element(live, @selectors[:text_input]))
+
+      refute dropdown_visible(live)
+    end
+  end
+
+  describe "when the dropdown is hidden" do
+    setup %{conn: conn} do
+      Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+        update_options(
+          change_msg,
+          [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+        )
+      end)
+
+      {:ok, live, _html} = live(conn, "/?style=daisyui")
+
+      type(live, "ABC")
+
+      render_blur(element(live, @selectors[:text_input]))
+
+      refute dropdown_visible(live)
+
+      %{live: live}
+    end
+
+    test "focus on text input shows it", %{live: live} do
+      render_focus(element(live, @selectors[:text_input]))
+
+      assert dropdown_visible(live)
+    end
+
+    test "clicking on the input shows it", %{live: live} do
+      render_click(element(live, @selectors[:text_input]))
+
+      assert dropdown_visible(live)
+    end
+  end
+
   test "can be disabled", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?disabled=true")
 
@@ -787,5 +860,16 @@ defmodule LiveSelectTest do
   defp dropdown_mouseover(live) do
     element(live, @selectors[:container])
     |> render_hook("dropdown-mouseover")
+  end
+
+  defp dropdown_visible(live) do
+    invisible =
+      element(live, @selectors[:dropdown])
+      |> render()
+      |> Floki.parse_fragment!()
+      |> Floki.attribute("style")
+      |> List.first() =~ "display: none;"
+
+    !invisible
   end
 end

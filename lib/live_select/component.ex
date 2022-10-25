@@ -28,7 +28,7 @@ defmodule LiveSelect.Component do
   @styles [
     daisyui: [
       active_option: ~S(active),
-      container: ~S(dropdown),
+      container: ~S(dropdown dropdown-open),
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary text-primary)
@@ -55,7 +55,8 @@ defmodule LiveSelect.Component do
         dropdown_mouseover: false,
         options: [],
         input: "",
-        selected: nil
+        selected: nil,
+        hide_dropdown: false
       )
 
     {:ok, socket}
@@ -107,7 +108,22 @@ defmodule LiveSelect.Component do
         socket
       end
 
-    {:noreply, socket}
+    {:noreply, assign(socket, :hide_dropdown, false)}
+  end
+
+  @impl true
+  def handle_event("click_away", _params, socket) do
+    {:noreply, assign(socket, :hide_dropdown, true)}
+  end
+
+  @impl true
+  def handle_event("blur", _params, socket) do
+    {:noreply, assign(socket, :hide_dropdown, !socket.assigns.dropdown_mouseover)}
+  end
+
+  @impl true
+  def handle_event("focus", _params, socket) do
+    {:noreply, assign(socket, :hide_dropdown, false)}
   end
 
   @impl true
@@ -226,7 +242,8 @@ defmodule LiveSelect.Component do
       options: [],
       current_focus: -1,
       input: label,
-      selected: selected
+      selected: selected,
+      dropdown_mouseover: false
     )
     |> push_event("selected", %{id: socket.assigns.id, selected: [label, selected]})
   end

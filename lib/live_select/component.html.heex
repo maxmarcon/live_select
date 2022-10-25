@@ -4,6 +4,7 @@
   name="live-select"
   phx-hook="LiveSelect"
   phx-target={@myself}
+  phx-click-away="click_away"
 >
   <%= text_input(@form, @text_input_field,
     value: @input,
@@ -17,12 +18,14 @@
     phx_change: "change",
     disabled: @disabled,
     readonly: !is_nil(@selected),
-    autocomplete: "off"
+    autocomplete: "off",
+    phx_focus: "focus",
+    phx_blur: "blur"
   ) %>
   <%= hidden_input(@form, @field, disabled: @disabled) %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
-    style={if Enum.empty?(@options), do: "display: none;", else: ""}
+    style={if Enum.empty?(@options) || @hide_dropdown, do: "display: none;", else: ""}
     name="live-select-dropdown"
   >
     <%= for {{label, _}, idx} <- Enum.with_index(@options) do %>
