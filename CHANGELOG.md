@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1
+## 0.2.1 (2022-10-25)
 
 * when disabled option is used, also disable hidden input
 * style disabled text input in tailwind mode
