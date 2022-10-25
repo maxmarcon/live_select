@@ -444,6 +444,14 @@ defmodule LiveSelectTest do
 
       refute dropdown_visible(live)
     end
+
+    test "if the mouse is on the dropdown blur on text input does not hide it", %{live: live} do
+      dropdown_mouseover(live)
+
+      render_blur(element(live, @selectors[:text_input]))
+
+      assert dropdown_visible(live)
+    end
   end
 
   describe "when the dropdown is hidden" do
