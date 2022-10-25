@@ -7,6 +7,7 @@
 * fix problem with selection via mouseclick when an input field is underneath the dropdown
 * hide dropdown when user clicks away from component or input loses focus
 * show dropdown when input obtains focus again
+* using default black text in tailwind mode 
 
 ## 0.2.0 (2022-10-03)
 
