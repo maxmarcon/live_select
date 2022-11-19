@@ -111,8 +111,8 @@ defmodule LiveSelect do
   @doc ~S"""
   Renders a `LiveSelect` input in a `form` with a given `field` name.
 
-  LiveSelect renders a hidden input with name `field` which contains the selected option.
-  The visible text input field will have the name `#{field}_text_input`.
+  LiveSelect renders two inputs: a hidden input named `field` that holds the value of the selected option, 
+  and a visible text input field named `#{field}_text_input` that contains the text entered by the user.
     
   **Opts:**
 
