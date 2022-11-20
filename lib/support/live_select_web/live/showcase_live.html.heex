@@ -43,6 +43,10 @@
           <%= error_tag(f, :field_name) %>
         </div>
         <div class="form-control max-w-sm">
+          <%= label(f, :mode, "Mode:", class: "label label-text font-semibold") %>
+          <%= select(f, :mode, [:single, :tags], class: "select select-sm select-bordered text-xs") %>
+        </div>
+        <div class="form-control max-w-sm">
           <%= label(f, :search_delay, "Search delay in ms:",
             class: "label label-text font-semibold"
           ) %>

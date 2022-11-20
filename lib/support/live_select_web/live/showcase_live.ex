@@ -33,6 +33,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:dropdown_extra_class, :string)
       field(:field_name, :string, default: "city_search")
       field(:form_name, :string, default: "my_form")
+      field(:mode, Ecto.Enum, values: [:single, :tags], default: :single)
       field(:new, :boolean, default: true)
       field(:option_class, :string)
       field(:option_extra_class, :string)
@@ -57,6 +58,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :dropdown_extra_class,
         :field_name,
         :form_name,
+        :mode,
         :option_class,
         :option_extra_class,
         :placeholder,

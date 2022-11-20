@@ -16,6 +16,7 @@ defmodule LiveSelect.Component do
     disabled: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
+    mode: :single,
     option_class: nil,
     option_extra_class: nil,
     placeholder: nil,
@@ -96,6 +97,13 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
+      |> then(fn socket ->
+        case assigns[:mode] do
+          :single -> assign(socket, :selected, nil)
+          :tags -> assign(socket, :selected, [])
+          nil -> assign_new(socket, :selected, fn -> nil end)
+        end
+      end)
 
     {:ok, socket}
   end
@@ -238,6 +246,12 @@ defmodule LiveSelect.Component do
   defp select(socket, selected_position) do
     {label, selected} = Enum.at(socket.assigns.options, selected_position)
 
+    {label, selected} =
+      case socket.assigns.mode do
+        :tags -> {nil, socket.assigns.selected ++ [selected]}
+        _ -> {label, selected}
+      end
+      
     socket
     |> assign(
       options: [],
@@ -313,4 +327,10 @@ defmodule LiveSelect.Component do
     Use `#{element}_extra_class` if you want to extend the default class for the element with additional classes.
     """
   end
+
+  defp encode(nil), do: nil
+
+  defp encode(selected) when is_binary(selected), do: selected
+
+  defp encode(selected), do: Jason.encode!(selected) |> IO.inspect(label: "encoded")
 end
