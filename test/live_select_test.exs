@@ -855,7 +855,7 @@ defmodule LiveSelectTest do
         keydown(live, "Enter")
 
       :click ->
-        element(live, "li[name=option-#{n}")
+        element(live, "li[phx-value-idx=#{n-1}")
         |> render_click()
     end
   end
