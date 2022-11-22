@@ -25,15 +25,13 @@
   <%= hidden_input(@form, @field, disabled: @disabled) %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
-    style={if Enum.empty?(@options) || @hide_dropdown, do: "display: none;", else: ""}
+    style={
+      if Enum.empty?(@options) || @hide_dropdown, do: "display: none;", else: "display: block;"
+    }
     name="live-select-dropdown"
   >
     <%= for {{label, _}, idx} <- Enum.with_index(@options) do %>
-      <li
-        phx-click="option-click"
-        phx-value-idx={idx}
-        phx-target={@myself}
-      >
+      <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself}>
         <div class={[
           class(@style, :option, @option_class, @option_extra_class),
           if(idx == @current_focus, do: class(@style, :active_option, @active_option_class))

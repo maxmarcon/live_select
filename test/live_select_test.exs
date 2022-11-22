@@ -812,9 +812,9 @@ defmodule LiveSelectTest do
 
     value = if value, do: value, else: label
 
-    assert_push_event(live, "selected", %{
+    assert_push_event(live, "select", %{
       id: "my_form_city_search_component",
-      selected: [^label, ^value]
+      selection: [%{label: ^label, selected: ^value}]
     })
   end
 
@@ -827,7 +827,7 @@ defmodule LiveSelectTest do
 
     assert text_input
            |> Floki.attribute("value") ==
-             [""]
+             []
 
     assert text_input
            |> Floki.attribute("readonly") ==
@@ -855,7 +855,7 @@ defmodule LiveSelectTest do
         keydown(live, "Enter")
 
       :click ->
-        element(live, "li[phx-value-idx=#{n-1}")
+        element(live, "li[phx-value-idx=#{n - 1}")
         |> render_click()
     end
   end

@@ -19,17 +19,17 @@ export default {
         },
         setHiddenInputValue(value) {
             const hidden_input = this.el.querySelector("input[type=hidden]")
-            hidden_input.value = typeof (value) === 'string' ? value : JSON.stringify(value)
+            hidden_input.value = value == null || typeof (value) === 'string' ? value : JSON.stringify(value)
             hidden_input.dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
             this.handleEvent("reset", ({id: id}) => {
                 if (this.el.id === id) {
-                    this.setInputValue("")
-                    this.setHiddenInputValue("")
+                    this.setInputValue(null)
+                    this.setHiddenInputValue(null)
                 }
             })
-            this.handleEvent("selected", ({id: id, selected: [label, selected]}) => {
+            this.handleEvent("select", ({id: id, selection: [{label: label, selected: selected}]}) => {
                 if (this.el.id === id) {
                     this.setInputValue(label);
                     this.setHiddenInputValue(selected)

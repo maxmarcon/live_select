@@ -2,9 +2,10 @@ defmodule LiveSelect.Component do
   @moduledoc false
 
   alias LiveSelect.ChangeMsg
+  alias Phoenix.LiveView.JS
 
   use Phoenix.LiveComponent
-  import Phoenix.HTML.Form
+  import Phoenix.HTML.Form, except: [reset: 1]
   import LiveSelect.ClassUtil
 
   @default_opts [
@@ -54,7 +55,7 @@ defmodule LiveSelect.Component do
         disabled: false,
         dropdown_mouseover: false,
         options: [],
-        input: "",
+        input: nil,
         selected: nil,
         hide_dropdown: false
       )
@@ -103,7 +104,7 @@ defmodule LiveSelect.Component do
   def handle_event("click", _params, socket) do
     socket =
       if socket.assigns.selected && !socket.assigns.disabled do
-        reset_input(socket)
+        reset(socket)
       else
         socket
       end
@@ -181,7 +182,7 @@ defmodule LiveSelect.Component do
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
     socket =
       if socket.assigns.selected do
-        reset_input(socket)
+        reset(socket)
       else
         select(socket, socket.assigns.current_focus)
       end
@@ -245,12 +246,15 @@ defmodule LiveSelect.Component do
       selected: selected,
       dropdown_mouseover: false
     )
-    |> push_event("selected", %{id: socket.assigns.id, selected: [label, selected]})
+    |> push_event("select", %{
+      id: socket.assigns.id,
+      selection: [%{label: label, selected: selected}]
+    })
   end
 
-  defp reset_input(socket) do
+  defp reset(socket) do
     socket
-    |> assign(options: [], selected: nil, input: "")
+    |> assign(options: [], selected: nil, input: nil)
     |> push_event("reset", %{id: socket.assigns.id})
   end
 
