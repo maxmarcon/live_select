@@ -2,7 +2,6 @@ defmodule LiveSelect.Component do
   @moduledoc false
 
   alias LiveSelect.ChangeMsg
-  alias Phoenix.LiveView.JS
 
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form, except: [reset: 1]
@@ -56,8 +55,7 @@ defmodule LiveSelect.Component do
         disabled: false,
         dropdown_mouseover: false,
         options: [],
-        input: nil,
-        selected: nil,
+        selection: [],
         hide_dropdown: false
       )
 
@@ -97,13 +95,6 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
-      |> then(fn socket ->
-        case assigns[:mode] do
-          :single -> assign(socket, :selected, nil)
-          :tags -> assign(socket, :selected, [])
-          nil -> assign_new(socket, :selected, fn -> nil end)
-        end
-      end)
 
     {:ok, socket}
   end
@@ -111,7 +102,7 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("click", _params, socket) do
     socket =
-      if socket.assigns.selected && !socket.assigns.disabled do
+      if Enum.any?(socket.assigns.selection) && !socket.assigns.disabled do
         reset(socket)
       else
         socket
@@ -139,7 +130,7 @@ defmodule LiveSelect.Component do
   def handle_event("keyup", %{"value" => text, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab"] do
     socket =
-      if socket.assigns.selected do
+      if Enum.any?(socket.assigns.selection) do
         socket
       else
         if String.length(text) >=
@@ -189,7 +180,7 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
     socket =
-      if socket.assigns.selected do
+      if Enum.any?(socket.assigns.selection) do
         reset(socket)
       else
         select(socket, socket.assigns.current_focus)
@@ -244,45 +235,50 @@ defmodule LiveSelect.Component do
   defp select(socket, -1), do: socket
 
   defp select(socket, selected_position) do
-    {label, selected} = Enum.at(socket.assigns.options, selected_position)
+    selected = Enum.at(socket.assigns.options, selected_position)
 
-    {label, selected} =
+    selection =
       case socket.assigns.mode do
-        :tags -> {nil, socket.assigns.selected ++ [selected]}
-        _ -> {label, selected}
+        :tags -> socket.assigns.selection ++ [selected]
+        _ -> [selected]
       end
-      
+
     socket
     |> assign(
       options: [],
       current_focus: -1,
-      input: label,
-      selected: selected,
+      selection: selection,
       dropdown_mouseover: false
     )
     |> push_event("select", %{
       id: socket.assigns.id,
-      selection: [%{label: label, selected: selected}]
+      selection: selection
     })
   end
 
   defp reset(socket) do
     socket
-    |> assign(options: [], selected: nil, input: nil)
+    |> assign(options: [], selection: [])
     |> push_event("reset", %{id: socket.assigns.id})
   end
 
   defp normalize_options(options) do
     options
     |> Enum.map(fn
-      option when is_list(option) or is_map(option) ->
-        {option[:label] || option[:key], option[:value]}
-
-      {_key, _value} = option ->
+      %{label: _, value: _} = option ->
         option
 
-      option when is_binary(option) or is_atom(option) or is_integer(option) ->
-        {option, option}
+      [label: _, value: _] = option ->
+        Map.new(option)
+
+      [key: key, value: value] ->
+        %{label: key, value: value}
+
+      {label, value} ->
+        %{label: label, value: value}
+
+      option when is_binary(option) or is_atom(option) or is_number(option) ->
+        %{label: option, value: option}
 
       option ->
         raise """
@@ -290,7 +286,7 @@ defmodule LiveSelect.Component do
         options must enumerate to:
 
         a list of atom, strings or numbers
-        a list of maps or keywords with label and value keys
+        a list of maps or keywords with keys: (:label, :value) or (:key, :value)
         a list of tuples
         """
     end)
@@ -327,10 +323,4 @@ defmodule LiveSelect.Component do
     Use `#{element}_extra_class` if you want to extend the default class for the element with additional classes.
     """
   end
-
-  defp encode(nil), do: nil
-
-  defp encode(selected) when is_binary(selected), do: selected
-
-  defp encode(selected), do: Jason.encode!(selected) |> IO.inspect(label: "encoded")
 end

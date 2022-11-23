@@ -29,10 +29,10 @@ export default {
                     this.setHiddenInputValue(null)
                 }
             })
-            this.handleEvent("select", ({id: id, selection: [{label: label, selected: selected}]}) => {
+            this.handleEvent("select", ({id: id, selection: [{label, value}]}) => {
                 if (this.el.id === id) {
                     this.setInputValue(label);
-                    this.setHiddenInputValue(selected)
+                    this.setHiddenInputValue(value)
                 }
             })
             this.attachDomEventHandlers()

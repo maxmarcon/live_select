@@ -371,7 +371,7 @@ defmodule LiveSelectTest do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
-        [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+        [%{label: "A", value: 1}, %{label: "B", value: 2}, [label: "C", value: 3]]
       )
     end)
 
@@ -565,7 +565,7 @@ defmodule LiveSelectTest do
         Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
           update_options(
             change_msg,
-            [[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]]
+            [%{label: "A", value: 1}, %{label: "B", value: 2}, %{label: "C", value: 3}]
           )
         end)
 
@@ -796,25 +796,11 @@ defmodule LiveSelectTest do
   defp assert_option_selected(live, label, value \\ nil) do
     # would be nice to check the value of the hidden input field, but this
     # is set by the JS hook
-    text_input =
-      live
-      |> element(@selectors[:text_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert text_input
-           |> Floki.attribute("value") ==
-             [to_string(label)]
-
-    assert text_input
-           |> Floki.attribute("readonly") ==
-             ["readonly"]
-
     value = if value, do: value, else: label
 
     assert_push_event(live, "select", %{
       id: "my_form_city_search_component",
-      selection: [%{label: ^label, selected: ^value}]
+      selection: [%{label: ^label, value: ^value}]
     })
   end
 
