@@ -534,6 +534,21 @@ defmodule LiveSelectTest do
     )
   end
 
+  test "raises if unknown mode is given" do
+    assert_raise(
+      RuntimeError,
+      ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
+      fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: :form,
+          field: :input,
+          mode: :not_a_valid_mode
+        )
+      end
+    )
+  end
+
   for {override_class, extend_class} <-
         Enum.zip(Keyword.values(@override_class_option), Keyword.values(@extend_class_option)),
       # we must open the dropdown to test option_class

@@ -46,6 +46,8 @@ defmodule LiveSelect.Component do
     none: []
   ]
 
+  @modes ~w(single tags)a
+
   @impl true
   def mount(socket) do
     socket =
@@ -215,6 +217,12 @@ defmodule LiveSelect.Component do
         raise(
           ~s(Invalid style: "#{assigns.style}". Style must be one of: #{inspect(Keyword.keys(@styles))})
         )
+      end
+    end
+
+    if mode = assigns[:mode] do
+      unless mode in @modes do
+        raise(~s(Invalid mode: "#{assigns.mode}". Mode must be one of: #{inspect(@modes)}))
       end
     end
 

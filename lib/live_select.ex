@@ -116,6 +116,7 @@ defmodule LiveSelect do
     
   **Opts:**
 
+  * `mode` - one of: `:single` (for single selection), or `:tags` (for multiple selection using tags)
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
