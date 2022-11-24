@@ -27,7 +27,7 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def keydown(live, key) do
-    element(live, @selectors[:text_input])
+    element(live, @selectors[:container])
     |> render_hook("keydown", %{"key" => key})
   end
 
