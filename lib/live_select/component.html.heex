@@ -6,22 +6,37 @@
   phx-target={@myself}
   phx-click-away="click_away"
 >
-  <%= text_input(@form, @text_input_field,
-    class:
-      "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
-    phx_click: "click",
-    placeholder: @placeholder,
-    phx_debounce: @debounce,
-    phx_keyup: "keyup",
-    phx_target: @myself,
-    phx_change: "change",
-    disabled: @disabled,
-    readonly: Enum.any?(@selection),
-    autocomplete: "off",
-    phx_focus: "focus",
-    phx_blur: "blur"
-  ) %>
-  <%= hidden_input(@form, @field, disabled: @disabled, value: @default_value) %>
+  <div class="flex">
+    <%= if @mode == :tags do %>
+      <%= for %{label: label} <- @selection do %>
+        <span><%= label %></span>
+      <% end %>
+    <% end %>
+    <%= text_input(@form, @text_input_field,
+      class:
+        "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
+      phx_click: "click",
+      placeholder: @placeholder,
+      phx_debounce: @debounce,
+      phx_keyup: "keyup",
+      phx_target: @myself,
+      phx_change: "change",
+      disabled: @disabled,
+      readonly: @mode == :single && Enum.any?(@selection),
+      autocomplete: "off",
+      phx_focus: "focus",
+      phx_blur: "blur"
+    ) %>
+  </div>
+  <%= if @mode == :single do %>
+    <%= hidden_input(@form, @field, disabled: @disabled, value: @default_value) %>
+  <% else %>
+    <%= multiple_select(@form, @field, options_for_multiselect(@selection),
+      selected: options_for_multiselect(@selection),
+      readonly: true,
+      style: "display: none;"
+    ) %>
+  <% end %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
     style={

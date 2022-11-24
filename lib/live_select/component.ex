@@ -105,7 +105,8 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("click", _params, socket) do
     socket =
-      if Enum.any?(socket.assigns.selection) && !socket.assigns.disabled do
+      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) &&
+           !socket.assigns.disabled do
         reset(socket)
       else
         socket
@@ -133,7 +134,7 @@ defmodule LiveSelect.Component do
   def handle_event("keyup", %{"value" => text, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"] do
     socket =
-      if Enum.any?(socket.assigns.selection) do
+      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
         socket
       else
         if String.length(text) >=
@@ -187,7 +188,7 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
     socket =
-      if Enum.any?(socket.assigns.selection) do
+      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
         reset(socket)
       else
         select(socket, socket.assigns.current_focus)
@@ -270,6 +271,7 @@ defmodule LiveSelect.Component do
     )
     |> push_event("select", %{
       id: socket.assigns.id,
+      mode: socket.assigns.mode,
       selection: selection
     })
   end
@@ -310,6 +312,11 @@ defmodule LiveSelect.Component do
     end)
   end
 
+  defp options_for_multiselect(normalized_options) do
+    normalized_options
+    |> Enum.map(&encode(&1.value))
+  end
+
   defp class(style, element, class_override, class_extend \\ nil)
 
   defp class(style, element, nil, nil) do
@@ -341,4 +348,8 @@ defmodule LiveSelect.Component do
     Use `#{element}_extra_class` if you want to extend the default class for the element with additional classes.
     """
   end
+
+  def encode(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
+
+  def encode(value), do: Jason.encode!(value)
 end

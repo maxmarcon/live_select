@@ -22,7 +22,6 @@ defmodule LiveSelectWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import LiveSelectWeb.ConnCase
       import Phoenix.LiveViewTest
 
       alias LiveSelectWeb.Router.Helpers, as: Routes

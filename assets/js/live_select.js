@@ -15,7 +15,7 @@ export default {
             }
         },
         setInputValue(value) {
-            this.el.querySelector("input[type=text]").value = value;
+            this.el.querySelector("input[type=text]").value = value
         },
         setHiddenInputValue(value) {
             const hidden_input = this.el.querySelector("input[type=hidden]")
@@ -29,10 +29,18 @@ export default {
                     this.setHiddenInputValue(default_value)
                 }
             })
-            this.handleEvent("select", ({id, selection: [{label, value}]}) => {
+            this.handleEvent("select", ({id, selection, mode}) => {
                 if (this.el.id === id) {
-                    this.setInputValue(label);
-                    this.setHiddenInputValue(value)
+                    if (mode === "single") {
+                        const [{label, value}] = selection
+                        this.setInputValue(label)
+                        this.setHiddenInputValue(value)
+                    } else {
+                        this.setInputValue(null)
+                        this.el.querySelector('select').dispatchEvent(
+                            new Event('input', {bubbles: true})
+                        )
+                    }
                 }
             })
             this.attachDomEventHandlers()
