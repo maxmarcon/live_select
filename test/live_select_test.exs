@@ -481,6 +481,12 @@ defmodule LiveSelectTest do
       refute dropdown_visible(live)
     end
 
+    test "pressing the escape key hides it", %{live: live} do
+      keydown(live, "Escape")
+
+      refute dropdown_visible(live)
+    end
+
     test "if the mouse is on the dropdown blur on text input does not hide it", %{live: live} do
       dropdown_mouseover(live)
 
@@ -518,6 +524,24 @@ defmodule LiveSelectTest do
 
     test "clicking on the input shows it", %{live: live} do
       render_click(element(live, @selectors[:text_input]))
+
+      assert dropdown_visible(live)
+    end
+
+    test "pressing a key shows it", %{live: live} do
+      keydown(live, "ArrowDown")
+
+      assert dropdown_visible(live)
+    end
+
+    test "pressing escape doesn't show it ", %{live: live} do
+      keydown(live, "Escape")
+
+      refute dropdown_visible(live)
+    end
+
+    test "typing shows it", %{live: live} do
+      type(live, "something")
 
       assert dropdown_visible(live)
     end

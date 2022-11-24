@@ -131,7 +131,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keyup", %{"value" => text, "key" => key}, socket)
-      when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab"] do
+      when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"] do
     socket =
       if Enum.any?(socket.assigns.selection) do
         socket
@@ -148,7 +148,7 @@ defmodule LiveSelect.Component do
             }
           )
 
-          socket
+          assign(socket, hide_dropdown: false)
         else
           assign(socket, :options, [])
         end
@@ -165,8 +165,8 @@ defmodule LiveSelect.Component do
       {:noreply,
        assign(
          socket,
-         :current_focus,
-         min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1)
+         current_focus: min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1),
+         hide_dropdown: false
        )}
     end
   end
@@ -176,7 +176,11 @@ defmodule LiveSelect.Component do
     if socket.assigns.dropdown_mouseover do
       {:noreply, socket}
     else
-      {:noreply, assign(socket, :current_focus, max(0, socket.assigns.current_focus - 1))}
+      {:noreply,
+       assign(socket,
+         current_focus: max(0, socket.assigns.current_focus - 1),
+         hide_dropdown: false
+       )}
     end
   end
 
@@ -190,6 +194,11 @@ defmodule LiveSelect.Component do
       end
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("keydown", %{"key" => "Escape"}, socket) do
+    {:noreply, assign(socket, :hide_dropdown, true)}
   end
 
   @impl true
