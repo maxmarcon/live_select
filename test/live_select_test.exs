@@ -411,6 +411,14 @@ defmodule LiveSelectTest do
 
       assert dropdown_visible(live)
     end
+
+    test "if the mouse is on the dropdown the escape key does not hide it", %{live: live} do
+      dropdown_mouseover(live)
+
+      keydown(live, "Escape")
+
+      assert dropdown_visible(live)
+    end
   end
 
   describe "when the dropdown is hidden" do

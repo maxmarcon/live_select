@@ -198,7 +198,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "Escape"}, socket) do
-    {:noreply, assign(socket, :hide_dropdown, true)}
+    {:noreply, assign(socket, :hide_dropdown, !socket.assigns.dropdown_mouseover)}
   end
 
   @impl true
