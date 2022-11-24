@@ -12,6 +12,7 @@ defmodule LiveSelect.Component do
     container_class: nil,
     container_extra_class: nil,
     debounce: 100,
+    default_value: nil,
     disabled: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
@@ -267,7 +268,7 @@ defmodule LiveSelect.Component do
   defp reset(socket) do
     socket
     |> assign(options: [], selection: [])
-    |> push_event("reset", %{id: socket.assigns.id})
+    |> push_event("reset", %{id: socket.assigns.id, default_value: socket.assigns.default_value})
   end
 
   defp normalize_options(options) do

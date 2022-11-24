@@ -343,6 +343,18 @@ defmodule LiveSelectTest do
     assert_option_selected(live, "B", 2)
   end
 
+  test "can specify a value to be sent when nothing is selected via default_value", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?default_value=default")
+
+    hidden_input =
+      live
+      |> element(@selectors[:hidden_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert Floki.attribute(hidden_input, "value") == ["default"]
+  end
+
   test "clicking on the text input field resets the selection", %{conn: conn} do
     Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
       update_options(
@@ -365,6 +377,30 @@ defmodule LiveSelectTest do
     |> render_click()
 
     assert_reset(live)
+  end
+
+  test "reset takes into account the default_value", %{conn: conn} do
+    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+      update_options(
+        change_msg,
+        A: 1,
+        B: 2,
+        C: 3
+      )
+    end)
+
+    {:ok, live, _html} = live(conn, "/?default_value=foo")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_option_selected(live, :B, 2)
+
+    element(live, @selectors[:text_input])
+    |> render_click()
+
+    assert_reset(live, "foo")
   end
 
   test "can navigate options with arrows", %{conn: conn} do
@@ -813,13 +849,6 @@ defmodule LiveSelectTest do
     # is set by the JS hook
     value = if value, do: value, else: label
 
-    assert_push_event(live, "select", %{
-      id: "my_form_city_search_component",
-      selection: [%{label: ^label, value: ^value}]
-    })
-  end
-
-  defp assert_reset(live) do
     text_input =
       live
       |> element(@selectors[:text_input])
@@ -827,14 +856,30 @@ defmodule LiveSelectTest do
       |> Floki.parse_fragment!()
 
     assert text_input
-           |> Floki.attribute("value") ==
-             []
+           |> Floki.attribute("readonly") ==
+             ["readonly"]
+
+    assert_push_event(live, "select", %{
+      id: "my_form_city_search_component",
+      selection: [%{label: ^label, value: ^value}]
+    })
+  end
+
+  defp assert_reset(live, default_value \\ nil) do
+    text_input =
+      live
+      |> element(@selectors[:text_input])
+      |> render()
+      |> Floki.parse_fragment!()
 
     assert text_input
            |> Floki.attribute("readonly") ==
              []
 
-    assert_push_event(live, "reset", %{id: "my_form_city_search_component"})
+    assert_push_event(live, "reset", %{
+      id: "my_form_city_search_component",
+      default_value: ^default_value
+    })
   end
 
   defp navigate(live, n, dir) do

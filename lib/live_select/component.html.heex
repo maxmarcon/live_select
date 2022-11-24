@@ -21,7 +21,7 @@
     phx_focus: "focus",
     phx_blur: "blur"
   ) %>
-  <%= hidden_input(@form, @field, disabled: @disabled) %>
+  <%= hidden_input(@form, @field, disabled: @disabled, value: @default_value) %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
     style={

@@ -23,13 +23,13 @@ export default {
             hidden_input.dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.handleEvent("reset", ({id: id}) => {
+            this.handleEvent("reset", ({id, default_value}) => {
                 if (this.el.id === id) {
                     this.setInputValue(null)
-                    this.setHiddenInputValue(null)
+                    this.setHiddenInputValue(default_value)
                 }
             })
-            this.handleEvent("select", ({id: id, selection: [{label, value}]}) => {
+            this.handleEvent("select", ({id, selection: [{label, value}]}) => {
                 if (this.el.id === id) {
                     this.setInputValue(label);
                     this.setHiddenInputValue(value)

@@ -28,6 +28,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:container_class, :string)
       field(:container_extra_class, :string)
       field(:debounce, :integer, default: 100)
+      field(:default_value, :string)
       field(:disabled, :boolean)
       field(:dropdown_class, :string)
       field(:dropdown_extra_class, :string)
@@ -53,6 +54,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :container_class,
         :container_extra_class,
         :debounce,
+        :default_value,
         :disabled,
         :dropdown_class,
         :dropdown_extra_class,
