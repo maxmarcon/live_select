@@ -87,6 +87,7 @@ defmodule LiveSelect.Component do
       |> assign(assigns)
       |> assign(:current_focus, -1)
       |> update(:options, &normalize_options/1)
+      |> update(:options, &(&1 -- socket.assigns.selection))
 
     socket =
       @default_opts

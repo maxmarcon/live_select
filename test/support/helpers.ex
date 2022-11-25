@@ -130,6 +130,23 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
+  def assert_options_selected(live, values) do
+    selected_options =
+      live
+      |> element(@selectors[:container])
+      |> render()
+      |> Floki.parse_fragment!()
+      |> Floki.find("select > option")
+
+    assert selected_options
+           |> Floki.attribute("value") == values
+
+    assert selected_options
+           |> Floki.attribute("selected")
+           |> Enum.count(&(&1 == "selected")) ==
+             Enum.count(values)
+  end
+
   def assert_reset(live, default_value \\ nil) do
     text_input =
       live
