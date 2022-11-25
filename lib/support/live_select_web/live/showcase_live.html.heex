@@ -15,10 +15,12 @@
         </label>
       </div>
       <div class="form-control">
-        <%= live_patch("Reset",
-          to: Routes.live_path(@socket, __MODULE__, reset: true),
-          class: "btn btn-warning btn-sm mt-1"
-        ) %>
+        <.link
+          patch={Routes.live_path(@socket, __MODULE__, reset: true)}
+          class="btn btn-warning btn-sm mt-1"
+        >
+          Reset
+        </.link>
       </div>
     </div>
     <div class="prose text-center flex flex-row justify-center">
