@@ -57,7 +57,6 @@ defmodule LiveSelect.Component do
       |> assign(
         current_focus: -1,
         disabled: false,
-        dropdown_mouseover: false,
         options: [],
         selection: [],
         hide_dropdown: false
@@ -113,18 +112,14 @@ defmodule LiveSelect.Component do
       else
         socket
       end
+      |> assign(hide_dropdown: false)
 
-    {:noreply, assign(socket, :hide_dropdown, false)}
-  end
-
-  @impl true
-  def handle_event("click_away", _params, socket) do
-    {:noreply, assign(socket, :hide_dropdown, true)}
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("blur", _params, socket) do
-    {:noreply, assign(socket, :hide_dropdown, !socket.assigns.dropdown_mouseover)}
+    {:noreply, assign(socket, :hide_dropdown, true)}
   end
 
   @impl true
@@ -162,29 +157,21 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
-    if socket.assigns.dropdown_mouseover do
-      {:noreply, socket}
-    else
-      {:noreply,
-       assign(
-         socket,
-         current_focus: min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1),
-         hide_dropdown: false
-       )}
-    end
+    {:noreply,
+     assign(
+       socket,
+       current_focus: min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1),
+       hide_dropdown: false
+     )}
   end
 
   @impl true
   def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
-    if socket.assigns.dropdown_mouseover do
-      {:noreply, socket}
-    else
-      {:noreply,
-       assign(socket,
-         current_focus: max(0, socket.assigns.current_focus - 1),
-         hide_dropdown: false
-       )}
-    end
+    {:noreply,
+     assign(socket,
+       current_focus: max(0, socket.assigns.current_focus - 1),
+       hide_dropdown: false
+     )}
   end
 
   @impl true
@@ -201,22 +188,12 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "Escape"}, socket) do
-    {:noreply, assign(socket, :hide_dropdown, !socket.assigns.dropdown_mouseover)}
+    {:noreply, assign(socket, :hide_dropdown, true)}
   end
 
   @impl true
-  def handle_event("option-click", %{"idx" => idx}, socket) do
+  def handle_event("option_click", %{"idx" => idx}, socket) do
     {:noreply, select(socket, String.to_integer(idx))}
-  end
-
-  @impl true
-  def handle_event("dropdown-mouseover", _params, socket) do
-    {:noreply, assign(socket, current_focus: -1, dropdown_mouseover: true)}
-  end
-
-  @impl true
-  def handle_event("dropdown-mouseleave", _params, socket) do
-    {:noreply, assign(socket, dropdown_mouseover: false)}
   end
 
   @impl true
@@ -268,8 +245,7 @@ defmodule LiveSelect.Component do
     |> assign(
       options: [],
       current_focus: -1,
-      selection: selection,
-      dropdown_mouseover: false
+      selection: selection
     )
     |> push_event("select", %{
       id: socket.assigns.id,

@@ -355,22 +355,6 @@ defmodule LiveSelectTest do
     assert_option_active(live, 1)
   end
 
-  test "moving the mouse on the dropdown deactivate option", %{conn: conn} do
-    stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
-
-    {:ok, live, _html} = live(conn, "/?style=daisyui")
-
-    type(live, "ABC")
-
-    navigate(live, 1, :down)
-
-    assert_option_active(live, 0)
-
-    dropdown_mouseover(live)
-
-    assert_option_active(live, -1)
-  end
-
   test "dropdown becomes visible when typing", %{conn: conn} do
     stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
 
@@ -404,22 +388,6 @@ defmodule LiveSelectTest do
       keydown(live, "Escape")
 
       refute dropdown_visible(live)
-    end
-
-    test "if the mouse is on the dropdown blur on text input does not hide it", %{live: live} do
-      dropdown_mouseover(live)
-
-      render_blur(element(live, @selectors[:text_input]))
-
-      assert dropdown_visible(live)
-    end
-
-    test "if the mouse is on the dropdown the escape key does not hide it", %{live: live} do
-      dropdown_mouseover(live)
-
-      keydown(live, "Escape")
-
-      assert dropdown_visible(live)
     end
   end
 

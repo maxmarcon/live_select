@@ -4,7 +4,6 @@
   name="live-select"
   phx-hook="LiveSelect"
   phx-target={@myself}
-  phx-click-away="click_away"
 >
   <div class="flex">
     <%= if @mode == :tags do %>
@@ -48,7 +47,7 @@
     name="live-select-dropdown"
   >
     <%= for {%{label: label}, idx} <- Enum.with_index(@options) do %>
-      <li phx-click="option-click" phx-value-idx={idx} phx-target={@myself}>
+      <li phx-click="option_click" phx-value-idx={idx} phx-target={@myself}>
         <div class={[
           class(@style, :option, @option_class, @option_extra_class),
           if(idx == @current_focus, do: class(@style, :active_option, @active_option_class))

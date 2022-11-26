@@ -31,11 +31,6 @@ defmodule LiveSelect.TestHelpers do
     |> render_hook("keydown", %{"key" => key})
   end
 
-  def dropdown_mouseover(live) do
-    element(live, @selectors[:container])
-    |> render_hook("dropdown-mouseover")
-  end
-
   def dropdown_visible(live) do
     invisible =
       element(live, @selectors[:dropdown])
@@ -148,19 +143,21 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_reset(live, default_value \\ nil) do
-    text_input =
-      live
-      |> element(@selectors[:text_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert text_input
+    assert live
+           |> element(@selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
            |> Floki.attribute("readonly") ==
              []
 
+    assert live
+           |> element(@selectors[:hidden_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("value") == List.wrap(default_value)
+
     assert_push_event(live, "reset", %{
-      id: "my_form_city_search_component",
-      default_value: ^default_value
+      id: "my_form_city_search_component"
     })
   end
 

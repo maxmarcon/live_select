@@ -2,16 +2,10 @@ export default {
     LiveSelect: {
         attachDomEventHandlers() {
             this.el.querySelector("input[type=text]").onkeydown = (event) => {
-                if (event.code == "Enter") {
+                if (event.code === "Enter") {
                     event.preventDefault()
                 }
                 this.pushEventTo(this.el, 'keydown', {key: event.code})
-            }
-            this.el.querySelector("ul").onmouseover = () => {
-                this.pushEventTo(this.el, 'dropdown-mouseover', {})
-            }
-            this.el.querySelector("ul").onmouseleave = () => {
-                this.pushEventTo(this.el, 'dropdown-mouseleave', {})
             }
         },
         setInputValue(value) {
