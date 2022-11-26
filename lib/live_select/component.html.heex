@@ -29,10 +29,13 @@
     ) %>
   </div>
   <%= if @mode == :single do %>
-    <%= hidden_input(@form, @field, disabled: @disabled, value: @default_value) %>
+    <%= hidden_input(@form, @field,
+      disabled: @disabled,
+      value: value(@selection, @default_value)
+    ) %>
   <% else %>
-    <%= multiple_select(@form, @field, options_for_multiselect(@selection),
-      selected: options_for_multiselect(@selection),
+    <%= multiple_select(@form, @field, values(@selection),
+      selected: values(@selection),
       readonly: true,
       style: "display: none;"
     ) %>

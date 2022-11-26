@@ -281,7 +281,7 @@ defmodule LiveSelect.Component do
   defp reset(socket) do
     socket
     |> assign(options: [], selection: [])
-    |> push_event("reset", %{id: socket.assigns.id, default_value: socket.assigns.default_value})
+    |> push_event("reset", %{id: socket.assigns.id})
   end
 
   defp normalize_options(options) do
@@ -314,10 +314,14 @@ defmodule LiveSelect.Component do
     end)
   end
 
-  defp options_for_multiselect(normalized_options) do
+  defp values(normalized_options) do
     normalized_options
     |> Enum.map(&encode(&1.value))
   end
+
+  defp value([], default_value), do: encode(default_value)
+
+  defp value([%{value: value} | _], _default_value), do: encode(value)
 
   defp class(style, element, class_override, class_extend \\ nil)
 
