@@ -5,6 +5,24 @@ defmodule LiveSelectTagsTest do
 
   import LiveSelect.TestHelpers
 
+  @selectors [
+    option_container: "ul[name=live-select-dropdown] > li"
+  ]
+
+  @default_style :tailwind
+  @expected_class [
+    daisyui: [
+      selected_option: ~S(disabled)
+    ],
+    tailwind: [
+      selected_option: ~S(text-gray-400)
+    ]
+  ]
+
+  @override_class_option [
+    selected_option: :selected_option_class
+  ]
+
   setup %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?mode=tags")
 
@@ -24,31 +42,14 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 3)
 
-    assert_options_selected(live, ["B", "D"])
+    assert_options_selected(live, ["B", "C"])
   end
 
   @tag :skip
   test "selected options appear in tags"
 
-  test "selected options don't reappear in the dropdown", %{live: live} do
-    stub_options(["A", "B", "C", "D"])
-
-    type(live, "ABC")
-
-    assert_options(live, ["A", "B", "C", "D"])
-
-    select_nth_option(live, 2)
-
-    type(live, "ABC")
-
-    assert_options(live, ["A", "C", "D"])
-
-    select_nth_option(live, 2)
-
-    type(live, "ABC")
-
-    assert_options(live, ["A", "D"])
-  end
+  @tag :skip
+  test "already selected options are not selectable in the dropdown"
 
   @tag :skip
   test "can remove selected options by clicking on tag"
@@ -58,4 +59,49 @@ defmodule LiveSelectTagsTest do
 
   @tag :skip
   test "can specify an alternative label for tags"
+
+  for style <- [:daisyui, :tailwind, :none, nil] do
+    @style style
+    describe "when style = #{@style || "default"}" do
+      test "class for selected option is set", %{conn: conn} do
+        {:ok, live, _} = live(conn, "/?mode=tags&style={@style}")
+
+        :ok = select_and_open_dropdown(live)
+
+        assert_option_container_selected_class(
+          live,
+          1,
+          get_in(@expected_class, [@style || @default_style, :selected_option]) || ""
+        )
+      end
+    end
+  end
+
+  defp select_and_open_dropdown(live) do
+    stub_options(["A", "B", "C", "D"])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    type(live, "ABC")
+
+    :ok
+  end
+
+  defp assert_option_container_selected_class(live, selected_pos, selected_class) do
+    element_classes =
+      render(live)
+      |> Floki.parse_document!()
+      |> Floki.attribute(@selectors[:option_container], "class")
+      |> Enum.map(&String.trim/1)
+
+    for {element_class, idx} <- Enum.with_index(element_classes) do
+      if idx == selected_pos do
+        assert String.contains?(element_class, selected_class)
+      else
+        refute String.contains?(element_class, selected_class)
+      end
+    end
+  end
 end

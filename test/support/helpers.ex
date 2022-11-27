@@ -10,7 +10,6 @@ defmodule LiveSelect.TestHelpers do
     text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
-    option: "ul[name=live-select-dropdown] > li:first-of-type > div",
     hidden_input: "input#my_form_city_search[type=hidden]"
   ]
 

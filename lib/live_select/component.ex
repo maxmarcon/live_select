@@ -20,11 +20,12 @@ defmodule LiveSelect.Component do
     option_class: nil,
     option_extra_class: nil,
     placeholder: nil,
-    update_min_len: 3,
+    selected_option_class: nil,
     style: :tailwind,
     text_input_class: nil,
     text_input_extra_class: nil,
-    text_input_selected_class: nil
+    text_input_selected_class: nil,
+    update_min_len: 3
   ]
 
   @styles [
@@ -33,6 +34,7 @@ defmodule LiveSelect.Component do
       container: ~S(dropdown dropdown-open),
       dropdown:
         ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      selected_option: ~S(disabled),
       text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary text-primary)
     ],
@@ -41,6 +43,7 @@ defmodule LiveSelect.Component do
       container: ~S(relative h-full text-black),
       dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer),
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
+      selected_option: ~S(text-gray-400),
       text_input:
         ~S(rounded-md h-full w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
       text_input_selected: ~S(border-gray-600 text-gray-600 border-2)
@@ -55,7 +58,7 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(
-        current_focus: -1,
+        active_option: -1,
         disabled: false,
         options: [],
         selection: [],
@@ -84,9 +87,8 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(assigns)
-      |> assign(:current_focus, -1)
+      |> assign(:active_option, -1)
       |> update(:options, &normalize_options/1)
-      |> update(:options, &(&1 -- socket.assigns.selection))
 
     socket =
       @default_opts
@@ -160,7 +162,7 @@ defmodule LiveSelect.Component do
     {:noreply,
      assign(
        socket,
-       current_focus: min(length(socket.assigns.options) - 1, socket.assigns.current_focus + 1),
+       active_option: min(length(socket.assigns.options) - 1, socket.assigns.active_option + 1),
        hide_dropdown: false
      )}
   end
@@ -169,7 +171,7 @@ defmodule LiveSelect.Component do
   def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
     {:noreply,
      assign(socket,
-       current_focus: max(0, socket.assigns.current_focus - 1),
+       active_option: max(0, socket.assigns.active_option - 1),
        hide_dropdown: false
      )}
   end
@@ -180,7 +182,7 @@ defmodule LiveSelect.Component do
       if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
         reset(socket)
       else
-        select(socket, socket.assigns.current_focus)
+        select(socket, socket.assigns.active_option)
       end
 
     {:noreply, socket}
@@ -244,7 +246,7 @@ defmodule LiveSelect.Component do
     socket
     |> assign(
       options: [],
-      current_focus: -1,
+      active_option: -1,
       selection: selection
     )
     |> push_event("select", %{

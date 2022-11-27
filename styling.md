@@ -37,6 +37,11 @@ Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
+In `tags` mode there adds 2 additional stylable elements:
+
+7. An option which has been **selected**
+8. The **tags**
+
 For each of these elements there is an `{element}_class` and for some also an `{element}_extra_class` option, which can
 be used
 to override or extend the default CSS classes for the element, respectively.
@@ -54,6 +59,8 @@ The following table shows the default styles for each element and the options yo
 | *dropdown*            | absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer                                       | dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer | `dropdown_class`            | `dropdown_extra_class`   |
 | *option*              | rounded-lg px-4 py-1 hover:bg-gray-400                                                                  |                                                                                             | `option_class`              | `option_extra_class`     |
 | *active option*       | text-white bg-gray-600                                                                                  | active                                                                                      | `active_option_class`       |                          |
+| *selected option*     | text-gray-400                                                                                           | disabled                                                                                    | `selected_option_class`     |
+| *tag*                 |                                                                                                         |                                                                                             | `tag_class`                 | `tag_extra_class`        |
 
 For example, if you want the options to use black text, the active option to have a red background,
 and remove rounded borders from both the dropdown and the active option, call [live_select/3](`LiveSelect.live_select/3`)

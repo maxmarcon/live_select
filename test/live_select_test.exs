@@ -47,11 +47,11 @@ defmodule LiveSelectTest do
 
   @selectors [
     container: "div[name=live-select]",
-    text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
+    hidden_input: "input#my_form_city_search[type=hidden]",
     option: "ul[name=live-select-dropdown] > li:first-of-type > div",
-    hidden_input: "input#my_form_city_search[type=hidden]"
+    text_input: "input#my_form_city_search_text_input[type=text]"
   ]
 
   setup :verify_on_exit!
