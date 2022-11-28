@@ -40,14 +40,30 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 3)
 
-    assert_selected_multiple(live, ["B", "C"])
+    assert_selected_multiple(live, ["B", "D"])
   end
 
   @tag :skip
   test "selected options appear in tags"
 
+  test "already selected options are not selectable in the dropdown using keyboard", %{live: live} do
+    stub_options(["A", "B", "C", "D"])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    type(live, "ABC")
+
+    navigate(live, 2, :down)
+
+    keydown(live, "Enter")
+
+    assert_selected_multiple(live, ["B", "C"])
+  end
+
   @tag :skip
-  test "already selected options are not selectable in the dropdown"
+  test "already selected options are not selectable in the dropdown using mouse"
 
   @tag :skip
   test "can remove selected options by clicking on tag"

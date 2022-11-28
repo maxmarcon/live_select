@@ -162,7 +162,7 @@ defmodule LiveSelect.Component do
     {:noreply,
      assign(
        socket,
-       active_option: min(length(socket.assigns.options) - 1, socket.assigns.active_option + 1),
+       active_option: next_selectable(socket),
        hide_dropdown: false
      )}
   end
@@ -171,7 +171,7 @@ defmodule LiveSelect.Component do
   def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
     {:noreply,
      assign(socket,
-       active_option: max(0, socket.assigns.active_option - 1),
+       active_option: prev_selectable(socket),
        hide_dropdown: false
      )}
   end
@@ -333,7 +333,26 @@ defmodule LiveSelect.Component do
     """
   end
 
-  def encode(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
+  defp encode(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
 
-  def encode(value), do: Jason.encode!(value)
+  defp encode(value), do: Jason.encode!(value)
+
+  defp next_selectable(socket) do
+    socket.assigns.options
+    |> Enum.with_index()
+    |> Enum.find({nil, socket.assigns.active_option}, fn {opt, idx} ->
+      idx > socket.assigns.active_option && opt not in socket.assigns.selection
+    end)
+    |> elem(1)
+  end
+
+  defp prev_selectable(socket) do
+    socket.assigns.options
+    |> Enum.with_index()
+    |> Enum.reverse()
+    |> Enum.find({nil, socket.assigns.active_option}, fn {opt, idx} ->
+      idx < socket.assigns.active_option && opt not in socket.assigns.selection
+    end)
+    |> elem(1)
+  end
 end
