@@ -40,11 +40,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:option_extra_class, :string)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
-      field(:update_min_len, :integer)
+      field(:selected_option_class, :string)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
       field(:text_input_class, :string)
       field(:text_input_extra_class, :string)
       field(:text_input_selected_class, :string)
+      field(:update_min_len, :integer)
     end
 
     def changeset(source \\ %__MODULE__{}, params) do
@@ -65,11 +66,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
         :option_extra_class,
         :placeholder,
         :search_delay,
-        :update_min_len,
+        :selected_option_class,
         :style,
         :text_input_class,
         :text_input_extra_class,
-        :text_input_selected_class
+        :text_input_selected_class,
+        :update_min_len
       ])
       |> validate_required([:field_name, :form_name])
       |> validate_number(:debounce, greater_than_or_equal_to: 0)

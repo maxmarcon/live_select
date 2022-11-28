@@ -72,6 +72,18 @@ defmodule LiveSelectTagsTest do
           get_in(@expected_class, [@style || @default_style, :selected_option]) || ""
         )
       end
+
+      test "class for selected option can be overridden", %{conn: conn} do
+        {:ok, live, _} = live(conn, "/?mode=tags&style=#{@style}&selected_option_class=foo")
+
+        :ok = select_and_open_dropdown(live, 2)
+
+        assert_option_container_class(
+          live,
+          2,
+          "foo"
+        )
+      end
     end
   end
 
