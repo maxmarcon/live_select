@@ -9,18 +9,18 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     import Ecto.Changeset
 
-    @empty_styles [
-      active_option_class: nil,
-      container_class: nil,
-      container_extra_class: nil,
-      dropdown_class: nil,
-      dropdown_extra_class: nil,
-      option_class: nil,
-      option_extra_class: nil,
-      selected_option_class: nil,
-      text_input_class: nil,
-      text_input_extra_class: nil,
-      text_input_selected_class: nil
+    @style_options [
+      :active_option_class,
+      :container_class,
+      :container_extra_class,
+      :dropdown_class,
+      :dropdown_extra_class,
+      :option_class,
+      :option_extra_class,
+      :selected_option_class,
+      :text_input_class,
+      :text_input_extra_class,
+      :text_input_selected_class
     ]
 
     @primary_key false
@@ -99,11 +99,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     def has_style_errors?(%Ecto.Changeset{errors: errors}) do
       errors
-      |> Keyword.take(Keyword.keys(@empty_styles))
+      |> Keyword.take(@style_options)
       |> Enum.any?()
     end
 
-    def style_options(), do: Keyword.keys(@empty_styles)
+    def style_options(), do: @style_options
 
     defp validate_styles(changeset) do
       if get_field(changeset, :style) == :none do
@@ -131,22 +131,16 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     defp maybe_apply_initial_styles(changeset) do
-      style_changed = get_change(changeset, :style)
       new_settings = get_field(changeset, :new)
 
-      if style_changed || new_settings do
+      if new_settings do
         initial_classes =
           Application.get_env(:live_select, :initial_classes, [])
-          |> Keyword.get(style_changed || LiveSelect.Component.default_opts()[:style], [])
+          |> Keyword.get(LiveSelect.Component.default_opts()[:style], [])
 
-        @empty_styles
-        |> Keyword.merge(initial_classes)
+        initial_classes
         |> Enum.reduce(changeset, fn {class, initial_value}, changeset ->
-          if (style_changed && !new_settings) || !get_change(changeset, class) do
-            put_change(changeset, class, initial_value)
-          else
-            changeset
-          end
+          put_change(changeset, class, initial_value)
         end)
       else
         changeset
