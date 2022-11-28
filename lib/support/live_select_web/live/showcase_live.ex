@@ -17,6 +17,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       dropdown_extra_class: nil,
       option_class: nil,
       option_extra_class: nil,
+      selected_option_class: nil,
       text_input_class: nil,
       text_input_extra_class: nil,
       text_input_selected_class: nil
