@@ -141,7 +141,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "can select option with mouseclick", %{conn: conn} do
@@ -155,7 +155,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2, :click)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "supports dropdown filled with strings", %{conn: conn} do
@@ -169,7 +169,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B")
+    assert_selected(live, "B")
   end
 
   test "supports dropdown filled with atoms", %{conn: conn} do
@@ -183,7 +183,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, :B)
+    assert_selected(live, :B)
   end
 
   test "supports dropdown filled with integers", %{conn: conn} do
@@ -197,7 +197,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, 2)
+    assert_selected(live, 2)
   end
 
   test "supports dropdown filled with keywords", %{conn: conn} do
@@ -211,7 +211,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "supports dropdown filled with values from keyword list", %{conn: conn} do
@@ -229,7 +229,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, :B, 2)
+    assert_selected(live, :B, 2)
   end
 
   test "supports dropdown filled with values from map", %{conn: conn} do
@@ -243,7 +243,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, :B, 2)
+    assert_selected(live, :B, 2)
   end
 
   test "supports dropdown filled from an enumerable of maps", %{conn: conn} do
@@ -257,7 +257,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "supports dropdown filled from an enumerable of keywords", %{conn: conn} do
@@ -271,7 +271,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "supports dropdown filled with keywords with key as the label", %{conn: conn} do
@@ -285,7 +285,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, "B", 2)
+    assert_selected(live, "B", 2)
   end
 
   test "can specify a value to be sent when nothing is selected via default_value", %{conn: conn} do
@@ -313,7 +313,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, :B, 2)
+    assert_selected(live, :B, 2)
 
     element(live, @selectors[:text_input])
     |> render_click()
@@ -334,7 +334,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_option_selected(live, :B, 2)
+    assert_selected(live, :B, 2)
 
     element(live, @selectors[:text_input])
     |> render_click()
@@ -352,7 +352,7 @@ defmodule LiveSelectTest do
     navigate(live, 4, :down)
     navigate(live, 1, :up)
 
-    assert_option_active(live, 1)
+    assert_option_active(live, 2)
   end
 
   test "dropdown becomes visible when typing", %{conn: conn} do
@@ -640,7 +640,7 @@ defmodule LiveSelectTest do
 
         assert_option_active(
           live,
-          0,
+          1,
           get_in(@expected_class, [@style || @default_style, :active_option]) || ""
         )
       end
@@ -654,7 +654,7 @@ defmodule LiveSelectTest do
 
         assert_option_active(
           live,
-          0,
+          1,
           "foo"
         )
       end

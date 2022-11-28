@@ -94,7 +94,7 @@ defmodule LiveSelect.TestHelpers do
       |> Floki.attribute(@selectors[:dropdown_entries], "class")
       |> Enum.map(&String.trim/1)
 
-    for {element_class, idx} <- Enum.with_index(element_classes) do
+    for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == pos do
         assert String.contains?(element_class, active_class)
       else
@@ -103,7 +103,7 @@ defmodule LiveSelect.TestHelpers do
     end
   end
 
-  def assert_option_selected(live, label, value \\ nil) do
+  def assert_selected(live, label, value \\ nil) do
     # would be nice to check the value of the hidden input field, but this
     # is set by the JS hook
     value = if value, do: value, else: label
@@ -124,7 +124,7 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
-  def assert_options_selected(live, values) do
+  def assert_selected_multiple(live, values) do
     selected_options =
       live
       |> element(@selectors[:container])

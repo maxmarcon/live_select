@@ -36,13 +36,11 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_options_selected(live, ["B"])
-
     type(live, "ABC")
 
     select_nth_option(live, 3)
 
-    assert_options_selected(live, ["B", "C"])
+    assert_selected_multiple(live, ["B", "C"])
   end
 
   @tag :skip
@@ -64,20 +62,22 @@ defmodule LiveSelectTagsTest do
     @style style
     describe "when style = #{@style || "default"}" do
       test "class for selected option is set", %{conn: conn} do
-        {:ok, live, _} = live(conn, "/?mode=tags&style={@style}")
+        {:ok, live, _} = live(conn, "/?mode=tags&style=#{@style}")
 
-        :ok = select_and_open_dropdown(live)
+        :ok = select_and_open_dropdown(live, 2)
 
-        assert_option_container_selected_class(
+        assert_option_container_class(
           live,
-          1,
+          2,
           get_in(@expected_class, [@style || @default_style, :selected_option]) || ""
         )
       end
     end
   end
 
-  defp select_and_open_dropdown(live) do
+  defp select_and_open_dropdown(live, pos) do
+    if pos < 1 || pos > 4, do: raise("pos must be between 1 adn 4")
+
     stub_options(["A", "B", "C", "D"])
 
     type(live, "ABC")
@@ -89,14 +89,16 @@ defmodule LiveSelectTagsTest do
     :ok
   end
 
-  defp assert_option_container_selected_class(live, selected_pos, selected_class) do
+  defp assert_option_container_class(_live, _selected_pos, ""), do: true
+
+  defp assert_option_container_class(live, selected_pos, selected_class) do
     element_classes =
       render(live)
       |> Floki.parse_document!()
       |> Floki.attribute(@selectors[:option_container], "class")
       |> Enum.map(&String.trim/1)
 
-    for {element_class, idx} <- Enum.with_index(element_classes) do
+    for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do
         assert String.contains?(element_class, selected_class)
       else
