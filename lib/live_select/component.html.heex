@@ -48,7 +48,7 @@
   >
     <%= for {option, idx} <- Enum.with_index(@options) do %>
       <li
-        phx-click="option_click"
+        phx-click={if option not in @selection, do: "option_click"}
         phx-value-idx={idx}
         phx-target={@myself}
         class={
