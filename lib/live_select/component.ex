@@ -45,8 +45,10 @@ defmodule LiveSelect.Component do
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
       selected_option: ~S(text-gray-400),
       text_input:
-        ~S(rounded-md h-full w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
-      text_input_selected: ~S(border-gray-600 text-gray-600 border-2)
+        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
+      text_input_selected: ~S(border-gray-600 text-gray-600 border-2),
+      tags_container: ~S(flex bg-white flex-wrap gap-1 p-1),
+      tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
     ],
     none: []
   ]
@@ -199,6 +201,11 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
+  def handle_event("option_remove", %{"idx" => idx}, socket) do
+    {:noreply, unselect(socket, String.to_integer(idx))}
+  end
+
+  @impl true
   def handle_event(_event, _params, socket) do
     {:noreply, socket}
   end
@@ -253,6 +260,15 @@ defmodule LiveSelect.Component do
       id: socket.assigns.id,
       mode: socket.assigns.mode,
       selection: selection
+    })
+  end
+
+  defp unselect(socket, pos) do
+    socket
+    |> update(:selection, &List.delete_at(&1, pos))
+    |> push_event("select", %{
+      id: socket.assigns.id,
+      mode: socket.assigns.mode
     })
   end
 
@@ -352,5 +368,18 @@ defmodule LiveSelect.Component do
     |> Enum.reject(fn {opt, _} -> active_option == opt || opt in selection end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 < active_option))
+  end
+
+  defp x(assigns) do
+    ~H"""
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="w-5 h-5 @class"
+    >
+      <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+    </svg>
+    """
   end
 end

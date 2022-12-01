@@ -5,28 +5,33 @@
   phx-hook="LiveSelect"
   phx-target={@myself}
 >
-  <div class="flex">
-    <%= if @mode == :tags do %>
-      <%= for %{label: label} <- @selection do %>
-        <span><%= label %></span>
+  <%= if @mode == :tags && Enum.any?(@selection) do %>
+    <div class={class(@style, :tags_container, nil, nil)}>
+      <%= for {%{label: label}, idx} <- Enum.with_index(@selection) do %>
+        <div class={class(@style, :tag, nil, nil)}>
+          <%= label %>
+          <button type="button" phx-click="option_remove" phx-value-idx={idx} phx-target={@myself}>
+            <.x class="cursor-pointer" />
+          </button>
+        </div>
       <% end %>
-    <% end %>
-    <%= text_input(@form, @text_input_field,
-      class:
-        "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
-      phx_click: "click",
-      placeholder: @placeholder,
-      phx_debounce: @debounce,
-      phx_keyup: "keyup",
-      phx_target: @myself,
-      phx_change: "change",
-      disabled: @disabled,
-      readonly: @mode == :single && Enum.any?(@selection),
-      autocomplete: "off",
-      phx_focus: "focus",
-      phx_blur: "blur"
-    ) %>
-  </div>
+    </div>
+  <% end %>
+  <%= text_input(@form, @text_input_field,
+    class:
+      "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
+    phx_click: "click",
+    placeholder: @placeholder,
+    phx_debounce: @debounce,
+    phx_keyup: "keyup",
+    phx_target: @myself,
+    phx_change: "change",
+    disabled: @disabled,
+    readonly: @mode == :single && Enum.any?(@selection),
+    autocomplete: "off",
+    phx_focus: "focus",
+    phx_blur: "blur"
+  ) %>
   <%= if @mode == :single do %>
     <%= hidden_input(@form, @field,
       disabled: @disabled,
