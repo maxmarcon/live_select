@@ -18,6 +18,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       :option_class,
       :option_extra_class,
       :selected_option_class,
+      :tag_class,
+      :tag_extra_class,
+      :tags_container_class,
+      :tags_container_extra_class,
       :text_input_class,
       :text_input_extra_class,
       :text_input_selected_class
@@ -25,55 +29,40 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     @primary_key false
     embedded_schema do
-      field(:active_option_class, :string)
-      field(:container_class, :string)
-      field(:container_extra_class, :string)
       field(:debounce, :integer, default: 100)
       field(:default_value, :string)
       field(:disabled, :boolean)
-      field(:dropdown_class, :string)
-      field(:dropdown_extra_class, :string)
       field(:field_name, :string, default: "city_search")
       field(:form_name, :string, default: "my_form")
       field(:mode, Ecto.Enum, values: [:single, :tags], default: :single)
       field(:new, :boolean, default: true)
-      field(:option_class, :string)
-      field(:option_extra_class, :string)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
-      field(:selected_option_class, :string)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
-      field(:text_input_class, :string)
-      field(:text_input_extra_class, :string)
-      field(:text_input_selected_class, :string)
       field(:update_min_len, :integer)
+
+      for class <- @class_options do
+        field(class, :string)
+      end
     end
 
     def changeset(source \\ %__MODULE__{}, params) do
       source
-      |> cast(params, [
-        :active_option_class,
-        :container_class,
-        :container_extra_class,
-        :debounce,
-        :default_value,
-        :disabled,
-        :dropdown_class,
-        :dropdown_extra_class,
-        :field_name,
-        :form_name,
-        :mode,
-        :option_class,
-        :option_extra_class,
-        :placeholder,
-        :search_delay,
-        :selected_option_class,
-        :style,
-        :text_input_class,
-        :text_input_extra_class,
-        :text_input_selected_class,
-        :update_min_len
-      ])
+      |> cast(
+        params,
+        [
+          :debounce,
+          :default_value,
+          :disabled,
+          :field_name,
+          :form_name,
+          :mode,
+          :placeholder,
+          :search_delay,
+          :style,
+          :update_min_len
+        ] ++ @class_options
+      )
       |> validate_required([:field_name, :form_name])
       |> validate_number(:debounce, greater_than_or_equal_to: 0)
       |> validate_number(:search_delay, greater_than_or_equal_to: 0)

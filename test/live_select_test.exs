@@ -472,7 +472,7 @@ defmodule LiveSelectTest do
   test "raises if unknown style is given" do
     assert_raise(
       RuntimeError,
-      ~s(Invalid style: "not_a_valid_style". Style must be one of: [:daisyui, :tailwind, :none]),
+      ~s(Invalid style: "not_a_valid_style". Style must be one of: [:tailwind, :daisyui, :none]),
       fn ->
         render_component(LiveSelect.Component,
           id: "live_select",

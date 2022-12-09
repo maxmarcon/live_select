@@ -22,6 +22,10 @@ defmodule LiveSelect.Component do
     placeholder: nil,
     selected_option_class: nil,
     style: :tailwind,
+    tag_class: nil,
+    tag_extra_class: nil,
+    tags_container_class: nil,
+    tags_container_extra_class: nil,
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil,
@@ -29,15 +33,6 @@ defmodule LiveSelect.Component do
   ]
 
   @styles [
-    daisyui: [
-      active_option: ~S(active),
-      container: ~S(dropdown dropdown-open),
-      dropdown:
-        ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
-      selected_option: ~S(disabled),
-      text_input: ~S(input input-bordered w-full),
-      text_input_selected: ~S(input-primary text-primary)
-    ],
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
       container: ~S(relative h-full text-black),
@@ -49,6 +44,17 @@ defmodule LiveSelect.Component do
       text_input_selected: ~S(border-gray-600 text-gray-600 border-2),
       tags_container: ~S(flex bg-white flex-wrap gap-1 p-1),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
+    ],
+    daisyui: [
+      active_option: ~S(active),
+      container: ~S(dropdown dropdown-open),
+      dropdown:
+        ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      selected_option: ~S(disabled),
+      text_input: ~S(input input-bordered w-full),
+      text_input_selected: ~S(input-primary text-primary),
+      tags_container: ~S(flex flex-wrap gap-1 p-1 bg-neutral),
+      tag: ~S(p-1 text-sm badge badge-primary)
     ],
     none: []
   ]
