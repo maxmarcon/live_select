@@ -26,7 +26,7 @@ defmodule LiveSelectTest do
       dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer),
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
       text_input:
-        ~S(rounded-md h-full w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
+        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
       text_input_selected: ~S(border-gray-600 text-gray-600 border-2)
     ]
   ]
