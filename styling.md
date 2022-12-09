@@ -29,7 +29,7 @@ You can control the style of the following elements:
 1. The outer **container** of the live_select component
 2. The **text input** field
 3. The **text input** field when an option has been selected
-4. The **dropdown** containing the selectable options
+4. The **dropdown** that contains the selectable options
 5. The single selectable **option**(s)
 6. The currently **active option**
 
@@ -37,10 +37,11 @@ Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
-In `tags` mode there adds 2 additional stylable elements:
+In `tags` mode there adds 3 additional stylable elements:
 
-7. An option which has been **selected**
-8. The **tags**
+7. An option in the dropdown that has been **selected**
+8. The **tags** showing the selected options
+9. THe **tags_container** that contains the tags
 
 For each of these elements there is an `{element}_class` and for some also an `{element}_extra_class` option, which can
 be used
