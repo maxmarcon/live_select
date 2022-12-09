@@ -124,9 +124,31 @@
               Classes in the defaults can be selectively
               excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
             </p>
-            <%= for class <- @style_options do %>
+            <div class="form-control mt-2">
+              <div class="input-group">
+                <span class="text-sm">Filter styles:</span>
+                <%= text_input(f, :style_filter,
+                  value: @style_filter,
+                  class: "input input-bordered input-sm",
+                  phx_change: "filter-styles"
+                ) %>
+                <button type="button" class="btn btn-square btn-sm" phx-click="clear-style-filter">
+                  <.x_icon />
+                </button>
+              </div>
+            </div>
+            <label
+              :if={
+                Enum.filter(@class_options, &String.contains?(to_string(&1), @style_filter))
+                |> Enum.empty?()
+              }
+              class="label label-text text-error text-sm"
+            >
+              No styles match filter
+            </label>
+            <%= for class <- @class_options do %>
               <%= if valid_class(@changeset, class) do %>
-                <div class="form-control w-full">
+                <div class={"form-control w-full #{unless String.contains?(to_string(class), @style_filter), do: "hidden"}"}>
                   <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
                   <%= text_input(f, class,
                     class: "input input-sm input-bordered",

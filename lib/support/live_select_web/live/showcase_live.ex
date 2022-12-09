@@ -9,7 +9,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     import Ecto.Changeset
 
-    @style_options [
+    @class_options [
       :active_option_class,
       :container_class,
       :container_extra_class,
@@ -99,11 +99,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     def has_style_errors?(%Ecto.Changeset{errors: errors}) do
       errors
-      |> Keyword.take(@style_options)
+      |> Keyword.take(@class_options)
       |> Enum.any?()
     end
 
-    def style_options(), do: @style_options
+    def class_options(), do: @class_options
 
     defp validate_styles(changeset) do
       if get_field(changeset, :style) == :none do
@@ -213,7 +213,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         submitted: false,
         save_classes_pid: nil,
         show_styles: false,
-        style_options: Settings.style_options(),
+        class_options: Settings.class_options(),
+        style_filter: "",
         dark_mode: false
       )
 
@@ -292,6 +293,14 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   def handle_event("dark-mode", value, socket) do
     {:noreply, assign(socket, :dark_mode, value)}
+  end
+
+  def handle_event("filter-styles", %{"settings" => %{"style_filter" => filter}}, socket) do
+    {:noreply, assign(socket, style_filter: filter)}
+  end
+
+  def handle_event("clear-style-filter", _params, socket) do
+    {:noreply, assign(socket, style_filter: "")}
   end
 
   @impl true
@@ -386,7 +395,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   defp save_classes(%Settings{} = settings) do
     settings
-    |> Map.take(Settings.style_options())
+    |> Map.take(Settings.class_options())
     |> Enum.reject(fn {_key, classes} -> is_nil(classes) end)
     |> Enum.map(fn {_key, classes} -> classes <> "\n" end)
     |> Enum.into(File.stream!(@class_file))
@@ -417,6 +426,21 @@ defmodule LiveSelectWeb.ShowcaseLive do
         stroke-linejoin="round"
         d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
       />
+    </svg>
+    """
+  end
+
+  defp x_icon(assigns) do
+    ~H"""
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
     """
   end
