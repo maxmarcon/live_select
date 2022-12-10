@@ -50,6 +50,7 @@ defmodule LiveSelect.Component do
       container: ~S(dropdown dropdown-open),
       dropdown:
         ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      option: "",
       selected_option: ~S(disabled),
       text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary text-primary),
@@ -87,6 +88,9 @@ defmodule LiveSelect.Component do
 
     get_in(@styles, [style, element])
   end
+
+  @doc false
+  def styles(), do: @styles
 
   @impl true
   def update(assigns, socket) do
