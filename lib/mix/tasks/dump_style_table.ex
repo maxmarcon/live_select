@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.CreateStylingTable do
+defmodule Mix.Tasks.DumpStyleTable do
   @moduledoc false
 
   use Mix.Task
