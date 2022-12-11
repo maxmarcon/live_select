@@ -27,7 +27,7 @@ defmodule Mix.Tasks.DumpStyleTable do
 
       header <>
         "| *#{el}* | " <>
-        (Keyword.values(styles) |> Enum.join(" | ")) <>
+        (Keyword.values(styles) |> Enum.map_join(" | ", &format_styles(&1))) <>
         " | #{class_override_option(el)} | #{class_extend_option(el)} |\n"
     end)
     |> IO.write()
@@ -45,4 +45,13 @@ defmodule Mix.Tasks.DumpStyleTable do
 
   defp class_options(),
     do: Enum.map(LiveSelect.Component.default_opts() |> Keyword.keys(), &to_string/1)
+
+  defp format_styles(nil), do: ""
+
+  defp format_styles(styles) do
+    styles
+    |> String.split()
+    |> Enum.sort()
+    |> Enum.join(" ")
+  end
 end
