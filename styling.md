@@ -52,17 +52,18 @@ to completely override the default classes, or use `{element}_extra_class` to ex
 
 The following table shows the default styles for each element and the options you can use to adjust its CSS classes.
 
-| Element               | Default daisyui classes                                                                     | Default tailwind classes                                                                         | Class override option     | Class extend option        |
-|-----------------------|---------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|---------------------------|----------------------------|
-| *active_option*       | active                                                                                      | text-white bg-gray-600                                                                           | active_option_class       |                            |
-| *container*           | dropdown dropdown-open                                                                      | relative h-full text-black                                                                       | container_class           | container_extra_class      |
-| *dropdown*            | dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer | absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer                                | dropdown_class            | dropdown_extra_class       |
-| *option*              |                                                                                             | rounded-lg px-4 py-1 hover:bg-gray-400                                                           | option_class              | option_extra_class         |
-| *selected_option*     | disabled                                                                                    | text-gray-400                                                                                    | selected_option_class     |                            |
-| *tag*                 | p-1 text-sm badge badge-primary                                                             | p-1 text-sm rounded-lg bg-blue-400 flex                                                          | tag_class                 | tag_extra_class            |
-| *tags_container*      | flex flex-wrap gap-1 p-1 bg-neutral                                                         | flex bg-white flex-wrap gap-1 p-1                                                                | tags_container_class      | tags_container_extra_class |
-| *text_input*          | input input-bordered w-full                                                                 | rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 | text_input_class          | text_input_extra_class     |
-| *text_input_selected* | input-primary text-primary                                                                  | border-gray-600 text-gray-600 border-2                                                           | text_input_selected_class |                            |
+| Element | Default daisyui classes | Default tailwind classes | Class override option | Class extend option |
+|----|----|----|----|----|
+| *active_option* | active | bg-gray-600 text-white | active_option_class |  |
+| *container* | dropdown dropdown-open | h-full relative text-black | container_class | container_extra_class |
+| *dropdown* | bg-base-200 cursor-pointer dropdown-content menu menu-compact p-1 rounded-box shadow w-full | absolute bg-gray-100 cursor-pointer rounded-xl shadow w-full z-50 | dropdown_class | dropdown_extra_class |
+| *option* |  | hover:bg-gray-400 px-4 py-1 rounded-lg | option_class | option_extra_class |
+| *selected_option* | disabled | text-gray-400 | selected_option_class |  |
+| *tag* | badge badge-primary p-1.5 text-sm | bg-blue-400 flex p-1 rounded-lg text-sm | tag_class | tag_extra_class |
+| *tags_container* | bg-primary-content flex flex-wrap gap-1 p-1 rounded-md | bg-white flex flex-wrap gap-1 p-1 rounded-md | tags_container_class | tags_container_extra_class |
+| *text_input* | input input-bordered w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 rounded-md w-full | text_input_class | text_input_extra_class |
+| *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
+
 
 For example, if you want the options to use black text, the active option to have a red background,
 and remove rounded borders from both the dropdown and the active option, call [live_select/3](`LiveSelect.live_select/3`)
