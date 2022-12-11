@@ -95,27 +95,31 @@ defmodule LiveSelectWeb.ShowcaseLive do
     def class_options(), do: @class_options
 
     defp validate_styles(changeset) do
-      if get_field(changeset, :style) == :none do
-        changeset
-      else
-        for {class, extra_class} <- [
-              {:container_class, :container_extra_class},
-              {:dropdown_class, :dropdown_extra_class},
-              {:text_input_class, :text_input_extra_class},
-              {:option_class, :option_extra_class}
-            ],
-            reduce: changeset do
-          changeset ->
-            if get_field(changeset, class) && get_field(changeset, extra_class) do
+      for {class, extra_class} <- [
+            {:container_class, :container_extra_class},
+            {:dropdown_class, :dropdown_extra_class},
+            {:text_input_class, :text_input_extra_class},
+            {:option_class, :option_extra_class},
+            {:tags_container_class, :tags_container_extra_class},
+            {:tag_class, :tag_extra_class}
+          ],
+          reduce: changeset do
+        changeset ->
+          cond do
+            get_field(changeset, :style) == :none && get_field(changeset, extra_class) ->
+              add_error(changeset, extra_class, "Can't specify this when style is none")
+
+            get_field(changeset, :style) != :none && get_field(changeset, class) &&
+                get_field(changeset, extra_class) ->
               errmsgs = "You can only specify one of these"
 
               changeset
               |> add_error(class, errmsgs)
               |> add_error(extra_class, errmsgs)
-            else
+
+            true ->
               changeset
-            end
-        end
+          end
       end
     end
 
@@ -267,7 +271,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ) do
     socket =
       socket
-      |> push_patch(to: Routes.live_path(socket, __MODULE__, prune_params(params)))
+      |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
 
     {:noreply, socket}
   end
@@ -396,7 +400,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp valid_class(changeset, class) do
-    Ecto.Changeset.get_field(changeset, :style) != :none ||
+    changeset.errors[class] ||
+      Ecto.Changeset.get_field(changeset, :style) != :none ||
       !String.contains?(to_string(class), "extra")
   end
 
@@ -433,13 +438,4 @@ defmodule LiveSelectWeb.ShowcaseLive do
     </svg>
     """
   end
-
-  defp prune_params(%{"style" => "none"} = params) do
-    Map.drop(
-      params,
-      ["container_extra_class", "dropdown_extra_class", "text_input_extra_class"]
-    )
-  end
-
-  defp prune_params(params), do: params
 end

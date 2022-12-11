@@ -124,9 +124,9 @@
               Classes in the defaults can be selectively
               excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
             </p>
-            <div class="form-control mt-2">
+            <div class="form-control mt-2 flex flex-row">
+              <span class="text-sm min-w-fit mr-2">Filter styles:</span>
               <div class="input-group">
-                <span class="text-sm">Filter styles:</span>
                 <%= text_input(f, :style_filter,
                   value: @style_filter,
                   class: "input input-bordered input-sm",
