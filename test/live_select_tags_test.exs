@@ -15,12 +15,12 @@ defmodule LiveSelectTagsTest do
   @expected_class [
     daisyui: [
       selected_option: ~S(disabled),
-      tags_container: ~S(flex flex-wrap gap-1 p-1 bg-neutral),
-      tag: ~S(p-1 text-sm badge badge-primary)
+      tags_container: ~S(flex flex-wrap gap-1 p-1 rounded-md bg-primary-content),
+      tag: ~S(p-1.5 text-sm badge badge-primary)
     ],
     tailwind: [
       selected_option: ~S(text-gray-400),
-      tags_container: ~S(flex bg-white flex-wrap gap-1 p-1),
+      tags_container: ~S(flex flex-wrap bg-white rounded-md gap-1 p-1),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
     ]
   ]
@@ -56,9 +56,6 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B D))
   end
 
-  @tag :skip
-  test "selected options appear in tags"
-
   test "already selected options are not selectable in the dropdown using keyboard", %{live: live} do
     stub_options(~w(A B C D))
 
@@ -90,11 +87,27 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B))
   end
 
-  @tag :skip
-  test "can remove selected options by clicking on tag"
+  test "can remove selected options by clicking on tag", %{live: live} do
+    stub_options(~w(A B C D))
 
-  @tag :skip
-  test "can style tags"
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 3)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(B D A))
+
+    unselect_nth_option(live, 2)
+
+    assert_selected_multiple(live, ~w(B A))
+  end
 
   @tag :skip
   test "can specify an alternative label for tags"

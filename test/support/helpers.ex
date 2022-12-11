@@ -10,7 +10,8 @@ defmodule LiveSelect.TestHelpers do
     text_input: "input#my_form_city_search_text_input[type=text]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
-    hidden_input: "input#my_form_city_search[type=hidden]"
+    hidden_input: "input#my_form_city_search[type=hidden]",
+    tag: "div[name=tags-container] > div"
   ]
 
   def select_nth_option(live, n, method \\ :key) do
@@ -26,6 +27,11 @@ defmodule LiveSelect.TestHelpers do
           render_click(el)
         end
     end
+  end
+
+  def unselect_nth_option(live, n) do
+    element(live, "div[name=tags-container] button[phx-value-idx=#{n - 1}][phx-click]")
+    |> render_click()
   end
 
   def keydown(live, key) do
@@ -142,6 +148,15 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.attribute("selected")
            |> Enum.count(&(&1 == "selected")) ==
              Enum.count(values)
+
+    assert live
+           |> render()
+           |> Floki.parse_document!()
+           |> Floki.find(@selectors[:tag])
+           |> Floki.text(sep: ",")
+           |> String.split(",")
+           |> Enum.map(&String.trim/1) ==
+             values
   end
 
   def assert_reset(live, default_value \\ nil) do
