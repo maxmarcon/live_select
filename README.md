@@ -25,7 +25,7 @@ To install, add this to your dependencies:
 
 In your `app.js` file:
 
-```
+```javascript
 import live_select from "live_select"
 
 // if you don't have any other hooks:
@@ -55,7 +55,7 @@ The choice of style is controlled by the `style` option in [live_select/3](https
 
 If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
 
-```
+```javascript
 module.exports = {
     content: [
         //...
@@ -74,7 +74,7 @@ Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for 
 
 Template:
 
-  ```html
+  ```elixir
   <.form for={:my_form} :let={f} phx-change="change">
       <%= live_select f, :city_search %> 
   </.form>
