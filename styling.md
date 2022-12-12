@@ -39,9 +39,11 @@ Here's a visual representation of the elements:
 
 In `tags` mode there adds 3 additional stylable elements:
 
-7. An option in the dropdown that has been **selected**
-8. The **tags** showing the selected options
-9. THe **tags_container** that contains the tags
+7. The **tag** showing the selected options
+8. The **tags_container** that contains the tags
+9. **selected_option**. This is an option in the dropdown that has been selected. It's still visible, but can't be selected again
+
+![styled elements_tags](file:///Users/max/code/live_select/priv/static/images/styled_elements_tags.png)
 
 For each of these elements there is an `{element}_class` and for some also an `{element}_extra_class` option, which can
 be used
