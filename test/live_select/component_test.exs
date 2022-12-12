@@ -28,4 +28,20 @@ defmodule LiveSelect.ComponentTest do
       )
     end)
   end
+
+  test "raises if _extra_class option is used with styles == :none" do
+    assert_raise(
+      RuntimeError,
+      ~r/when using `style: :none`, please use only `container_class`/i,
+      fn ->
+        render_component(Component,
+          id: "live_select",
+          form: :my_form,
+          field: :live_select,
+          style: :none,
+          container_extra_class: "foo"
+        )
+      end
+    )
+  end
 end

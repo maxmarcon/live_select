@@ -18,7 +18,7 @@ defmodule LiveSelectTest do
       dropdown:
         ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
       text_input: ~S(input input-bordered w-full),
-      text_input_selected: ~S(input-primary text-primary)
+      text_input_selected: ~S(input-primary)
     ],
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
@@ -27,7 +27,7 @@ defmodule LiveSelectTest do
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
       text_input:
         ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
-      text_input_selected: ~S(border-gray-600 text-gray-600 border-2)
+      text_input_selected: ~S(border-gray-600 text-gray-600)
     ]
   ]
 
@@ -528,16 +528,6 @@ defmodule LiveSelectTest do
     describe "when style = #{@style || "default"}" do
       setup do
         stub_options([%{label: "A", value: 1}, %{label: "B", value: 2}, %{label: "C", value: 3}])
-      end
-
-      if @style == :none do
-        test "using _extra_class option raises", %{conn: conn} do
-          assert_raise RuntimeError,
-                       ~r/when using `style: :none`, please use only `container_class`/i,
-                       fn ->
-                         live(conn, "/?style=#{@style}&container_extra_class=boo")
-                       end
-        end
       end
 
       for element <- [
