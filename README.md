@@ -13,7 +13,7 @@ Dynamic selection field for LiveView.
 
 To install, add this to your dependencies:
 
-```
+```elixir
 [
     {:live_select, "~> 0.2.0"}
 ]
