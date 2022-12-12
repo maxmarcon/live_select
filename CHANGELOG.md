@@ -1,5 +1,8 @@
 # Changelog
 
+* tags mode
+* hide dropdown on escape key pressed
+
 ## 0.2.1 (2022-10-25)
 
 * when disabled option is used, also disable hidden input

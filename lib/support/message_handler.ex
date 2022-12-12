@@ -41,7 +41,7 @@ defmodule LiveSelect.MessageHandler do
       String.contains?(String.downcase(name), String.downcase(text))
     end)
     |> Enum.map(fn %{"name" => name, "loc" => %{"coordinates" => coord}} ->
-      {name, coord}
+      %{label: name, value: coord}
     end)
   end
 end

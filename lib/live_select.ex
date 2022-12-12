@@ -34,7 +34,11 @@ defmodule LiveSelect do
     
   The selected entries will be passed to your live view's `change` and `submit` events as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
-  ## Example: single selection
+  ## Examples
+
+  You can see these examples in action easily using the showcase app.
+
+  ### Single selection
 
   Here's an example that describes all the moving parts in detail. The user can search for cities.
   The LiveSelect main form input is called `city_search`.
@@ -84,9 +88,9 @@ defmodule LiveSelect do
   end  
   ```
 
-  ## Example: Multiple selection with tags mode
+  ### Multiple selection with tags mode
 
-  Let's now say you want to allow the user to select multiple cities and not only one. You can use `:tags` mode for it:
+  Let's say you want to build on the previous example and allow the user to select multiple cities and not only one. You can use `:tags` mode for it:
     
   Template:
   ```
@@ -97,17 +101,6 @@ defmodule LiveSelect do
 
   LiveView:
   ```
-  import LiveSelect
-
-  @impl true
-  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-    cities = City.search(change_msg.text)
-
-    update_options(change_msg, cities)
-    
-    {:noreply, socket}
-  end
-
   @impl true
   def handle_event(
         "change",
@@ -123,7 +116,7 @@ defmodule LiveSelect do
   end  
   ```
 
-  ## Example: Multiple LiveSelect inputs in the same LiveView  
+  ### Multiple LiveSelect inputs in the same LiveView  
     
   If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field. 
   For example:
@@ -216,9 +209,10 @@ defmodule LiveSelect do
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
     
-  ## Tag labels
+  ## Alternative tag labels
     
-  Sometimes, in `:tags` mode, you might want to use shorter labels for tags to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
+  Sometimes, in `:tags` mode, you might want to use alternative labels for the tags. For example, you might want the labels in the tags to be shorter 
+  in order to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
 
   ```
   [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  

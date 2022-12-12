@@ -10,9 +10,9 @@
       class={class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)}
       name="tags-container"
     >
-      <%= for {%{label: label}, idx} <- Enum.with_index(@selection) do %>
+      <%= for {option, idx} <- Enum.with_index(@selection) do %>
         <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
-          <%= label %>
+          <%= option[:tag_label] || option[:label] %>
           <button type="button" phx-click="option_remove" phx-value-idx={idx} phx-target={@myself}>
             <.x class="cursor-pointer" />
           </button>

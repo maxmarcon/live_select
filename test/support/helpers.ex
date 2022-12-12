@@ -133,7 +133,9 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
-  def assert_selected_multiple(live, values) do
+  def assert_selected_multiple(live, values, tags \\ nil) do
+    tags = tags || values
+
     selected_options =
       live
       |> element(@selectors[:container])
@@ -156,7 +158,7 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.text(sep: ",")
            |> String.split(",")
            |> Enum.map(&String.trim/1) ==
-             values
+             tags
   end
 
   def assert_reset(live, default_value \\ nil) do

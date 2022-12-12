@@ -109,8 +109,33 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B A))
   end
 
-  @tag :skip
-  test "can specify alternative labels for tags"
+  test "can specify alternative labels for tags using maps", %{live: live} do
+    stub_options([%{tag_label: "R", value: "Rome"}, %{tag_label: "NY", value: "New York"}])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected_multiple(live, ["Rome", "New York"], ["R", "NY"])
+  end
+
+  test "can specify alternative labels for tags using keywords", %{live: live} do
+    stub_options([[tag_label: "R", value: "Rome"], [tag_label: "NY", value: "New York"]])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected_multiple(live, ["Rome", "New York"], ["R", "NY"])
+  end
 
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style

@@ -291,20 +291,12 @@ defmodule LiveSelect.Component do
   defp normalize_options(options) do
     options
     |> Enum.map(fn
-      %{label: _, value: _} = option ->
-        option
+      %{value: value} = option ->
+        Map.put_new(option, :label, value)
 
-      %{value: value} ->
-        %{label: value, value: value}
-
-      [label: _, value: _] = option ->
+      option when is_list(option) ->
         Map.new(option)
-
-      [value: value] ->
-        %{label: value, value: value}
-
-      [key: key, value: value] ->
-        %{label: key, value: value}
+        |> Map.put_new(:label, option[:key] || option[:value])
 
       {label, value} ->
         %{label: label, value: value}
@@ -318,7 +310,7 @@ defmodule LiveSelect.Component do
         options must enumerate to:
 
         a list of atom, strings or numbers
-        a list of maps or keywords with keys: (:label, :value) or (:key, :value)
+        a list of maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_value
         a list of tuples
         """
     end)

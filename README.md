@@ -5,8 +5,7 @@
 
 Dynamic selection field for LiveView.
 
-`LiveSelect` is a LiveView component that implements a dynamic selection
-field with a dropdown. The content of the dropdown is filled dynamically by your LiveView.
+`LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically by your LiveView.
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif)
 
@@ -43,7 +42,7 @@ const hooks = {
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
-## Tailwind configuration   
+## Tailwind configuration
 
 `LiveSelect` supports 3 styling modes:
 
@@ -54,8 +53,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 The choice of style is controlled by the `style` option in [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3).
 `tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
 
-If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
-your `tailwind.config.js`:
+If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
 
 ```
 module.exports = {
@@ -72,27 +70,56 @@ Notice the different paths for a standalone or umbrella app.
 
 Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
 
+## Usage
+
+Template:
+
+  ```
+  <.form for={:my_form} :let={f} phx-change="change">
+      <%= live_select f, :city_search %> 
+  </.form>
+  ```
+
+LiveView:
+
+  ```
+  import LiveSelect
+
+  @impl true
+  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
+    cities = City.search(change_msg.text)
+
+    update_options(change_msg, cities)
+    
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(
+        "change",
+        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
+        socket
+      ) do
+    IO.puts("You selected city #{city_name} located at: #{city_coords}")
+
+    {:noreply, socket}
+  end  
+  ```
+
+Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
+
 ## Showcase app
 
-The repository includes a showcase app that you can use to experiment with the different options and parameters
-for `LiveSelect`. To start the showcase app, simply run:
+The repository includes a showcase app that you can use to experiment with the different options and parameters for `LiveSelect`. To start the showcase app, simply run:
 
 ```
 mix setup
 PORT=4001 mix phx.server
 ```
 
-from within the cloned repository. The app will be available at http://localhost:4001.
-The showcase app allows you to quickly experiment with options and styles, providing an easy way to fine tune
-your `LiveSelect` component.
-The app also shows the messages and events that your `LiveView` receives. For each event or message, the app shows the
-function head of the callback that your LiveView needs to implement in order to handle the event.
+from within the cloned repository. The app will be available at http://localhost:4001. The showcase app allows you to quickly experiment with options and styles, providing an easy way to fine tune your `LiveSelect` component. The app also shows the messages and events that your `LiveView` receives. For each event or message, the app shows the function head of the callback that your LiveView needs to implement in order to handle the event.
 
 ![SHOWCASE_APP](https://github.com/maxmarcon/live_select/raw/main/priv/static/images/showcase.gif)
-
-## Usage
-
-Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.html).
 
 ## TODO
 
@@ -103,5 +130,5 @@ Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.ht
 - [X] Customizable placeholder
 - [X] Enable configuration of styles in the showcase app
 - [X] Add support for vanilla tailwind styles
-- [ ] Enable multiple options mode ([example](https://slimselectjs.com/))
-- [ ] Enable using custom HTML to display options
+- [ ] Enable multiple selection mode(s) ([example](https://slimselectjs.com/))
+- [ ] Expose as function component (and drop LV 0.17 support)
