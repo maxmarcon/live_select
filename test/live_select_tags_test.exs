@@ -110,7 +110,7 @@ defmodule LiveSelectTagsTest do
   end
 
   @tag :skip
-  test "can specify an alternative label for tags"
+  test "can specify alternative labels for tags"
 
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style

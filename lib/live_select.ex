@@ -201,10 +201,12 @@ defmodule LiveSelect do
 
   * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
   * _tuples_: `{label, value}` corresponding to label and value for the option
-  * _maps_: `%{label: label, value: value}`
-  * _keywords_: `[label: label, value: value]`
+  * _maps_: `%{label: label, value: value}` or `%{value: value}` 
+  * _keywords_: `[label: label, value: value]` or `[value: value]`
 
-  This means you can use maps and keyword lists to pass the list of options, for example:
+  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option. 
+
+  Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
 
   ```
   %{Red: 1, Yellow: 2, Green: 3}

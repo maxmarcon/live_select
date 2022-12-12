@@ -200,20 +200,6 @@ defmodule LiveSelectTest do
     assert_selected(live, 2)
   end
 
-  test "supports dropdown filled with keywords", %{conn: conn} do
-    stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
-
-    {:ok, live, _html} = live(conn, "/")
-
-    type(live, "ABC")
-
-    assert_options(live, ["A", "B", "C"])
-
-    select_nth_option(live, 2)
-
-    assert_selected(live, "B", 2)
-  end
-
   test "supports dropdown filled with values from keyword list", %{conn: conn} do
     stub_options(
       A: 1,
@@ -258,6 +244,38 @@ defmodule LiveSelectTest do
     select_nth_option(live, 2)
 
     assert_selected(live, "B", 2)
+  end
+
+  test "supports dropdown filled from an enumerable of maps where only value is specified", %{
+    conn: conn
+  } do
+    stub_options([%{value: "A"}, %{value: "B"}, %{value: "C"}])
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, "B", "B")
+  end
+
+  test "supports dropdown filled from an enumerable of keywords only value is specified", %{
+    conn: conn
+  } do
+    stub_options([[value: "A"], [value: "B"], [value: "C"]])
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, "B", "B")
   end
 
   test "supports dropdown filled from an enumerable of keywords", %{conn: conn} do

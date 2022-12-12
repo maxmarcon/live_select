@@ -294,8 +294,14 @@ defmodule LiveSelect.Component do
       %{label: _, value: _} = option ->
         option
 
+      %{value: value} ->
+        %{label: value, value: value}
+
       [label: _, value: _] = option ->
         Map.new(option)
+
+      [value: value] ->
+        %{label: value, value: value}
 
       [key: key, value: value] ->
         %{label: key, value: value}
