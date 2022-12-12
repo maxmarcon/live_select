@@ -213,6 +213,16 @@ defmodule LiveSelect do
   Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
+    
+  ## Tag labels
+    
+  Sometimes, in `:tags` mode, you might want to use shorter labels for tags to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
+
+  ```
+  [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  
+  ```
+
+  will result in "New York" and "Barcelona" to be used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
   """
   def update_options(%ChangeMsg{} = change_msg, options) do
     Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
