@@ -200,9 +200,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       assign(socket,
         events: [],
-        selected: "",
-        selected_text: "",
         next_event_id: 0,
+        locations: nil,
         submitted: false,
         save_classes_pid: nil,
         show_styles: false,
@@ -303,12 +302,29 @@ defmodule LiveSelectWeb.ShowcaseLive do
         "change" ->
           form_name = socket.assigns.changeset.data.form_name
           field_name = socket.assigns.changeset.data.field_name
+          mode = socket.assigns.changeset.data.mode
 
           selected = get_in(params, [form_name, field_name])
-
           selected_text = get_in(params, [form_name, field_name <> "_text_input"])
 
-          assign(socket, selected: selected, selected_text: selected_text, submitted: false)
+          {cities, locations} =
+            cond do
+              mode == :single ->
+                {"city #{selected_text}", if(selected == "", do: nil, else: selected)}
+
+              mode == :tags && selected ->
+                {"#{Enum.count(selected)} #{if Enum.count(selected) > 1, do: "cities", else: "city"}",
+                 Enum.join(selected, ", ")}
+
+              true ->
+                {nil, nil}
+            end
+
+          assign(socket,
+            cities: cities,
+            locations: locations,
+            submitted: false
+          )
 
         "submit" ->
           assign(socket, submitted: true)
