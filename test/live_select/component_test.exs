@@ -44,4 +44,34 @@ defmodule LiveSelect.ComponentTest do
       end
     )
   end
+
+  test "raises if unknown mode is given" do
+    assert_raise(
+      RuntimeError,
+      ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
+      fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: :form,
+          field: :input,
+          mode: :not_a_valid_mode
+        )
+      end
+    )
+  end
+
+  test "raises if unknown style is given" do
+    assert_raise(
+      RuntimeError,
+      ~s(Invalid style: "not_a_valid_style". Style must be one of: [:tailwind, :daisyui, :none]),
+      fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: :form,
+          field: :input,
+          style: :not_a_valid_style
+        )
+      end
+    )
+  end
 end
