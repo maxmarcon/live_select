@@ -197,7 +197,7 @@
     <div class="prose text-center mt-2">
       <h4>Try out the component here:</h4>
     </div>
-    <div class={"h-60 w-1/2 #{if @dark_mode, do: "dark"}"}>
+    <div class={"h-60 w-3/4 #{if @dark_mode, do: "dark"}"}>
       <.form
         :let={f}
         for={String.to_atom(@changeset.data.form_name)}

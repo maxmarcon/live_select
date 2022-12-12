@@ -28,7 +28,13 @@ defmodule LiveSelect do
   The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `update_options/2`
   to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
 
-  ## Examples
+  ## Multiple selection with tags mode
+
+  When `:tags` mode is enabled `LiveSelect` allows the user to select multiple entries. The entries will be visible above the text input field as removable tags.
+    
+  The selected entries will be passed to your live view's `change` and `submit` events as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
+
+  ## Example: single selection
 
   Here's an example that describes all the moving parts in detail. The user can search for cities.
   The LiveSelect main form input is called `city_search`.
@@ -78,7 +84,46 @@ defmodule LiveSelect do
   end  
   ```
 
-  ### Multiple LiveSelect inputs in the same LiveView  
+  ## Example: Multiple selection with tags mode
+
+  Let's now say you want to allow the user to select multiple cities and not only one. You can use `:tags` mode for it:
+    
+  Template:
+  ```
+  <.form for={:my_form} :let={f} phx-change="change">
+      <%= live_select f, :city_search, mode: :tags %> 
+  </.form>
+  ```
+
+  LiveView:
+  ```
+  import LiveSelect
+
+  @impl true
+  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
+    cities = City.search(change_msg.text)
+
+    update_options(change_msg, cities)
+    
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(
+        "change",
+        %{"my_form" => %{"city_search" => list_of_coords}},
+        socket
+      ) do
+    # list_of_coords will contain the list of the coordinates of the selected cities, for example:
+    # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
+
+    IO.puts("You selected cities located at: #{list_of_coords}")
+
+    {:noreply, socket}
+  end  
+  ```
+
+  ## Example: Multiple LiveSelect inputs in the same LiveView  
     
   If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field. 
   For example:
