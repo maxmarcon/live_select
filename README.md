@@ -74,7 +74,7 @@ Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for 
 
 Template:
 
-  ```
+  ```html
   <.form for={:my_form} :let={f} phx-change="change">
       <%= live_select f, :city_search %> 
   </.form>
@@ -82,7 +82,7 @@ Template:
 
 LiveView:
 
-  ```
+  ```elixir
   import LiveSelect
 
   @impl true
