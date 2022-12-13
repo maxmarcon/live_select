@@ -36,11 +36,12 @@ defmodule LiveSelect do
 
   ## Examples
 
-  You can see these examples in action easily using the showcase app.
+  These examples describe all the moving parts in detail. You can see these examples in action, see which messages and events are being sent, and play around
+  with the configuration easily with the [showcase app](https://github.com/maxmarcon/live_select#showcase-app).
 
   ### Single selection
 
-  Here's an example that describes all the moving parts in detail. The user can search for cities.
+  The user can search for cities.
   The LiveSelect main form input is called `city_search`.
   When a city is selected, the coordinates of that city will be the value of the form input.
   The name of the selected city is available in the text input field named `city_search_text_input`.
@@ -161,7 +162,7 @@ defmodule LiveSelect do
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
   * `update_min_len` - the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3
   * `style` - one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details
-  * `active_option_class`, `container_class`, `container_extra_class`, `dropdown_class`, `dropdown_extra_class`, `option_class`, `option_extra_class`, `text_input_class`, `text_input_extra_class`, `text_input_selected_class` - see the [Styling section](styling.html) for details
+  * `active_option_class`, `container_class`, `container_extra_class`, `dropdown_class`, `dropdown_extra_class`, `option_class`, `option_extra_class`, `text_input_class`, `text_input_extra_class`, `text_input_selected_class`,`selected_option_class`, `tag_class`, `tag_extra_class`, `tags_container_class`, `tags_container_extra_class` - see the [Styling section](styling.html) for details
     
   """
   def live_select(form, field, opts \\ [])
