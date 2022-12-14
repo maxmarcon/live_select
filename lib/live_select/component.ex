@@ -42,7 +42,7 @@ defmodule LiveSelect.Component do
       text_input:
         ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
       text_input_selected: ~S(border-gray-600 text-gray-600),
-      tags_container: ~S(flex flex-wrap bg-white rounded-md gap-1 p-1),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
     ],
     daisyui: [
@@ -54,7 +54,7 @@ defmodule LiveSelect.Component do
       selected_option: ~S(disabled),
       text_input: ~S(input input-bordered w-full),
       text_input_selected: ~S(input-primary),
-      tags_container: ~S(flex flex-wrap gap-1 p-1 rounded-md bg-primary-content),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1.5 text-sm badge badge-primary)
     ],
     none: []

@@ -17,12 +17,12 @@ defmodule LiveSelectTagsTest do
   @expected_class [
     daisyui: [
       selected_option: ~S(disabled),
-      tags_container: ~S(flex flex-wrap gap-1 p-1 rounded-md bg-primary-content),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1.5 text-sm badge badge-primary)
     ],
     tailwind: [
       selected_option: ~S(text-gray-400),
-      tags_container: ~S(flex flex-wrap bg-white rounded-md gap-1 p-1),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
     ]
   ]

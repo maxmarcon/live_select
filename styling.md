@@ -62,7 +62,7 @@ The following table shows the default styles for each element and the options yo
 | *option* |  | hover:bg-gray-400 px-4 py-1 rounded-lg | option_class | option_extra_class |
 | *selected_option* | disabled | text-gray-400 | selected_option_class |  |
 | *tag* | badge badge-primary p-1.5 text-sm | bg-blue-400 flex p-1 rounded-lg text-sm | tag_class | tag_extra_class |
-| *tags_container* | bg-primary-content flex flex-wrap gap-1 p-1 rounded-md | bg-white flex flex-wrap gap-1 p-1 rounded-md | tags_container_class | tags_container_extra_class |
+| *tags_container* | flex flex-wrap gap-1 p-1 | flex flex-wrap gap-1 p-1 | tags_container_class | tags_container_extra_class |
 | *text_input* | input input-bordered w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 rounded-md w-full | text_input_class | text_input_extra_class |
 | *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
 
