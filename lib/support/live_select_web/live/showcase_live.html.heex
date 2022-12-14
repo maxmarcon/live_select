@@ -218,7 +218,7 @@
           </div>
           <%= submit("Submit",
             class: "btn btn-primary col-span-1",
-            disabled: @submitted || !@changeset.valid? || !@locations
+            disabled: !@changeset.valid? || !@locations
           ) %>
           <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
             !! This should not move when the dropdown opens !!

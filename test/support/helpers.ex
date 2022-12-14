@@ -7,10 +7,10 @@ defmodule LiveSelect.TestHelpers do
 
   @selectors [
     container: "div[name=live-select]",
-    text_input: "input#my_form_city_search_text_input[type=text]",
+    text_input: "input#my_form_city_search_text_input",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
-    hidden_input: "input#my_form_city_search[type=hidden]",
+    hidden_input: "input#my_form_city_search",
     tag: "div[name=tags-container] > div"
   ]
 
@@ -113,9 +113,17 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_selected(live, label, value \\ nil) do
-    # would be nice to check the value of the hidden input field, but this
-    # is set by the JS hook
     value = if value, do: value, else: label
+
+    hidden_input =
+      live
+      |> element(@selectors[:hidden_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert hidden_input
+           |> Floki.attribute("value") ==
+             [to_string(value)]
 
     text_input =
       live

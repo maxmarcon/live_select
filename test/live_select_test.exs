@@ -49,9 +49,9 @@ defmodule LiveSelectTest do
     container: "div[name=live-select]",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
-    hidden_input: "input#my_form_city_search[type=hidden]",
+    hidden_input: "input#my_form_city_search",
     option: "ul[name=live-select-dropdown] > li:first-of-type > div",
-    text_input: "input#my_form_city_search_text_input[type=text]"
+    text_input: "input#my_form_city_search_text_input"
   ]
 
   setup :verify_on_exit!
@@ -59,25 +59,25 @@ defmodule LiveSelectTest do
   test "can be rendered", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    assert has_element?(live, "input#my_form_city_search[type=hidden]")
+    assert has_element?(live, @selectors[:hidden_input])
 
-    assert has_element?(live, "input#my_form_city_search_text_input[type=text]")
+    assert has_element?(live, @selectors[:text_input])
   end
 
   test "can be rendered with a given field name", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?field_name=city_search")
 
-    assert has_element?(live, "input#my_form_city_search[type=hidden]")
+    assert has_element?(live, "input#my_form_city_search")
 
-    assert has_element?(live, "input#my_form_city_search_text_input[type=text]")
+    assert has_element?(live, "input#my_form_city_search_text_input")
   end
 
   test "can be rendered with a given form name", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?form_name=special_form")
 
-    assert has_element?(live, "input#special_form_city_search[type=hidden]")
+    assert has_element?(live, "input#special_form_city_search")
 
-    assert has_element?(live, "input#special_form_city_search_text_input[type=text]")
+    assert has_element?(live, "input#special_form_city_search_text_input")
   end
 
   test "sends a ChangeMsg message as reaction to user's input", %{conn: conn} do

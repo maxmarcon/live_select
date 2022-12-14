@@ -36,13 +36,16 @@
     phx_blur: "blur"
   ) %>
   <%= if @mode == :single do %>
-    <%= hidden_input(@form, @field,
+    <%= text_input(@form, @field,
       disabled: @disabled,
+      style: "display: none;",
+      class: "hidden",
       value: value(@selection, @default_value)
     ) %>
   <% else %>
     <%= multiple_select(@form, @field, values(@selection),
       selected: values(@selection),
+      disabled: @disabled,
       readonly: true,
       style: "display: none;"
     ) %>

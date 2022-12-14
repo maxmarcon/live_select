@@ -8,7 +8,9 @@ defmodule LiveSelectTagsTest do
   @selectors [
     option: "ul[name=live-select-dropdown] > li",
     tags_container: "div[name=tags-container]",
-    tag: "div[name=tags-container] > div"
+    tag: "div[name=tags-container] > div",
+    multiselect: "select#my_form_city_search[multiple]",
+    text_input: "input#my_form_city_search_text_input[type=text]"
   ]
 
   @default_style :tailwind
@@ -135,6 +137,20 @@ defmodule LiveSelectTagsTest do
     select_nth_option(live, 2)
 
     assert_selected_multiple(live, ["Rome", "New York"], ["R", "NY"])
+  end
+
+  test "can be disabled", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?disabled=true&mode=tags")
+
+    assert element(live, @selectors[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
+
+    assert element(live, @selectors[:multiselect])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do

@@ -12,7 +12,7 @@ export default {
             this.el.querySelector("input[type=text]").value = value
         },
         inputEvent(mode) {
-            const selector = mode === "single" ? "input[type=hidden]" : "select"
+            const selector = mode === "single" ? "input.hidden" : "select"
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {

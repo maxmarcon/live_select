@@ -7,7 +7,7 @@ defmodule LiveSelect do
 
   @moduledoc ~S"""
   The `LiveSelect` field is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
-  LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option.
+  LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option(s).
   As the text changes, LiveSelect will render a dropdown below the text input
   containing the matching options, which the user can then select.
 
@@ -150,7 +150,7 @@ defmodule LiveSelect do
   @doc ~S"""
   Renders a `LiveSelect` input in a `form` with a given `field` name.
 
-  LiveSelect renders two inputs: a hidden input named `field` that holds the value of the selected option, 
+  LiveSelect renders two inputs: a hidden input (of type either text or select, depending on the specified mode) named `field` that holds the value of the selected option(s), 
   and a visible text input field named `#{field}_text_input` that contains the text entered by the user.
     
   **Opts:**
