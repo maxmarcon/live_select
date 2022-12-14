@@ -10,11 +10,11 @@ defmodule LiveSelect.ComponentTest do
       |> Floki.parse_document!()
 
     assert component
-           |> Floki.find("input#my_form_live_select[type=hidden]")
+           |> Floki.find("input#my_form_live_select")
            |> Enum.any?()
 
     assert component
-           |> Floki.find("input#my_form_live_select_text_input[type=text]")
+           |> Floki.find("input#my_form_live_select_text_input")
            |> Enum.any?()
   end
 
