@@ -130,5 +130,6 @@ from within the cloned repository. The app will be available at http://localhost
 - [X] Customizable placeholder
 - [X] Enable configuration of styles in the showcase app
 - [X] Add support for vanilla tailwind styles
-- [X] Enable multiple selection mode(s) ([example](https://slimselectjs.com/))
+- [X] Enable multiple selection mode
 - [ ] Expose as function component (and drop LV 0.17 support)
+- [ ] Maybe additional multiple selection mode(s)? 
