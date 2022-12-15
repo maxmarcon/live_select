@@ -11,15 +11,15 @@ export default {
         setInputValue(value) {
             this.el.querySelector("input[type=text]").value = value
         },
-        inputEvent(mode) {
-            const selector = mode === "single" ? "input.hidden" : "select"
+        inputEvent(selection, mode) {
+            const selector = mode === "single" ? "input.hidden" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
             this.handleEvent("reset", ({id}) => {
                 if (this.el.id === id) {
                     this.setInputValue(null)
-                    this.inputEvent("single")
+                    this.inputEvent([], "single")
                 }
             })
             this.handleEvent("select", ({id, selection, mode}) => {
@@ -27,10 +27,10 @@ export default {
                     if (mode === "single") {
                         const [{label}] = selection
                         this.setInputValue(label)
-                        this.inputEvent(mode)
+                        this.inputEvent(selection, mode)
                     } else {
                         this.setInputValue(null)
-                        this.inputEvent(mode)
+                        this.inputEvent(selection, mode)
                     }
                 }
             })

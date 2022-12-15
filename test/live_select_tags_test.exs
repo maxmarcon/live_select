@@ -146,11 +146,6 @@ defmodule LiveSelectTagsTest do
            |> render()
            |> Floki.parse_fragment!()
            |> Floki.attribute("disabled") == ["disabled"]
-
-    assert element(live, @selectors[:multiselect])
-           |> render()
-           |> Floki.parse_fragment!()
-           |> Floki.attribute("disabled") == ["disabled"]
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do

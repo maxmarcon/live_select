@@ -274,11 +274,12 @@ defmodule LiveSelect.Component do
   end
 
   defp unselect(socket, pos) do
-    socket
-    |> update(:selection, &List.delete_at(&1, pos))
-    |> push_event("select", %{
+    socket = update(socket, :selection, &List.delete_at(&1, pos))
+
+    push_event(socket, "select", %{
       id: socket.assigns.id,
-      mode: socket.assigns.mode
+      mode: socket.assigns.mode,
+      selection: socket.assigns.selection
     })
   end
 

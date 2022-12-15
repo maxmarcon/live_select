@@ -144,20 +144,12 @@ defmodule LiveSelect.TestHelpers do
   def assert_selected_multiple(live, values, tags \\ nil) do
     tags = tags || values
 
-    selected_options =
-      live
-      |> element(@selectors[:container])
-      |> render()
-      |> Floki.parse_fragment!()
-      |> Floki.find("select > option")
-
-    assert selected_options
+    assert live
+           |> element(@selectors[:container])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.find("input[type=hidden]")
            |> Floki.attribute("value") == values
-
-    assert selected_options
-           |> Floki.attribute("selected")
-           |> Enum.count(&(&1 == "selected")) ==
-             Enum.count(values)
 
     assert live
            |> render()

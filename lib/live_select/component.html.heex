@@ -36,7 +36,7 @@
     phx_blur: "blur"
   ) %>
   <%= if @mode == :single do %>
-    <!-- this can become a hidden input as soon as this is released: https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1 -->
+    <!-- TODO: this can become a hidden input when this fix is released: https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1 -->
     <%= text_input(@form, @field,
       disabled: @disabled,
       style: "display: none;",
@@ -44,12 +44,24 @@
       value: value(@selection, @default_value)
     ) %>
   <% else %>
-    <%= multiple_select(@form, @field, values(@selection),
-      selected: values(@selection),
-      disabled: @disabled,
-      readonly: true,
-      style: "display: none;"
-    ) %>
+    <!-- TODO: the stuff below could be replaced with a single hidden, readonly multiselect, but updates don't quite work. So we resort to hidden inputs for now -->
+    <%= if Enum.empty?(@selection) do %>
+      <input
+        type="hidden"
+        name="live_select_empty_selection"
+        id={"live_select_empty_selection_#{@myself}"}
+        disabled={@disabled}
+      />
+    <% end %>
+    <%= for field <- inputs_for(@form, @field) do %>
+      <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
+        <%= hidden_input(field, nil,
+          disabled: @disabled,
+          id: input_id(field, to_string(idx)),
+          value: value
+        ) %>
+      <% end %>
+    <% end %>
   <% end %>
   <ul
     class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
