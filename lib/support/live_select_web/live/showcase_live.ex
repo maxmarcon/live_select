@@ -299,7 +299,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def handle_event(event, params, socket) do
     socket =
       case event do
-        "change" ->
+        "submit" ->
           form_name = socket.assigns.changeset.data.form_name
           field_name = socket.assigns.changeset.data.field_name
           mode = socket.assigns.changeset.data.mode
@@ -309,8 +309,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
           {cities, locations} =
             cond do
-              mode == :single ->
-                {"city #{selected_text}", if(selected == "", do: nil, else: selected)}
+              mode == :single && selected != "" && selected_text != "" ->
+                {"city #{selected_text}", selected}
 
               mode == :tags && selected ->
                 {"#{Enum.count(selected)} #{if Enum.count(selected) > 1, do: "cities", else: "city"}",
@@ -323,11 +323,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
           assign(socket,
             cities: cities,
             locations: locations,
-            submitted: false
+            submitted: true
           )
-
-        "submit" ->
-          assign(socket, submitted: true)
 
         _ ->
           socket
