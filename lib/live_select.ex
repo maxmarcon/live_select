@@ -19,8 +19,14 @@ defmodule LiveSelect do
 
   After an option has been selected, the selection can be undone by clicking on text field.
 
-  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif" width="300" />
-     
+  ### Single mode  
+
+  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif" width="300" />
+
+  ### Tags mode
+      
+  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif" width="300" />
+
   ## Reacting to user's input
 
   Whenever the user types something in the text input, LiveSelect sends a `t:LiveSelect.ChangeMsg.t/0` message to your LiveView.
@@ -39,7 +45,7 @@ defmodule LiveSelect do
   These examples describe all the moving parts in detail. You can see these examples in action, see which messages and events are being sent, and play around
   with the configuration easily with the [showcase app](https://github.com/maxmarcon/live_select#showcase-app).
 
-  ### Single selection
+  ### Single mode
 
   The user can search for cities.
   The LiveSelect main form input is called `city_search`.
@@ -89,7 +95,7 @@ defmodule LiveSelect do
   end  
   ```
 
-  ### Multiple selection with tags mode
+  ### Tags mode
 
   Let's say you want to build on the previous example and allow the user to select multiple cities and not only one. You can use `:tags` mode for it:
     

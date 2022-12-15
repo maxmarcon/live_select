@@ -7,7 +7,13 @@ Dynamic selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically by your LiveView.
 
-![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo.gif)
+### Single selection (single mode)
+
+![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif)
+
+### Multiple selection (tags mode)
+
+![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
 ## Installation
 
