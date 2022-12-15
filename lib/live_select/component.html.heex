@@ -53,14 +53,14 @@
         disabled={@disabled}
       />
     <% end %>
-    <%= for field <- inputs_for(@form, @field) do %>
-      <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
-        <%= hidden_input(field, nil,
-          disabled: @disabled,
-          id: input_id(field, to_string(idx)),
-          value: value
-        ) %>
-      <% end %>
+    <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
+      <input
+        type="hidden"
+        name={input_name(@form, @field) <> "[]"}
+        id={input_id(@form, @field) <> "_#{idx}"}
+        disabled={@disabled}
+        value={value}
+      />
     <% end %>
   <% end %>
   <ul
