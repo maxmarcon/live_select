@@ -7,9 +7,8 @@ defmodule LiveSelect do
 
   @moduledoc ~S"""
   The `LiveSelect` field is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
-  LiveSelect creates a text input field in which the user can type text, and a hidden input field that will contain the value of the selected option(s).
-  As the text changes, LiveSelect will render a dropdown below the text input
-  containing the matching options, which the user can then select.
+  LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
+  As the input text changes, LiveSelect will render a dropdown below the text input containing the matching options, which the user can then select.
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
@@ -17,7 +16,7 @@ defmodule LiveSelect do
   Whenever an option is selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
 
-  After an option has been selected, the selection can be undone by clicking on text field.
+  After an option has been selected, the selection can be undone by clicking on the text field. In tags mode, single tags can be removed by clicking on them.
 
   ### Single mode  
 

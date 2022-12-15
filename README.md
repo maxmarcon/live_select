@@ -5,7 +5,7 @@
 
 Dynamic selection field for LiveView.
 
-`LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically by your LiveView.
+`LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically and asynchronously by your LiveView as a reaction to user's input. This allows you to easily implement features like search. It supports both single and multiple selections. 
 
 ### Single selection (single mode)
 
