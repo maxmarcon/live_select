@@ -21,7 +21,7 @@ To install, add this to your dependencies:
 
 ```elixir
 [
-    {:live_select, "~> 0.2.0"}
+    {:live_select, "~> 0.3.0"}
 ]
 ```
 
