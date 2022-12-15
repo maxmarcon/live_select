@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 (2022-12-15)
+
+Bugfix: removed inputs_for because it was failing if the field is not an association
+
 ## 0.3.0 (2022-12-15)
 
 * tags mode
