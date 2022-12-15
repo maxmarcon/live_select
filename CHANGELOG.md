@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.3.0 (2022-12-15)
+
 * tags mode
 * hide dropdown on escape key pressed
 
