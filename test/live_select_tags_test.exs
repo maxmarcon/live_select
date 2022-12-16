@@ -268,7 +268,7 @@ defmodule LiveSelectTagsTest do
   end
 
   defp select_and_open_dropdown(live, pos) do
-    if pos < 1 || pos > 4, do: raise("pos must be between 1 adn 4")
+    if pos < 1 || pos > 4, do: raise("pos must be between 1 and 4")
 
     stub_options(~w(A B C D))
 
