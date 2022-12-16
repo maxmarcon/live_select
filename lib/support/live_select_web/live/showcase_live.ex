@@ -142,7 +142,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   @max_events 3
-  @class_file "priv/static/assets/class.txt"
+  @class_file "priv/static/class.txt"
 
   defmodule Render do
     @moduledoc false
