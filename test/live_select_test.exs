@@ -623,7 +623,7 @@ defmodule LiveSelectTest do
         )
       end
 
-      test "class for active option can be overriden", %{conn: conn} do
+      test "class for active option can be overridden", %{conn: conn} do
         {:ok, live, _html} = live(conn, "/?style=#{@style}&active_option_class=foo")
 
         type(live, "ABC")
