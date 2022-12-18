@@ -112,7 +112,7 @@ LiveView:
   end  
   ```
 
-Refer to the [online documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
+Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
 
 ## Showcase app
 
