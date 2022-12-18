@@ -37,7 +37,7 @@ defmodule LiveSelect do
 
   When `:tags` mode is enabled `LiveSelect` allows the user to select multiple entries. The entries will be visible above the text input field as removable tags.
     
-  The selected entries will be passed to your live view's `change` and `submit` events as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
+  The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
   ## Examples
 
@@ -96,7 +96,8 @@ defmodule LiveSelect do
 
   ### Tags mode
 
-  Let's say you want to build on the previous example and allow the user to select multiple cities and not only one. You can use `:tags` mode for it:
+  Let's say you want to build on the previous example and allow the user to select multiple cities and not only one.
+  The `:tags` mode allows you to do exactly this.
     
   Template:
   ```
@@ -113,7 +114,7 @@ defmodule LiveSelect do
         %{"my_form" => %{"city_search" => list_of_coords}},
         socket
       ) do
-    # list_of_coords will contain the list of the coordinates of the selected cities, for example:
+    # list_of_coords will contain the list of the JSON-encoded coordinates of the selected cities, for example:
     # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
 
     IO.puts("You selected cities located at: #{list_of_coords}")
@@ -224,7 +225,7 @@ defmodule LiveSelect do
   [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  
   ```
 
-  will result in "New York" and "Barcelona" to be used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
+  will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
   """
   def update_options(%ChangeMsg{} = change_msg, options) do
     Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
