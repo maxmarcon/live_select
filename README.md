@@ -15,6 +15,44 @@ Dynamic selection field for LiveView.
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
+## Usage
+
+Template:
+
+  ```elixir
+  <.form for={:my_form} :let={f} phx-change="change">
+      <%= live_select f, :city_search %> 
+  </.form>
+  ```
+
+LiveView:
+
+  ```elixir
+  import LiveSelect
+
+  @impl true
+  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
+    cities = City.search(change_msg.text)
+
+    update_options(change_msg, cities)
+    
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(
+        "change",
+        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
+        socket
+      ) do
+    IO.puts("You selected city #{city_name} located at: #{city_coords}")
+
+    {:noreply, socket}
+  end  
+  ```
+
+Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
+
 ## Installation
 
 To install, add this to your dependencies:
@@ -75,44 +113,6 @@ module.exports = {
 Notice the different paths for a standalone or umbrella app.
 
 Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
-
-## Usage
-
-Template:
-
-  ```elixir
-  <.form for={:my_form} :let={f} phx-change="change">
-      <%= live_select f, :city_search %> 
-  </.form>
-  ```
-
-LiveView:
-
-  ```elixir
-  import LiveSelect
-
-  @impl true
-  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-    cities = City.search(change_msg.text)
-
-    update_options(change_msg, cities)
-    
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event(
-        "change",
-        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
-        socket
-      ) do
-    IO.puts("You selected city #{city_name} located at: #{city_coords}")
-
-    {:noreply, socket}
-  end  
-  ```
-
-Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
 
 ## Showcase app
 
