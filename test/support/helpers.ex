@@ -21,10 +21,9 @@ defmodule LiveSelect.TestHelpers do
         keydown(live, "Enter")
 
       :click ->
-        el = element(live, "li[phx-value-idx=#{n - 1}][phx-click]")
-
-        if has_element?(el) do
-          render_click(el)
+        if has_element?(live, "li > div[data-idx=#{n - 1}]") do
+          element(live, @selectors[:container])
+          |> render_hook("option_click", %{"idx" => to_string(n - 1)})
         end
     end
   end

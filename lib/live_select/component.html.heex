@@ -71,18 +71,16 @@
     name="live-select-dropdown"
   >
     <%= for {option, idx} <- Enum.with_index(@options) do %>
-      <li
-        phx-click={if option not in @selection, do: "option_click"}
-        phx-value-idx={idx}
-        phx-target={@myself}
-        class={
-          if option in @selection, do: class(@style, :selected_option, @selected_option_class)
-        }
-      >
-        <div class={[
-          class(@style, :option, @option_class, @option_extra_class),
-          if(idx == @active_option, do: class(@style, :active_option, @active_option_class))
-        ]}>
+      <li class={
+        if option in @selection, do: class(@style, :selected_option, @selected_option_class)
+      }>
+        <div
+          class={[
+            class(@style, :option, @option_class, @option_extra_class),
+            if(idx == @active_option, do: class(@style, :active_option, @active_option_class))
+          ]}
+          data-idx={unless option in @selection, do: idx}
+        >
           <%= option.label %>
         </div>
       </li>
