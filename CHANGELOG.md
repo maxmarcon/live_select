@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 (2023-01-03)
+
+Bugfix: options in dropdown not always clickable because of race condition with blur event (https://github.com/maxmarcon/live_select/issues/7)
+
 ## 0.3.1 (2022-12-15)
 
 Bugfix: removed inputs_for because it was failing if the field is not an association
