@@ -25,7 +25,7 @@ defmodule LiveSelect.ComponentTest do
         id: "live_select",
         form: :form,
         field: :input,
-        options: [{"A", 1}, "B", "C"]
+        options: ["A", "B", "C"]
       )
 
     assert_options(component, ["A", "B", "C"])
