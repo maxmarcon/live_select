@@ -162,6 +162,7 @@ defmodule LiveSelect do
   **Opts:**
 
   * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
+  * `options` - initial list of available options to select for. See `update_options/2` for details on the format to use
   * `default_value` - default value to send to the server if nothing is selected. Only used in `:single` mode, defaults to an empty string
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  

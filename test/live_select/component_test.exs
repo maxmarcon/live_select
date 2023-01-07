@@ -3,6 +3,7 @@ defmodule LiveSelect.ComponentTest do
 
   use LiveSelectWeb.ConnCase, async: true
   alias LiveSelect.Component
+  import LiveSelect.TestHelpers
 
   test "can be rendered" do
     component =
@@ -16,6 +17,18 @@ defmodule LiveSelect.ComponentTest do
     assert component
            |> Floki.find("input#my_form_live_select_text_input")
            |> Enum.any?()
+  end
+
+  test "can set initial options" do
+    component =
+      render_component(LiveSelect.Component,
+        id: "live_select",
+        form: :form,
+        field: :input,
+        options: [{"A", 1}, "B", "C"]
+      )
+
+    assert_options(component, ["A", "B", "C"])
   end
 
   test "raises if invalid assign is passed" do

@@ -80,14 +80,16 @@ defmodule LiveSelect.TestHelpers do
     end)
   end
 
-  def assert_options(live, elements) do
-    assert render(live)
+  def assert_options(rendered, elements) when is_binary(rendered) do
+    assert rendered
            |> Floki.parse_document!()
            |> Floki.find(@selectors[:dropdown_entries])
            |> Floki.text()
            |> String.replace(~r/\s+/, "") ==
              Enum.join(elements)
   end
+
+  def assert_options(live, elements), do: assert_options(render(live), elements)
 
   def assert_option_active(live, pos, active_class \\ "active")
 
