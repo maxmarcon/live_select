@@ -86,7 +86,7 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2, :click)
 
-    assert_selected_multiple(live, ~w(B))
+    assert_selected_multiple_static(live, ~w(B))
   end
 
   test "can remove selected options by clicking on tag", %{live: live} do
@@ -122,7 +122,7 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, ["Rome", "New York"], ["R", "NY"])
+    assert_selected_multiple(live, ["Rome", "New York"], ["Rome", "New York"], ["R", "NY"])
   end
 
   test "can specify alternative labels for tags using keywords", %{live: live} do
@@ -136,7 +136,7 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, ["Rome", "New York"], ["R", "NY"])
+    assert_selected_multiple(live, ["Rome", "New York"], ["Rome", "New York"], ["R", "NY"])
   end
 
   test "can be disabled", %{conn: conn} do

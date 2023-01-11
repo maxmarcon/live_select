@@ -200,10 +200,12 @@
     <div class={"h-60 w-3/4 #{if @dark_mode, do: "dark"}"}>
       <.form
         :let={f}
-        for={String.to_atom(@changeset.data.form_name)}
+        for={@form_changeset}
+        as={@changeset.data.form_name}
         phx-change="change"
         phx-submit="submit"
       >
+        <%= inspect(input_value(f, String.to_atom(@changeset.data.field_name))) %>
         <div class="grid grid-cols-4 gap-1 items-center">
           <div class="col-span-3 form-control">
             <%= live_select(

@@ -31,6 +31,96 @@ defmodule LiveSelect.ComponentTest do
     assert_options(component, ["A", "B", "C"])
   end
 
+  describe "in single mode" do
+    test "can set initial selection via changeset" do
+      changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search,
+          options: ["A", "B", "C"]
+        )
+
+      assert_selected_static(component, "B")
+    end
+
+    test "can set initial selection via changeset for non-string values" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: %{"x" => 1, "y" => 2}}, %{city_search: :string}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search,
+          options: [
+            %{label: "A", value: %{}},
+            %{label: "B", value: %{"x" => 1, "y" => 2}},
+            %{label: "C", value: [1, 2]}
+          ]
+        )
+
+      assert_selected_static(component, "B", %{"x" => 1, "y" => 2})
+    end
+  end
+
+  describe "in tags mode" do
+    test "can set initial selection via changeset" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search,
+          options: ["A", "B", "C", "D"]
+        )
+
+      assert_selected_multiple_static(component, ["B", "D"])
+    end
+
+    test "can set initial selection via changeset for non-string values" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: [%{"x" => 1, "y" => 2}, [1, 2]]}, %{city_search: :string}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search,
+          options: [
+            %{label: "A", value: %{}},
+            %{label: "B", value: %{"x" => 1, "y" => 2}},
+            %{label: "C", value: [1, 2]}
+          ]
+        )
+
+      assert_selected_multiple_static(component, [%{"x" => 1, "y" => 2}, [1, 2]], ["B", "C"])
+    end
+  end
+
   test "raises if invalid assign is passed" do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
       render_component(Component,
@@ -83,6 +173,21 @@ defmodule LiveSelect.ComponentTest do
           form: :form,
           field: :input,
           style: :not_a_valid_style
+        )
+      end
+    )
+  end
+
+  test "raises if non-enumerable options are given" do
+    assert_raise(
+      RuntimeError,
+      ~s(options must be enumerable),
+      fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: :form,
+          field: :input,
+          options: "not a list"
         )
       end
     )

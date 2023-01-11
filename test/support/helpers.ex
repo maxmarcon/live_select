@@ -142,24 +142,62 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
-  def assert_selected_multiple(live, values, tags \\ nil) do
-    tags = tags || values
+  def assert_selected_static(html, label, value \\ nil) do
+    value = if value, do: value, else: label
 
-    assert live
-           |> element(@selectors[:container])
-           |> render()
-           |> Floki.parse_fragment!()
-           |> Floki.find("input[type=hidden]")
-           |> Floki.attribute("value") == values
+    assert Floki.attribute(html, @selectors[:hidden_input], "value") == [encode_value(value)]
 
-    assert live
-           |> render()
-           |> Floki.parse_document!()
+    text_input = Floki.find(html, @selectors[:text_input])
+
+    assert Floki.attribute(text_input, "readonly") ==
+             ["readonly"]
+
+    assert Floki.attribute(text_input, "value") ==
+             [label]
+  end
+
+  def assert_selected_multiple_static(live, values) do
+    assert_selected_multiple_static(live, values, values)
+  end
+
+  def assert_selected_multiple_static(html, values, tag_labels) when is_binary(html) do
+    assert Floki.attribute(html, "#{@selectors[:container]} input[type=hidden]", "value") ==
+             encode_values(values)
+
+    assert html
            |> Floki.find(@selectors[:tag])
            |> Floki.text(sep: ",")
            |> String.split(",")
            |> Enum.map(&String.trim/1) ==
-             tags
+             tag_labels
+  end
+
+  def assert_selected_multiple_static(live, values, tag_labels) do
+    assert_selected_multiple_static(render(live), values, tag_labels)
+  end
+
+  def assert_selected_multiple(live, values) do
+    assert_selected_multiple(live, values, values, values)
+  end
+
+  def assert_selected_multiple(live, values, labels) do
+    assert_selected_multiple(live, values, labels, labels)
+  end
+
+  def assert_selected_multiple(live, values, labels, tag_labels) do
+    assert_selected_multiple_static(live, values, tag_labels)
+
+    selection =
+      Enum.zip([labels, tag_labels, values])
+      |> Enum.map(fn
+        {tag, tag_label, value} when tag_label == tag -> %{label: tag, value: value}
+        {tag, tag_label, value} -> %{label: tag, tag_label: tag_label, value: value}
+      end)
+
+    assert_push_event(live, "select", %{
+      id: "my_form_city_search_component",
+      selection: ^selection
+    })
   end
 
   def assert_reset(live, default_value \\ nil) do
@@ -192,4 +230,12 @@ defmodule LiveSelect.TestHelpers do
       keydown(live, key)
     end
   end
+
+  defp encode_values(values) when is_list(values) do
+    for value <- values, do: encode_value(value)
+  end
+
+  defp encode_value(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
+
+  defp encode_value(value), do: Jason.encode!(value)
 end

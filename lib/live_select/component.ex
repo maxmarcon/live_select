@@ -4,7 +4,7 @@ defmodule LiveSelect.Component do
   alias LiveSelect.ChangeMsg
 
   use Phoenix.LiveComponent
-  import Phoenix.HTML.Form, except: [reset: 1]
+  import Phoenix.HTML.Form, except: [reset: 1, label: 2]
   import LiveSelect.ClassUtil
 
   @default_opts [
@@ -70,8 +70,7 @@ defmodule LiveSelect.Component do
         active_option: -1,
         disabled: false,
         options: [],
-        selection: [],
-        hide_dropdown: false
+        hide_dropdown: true
       )
 
     {:ok, socket}
@@ -101,6 +100,15 @@ defmodule LiveSelect.Component do
       |> assign(assigns)
       |> assign(:active_option, -1)
       |> update(:options, &normalize_options/1)
+      |> assign_new(:selection, fn %{form: form, field: field, options: options} ->
+        form_value = input_value(form, field)
+
+        options
+        |> Enum.filter(fn %{value: value} ->
+          (is_list(form_value) && value in form_value) ||
+            value == form_value
+        end)
+      end)
 
     socket =
       @default_opts
@@ -235,6 +243,12 @@ defmodule LiveSelect.Component do
       end
     end
 
+    if Map.has_key?(assigns, :options) do
+      unless Enumerable.impl_for(assigns.options) do
+        raise "options must be enumerable"
+      end
+    end
+
     valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
@@ -317,14 +331,17 @@ defmodule LiveSelect.Component do
     end)
   end
 
-  defp values(normalized_options) do
-    normalized_options
-    |> Enum.map(&encode(&1.value))
+  defp values(options) do
+    Enum.map(options, &encode(&1.value))
   end
 
   defp value([], default_value), do: encode(default_value)
 
   defp value([%{value: value} | _], _default_value), do: encode(value)
+
+  defp label(:single, [%{label: label}]), do: label
+
+  defp label(_, _), do: nil
 
   defp class(style, element, class_override, class_extend \\ nil)
 

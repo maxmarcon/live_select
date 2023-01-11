@@ -40,6 +40,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:search_delay, :integer, default: 10)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
       field(:update_min_len, :integer)
+      field(:options, {:array, :string}, default: [])
+      field(:selection, {:array, :string}, default: [])
 
       for class <- @class_options do
         field(class, :string)
@@ -57,6 +59,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :field_name,
           :form_name,
           :mode,
+          :options,
+          :selection,
           :placeholder,
           :search_delay,
           :style,
@@ -74,7 +78,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     def live_select_opts(%__MODULE__{} = settings) do
       settings
-      |> Map.drop([:search_delay, :form_name, :field_name, :new])
+      |> Map.drop([:search_delay, :form_name, :field_name, :new, :selection])
       |> Map.from_struct()
       |> then(
         &if is_nil(&1.style) do
@@ -245,6 +249,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket =
           socket
           |> spawn_save_classes_task(settings)
+          |> assign(:form_changeset, make_form_changeset(settings))
           |> assign(:changeset, Ecto.Changeset.change(settings))
 
         {:noreply, socket}
@@ -253,6 +258,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket =
           socket
           |> assign(:changeset, changeset)
+          |> assign(:form_changeset, Ecto.Changeset.change({%{foo: 1}, %{foo: :integer}}, %{}))
           |> assign(
             :show_styles,
             socket.assigns.show_styles || Settings.has_style_errors?(changeset)
@@ -375,7 +381,19 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
   end
 
-  def default_class(style, class), do: LiveSelect.Component.default_class(style, class)
+  defp default_class(style, class), do: LiveSelect.Component.default_class(style, class)
+
+  defp make_form_changeset(settings) do
+    {Map.new([
+       {String.to_atom(settings.field_name),
+        if(settings.mode == :single, do: List.first(settings.selection), else: settings.selection)}
+     ]),
+     Map.new([
+       {String.to_atom(settings.field_name),
+        if(settings.mode == :single, do: :string, else: {:array, :string})}
+     ])}
+    |> Ecto.Changeset.change(%{})
+  end
 
   defp spawn_save_classes_task(socket, %Settings{} = settings) do
     if connected?(socket) do

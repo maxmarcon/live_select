@@ -33,7 +33,8 @@
     readonly: @mode == :single && Enum.any?(@selection),
     autocomplete: "off",
     phx_focus: "focus",
-    phx_blur: "blur"
+    phx_blur: "blur",
+    value: label(@mode, @selection)
   ) %>
   <%= if @mode == :single do %>
     <!-- TODO: this can become a hidden input when this fix is released: https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1 -->
