@@ -276,9 +276,9 @@ defmodule LiveSelect.Component do
 
     socket
     |> assign(
-      options: [],
       active_option: -1,
-      selection: selection
+      selection: selection,
+      hide_dropdown: true
     )
     |> push_event("select", %{
       id: socket.assigns.id,
@@ -299,7 +299,7 @@ defmodule LiveSelect.Component do
 
   defp reset(socket) do
     socket
-    |> assign(options: [], selection: [])
+    |> assign(selection: [])
     |> push_event("reset", %{id: socket.assigns.id})
   end
 
