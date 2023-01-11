@@ -205,7 +205,6 @@
         phx-change="change"
         phx-submit="submit"
       >
-        <%= inspect(input_value(f, String.to_atom(@changeset.data.field_name))) %>
         <div class="grid grid-cols-4 gap-1 items-center">
           <div class="col-span-3 form-control">
             <%= live_select(
