@@ -162,8 +162,10 @@ defmodule LiveSelect do
   **Opts:**
 
   * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
-  * `options` - initial list of available options to select for. See `update_options/2` for details on the format to use
-  * `value` - manually set an initial selection - overrides any value from the form
+  * `options` - initial available options to select from. See `update_options/2` for details on the format to use
+  * `value` - used to manually set an initial selection - overrides any values from the form. 
+  Must be a single element in `:single` mode, or a list of elements in `:tags` mode. 
+  If an element can be found in the initial options, the corresponding label will be used. Otherwise, the element will be used for both value and label
   * `disabled` - set this to a truthy value to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
