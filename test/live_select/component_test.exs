@@ -32,7 +32,7 @@ defmodule LiveSelect.ComponentTest do
   end
 
   describe "in single mode" do
-    test "can set initial selection via changeset" do
+    test "can set initial selection from form" do
       changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
 
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
@@ -48,7 +48,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B")
     end
 
-    test "can set initial selection via changeset for non-string values" do
+    test "can set initial selection from form for non-string values" do
       changeset =
         Ecto.Changeset.change(
           {%{city_search: %{"x" => 1, "y" => 2}}, %{city_search: :string}},
@@ -71,10 +71,40 @@ defmodule LiveSelect.ComponentTest do
 
       assert_selected_static(component, "B", %{"x" => 1, "y" => 2})
     end
+
+    test "can set initial selection from form without options" do
+      changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search
+        )
+
+      assert_selected_static(component, "B")
+    end
+
+    test "can set initial selection and label from form without options" do
+      changeset = Ecto.Changeset.change({%{city_search: {"B", 1}}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search
+        )
+
+      assert_selected_static(component, "B", 1)
+    end
   end
 
   describe "in tags mode" do
-    test "can set initial selection via changeset" do
+    test "can set initial selection from form" do
       changeset =
         Ecto.Changeset.change(
           {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
@@ -95,7 +125,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_multiple_static(component, ["B", "D"])
     end
 
-    test "can set initial selection via changeset for non-string values" do
+    test "can set initial selection from form for non-string values" do
       changeset =
         Ecto.Changeset.change(
           {%{city_search: [%{"x" => 1, "y" => 2}, [1, 2]]}, %{city_search: :string}},
@@ -118,6 +148,46 @@ defmodule LiveSelect.ComponentTest do
         )
 
       assert_selected_multiple_static(component, [%{"x" => 1, "y" => 2}, [1, 2]], ["B", "C"])
+    end
+
+    test "can set initial selection from form without options" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search
+        )
+
+      assert_selected_multiple_static(component, ["B", "D"])
+    end
+
+    test "can set initial selection and labels from form without options" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: [{"B", 1}, {"D", 2}]}, %{city_search: {:array, :string}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search
+        )
+
+      assert_selected_multiple_static(component, ["1", "2"], ["B", "D"])
     end
   end
 

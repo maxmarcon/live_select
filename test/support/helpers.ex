@@ -85,8 +85,8 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.parse_document!()
            |> Floki.find(@selectors[:dropdown_entries])
            |> Floki.text()
-           |> String.replace(~r/\s+/, "") ==
-             Enum.join(elements)
+           |> String.replace(~r/\s+/, ",")
+           |> String.trim(",") == Enum.join(elements, ",")
   end
 
   def assert_options(live, elements), do: assert_options(render(live), elements)
@@ -235,7 +235,9 @@ defmodule LiveSelect.TestHelpers do
     for value <- values, do: encode_value(value)
   end
 
-  defp encode_value(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
+  defp encode_value(value) when is_binary(value), do: value
+
+  defp encode_value(value) when is_number(value) or is_atom(value), do: to_string(value)
 
   defp encode_value(value), do: Jason.encode!(value)
 end

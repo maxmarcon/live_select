@@ -100,14 +100,20 @@ defmodule LiveSelect.Component do
       |> assign(assigns)
       |> assign(:active_option, -1)
       |> update(:options, &normalize_options/1)
-      |> assign_new(:selection, fn %{form: form, field: field, options: options} ->
-        form_value = input_value(form, field)
+      |> assign_new(:selection, fn
+        %{form: form, field: field, options: []} ->
+          input_value(form, field)
+          |> List.wrap()
+          |> normalize_options()
 
-        options
-        |> Enum.filter(fn %{value: value} ->
-          (is_list(form_value) && value in form_value) ||
-            value == form_value
-        end)
+        %{form: form, field: field, options: options} ->
+          form_value = input_value(form, field)
+
+          options
+          |> Enum.filter(fn %{value: value} ->
+            (is_list(form_value) && value in form_value) ||
+              value == form_value
+          end)
       end)
 
     socket =
