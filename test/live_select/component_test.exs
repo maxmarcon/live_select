@@ -118,6 +118,23 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "A")
     end
 
+    test "can set initial selection explicitly, bypassing the form" do
+      changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search,
+          value: "D",
+          options: ["A", "B", "C"]
+        )
+
+      assert_selected_static(component, "D")
+    end
+
     test "raises if initial selection is in the wrong format" do
       changeset =
         Ecto.Changeset.change({%{city_search: [{"B", 1}]}, %{city_search: :string}}, %{})
@@ -240,6 +257,28 @@ defmodule LiveSelect.ComponentTest do
         )
 
       assert_selected_multiple_static(component, ["1", "2", "3"], ["B", "D", "3"])
+    end
+
+    test "can set initial selection explicitly, bypassing the form" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search,
+          value: ["C", "F"],
+          options: ["A", "B", "C", "D"]
+        )
+
+      assert_selected_multiple_static(component, ["C", "F"])
     end
 
     test "raises if initial selection is in the wrong format" do

@@ -306,18 +306,6 @@ defmodule LiveSelectTest do
     assert_selected(live, "B", 2)
   end
 
-  test "can specify a value to be sent when nothing is selected via default_value", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?default_value=default")
-
-    hidden_input =
-      live
-      |> element(@selectors[:hidden_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert Floki.attribute(hidden_input, "value") == ["default"]
-  end
-
   test "clicking on the text input field resets the selection", %{conn: conn} do
     stub_options(
       A: 1,
@@ -337,27 +325,6 @@ defmodule LiveSelectTest do
     |> render_click()
 
     assert_reset(live)
-  end
-
-  test "reset takes into account the default_value", %{conn: conn} do
-    stub_options(
-      A: 1,
-      B: 2,
-      C: 3
-    )
-
-    {:ok, live, _html} = live(conn, "/?default_value=foo")
-
-    type(live, "ABC")
-
-    select_nth_option(live, 2)
-
-    assert_selected(live, :B, 2)
-
-    element(live, @selectors[:text_input])
-    |> render_click()
-
-    assert_reset(live, "foo")
   end
 
   test "can navigate options with arrows", %{conn: conn} do

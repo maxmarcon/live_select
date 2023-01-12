@@ -12,7 +12,6 @@ defmodule LiveSelect.Component do
     container_class: nil,
     container_extra_class: nil,
     debounce: 100,
-    default_value: nil,
     disabled: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
@@ -29,7 +28,8 @@ defmodule LiveSelect.Component do
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil,
-    update_min_len: 3
+    update_min_len: 3,
+    value: nil
   ]
 
   @styles [
@@ -112,8 +112,12 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
-      |> assign_new(:selection, fn %{form: form, field: field, options: options, mode: mode} ->
-        selection_from_form(form, field, options, mode)
+      |> assign_new(:selection, fn
+        %{form: form, field: field, options: options, mode: mode, value: nil} ->
+          initial_selection(input_value(form, field), options, mode)
+
+        %{options: options, mode: mode, value: value} ->
+          initial_selection(value, options, mode)
       end)
 
     {:ok, socket}
@@ -297,18 +301,16 @@ defmodule LiveSelect.Component do
     |> push_event("reset", %{id: socket.assigns.id})
   end
 
-  defp selection_from_form(form, field, options, :single) do
-    form_value = input_value(form, field)
-
-    if option = Enum.find(options, fn %{value: value} -> value == form_value end) do
+  defp initial_selection(value, options, :single) do
+    if option = Enum.find(options, fn %{value: val} -> value == val end) do
       [option]
     else
-      List.wrap(normalize(form_value, :selection))
+      List.wrap(normalize(value, :selection))
     end
   end
 
-  defp selection_from_form(form, field, options, _) do
-    input_value(form, field)
+  defp initial_selection(value, options, _) do
+    value
     |> then(&if Enumerable.impl_for(&1), do: &1, else: List.wrap(&1))
     |> Enum.map(
       &if option = Enum.find(options, fn %{value: value} -> value == &1 end) do
@@ -361,9 +363,9 @@ defmodule LiveSelect.Component do
     Enum.map(options, &encode(&1.value))
   end
 
-  defp value([], default_value), do: encode(default_value)
+  defp value([%{value: value} | _]), do: encode(value)
 
-  defp value([%{value: value} | _], _default_value), do: encode(value)
+  defp value(_), do: nil
 
   defp label(:single, [%{label: label} | _]), do: label
 

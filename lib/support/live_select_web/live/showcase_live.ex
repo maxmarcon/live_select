@@ -30,7 +30,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
     @primary_key false
     embedded_schema do
       field(:debounce, :integer, default: 100)
-      field(:default_value, :string)
       field(:disabled, :boolean)
       field(:field_name, :string, default: "city_search")
       field(:form_name, :string, default: "my_form")
@@ -54,7 +53,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
         params,
         [
           :debounce,
-          :default_value,
           :disabled,
           :field_name,
           :form_name,

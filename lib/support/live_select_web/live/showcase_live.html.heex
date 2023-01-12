@@ -49,14 +49,6 @@
           <%= select(f, :mode, [:single, :tags], class: "select select-sm select-bordered text-xs") %>
         </div>
         <div class="form-control max-w-sm">
-          <%= label(f, :default_vale, "Default value:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :default_value,
-            class: "input input-sm input-bordered",
-            spellcheck: "false",
-            disabled: input_value(f, :mode) != :single
-          ) %>
-        </div>
-        <div class="form-control max-w-sm">
           <%= label(f, :search_delay, "Search delay in ms:",
             class: "label label-text font-semibold"
           ) %>
