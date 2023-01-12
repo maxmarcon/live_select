@@ -100,21 +100,6 @@ defmodule LiveSelect.Component do
       |> assign(assigns)
       |> assign(:active_option, -1)
       |> update(:options, &normalize_options/1)
-      |> assign_new(:selection, fn
-        %{form: form, field: field, options: []} ->
-          input_value(form, field)
-          |> List.wrap()
-          |> normalize_options()
-
-        %{form: form, field: field, options: options} ->
-          form_value = input_value(form, field)
-
-          options
-          |> Enum.filter(fn %{value: value} ->
-            (is_list(form_value) && value in form_value) ||
-              value == form_value
-          end)
-      end)
 
     socket =
       @default_opts
@@ -127,6 +112,9 @@ defmodule LiveSelect.Component do
         val -> val
       end)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
+      |> assign_new(:selection, fn %{form: form, field: field, options: options, mode: mode} ->
+        selection_from_form(form, field, options, mode)
+      end)
 
     {:ok, socket}
   end
@@ -309,14 +297,42 @@ defmodule LiveSelect.Component do
     |> push_event("reset", %{id: socket.assigns.id})
   end
 
+  defp selection_from_form(form, field, options, :single) do
+    form_value = input_value(form, field)
+
+    if option = Enum.find(options, fn %{value: value} -> value == form_value end) do
+      [option]
+    else
+      List.wrap(normalize(form_value, :selection))
+    end
+  end
+
+  defp selection_from_form(form, field, options, _) do
+    input_value(form, field)
+    |> then(&if Enumerable.impl_for(&1), do: &1, else: List.wrap(&1))
+    |> Enum.map(
+      &if option = Enum.find(options, fn %{value: value} -> value == &1 end) do
+        option
+      else
+        normalize(&1, :selection)
+      end
+    )
+  end
+
   defp normalize_options(options) do
-    options
-    |> Enum.map(fn
+    Enum.map(options, &normalize(&1, :options))
+  end
+
+  defp normalize(nil, _), do: nil
+
+  defp normalize(option_or_selection, what) when what in [:options, :selection] do
+    case option_or_selection do
       %{value: value} = option ->
         Map.put_new(option, :label, value)
 
       option when is_list(option) ->
         Map.new(option)
+        |> tap(&if Map.take(&1, [:key, :value]) == %{}, do: invalid_option(option, what))
         |> Map.put_new(:label, option[:key] || option[:value])
 
       {label, value} ->
@@ -326,15 +342,19 @@ defmodule LiveSelect.Component do
         %{label: option, value: option}
 
       option ->
-        raise """
-        invalid option: #{inspect(option)}
-        options must enumerate to:
+        invalid_option(option, what)
+    end
+  end
 
-        a list of atom, strings or numbers
-        a list of maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_value
-        a list of tuples
-        """
-    end)
+  defp invalid_option(option, what) do
+    raise """
+    invalid #{if what == :selection, do: "element in selection", else: "option"}: #{inspect(option)}
+    #{what} must enumerate to:
+
+    a list of atom, strings or numbers
+    a list of maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_label
+    a list of tuples
+    """
   end
 
   defp values(options) do
@@ -345,7 +365,7 @@ defmodule LiveSelect.Component do
 
   defp value([%{value: value} | _], _default_value), do: encode(value)
 
-  defp label(:single, [%{label: label}]), do: label
+  defp label(:single, [%{label: label} | _]), do: label
 
   defp label(_, _), do: nil
 

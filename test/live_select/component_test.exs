@@ -101,6 +101,37 @@ defmodule LiveSelect.ComponentTest do
 
       assert_selected_static(component, "B", 1)
     end
+
+    test "can set initial selection from form even if it can't be found in the options" do
+      changeset = Ecto.Changeset.change({%{city_search: "A"}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search,
+          options: ["B"]
+        )
+
+      assert_selected_static(component, "A")
+    end
+
+    test "raises if initial selection is in the wrong format" do
+      changeset =
+        Ecto.Changeset.change({%{city_search: [{"B", 1}]}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          field: :city_search
+        )
+      end
+    end
   end
 
   describe "in tags mode" do
@@ -188,6 +219,43 @@ defmodule LiveSelect.ComponentTest do
         )
 
       assert_selected_multiple_static(component, ["1", "2"], ["B", "D"])
+    end
+
+    test "can set initial selection from form even it can't be found in the options" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: [{"B", 1}, 2, 3]}, %{city_search: {:array, :string}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          mode: :tags,
+          form: form,
+          field: :city_search,
+          options: [{"D", 2}]
+        )
+
+      assert_selected_multiple_static(component, ["1", "2", "3"], ["B", "D", "3"])
+    end
+
+    test "raises if initial selection is in the wrong format" do
+      changeset =
+        Ecto.Changeset.change({%{city_search: [%{B: 1, C: 2}]}, %{city_search: :string}}, %{})
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
+        render_component(LiveSelect.Component,
+          id: "live_select",
+          form: form,
+          mode: :tags,
+          field: :city_search
+        )
+      end
     end
   end
 

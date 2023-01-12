@@ -1,4 +1,4 @@
-# LiveSelect
+# LiveSelect 
 
 [![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
@@ -7,7 +7,7 @@ Dynamic selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically and asynchronously by your LiveView as a reaction to user's input. This allows you to easily implement features like search. It supports both single and multiple selections. 
 
-### Single selection (single mode)
+### Single selection (single mode) 
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif)
 
@@ -15,7 +15,7 @@ Dynamic selection field for LiveView.
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
-## Usage
+## Usage 📒
 
 Template:
 
@@ -53,7 +53,7 @@ LiveView:
 
 Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
 
-## Installation
+## Installation 📦
 
 To install, add this to your dependencies:
 
@@ -63,7 +63,7 @@ To install, add this to your dependencies:
 ]
 ```
 
-## Javascript Hooks
+## Javascript Hooks 🪝
 
 `LiveSelect` relies on Javascript hooks to work. You need to add `LiveSelect`'s hooks to your live socket.
 
@@ -86,7 +86,7 @@ const hooks = {
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
-## Tailwind configuration
+## Tailwind configuration 💄
 
 `LiveSelect` supports 3 styling modes:
 
@@ -114,7 +114,7 @@ Notice the different paths for a standalone or umbrella app.
 
 Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
 
-## Showcase app
+## Showcase app 🎪
 
 The repository includes a showcase app that you can use to experiment with the different options and parameters for `LiveSelect`. To start the showcase app, simply run:
 
@@ -127,7 +127,7 @@ from within the cloned repository. The app will be available at http://localhost
 
 ![SHOWCASE_APP](https://github.com/maxmarcon/live_select/raw/main/priv/static/images/showcase.gif)
 
-## TODO
+## Roadmap 🛣️
 
 - [X] Add `package.json` to enable `import live_select from "live_select"`
 - [X] Make sure component classes are included by tailwind
