@@ -15,7 +15,7 @@ Dynamic selection field for LiveView.
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
-## Usage 📒
+## Usage 🧭
 
 Template:
 
@@ -86,7 +86,7 @@ const hooks = {
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
 
-## Tailwind configuration 💄
+## Tailwind configuration 🎨
 
 `LiveSelect` supports 3 styling modes:
 

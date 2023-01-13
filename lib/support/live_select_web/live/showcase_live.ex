@@ -76,7 +76,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> put_change(:new, false)
     end
 
-    def live_select_opts(%__MODULE__{} = settings) do
+    def live_select_opts(%__MODULE__{} = settings, remove_defaults \\ false) do
+      default_opts = LiveSelect.Component.default_opts()
+
       settings
       |> Map.drop([:search_delay, :form_name, :field_name, :new, :selection])
       |> Map.from_struct()
@@ -87,6 +89,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
           &1
         end
       )
+      |> Map.reject(fn {option, value} ->
+        remove_defaults && value == Keyword.fetch!(default_opts, option)
+      end)
       |> Keyword.new()
     end
 

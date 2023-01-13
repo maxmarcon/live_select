@@ -19,6 +19,7 @@ defmodule LiveSelect.Component do
     mode: :single,
     option_class: nil,
     option_extra_class: nil,
+    options: [],
     placeholder: nil,
     selected_option_class: nil,
     style: :tailwind,
@@ -69,8 +70,6 @@ defmodule LiveSelect.Component do
       socket
       |> assign(
         active_option: -1,
-        disabled: false,
-        options: [],
         hide_dropdown: true
       )
 
@@ -100,7 +99,6 @@ defmodule LiveSelect.Component do
       socket
       |> assign(assigns)
       |> assign(:active_option, -1)
-      |> update(:options, &normalize_options/1)
 
     socket =
       @default_opts
@@ -112,6 +110,7 @@ defmodule LiveSelect.Component do
         nil -> @default_opts[:update_min_len]
         val -> val
       end)
+      |> update(:options, &normalize_options/1)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
       |> assign_new(:selection, fn
         %{form: form, field: field, options: options, mode: mode, value: nil} ->
