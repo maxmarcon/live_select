@@ -89,6 +89,34 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple_static(live, ~w(B))
   end
 
+  describe "when max_selectable option is set" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/?mode=tags&max_selectable=2")
+
+      %{live: live}
+    end
+
+    test "prevents selection of more than max_selectable options", %{live: live} do
+      stub_options(~w(A B C D))
+
+      type(live, "ABC")
+
+      select_nth_option(live, 2, :key)
+
+      type(live, "ABC")
+
+      select_nth_option(live, 4, :click)
+
+      assert_selected_multiple(live, ~w(B D))
+
+      type(live, "ABC")
+
+      select_nth_option(live, 3, :click)
+
+      assert_selected_multiple_static(live, ~w(B D))
+    end
+  end
+
   test "can remove selected options by clicking on tag", %{live: live} do
     stub_options(~w(A B C D))
 

@@ -49,10 +49,16 @@
           <%= select(f, :mode, [:single, :tags], class: "select select-sm select-bordered text-xs") %>
         </div>
         <div class="form-control max-w-sm">
+          <%= label(f, :max_selectable, "Max selectable:", class: "label label-text font-semibold") %>
+          <%= number_input(f, :max_selectable, min: 0, class: "input input-sm input-bordered") %>
+          <%= error_tag(f, :max_selectable) %>
+        </div>
+        <div class="form-control max-w-sm">
           <%= label(f, :search_delay, "Search delay in ms:",
             class: "label label-text font-semibold"
           ) %>
-          <%= text_input(f, :search_delay,
+          <%= number_input(f, :search_delay,
+            min: 0,
             class: "input input-sm input-bordered",
             spellcheck: "false"
           ) %>
@@ -69,7 +75,8 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :update_min_len, "update_min_len:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :update_min_len,
+          <%= number_input(f, :update_min_len,
+            min: 0,
             class: "input input-sm input-bordered",
             spellcheck: "false"
           ) %>
@@ -80,7 +87,11 @@
         </div>
         <div class="form-control max-w-sm">
           <%= label(f, :debounce, "debounce:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :debounce, class: "input input-sm input-bordered", spellcheck: "false") %>
+          <%= number_input(f, :debounce,
+            min: 0,
+            class: "input input-sm input-bordered",
+            spellcheck: "false"
+          ) %>
           <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
           <%= error_tag(f, :debounce) %>
         </div>

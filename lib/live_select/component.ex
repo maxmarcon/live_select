@@ -15,6 +15,7 @@ defmodule LiveSelect.Component do
     disabled: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
+    max_selectable: 0,
     mode: :single,
     option_class: nil,
     option_extra_class: nil,
@@ -268,21 +269,34 @@ defmodule LiveSelect.Component do
 
     selection =
       case socket.assigns.mode do
-        :tags -> socket.assigns.selection ++ [selected]
-        _ -> [selected]
+        :tags ->
+          if socket.assigns.max_selectable > 0 &&
+               length(socket.assigns.selection) >= socket.assigns.max_selectable,
+             do: socket.assigns.selection,
+             else: socket.assigns.selection ++ [selected]
+
+        _ ->
+          [selected]
       end
 
-    socket
-    |> assign(
-      active_option: -1,
-      selection: selection,
-      hide_dropdown: true
-    )
-    |> push_event("select", %{
-      id: socket.assigns.id,
-      mode: socket.assigns.mode,
-      selection: selection
-    })
+    if socket.assigns.selection != selection do
+      socket
+      |> assign(
+        active_option: -1,
+        selection: selection,
+        hide_dropdown: true
+      )
+      |> push_event("select", %{
+        id: socket.assigns.id,
+        mode: socket.assigns.mode,
+        selection: selection
+      })
+    else
+      assign(socket,
+        active_option: -1,
+        hide_dropdown: true
+      )
+    end
   end
 
   defp unselect(socket, pos) do
@@ -407,6 +421,14 @@ defmodule LiveSelect.Component do
 
   defp encode(value), do: Jason.encode!(value)
 
+  defp next_selectable(%{
+         selection: selection,
+         active_option: active_option,
+         max_selectable: max_selectable
+       })
+       when max_selectable > 0 and length(selection) >= max_selectable,
+       do: active_option
+
   defp next_selectable(%{options: options, active_option: active_option, selection: selection}) do
     options
     |> Enum.with_index()
@@ -414,6 +436,14 @@ defmodule LiveSelect.Component do
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 > active_option))
   end
+
+  defp prev_selectable(%{
+         selection: selection,
+         active_option: active_option,
+         max_selectable: max_selectable
+       })
+       when max_selectable > 0 and length(selection) >= max_selectable,
+       do: active_option
 
   defp prev_selectable(%{options: options, active_option: active_option, selection: selection}) do
     options

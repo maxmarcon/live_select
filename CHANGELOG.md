@@ -1,5 +1,9 @@
 # Changelog
 
+* set initial selection from the form or manually via a `value` option
+* set initial set of available options via the `options` options
+* add a `max_selectable` option to limit the maximum size of the selection
+
 ## 0.3.2 (2023-01-03)
 
 Bugfix: options in dropdown not always clickable because of race condition with blur event (https://github.com/maxmarcon/live_select/issues/7)

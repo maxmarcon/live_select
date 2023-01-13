@@ -73,7 +73,8 @@
   >
     <%= for {option, idx} <- Enum.with_index(@options) do %>
       <li class={
-        if option in @selection, do: class(@style, :selected_option, @selected_option_class)
+        if option in @selection || (@max_selectable > 0 && length(@selection) >= @max_selectable),
+          do: class(@style, :selected_option, @selected_option_class)
       }>
         <div
           class={[
