@@ -63,7 +63,7 @@ To install, add this to your dependencies:
 ]
 ```
 
-## Javascript Hooks 🪝
+## Javascript hooks 🪝
 
 `LiveSelect` relies on Javascript hooks to work. You need to add `LiveSelect`'s hooks to your live socket.
 
