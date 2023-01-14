@@ -6,8 +6,13 @@ module.exports = {
         '../config/*.exs',
         '../lib/support/*_web.ex',
         '../lib/support/*_web/**/*.*ex',
-        '../lib/live_select/*.*ex',
-        '../priv/static/assets/class.txt'
+        '../lib/live_select/*.*ex'
+    ],
+    safelist: [
+        {
+            pattern: /./,
+            variants: ["hover", "focus", "disabled"]
+        }
     ],
     theme: {
         extend: {},

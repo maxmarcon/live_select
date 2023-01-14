@@ -151,7 +151,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   @max_events 3
-  @class_file "priv/static/class.txt"
 
   defmodule Render do
     @moduledoc false
@@ -224,8 +223,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_params(params, _url, socket) do
-    maybe_terminate_save_classes_task(socket)
-
     params =
       params
       |> Map.new(fn {k, v} -> if v == "", do: {k, nil}, else: {k, v} end)
@@ -253,7 +250,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket =
           socket
-          |> spawn_save_classes_task(settings)
           |> assign(:form_changeset, make_form_changeset(settings))
           |> assign(:changeset, Ecto.Changeset.change(settings))
 
@@ -398,36 +394,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
         if(settings.mode == :single, do: :string, else: {:array, :string})}
      ])}
     |> Ecto.Changeset.change(%{})
-  end
-
-  defp spawn_save_classes_task(socket, %Settings{} = settings) do
-    if connected?(socket) do
-      {:ok, pid} =
-        Task.Supervisor.start_child(LiveSelectWeb.TaskSupervisor, fn ->
-          save_classes(settings)
-        end)
-
-      assign(socket, :save_classes_pid, pid)
-    else
-      socket
-    end
-  end
-
-  defp maybe_terminate_save_classes_task(socket) do
-    if pid = socket.assigns.save_classes_pid do
-      Task.Supervisor.terminate_child(
-        LiveSelectWeb.TaskSupervisor,
-        pid
-      )
-    end
-  end
-
-  defp save_classes(%Settings{} = settings) do
-    settings
-    |> Map.take(Settings.class_options())
-    |> Enum.reject(fn {_key, classes} -> is_nil(classes) end)
-    |> Enum.map(fn {_key, classes} -> classes <> "\n" end)
-    |> Enum.into(File.stream!(@class_file))
   end
 
   defp message_handler() do
