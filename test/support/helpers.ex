@@ -50,7 +50,7 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def stub_options(options) do
-    Mox.stub(LiveSelect.MessageHandlerMock, :handle, fn change_msg, _ ->
+    Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->
       update_options(
         change_msg,
         options

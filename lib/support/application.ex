@@ -8,15 +8,11 @@ defmodule LiveSelect.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Telemetry supervisor
-      LiveSelectWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: LiveSelect.PubSub},
-      # Start the Endpoint (http/https)
-      LiveSelectWeb.Endpoint,
-      # Start a worker by calling: LiveSelect.Worker.start_link(arg)
-      # {LiveSelect.Worker, arg}
-      {Task.Supervisor, name: LiveSelectWeb.TaskSupervisor}
+      # Start the Endpoint (http/https),
+      LiveSelect.CityFinder,
+      LiveSelectWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

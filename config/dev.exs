@@ -1,7 +1,5 @@
 import Config
 
-config :live_select, :message_handler, LiveSelect.MessageHandler
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -18,8 +16,7 @@ config :live_select, LiveSelectWeb.Endpoint,
   secret_key_base: "2nJhi0qF4Z8rVEW1MahlKTpKsfE/IqlM0/sxyd9S98q/96ZiWJOpCkLHd5/cmsz5",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
 # ## SSL Support
@@ -53,34 +50,6 @@ config :live_select, LiveSelectWeb.Endpoint,
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"lib/.*(ex)$"
     ]
-  ]
-
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.14.29",
-  default: [
-    args:
-      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ],
-  module: [
-    args:
-      ~w(js/live_select.js --target=es2017 --minify --outfile=../priv/static/live_select.min.js),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ]
-
-config :tailwind,
-  version: "3.1.3",
-  default: [
-    args: ~w(
-      --config=tailwind.config.js
-      --input=css/app.css
-      --output=../priv/static/assets/app.css
-      --watch
-    ),
-    cd: Path.expand("../assets", __DIR__)
   ]
 
 # Do not include metadata nor timestamps in development logs

@@ -1,6 +1,6 @@
 import Config
 
-config :live_select, :message_handler, LiveSelect.MessageHandlerMock
+config :live_select, :message_handler, LiveSelect.ChangeMsgHandlerMock
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

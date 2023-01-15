@@ -48,17 +48,14 @@ defmodule LiveSelect.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix, "~> 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_ecto, "~> 4.0", only: [:dev, :test]},
-      {:ecto, "~> 3.8", only: [:dev, :test]},
-      {:ecto_sql, "~> 3.0", only: [:dev, :test]},
+      {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
+      {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
       {:floki, ">= 0.30.0", only: :test},
-      {:esbuild, "~> 0.4", only: :dev},
-      {:telemetry_metrics, "~> 0.6", only: [:dev, :test]},
-      {:telemetry_poller, "~> 1.0", only: [:dev, :test]},
-      {:jason, "~> 1.2", only: [:dev, :test]},
-      {:plug_cowboy, "~> 2.5", only: :dev},
+      {:esbuild, "~> 0.4", only: [:dev, :demo]},
+      {:jason, "~> 1.2", only: [:dev, :test, :demo]},
+      {:plug_cowboy, "~> 2.5", only: [:dev, :demo]},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:tailwind, "~> 0.1.6", only: :dev},
+      {:tailwind, "~> 0.1.6", only: [:dev, :demo]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test}
@@ -74,7 +71,13 @@ defmodule LiveSelect.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "cmd --cd assets yarn"],
-      "assets.deploy": ["esbuild module"]
+      "assets.package": ["esbuild package"],
+      "assets.deploy": [
+        "cmd --cd assets yarnpkg",
+        "tailwind default --minify",
+        "esbuild default --minify",
+        "phx.digest"
+      ]
     ]
   end
 

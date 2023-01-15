@@ -83,13 +83,13 @@ defmodule LiveSelectTest do
   test "sends a ChangeMsg message as reaction to user's input", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    Mox.expect(LiveSelect.MessageHandlerMock, :handle, fn %ChangeMsg{
-                                                            id: "my_form_city_search_component",
-                                                            text: "Ber",
-                                                            module: LiveSelect.Component,
-                                                            field: :city_search
-                                                          },
-                                                          _ ->
+    Mox.expect(LiveSelect.ChangeMsgHandlerMock, :handle, fn %ChangeMsg{
+                                                              id: "my_form_city_search_component",
+                                                              text: "Ber",
+                                                              module: LiveSelect.Component,
+                                                              field: :city_search
+                                                            },
+                                                            _ ->
       nil
     end)
 
