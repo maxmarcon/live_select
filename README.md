@@ -118,7 +118,10 @@ Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for 
 
 ## Showcase app 🎪
 
-The repository includes a showcase app that you can use to experiment with the different options and parameters for `LiveSelect`. To start the showcase app, simply run:
+The repository includes a showcase app that you can use to experiment with the different options and parameters for `LiveSelect`. 
+The showcase app is available [here](https://live-select.fly.dev/).
+
+To start the showcase app locally, simply run:
 
 ```
 mix setup
