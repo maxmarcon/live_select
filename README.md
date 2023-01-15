@@ -130,8 +130,6 @@ PORT=4001 mix phx.server
 
 from within the cloned repository. The app will be available at http://localhost:4001. The showcase app allows you to quickly experiment with options and styles, providing an easy way to fine tune your `LiveSelect` component. The app also shows the messages and events that your `LiveView` receives. For each event or message, the app shows the function head of the callback that your LiveView needs to implement in order to handle the event.
 
-![SHOWCASE_APP](https://github.com/maxmarcon/live_select/raw/main/priv/static/images/showcase.gif)
-
 ## Roadmap 🛣️
 
 - [X] Add `package.json` to enable `import live_select from "live_select"`
