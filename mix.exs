@@ -51,11 +51,11 @@ defmodule LiveSelect.MixProject do
       {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
       {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
       {:floki, ">= 0.30.0", only: :test},
-      {:esbuild, "~> 0.4", only: [:dev, :demo]},
+      {:esbuild, "~> 0.4", only: [:dev, :test, :demo]},
       {:jason, "~> 1.2", only: [:dev, :test, :demo]},
       {:plug_cowboy, "~> 2.5", only: [:dev, :demo]},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:tailwind, "~> 0.1.6", only: [:dev, :demo]},
+      {:tailwind, "~> 0.1.6", only: [:dev, :test, :demo]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test}
