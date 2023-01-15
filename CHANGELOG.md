@@ -1,7 +1,9 @@
 # Changelog
 
-* set initial selection from the form or manually via a `value` option
-* set initial set of available options via the `options` options
+## 0.3.3 (2023-01-15)
+
+* set initial selection from the form or manually with `value` option
+* set initial list of available options with `options` option
 * add a `max_selectable` option to limit the maximum size of the selection
 
 ## 0.3.2 (2023-01-03)
