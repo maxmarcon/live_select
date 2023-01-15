@@ -263,39 +263,40 @@ defmodule LiveSelect.Component do
 
   defp select(socket, -1), do: socket
 
+  defp select(
+         %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
+         _selected_position
+       )
+       when max_selectable > 0 and length(selection) >= max_selectable do
+    assign(socket,
+      active_option: -1,
+      hide_dropdown: true
+    )
+  end
+
   defp select(socket, selected_position) do
     selected = Enum.at(socket.assigns.options, selected_position)
 
     selection =
       case socket.assigns.mode do
         :tags ->
-          if socket.assigns.max_selectable > 0 &&
-               length(socket.assigns.selection) >= socket.assigns.max_selectable,
-             do: socket.assigns.selection,
-             else: socket.assigns.selection ++ [selected]
+          socket.assigns.selection ++ [selected]
 
         _ ->
           [selected]
       end
 
-    if socket.assigns.selection != selection do
-      socket
-      |> assign(
-        active_option: -1,
-        selection: selection,
-        hide_dropdown: true
-      )
-      |> push_event("select", %{
-        id: socket.assigns.id,
-        mode: socket.assigns.mode,
-        selection: selection
-      })
-    else
-      assign(socket,
-        active_option: -1,
-        hide_dropdown: true
-      )
-    end
+    socket
+    |> assign(
+      active_option: -1,
+      selection: selection,
+      hide_dropdown: true
+    )
+    |> push_event("select", %{
+      id: socket.assigns.id,
+      mode: socket.assigns.mode,
+      selection: selection
+    })
   end
 
   defp unselect(socket, pos) do
