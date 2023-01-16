@@ -17,9 +17,12 @@
   </head>
   <body>
     <header>
-      <article class="container prose-lg text-center my-5">
-        <h1>LiveSelect Showcase App</h1>
-      </article>
+      <div class="p-5 navbar bg-base-100 gap-5">
+        <h1 class="text-2xl font-bold flex-1">LiveSelect Showcase App</h1>
+        <a class="link text-xl" href="https://github.com/maxmarcon/live_select" target="_blank">
+          <img width="50" src={Routes.static_path(@conn, "/images/github-mark.png")} />
+        </a>
+      </div>
     </header>
     <%= @inner_content %>
   </body>

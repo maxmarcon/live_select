@@ -1,6 +1,7 @@
 # LiveSelect 
 
-[![Hex.pm](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
+[![Hex](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
+[![Hexdocs](https://img.shields.io/badge/-docs-green)](https://hexdocs.pm/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
 Dynamic selection field for LiveView.
