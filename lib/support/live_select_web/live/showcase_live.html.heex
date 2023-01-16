@@ -1,263 +1,294 @@
-<div class="flex w-full p-5 gap-2" xmlns="http://www.w3.org/1999/html">
-  <div class="flex flex-col w-1/2">
-    <div class="flex gap-2">
-      <div class="form-control w-1/4">
-        <label class="label cursor-pointer">
-          <span class="label-text">Toggle dark mode</span>
-          <input
-            id="dark-mode-toggle"
-            type="checkbox"
-            class="toggle"
-            data-toggle-theme="dark,light"
-            phx-hook="watchThemeChanges"
-            phx-update="ignore"
-          />
-        </label>
-      </div>
-      <div class="form-control">
-        <.link
-          patch={Routes.live_path(@socket, __MODULE__, reset: true)}
-          class="btn btn-warning btn-sm mt-1"
-        >
-          Reset
-        </.link>
-      </div>
+<div class={if @dark_mode, do: "dark"}>
+  <header>
+    <div class="p-5 navbar bg-base-100 gap-5">
+      <h1 class="text-2xl font-bold flex-1">LiveSelect Showcase App</h1>
+      <a class="link text-xl" href="https://github.com/maxmarcon/live_select" target="_blank">
+        <img
+          class="hidden dark:block"
+          width="50"
+          src={Routes.static_path(@socket, "/images/github-mark-white.png")}
+        />
+        <img
+          class="dark:hidden"
+          width="50"
+          src={Routes.static_path(@socket, "/images/github-mark.png")}
+        />
+      </a>
     </div>
-    <div class="prose text-center flex flex-row justify-center">
-      <h4>Change settings here:</h4>
-    </div>
-    <.form :let={f} for={@changeset} phx-change="update-settings">
-      <div class="flex flex-wrap p-5 gap-2">
-        <div class="form-control max-w-sm">
-          <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :form_name,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= error_tag(f, :form_name) %>
+  </header>
+  <div class="flex w-full p-5 gap-2" xmlns="http://www.w3.org/1999/html">
+    <div class="flex flex-col w-1/2">
+      <div class="flex gap-2">
+        <div class="form-control w-1/4">
+          <label class="label cursor-pointer">
+            <span class="label-text">Toggle dark mode</span>
+            <input
+              id="dark-mode-toggle"
+              type="checkbox"
+              class="toggle"
+              data-toggle-theme="dark,light"
+              phx-hook="watchThemeChanges"
+              phx-update="ignore"
+            />
+          </label>
         </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :field_name, "Field name:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :field_name,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= error_tag(f, :field_name) %>
+        <div class="form-control">
+          <.link
+            patch={Routes.live_path(@socket, __MODULE__, reset: true)}
+            class="btn btn-warning btn-sm mt-1"
+          >
+            Reset
+          </.link>
         </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :mode, "Mode:", class: "label label-text font-semibold") %>
-          <%= select(f, :mode, [:single, :tags], class: "select select-sm select-bordered text-xs") %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :max_selectable, "Max selectable:", class: "label label-text font-semibold") %>
-          <%= number_input(f, :max_selectable, min: 0, class: "input input-sm input-bordered") %>
-          <%= error_tag(f, :max_selectable) %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :search_delay, "Search delay in ms:",
-            class: "label label-text font-semibold"
-          ) %>
-          <%= number_input(f, :search_delay,
-            min: 0,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= error_tag(f, :search_delay) %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
-          <%= text_input(f, :placeholder,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= label(f, :placeholder, default_value_descr(:placeholder), class: "label label-text") %>
-          <%= error_tag(f, :placeholder) %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :update_min_len, "update_min_len:", class: "label label-text font-semibold") %>
-          <%= number_input(f, :update_min_len,
-            min: 0,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= label(f, :update_min_len, default_value_descr(:update_min_len),
-            class: "label label-text"
-          ) %>
-          <%= error_tag(f, :update_min_len) %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label(f, :debounce, "debounce:", class: "label label-text font-semibold") %>
-          <%= number_input(f, :debounce,
-            min: 0,
-            class: "input input-sm input-bordered",
-            spellcheck: "false"
-          ) %>
-          <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
-          <%= error_tag(f, :debounce) %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label class: "label cursor-pointer" do %>
-            <span class="label-text font-semibold">disabled:&nbsp;</span>
-            <%= checkbox(f, :disabled, class: "checkbox") %>
-          <% end %>
-        </div>
-        <div class="form-control max-w-sm">
-          <%= label class: "label cursor-pointer" do %>
-            <span class="label-text font-semibold">style:&nbsp;</span>
-            <%= select(f, :style, [:tailwind, :daisyui, :none],
+      </div>
+      <div class="prose text-center flex flex-row justify-center">
+        <h4>Change settings here:</h4>
+      </div>
+      <.form :let={f} for={@changeset} phx-change="update-settings">
+        <div class="flex flex-wrap p-5 gap-2">
+          <div class="form-control max-w-sm">
+            <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
+            <%= text_input(f, :form_name,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= error_tag(f, :form_name) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :field_name, "Field name:", class: "label label-text font-semibold") %>
+            <%= text_input(f, :field_name,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= error_tag(f, :field_name) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :mode, "Mode:", class: "label label-text font-semibold") %>
+            <%= select(f, :mode, [:single, :tags],
               class: "select select-sm select-bordered text-xs"
             ) %>
-          <% end %>
-        </div>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :max_selectable, "Max selectable:",
+              class: "label label-text font-semibold"
+            ) %>
+            <%= number_input(f, :max_selectable, min: 0, class: "input input-sm input-bordered") %>
+            <%= error_tag(f, :max_selectable) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :search_delay, "Search delay in ms:",
+              class: "label label-text font-semibold"
+            ) %>
+            <%= number_input(f, :search_delay,
+              min: 0,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= error_tag(f, :search_delay) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
+            <%= text_input(f, :placeholder,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= label(f, :placeholder, default_value_descr(:placeholder),
+              class: "label label-text"
+            ) %>
+            <%= error_tag(f, :placeholder) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :update_min_len, "update_min_len:",
+              class: "label label-text font-semibold"
+            ) %>
+            <%= number_input(f, :update_min_len,
+              min: 0,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= label(f, :update_min_len, default_value_descr(:update_min_len),
+              class: "label label-text"
+            ) %>
+            <%= error_tag(f, :update_min_len) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label(f, :debounce, "debounce:", class: "label label-text font-semibold") %>
+            <%= number_input(f, :debounce,
+              min: 0,
+              class: "input input-sm input-bordered",
+              spellcheck: "false"
+            ) %>
+            <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
+            <%= error_tag(f, :debounce) %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label class: "label cursor-pointer" do %>
+              <span class="label-text font-semibold">disabled:&nbsp;</span>
+              <%= checkbox(f, :disabled, class: "checkbox") %>
+            <% end %>
+          </div>
+          <div class="form-control max-w-sm">
+            <%= label class: "label cursor-pointer" do %>
+              <span class="label-text font-semibold">style:&nbsp;</span>
+              <%= select(f, :style, [:tailwind, :daisyui, :none],
+                class: "select select-sm select-bordered text-xs"
+              ) %>
+            <% end %>
+          </div>
 
-        <div
-          id="style-dropdown"
-          class={
+          <div
+            id="style-dropdown"
+            class={
             "w-full collapse collapse-arrow #{if @show_styles, do: "collapse-open", else: "collapse-close"} border
             border-base-300 bg-base-100 rounded-box"
           }
-        >
-          <%= checkbox(f, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
-          <div class="collapse-title text-sm font-medium">
-            Styling options
-          </div>
-          <div class="collapse-content">
-            <p class="whitespace-normal font-light text-sm">
-              Set or override styling options. The defaults are set by the selected style.
-              Classes in the defaults can be selectively
-              excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
-            </p>
-            <div class="form-control mt-2 flex flex-row">
-              <span class="text-sm min-w-fit mr-2">Filter styles:</span>
-              <div class="input-group">
-                <%= text_input(f, :style_filter,
-                  value: @style_filter,
-                  class: "input input-bordered input-sm",
-                  phx_change: "filter-styles"
-                ) %>
-                <button type="button" class="btn btn-square btn-sm" phx-click="clear-style-filter">
-                  <.x_icon />
-                </button>
-              </div>
+          >
+            <%= checkbox(f, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
+            <div class="collapse-title text-sm font-medium">
+              Styling options
             </div>
-            <label
-              :if={
-                Enum.filter(@class_options, &String.contains?(to_string(&1), @style_filter))
-                |> Enum.empty?()
-              }
-              class="label label-text text-error text-sm"
-            >
-              No styles match filter
-            </label>
-            <%= for class <- @class_options do %>
-              <%= if valid_class(@changeset, class) do %>
-                <div class={"form-control w-full #{unless String.contains?(to_string(class), @style_filter), do: "hidden"}"}>
-                  <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
-                  <%= text_input(f, class,
-                    class: "input input-sm input-bordered",
-                    spellcheck: "false"
+            <div class="collapse-content">
+              <p class="whitespace-normal font-light text-sm">
+                Set or override styling options. The defaults are set by the selected style.
+                Classes in the defaults can be selectively
+                excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
+              </p>
+              <div class="form-control mt-2 flex flex-row">
+                <span class="text-sm min-w-fit mr-2">Filter styles:</span>
+                <div class="input-group">
+                  <%= text_input(f, :style_filter,
+                    value: @style_filter,
+                    class: "input input-bordered input-sm",
+                    phx_change: "filter-styles"
                   ) %>
-                  <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
-                    <label class="label label-text">
-                      default from style: &ldquo;<%= default_class(
-                        Ecto.Changeset.get_field(@changeset, :style),
-                        class
-                      ) %>&rdquo;
-                    </label>
-                  <% end %>
-                  <%= error_tag(f, class) %>
+                  <button
+                    type="button"
+                    class="btn btn-square btn-sm"
+                    phx-click="clear-style-filter"
+                  >
+                    <.x_icon />
+                  </button>
                 </div>
+              </div>
+              <label
+                :if={
+                  Enum.filter(@class_options, &String.contains?(to_string(&1), @style_filter))
+                  |> Enum.empty?()
+                }
+                class="label label-text text-error text-sm"
+              >
+                No styles match filter
+              </label>
+              <%= for class <- @class_options do %>
+                <%= if valid_class(@changeset, class) do %>
+                  <div class={"form-control w-full #{unless String.contains?(to_string(class), @style_filter), do: "hidden"}"}>
+                    <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
+                    <%= text_input(f, class,
+                      class: "input input-sm input-bordered",
+                      spellcheck: "false"
+                    ) %>
+                    <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
+                      <label class="label label-text">
+                        default from style: &ldquo;<%= default_class(
+                          Ecto.Changeset.get_field(@changeset, :style),
+                          class
+                        ) %>&rdquo;
+                      </label>
+                    <% end %>
+                    <%= error_tag(f, class) %>
+                  </div>
+                <% end %>
               <% end %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </.form>
-
-    <div class="prose text-center">
-      <h4>See events and messages here:</h4>
-    </div>
-
-    <div id="event-list" class="flex flex-col gap-y-2 mt-2">
-      <%= for {event, position} <- Enum.with_index(@events) do %>
-        <div
-          id={"event-#{event.id}"}
-          class={[
-            if(position == 0, do: "hidden"),
-            "ml-10 border-info rounded-lg border rounded p-2"
-          ]}
-          phx-mounted={
-            JS.show(transition: {"ease-in duration-500", "opacity-0", "opacity-100"}, time: 500)
-          }
-        >
-          <Render.event {event} />
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
-    <div class="prose text-center mt-2">
-      <h4>Try out the component here:</h4>
-    </div>
-    <div class={"h-60 w-3/4 #{if @dark_mode, do: "dark"}"}>
-      <.form
-        :let={f}
-        for={@form_changeset}
-        as={@changeset.data.form_name}
-        phx-change="change"
-        phx-submit="submit"
-      >
-        <div class="grid grid-cols-4 gap-1 items-center">
-          <div class="col-span-3 form-control">
-            <%= live_select(
-              f,
-              @changeset.data.field_name,
-              Settings.live_select_opts(@changeset.data)
-              |> Keyword.update(:disabled, !@changeset.valid?, fn
-                true -> true
-                _ -> !@changeset.valid?
-              end)
-            ) %>
-          </div>
-          <%= submit("Submit",
-            class: "btn btn-primary col-span-1",
-            disabled: !@changeset.valid?
-          ) %>
-          <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
-            !! This should not move when the dropdown opens !!
-          </div>
-          <div :if={@submitted} class="col-span-4 text-info text-center my-5 w-full">
-            <span :if={@cities not in ["", nil]}>
-              ✅ You selected <%= @cities %> located at <%= @locations %>
-            </span>
-            <span :if={@cities in ["", nil]}>
-              ❌ Nothing selected
-            </span>
+            </div>
           </div>
         </div>
       </.form>
+
+      <div class="prose text-center">
+        <h4>See events and messages here:</h4>
+      </div>
+
+      <div id="event-list" class="flex flex-col gap-y-2 mt-2">
+        <%= for {event, position} <- Enum.with_index(@events) do %>
+          <div
+            id={"event-#{event.id}"}
+            class={[
+              if(position == 0, do: "hidden"),
+              "ml-10 border-info rounded-lg border rounded p-2"
+            ]}
+            phx-mounted={
+              JS.show(transition: {"ease-in duration-500", "opacity-0", "opacity-100"}, time: 500)
+            }
+          >
+            <Render.event {event} />
+          </div>
+        <% end %>
+      </div>
     </div>
 
-    <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
-      <div
-        id="copy-to-clipboard-tooltip"
-        class="tooltip-success absolute top-0 right-0 "
-        data-tip="Copied to clipboard!"
-      >
-        <button
-          id="copy-to-clipboard"
-          data-clipboard-target="#live-select-code"
-          class="btn bg-inherit text-inherit hover:bg-base-300"
-        >
-          <.copy_to_clipboard_icon />
-        </button>
+    <div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
+      <div class="prose text-center mt-2">
+        <h4>Try out the component here:</h4>
       </div>
-      <Render.live_select
-        form_name={@changeset.data.form_name}
-        field_name={@changeset.data.field_name}
-        opts={Settings.live_select_opts(@changeset.data, true)}
-      />
+      <div class="h-60 w-3/4">
+        <.form
+          :let={f}
+          for={@form_changeset}
+          as={@changeset.data.form_name}
+          phx-change="change"
+          phx-submit="submit"
+        >
+          <div class="grid grid-cols-4 gap-1 items-center">
+            <div class="col-span-3 form-control">
+              <%= live_select(
+                f,
+                @changeset.data.field_name,
+                Settings.live_select_opts(@changeset.data)
+                |> Keyword.update(:disabled, !@changeset.valid?, fn
+                  true -> true
+                  _ -> !@changeset.valid?
+                end)
+              ) %>
+            </div>
+            <%= submit("Submit",
+              class: "btn btn-primary col-span-1",
+              disabled: !@changeset.valid?
+            ) %>
+            <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
+              !! This should not move when the dropdown opens !!
+            </div>
+            <div :if={@submitted} class="col-span-4 text-info text-center my-5 w-full">
+              <span :if={@cities not in ["", nil]}>
+                ✅ You selected <%= @cities %> located at <%= @locations %>
+              </span>
+              <span :if={@cities in ["", nil]}>
+                ❌ Nothing selected
+              </span>
+            </div>
+          </div>
+        </.form>
+      </div>
+
+      <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
+        <div
+          id="copy-to-clipboard-tooltip"
+          class="tooltip-success absolute top-0 right-0 "
+          data-tip="Copied to clipboard!"
+        >
+          <button
+            id="copy-to-clipboard"
+            data-clipboard-target="#live-select-code"
+            class="btn bg-inherit text-inherit hover:bg-base-300"
+          >
+            <.copy_to_clipboard_icon />
+          </button>
+        </div>
+        <Render.live_select
+          form_name={@changeset.data.form_name}
+          field_name={@changeset.data.field_name}
+          opts={Settings.live_select_opts(@changeset.data, true)}
+        />
+      </div>
     </div>
   </div>
 </div>
