@@ -364,12 +364,12 @@ defmodule LiveSelect.Component do
 
   defp invalid_option(option, what) do
     raise """
-    invalid #{if what == :selection, do: "element in selection", else: "option"}: #{inspect(option)}
-    #{what} must enumerate to:
+    invalid #{if what == :selection, do: "element in selection", else: "element in options"}: #{inspect(option)}
+    elements of #{what} can be:
 
-    a list of atom, strings or numbers
-    a list of maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_label
-    a list of tuples
+    atoms, strings or numbers
+    maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_label
+    2-element tuples
     """
   end
 
