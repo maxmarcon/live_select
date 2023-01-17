@@ -16,12 +16,12 @@
       </a>
     </div>
   </header>
-  <div class="flex w-full p-5 gap-2" xmlns="http://www.w3.org/1999/html">
-    <div class="flex flex-col w-1/2">
+  <div class="flex flex-col md:flex-row p-5 gap-2" xmlns="http://www.w3.org/1999/html">
+    <div class="flex flex-col md:w-1/2">
       <div class="flex gap-2">
-        <div class="form-control w-1/4">
+        <div class="form-control md:w-1/4">
           <label class="label cursor-pointer">
-            <span class="label-text">Toggle dark mode</span>
+            <span class="label-text mr-1">Toggle dark mode</span>
             <input
               id="dark-mode-toggle"
               type="checkbox"
@@ -41,7 +41,7 @@
           </.link>
         </div>
       </div>
-      <div class="prose text-center flex flex-row justify-center">
+      <div class="prose text-center flex flex-row justify-center mt-2">
         <h4>Change settings here:</h4>
       </div>
       <.form :let={f} for={@changeset} phx-change="update-settings">
@@ -153,12 +153,12 @@
                 Classes in the defaults can be selectively
                 excluded with the &ldquo;<span class="italic">!class-name</span>&rdquo; notation
               </p>
-              <div class="form-control mt-2 flex flex-row">
-                <span class="text-sm min-w-fit mr-2">Filter styles:</span>
-                <div class="input-group">
+              <div class="form-control mt-2">
+                <label class="label label-text">Filter styling options by name:</label>
+                <div class="input-group w-full">
                   <%= text_input(f, :style_filter,
                     value: @style_filter,
-                    class: "input input-bordered input-sm",
+                    class: "input input-bordered input-sm flex-1",
                     phx_change: "filter-styles"
                   ) %>
                   <button
@@ -226,7 +226,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
+    <div class="flex flex-col md:w-1/2 items-center gap-y-5 bg-base-100 border rounded-md">
       <div class="prose text-center mt-2">
         <h4>Try out the component here:</h4>
       </div>
@@ -251,7 +251,7 @@
               ) %>
             </div>
             <%= submit("Submit",
-              class: "btn btn-primary col-span-1",
+              class: "btn btn-primary btn-sm md:btn-md text-xs md:text-md col-span-1",
               disabled: !@changeset.valid?
             ) %>
             <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">

@@ -1,4 +1,4 @@
-<main class="container">
+<main class="container mx-auto">
   <%= if live_flash(@flash, :info) do %>
     <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
       <%= live_flash(@flash, :info) %>
