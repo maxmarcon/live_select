@@ -37,7 +37,7 @@ Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
-In `tags` mode there adds 3 additional stylable elements:
+In `tags` mode there are 3 additional stylable elements:
 
 7. The **tag** showing the selected options
 8. The **tags_container** that contains the tags
