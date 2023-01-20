@@ -261,8 +261,6 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp select(socket, -1), do: socket
-
   defp select(
          %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
          _selected_position
@@ -273,6 +271,16 @@ defmodule LiveSelect.Component do
       hide_dropdown: true
     )
   end
+
+  defp select(%{assigns: %{options: [option], selection: selection}} = socket, -1) do
+    if option in selection do
+      socket
+    else
+      select(socket, 0)
+    end
+  end
+
+  defp select(socket, -1), do: socket
 
   defp select(socket, selected_position) do
     selected = Enum.at(socket.assigns.options, selected_position)

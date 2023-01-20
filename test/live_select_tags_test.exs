@@ -56,6 +56,32 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple_static(live, ~w(B))
   end
 
+  test "hitting enter with only one option selects it", %{live: live} do
+    stub_options(~w(A))
+
+    type(live, "ABC")
+
+    keydown(live, "Enter")
+
+    assert_selected_multiple(live, ~w(A))
+  end
+
+  test "hitting enter with only one option does not select it if already selected", %{live: live} do
+    stub_options(~w(A))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(A))
+
+    type(live, "ABC")
+
+    keydown(live, "Enter")
+
+    assert_selected_multiple_static(live, ~w(A))
+  end
+
   describe "when max_selectable option is set" do
     setup %{conn: conn} do
       {:ok, live, _html} = live(conn, "/?mode=tags&max_selectable=2")
