@@ -343,7 +343,7 @@ defmodule LiveSelect.ComponentTest do
   test "raises if unknown style is given" do
     assert_raise(
       RuntimeError,
-      ~s(Invalid style: "not_a_valid_style". Style must be one of: [:tailwind, :daisyui, :none]),
+      ~s(Invalid style: :not_a_valid_style. Style must be one of: [:tailwind, :daisyui, :none]),
       fn ->
         render_component(LiveSelect.Component,
           id: "live_select",
@@ -368,5 +368,377 @@ defmodule LiveSelect.ComponentTest do
         )
       end
     )
+  end
+
+  test "can be disabled" do
+    component =
+      render_component(LiveSelect.Component,
+        id: "live_select",
+        form: :my_form,
+        field: :city_search,
+        disabled: true
+      )
+
+    assert Floki.attribute(component, selectors()[:text_input], "disabled") == ["disabled"]
+
+    assert Floki.attribute(component, selectors()[:hidden_input], "disabled") == ["disabled"]
+  end
+
+  test "can set the debounce value" do
+    component =
+      render_component(LiveSelect.Component,
+        id: "live_select",
+        form: :my_form,
+        field: :city_search,
+        debounce: 500
+      )
+
+    assert Floki.attribute(component, selectors()[:text_input], "phx-debounce") == ["500"]
+  end
+
+  test "can set a placeholder text" do
+    component =
+      render_component(LiveSelect.Component,
+        id: "live_select",
+        form: :my_form,
+        field: :city_search,
+        placeholder: "Give it a try"
+      )
+
+    assert Floki.attribute(component, selectors()[:text_input], "placeholder") == [
+             "Give it a try"
+           ]
+  end
+
+  for {override_class, extend_class} <-
+        Enum.zip(
+          Keyword.values(Keyword.delete(override_class_option(), :selected_option)),
+          Keyword.values(extend_class_option())
+        ) do
+    @override_class override_class
+    @extend_class extend_class
+
+    test "using both #{@override_class} and #{@extend_class} options raises" do
+      assert_raise(
+        RuntimeError,
+        ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
+        fn ->
+          opts =
+            [
+              id: "live_select",
+              form: :form,
+              field: :input,
+              options: ["A", "B", "C"],
+              value: ["A", "B"],
+              mode: :tags
+            ]
+            |> Keyword.put(@override_class, "foo")
+            |> Keyword.put(@extend_class, "boo")
+
+          render_component(LiveSelect.Component, opts)
+        end
+      )
+    end
+  end
+
+  for style <- [:daisyui, :tailwind, :none, nil] do
+    @style style
+
+    describe "when style = #{@style || "default"}" do
+      for element <- [
+            :container,
+            :text_input,
+            :dropdown,
+            :option
+          ] do
+        @element element
+
+        test "#{@element} has default class" do
+          component =
+            render_component(
+              LiveSelect.Component,
+              [id: "live_select", form: :my_form, field: :city_search, options: ["A", "B", "C"]] ++
+                if(@style, do: [style: @style], else: [])
+            )
+
+          assert Floki.attribute(component, selectors()[@element], "class") == [
+                   get_in(expected_class(), [@style || default_style(), @element]) || ""
+                 ]
+        end
+
+        if override_class_option()[@element] do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]}" do
+            option = override_class_option()[@element]
+
+            component =
+              render_component(
+                LiveSelect.Component,
+                [id: "live_select", form: :my_form, field: :city_search, options: ["A", "B", "C"]] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     "foo"
+                   ]
+          end
+        end
+
+        if extend_class_option()[@element] && @style != :none do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]}" do
+            option = extend_class_option()[@element]
+
+            component =
+              render_component(
+                LiveSelect.Component,
+                [id: "live_select", form: :my_form, field: :city_search, options: ["A", "B", "C"]] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
+                        " foo")
+                     |> String.trim()
+                   ]
+          end
+
+          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}" do
+            option = extend_class_option()[@element]
+
+            base_classes = get_in(expected_class(), [@style || default_style(), @element])
+
+            if base_classes do
+              class_to_remove = String.split(base_classes) |> List.first()
+
+              expected_classes =
+                String.split(base_classes)
+                |> Enum.drop(1)
+                |> Enum.join(" ")
+
+              component =
+                render_component(
+                  LiveSelect.Component,
+                  [
+                    id: "live_select",
+                    form: :my_form,
+                    field: :city_search,
+                    options: ["A", "B", "C"]
+                  ] ++
+                    if(@style, do: [style: @style], else: []) ++ [{option, "!#{class_to_remove}"}]
+                )
+
+              assert Floki.attribute(component, selectors()[@element], "class") == [
+                       expected_classes
+                     ]
+            end
+          end
+        end
+      end
+
+      test "additional class for text input selected is set" do
+        component =
+          render_component(
+            LiveSelect.Component,
+            [
+              id: "live_select",
+              form: :my_form,
+              field: :city_search,
+              options: ["A", "B", "C"],
+              value: "A"
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        expected_class =
+          (get_in(expected_class(), [@style || default_style(), :text_input]) || "") <>
+            " " <>
+            (get_in(expected_class(), [@style || default_style(), :text_input_selected]) || "")
+
+        assert Floki.attribute(component, selectors()[:text_input], "class") == [
+                 expected_class
+               ]
+      end
+
+      test "additional class for text input selected can be overridden" do
+        component =
+          render_component(
+            LiveSelect.Component,
+            [
+              id: "live_select",
+              form: :my_form,
+              field: :city_search,
+              options: ["A", "B", "C"],
+              value: "A",
+              text_input_selected_class: "foo"
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        expected_class =
+          (get_in(expected_class(), [@style || default_style(), :text_input]) || "") <>
+            " foo"
+
+        assert Floki.attribute(component, selectors()[:text_input], "class") == [
+                 expected_class
+               ]
+      end
+
+      test "class for selected option is set" do
+        component =
+          render_component(
+            LiveSelect.Component,
+            [
+              id: "live_select",
+              form: :my_form,
+              mode: :tags,
+              field: :city_search,
+              options: ["A", "B", "C"],
+              value: "B"
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        assert_selected_option_class(
+          component,
+          2,
+          get_in(expected_class(), [@style || default_style(), :selected_option]) || ""
+        )
+      end
+
+      test "class for selected option can be overridden" do
+        component =
+          render_component(
+            LiveSelect.Component,
+            [
+              id: "live_select",
+              form: :my_form,
+              mode: :tags,
+              field: :city_search,
+              options: ["A", "B", "C"],
+              value: "B",
+              selected_option_class: "foo"
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        assert_selected_option_class(
+          component,
+          2,
+          "foo"
+        )
+      end
+
+      for element <- [
+            :tags_container,
+            :tag
+          ] do
+        @element element
+
+        test "#{@element} has default class" do
+          component =
+            render_component(
+              LiveSelect.Component,
+              [
+                id: "live_select",
+                form: :my_form,
+                mode: :tags,
+                field: :city_search,
+                options: ["A", "B", "C"],
+                value: "B",
+                selected_option_class: "foo"
+              ] ++
+                if(@style, do: [style: @style], else: [])
+            )
+
+          assert Floki.attribute(component, selectors()[@element], "class") == [
+                   get_in(expected_class(), [@style || default_style(), @element]) || ""
+                 ]
+        end
+
+        if override_class_option()[@element] do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]}" do
+            option = override_class_option()[@element]
+
+            component =
+              render_component(
+                LiveSelect.Component,
+                [
+                  id: "live_select",
+                  form: :my_form,
+                  mode: :tags,
+                  field: :city_search,
+                  options: ["A", "B", "C"],
+                  value: "B",
+                  selected_option_class: "foo"
+                ] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     "foo"
+                   ]
+          end
+        end
+
+        if extend_class_option()[@element] && @style != :none do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]}" do
+            option = extend_class_option()[@element]
+
+            component =
+              render_component(
+                LiveSelect.Component,
+                [
+                  id: "live_select",
+                  form: :my_form,
+                  mode: :tags,
+                  field: :city_search,
+                  options: ["A", "B", "C"],
+                  value: "B",
+                  selected_option_class: "foo"
+                ] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
+                        " foo")
+                     |> String.trim()
+                   ]
+          end
+
+          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}" do
+            option = extend_class_option()[@element]
+
+            base_classes = get_in(expected_class(), [@style || default_style(), @element])
+
+            if base_classes do
+              class_to_remove = String.split(base_classes) |> List.first()
+
+              expected_classes =
+                String.split(base_classes)
+                |> Enum.drop(1)
+                |> Enum.join(" ")
+
+              component =
+                render_component(
+                  LiveSelect.Component,
+                  [
+                    id: "live_select",
+                    form: :my_form,
+                    mode: :tags,
+                    field: :city_search,
+                    options: ["A", "B", "C"],
+                    value: "B"
+                  ] ++
+                    if(@style, do: [style: @style], else: []) ++ [{option, "!#{class_to_remove}"}]
+                )
+
+              assert Floki.attribute(component, selectors()[@element], "class") == [
+                       expected_classes
+                     ]
+            end
+          end
+        end
+      end
+    end
   end
 end

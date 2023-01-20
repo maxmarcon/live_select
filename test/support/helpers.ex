@@ -5,14 +5,68 @@ defmodule LiveSelect.TestHelpers do
 
   import LiveSelect
 
+  @default_style :tailwind
+  def default_style(), do: @default_style
+
+  @expected_class [
+    daisyui: [
+      active_option: ~S(active),
+      container: ~S(dropdown dropdown-open),
+      dropdown:
+        ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      selected_option: ~S(disabled),
+      tag: ~S(p-1.5 text-sm badge badge-primary),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
+      text_input: ~S(input input-bordered w-full),
+      text_input_selected: ~S(input-primary)
+    ],
+    tailwind: [
+      active_option: ~S(text-white bg-gray-600),
+      container: ~S(relative h-full text-black),
+      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer),
+      option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
+      selected_option: ~S(text-gray-400),
+      tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex),
+      tags_container: ~S(flex flex-wrap gap-1 p-1),
+      text_input:
+        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
+      text_input_selected: ~S(border-gray-600 text-gray-600)
+    ]
+  ]
+  def expected_class(), do: @expected_class
+
+  @override_class_option [
+    container: :container_class,
+    dropdown: :dropdown_class,
+    option: :option_class,
+    selected_option: :selected_option_class,
+    tag: :tag_class,
+    tags_container: :tags_container_class,
+    text_input: :text_input_class
+  ]
+  def override_class_option, do: @override_class_option
+
+  @extend_class_option [
+    container: :container_extra_class,
+    dropdown: :dropdown_extra_class,
+    option: :option_extra_class,
+    tag: :tag_extra_class,
+    tags_container: :tags_container_extra_class,
+    text_input: :text_input_extra_class
+  ]
+  def extend_class_option(), do: @extend_class_option
+
   @selectors [
     container: "div[name=live-select]",
-    text_input: "input#my_form_city_search_text_input",
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
     hidden_input: "input#my_form_city_search",
-    tag: "div[name=tags-container] > div"
+    option: "ul[name=live-select-dropdown] > li:first-of-type > div",
+    tag: "div[name=tags-container] > div",
+    tags_container: "div[name=tags-container]",
+    text_input: "input#my_form_city_search_text_input"
   ]
+  def selectors(), do: @selectors
 
   def select_nth_option(live, n, method \\ :key) do
     case method do
@@ -198,6 +252,23 @@ defmodule LiveSelect.TestHelpers do
       id: "my_form_city_search_component",
       selection: ^selection
     })
+  end
+
+  def assert_selected_option_class(_live, _selected_pos, ""), do: true
+
+  def assert_selected_option_class(html, selected_pos, selected_class) when is_binary(html) do
+    element_classes =
+      html
+      |> Floki.attribute(@selectors[:option], "class")
+      |> Enum.map(&String.trim/1)
+
+    for {element_class, idx} <- Enum.with_index(element_classes, 1) do
+      if idx == selected_pos do
+        assert String.contains?(element_class, selected_class)
+      else
+        refute String.contains?(element_class, selected_class)
+      end
+    end
   end
 
   def assert_reset(live, default_value \\ nil) do

@@ -227,10 +227,10 @@ defmodule LiveSelect.Component do
   end
 
   defp validate_assigns!(assigns) do
-    if style = assigns[:style] do
-      unless style in Keyword.keys(@styles) do
+    if Map.has_key?(assigns, :style) do
+      unless assigns[:style] in Keyword.keys(@styles) do
         raise(
-          ~s(Invalid style: "#{assigns.style}". Style must be one of: #{inspect(Keyword.keys(@styles))})
+          ~s(Invalid style: #{inspect(assigns.style)}. Style must be one of: #{inspect(Keyword.keys(@styles))})
         )
       end
     end
