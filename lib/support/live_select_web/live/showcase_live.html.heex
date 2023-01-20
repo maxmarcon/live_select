@@ -16,6 +16,9 @@
       </a>
     </div>
   </header>
+  <div :if={!@changeset.valid?} class="px-5 label justify-center text-error">
+    ❌ Your settings are invalid, check the form for errors
+  </div>
   <div class="flex flex-col md:flex-row p-5 gap-2" xmlns="http://www.w3.org/1999/html">
     <div class="flex flex-col md:w-1/2">
       <div class="flex gap-2">
