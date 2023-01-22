@@ -1,4 +1,4 @@
-# LiveSelect 
+# LiveSelect
 
 [![Hex](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
 [![Hexdocs](https://img.shields.io/badge/-docs-green)](https://hexdocs.pm/live_select)
@@ -6,11 +6,13 @@
 
 Dynamic selection field for LiveView.
 
-`LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the dropdown is filled dynamically by your LiveView as a reaction to user's input. This allows you to easily implement features like search. It supports both single and multiple selections. 
+`LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the
+dropdown is filled dynamically by your LiveView as a reaction to user's input. This allows you to easily create an
+interface for features such as search. It supports both single and multiple selections.
 
-### [Try the showcase app](https://live-select.fly.dev/) 🔬
+### [Try it in the showcase app](https://live-select.fly.dev/) 🔬
 
-### Single selection (single mode) 
+### Single selection (single mode)
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif)
 
@@ -36,6 +38,7 @@ LiveView:
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
     cities = City.search(change_msg.text)
+    # cities = [ {"New York City", [-74.00597,40.71427]}, {"New Kingston", [-76.78319,18.00747]}, ... ]
 
     update_options(change_msg, cities)
     
@@ -82,7 +85,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 // if you have other hooks:
 const hooks = {
     MyHook: {
-      // ...
+        // ...
     },
     ...live_select
 }
@@ -97,19 +100,23 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 * `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
 * `none`: no styling at all.
 
-The choice of style is controlled by the `style` option in [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3).
+The choice of style is controlled by the `style` option
+in [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3).
 `tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
 
-If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in your `tailwind.config.js`:
+If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
+your `tailwind.config.js`:
 
 ```javascript
 module.exports = {
     content: [
         //...
-        '../deps/live_select/lib/live_select/component.*ex' <-- for a standalone app
-        '../../../deps/live_select/lib/live_select/component.*ex' <-- for an umbrella app
-    ]
-    //..
+        '../deps/live_select/lib/live_select/component.*ex' < -- for a standalone app
+    '../../../deps/live_select/lib/live_select/component.*ex' < --
+for an umbrella
+app
+]
+//..
 }
 ```
 
@@ -119,7 +126,8 @@ Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for 
 
 ## Showcase app 🎪
 
-The repository includes a showcase app that you can use to experiment with the different options and parameters for `LiveSelect`. 
+The repository includes a showcase app that you can use to experiment with the different options and parameters
+for `LiveSelect`.
 The showcase app is available [here](https://live-select.fly.dev/).
 
 To start the showcase app locally, simply run:
@@ -129,7 +137,10 @@ mix setup
 PORT=4001 mix phx.server
 ```
 
-from within the cloned repository. The app will be available at http://localhost:4001. The showcase app allows you to quickly experiment with options and styles, providing an easy way to fine tune your `LiveSelect` component. The app also shows the messages and events that your `LiveView` receives. For each event or message, the app shows the function head of the callback that your LiveView needs to implement in order to handle the event.
+from within the cloned repository. The app will be available at http://localhost:4001. The showcase app allows you to
+quickly experiment with options and styles, providing an easy way to fine tune your `LiveSelect` component. The app also
+shows the messages and events that your `LiveView` receives. For each event or message, the app shows the function head
+of the callback that your LiveView needs to implement in order to handle the event.
 
 ## Roadmap 🛣️
 
