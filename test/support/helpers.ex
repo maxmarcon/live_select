@@ -196,6 +196,28 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
+  def refute_selected(live) do
+    hidden_input =
+      live
+      |> element(@selectors[:hidden_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert hidden_input
+           |> Floki.attribute("value") ==
+             []
+
+    text_input =
+      live
+      |> element(@selectors[:text_input])
+      |> render()
+      |> Floki.parse_fragment!()
+
+    assert text_input
+           |> Floki.attribute("readonly") ==
+             []
+  end
+
   def assert_selected_static(html, label, value \\ nil) do
     value = if value, do: value, else: label
 
@@ -222,6 +244,7 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.find(@selectors[:tag])
            |> Floki.text(sep: ",")
            |> String.split(",")
+           |> Enum.reject(&(&1 == ""))
            |> Enum.map(&String.trim/1) ==
              tag_labels
   end

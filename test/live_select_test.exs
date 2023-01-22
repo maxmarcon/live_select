@@ -126,6 +126,20 @@ defmodule LiveSelectTest do
     assert_selected(live, "A", 1)
   end
 
+  test "hitting enter with more than one option does not select", %{conn: conn} do
+    stub_options([{"A", 1}, {"B", 2}])
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B"])
+
+    keydown(live, "Enter")
+
+    refute_selected(live)
+  end
+
   test "supports dropdown filled with strings", %{conn: conn} do
     stub_options(["A", "B", "C"])
 

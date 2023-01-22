@@ -66,6 +66,16 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(A))
   end
 
+  test "hitting enter with more than one option does not select", %{live: live} do
+    stub_options(~w(A B))
+
+    type(live, "ABC")
+
+    keydown(live, "Enter")
+
+    assert_selected_multiple_static(live, [])
+  end
+
   test "hitting enter with only one option does not select it if already selected", %{live: live} do
     stub_options(~w(A))
 
