@@ -166,8 +166,9 @@ defmodule LiveSelect do
   * `value` - used to manually set an initial selection - overrides any values from the form. 
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode. 
   If an element can be found in the initial options, the corresponding label will be used. Otherwise, the element will be used for both value and label
-  * `max_selectable` - limits the maximum number of selectable elements. Defaults to `0`, meaning no limit 
-  * `disabled` - set this to a truthy value to disable the input field
+  * `max_selectable` - limits the maximum number of selectable elements. Defaults to `0`, meaning no limit
+  * `user_defined_options` - if `true` and no selectable entries are available, hitting enter will create a new selected option from the content of the text field. Defaults to `false` 
+  * `disabled` - set this to `true` to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
   * `update_min_len` - the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3

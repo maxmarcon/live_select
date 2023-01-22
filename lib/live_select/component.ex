@@ -9,6 +9,7 @@ defmodule LiveSelect.Component do
 
   @default_opts [
     active_option_class: nil,
+    user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,
     debounce: 100,
@@ -154,6 +155,8 @@ defmodule LiveSelect.Component do
       if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
         socket
       else
+        text = String.trim(text)
+
         if String.length(text) >=
              socket.assigns.update_min_len do
           send(
@@ -166,9 +169,9 @@ defmodule LiveSelect.Component do
             }
           )
 
-          assign(socket, hide_dropdown: false)
+          assign(socket, hide_dropdown: false, current_text: text)
         else
-          assign(socket, :options, [])
+          assign(socket, options: [], current_text: text)
         end
       end
 
@@ -200,7 +203,7 @@ defmodule LiveSelect.Component do
       if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
         reset(socket)
       else
-        select(socket, socket.assigns.active_option)
+        maybe_select(socket)
       end
 
     {:noreply, socket}
@@ -213,7 +216,8 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("option_click", %{"idx" => idx}, socket) do
-    {:noreply, select(socket, String.to_integer(idx))}
+    socket = assign(socket, :active_option, String.to_integer(idx))
+    {:noreply, maybe_select(socket)}
   end
 
   @impl true
@@ -261,10 +265,7 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp select(
-         %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
-         _selected_position
-       )
+  defp maybe_select(%{assigns: %{selection: selection, max_selectable: max_selectable}} = socket)
        when max_selectable > 0 and length(selection) >= max_selectable do
     assign(socket,
       active_option: -1,
@@ -272,19 +273,36 @@ defmodule LiveSelect.Component do
     )
   end
 
-  defp select(%{assigns: %{options: [option], selection: selection}} = socket, -1) do
-    if option in selection do
+  defp maybe_select(
+         %{assigns: %{options: [], current_text: current_text, user_defined_options: true}} =
+           socket
+       ) do
+    option = normalize(current_text, :selection)
+
+    if option in socket.assigns.selection do
       socket
     else
-      select(socket, 0)
+      select(socket, option)
     end
   end
 
-  defp select(socket, -1), do: socket
+  defp maybe_select(
+         %{assigns: %{options: [option], selection: selection, active_option: -1}} = socket
+       ) do
+    if already_selected?(option, selection) do
+      socket
+    else
+      select(socket, option)
+    end
+  end
 
-  defp select(socket, selected_position) do
-    selected = Enum.at(socket.assigns.options, selected_position)
+  defp maybe_select(%{assigns: %{active_option: -1}} = socket), do: socket
 
+  defp maybe_select(socket) do
+    select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option))
+  end
+
+  defp select(socket, selected) do
     selection =
       case socket.assigns.mode do
         :tags ->
@@ -429,6 +447,10 @@ defmodule LiveSelect.Component do
 
   defp encode(value), do: Jason.encode!(value)
 
+  defp already_selected?(option, selection) do
+    option.label in Enum.map(selection, & &1.label)
+  end
+
   defp next_selectable(%{
          selection: selection,
          active_option: active_option,
@@ -440,7 +462,7 @@ defmodule LiveSelect.Component do
   defp next_selectable(%{options: options, active_option: active_option, selection: selection}) do
     options
     |> Enum.with_index()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || opt in selection end)
+    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 > active_option))
   end
@@ -457,7 +479,7 @@ defmodule LiveSelect.Component do
     options
     |> Enum.with_index()
     |> Enum.reverse()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || opt in selection end)
+    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 < active_option))
   end

@@ -34,6 +34,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:field_name, :string, default: "city_search")
       field(:form_name, :string, default: "my_form")
       field(:max_selectable, :integer, default: 0)
+      field(:user_defined_options, :boolean)
       field(:mode, Ecto.Enum, values: [:single, :tags], default: :single)
       field(:new, :boolean, default: true)
       field(:placeholder, :string, default: "Search for a city")
@@ -58,6 +59,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :field_name,
           :form_name,
           :max_selectable,
+          :user_defined_options,
           :mode,
           :options,
           :selection,

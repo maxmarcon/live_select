@@ -140,6 +140,50 @@ defmodule LiveSelectTest do
     refute_selected(live)
   end
 
+  describe "when user_defined_options = true" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/?user_defined_options=true")
+
+      %{live: live}
+    end
+
+    test "hitting enter no options add entered text to selection", %{live: live} do
+      stub_options([])
+
+      type(live, "ABC")
+
+      assert_options(live, [])
+
+      keydown(live, "Enter")
+
+      assert_selected(live, "ABC")
+    end
+
+    test "text added to selection should be trimmed", %{live: live} do
+      stub_options([])
+
+      type(live, " ABC  ")
+
+      assert_options(live, [])
+
+      keydown(live, "Enter")
+
+      assert_selected(live, "ABC")
+    end
+
+    test "hitting enter with more than one option does not select", %{live: live} do
+      stub_options([{"A", 1}, {"B", 2}])
+
+      type(live, "ABC")
+
+      assert_options(live, ["A", "B"])
+
+      keydown(live, "Enter")
+
+      refute_selected(live)
+    end
+  end
+
   test "supports dropdown filled with strings", %{conn: conn} do
     stub_options(["A", "B", "C"])
 

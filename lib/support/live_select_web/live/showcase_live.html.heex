@@ -79,6 +79,12 @@
             <%= error_tag(f, :max_selectable) %>
           </div>
           <div class="form-control max-w-sm">
+            <label class="label cursor-pointer">
+              <span class="label-text mr-1">User-defined options:</span>
+              <%= checkbox(f, :user_defined_options, class: "toggle", type: "checkbox") %>
+            </label>
+          </div>
+          <div class="form-control max-w-sm">
             <%= label(f, :search_delay, "Search delay in ms:",
               class: "label label-text font-semibold"
             ) %>
@@ -207,11 +213,11 @@
         </div>
       </.form>
 
-      <div class="prose text-center">
+      <div class="hidden md:block prose text-center">
         <h4>See events and messages here:</h4>
       </div>
 
-      <div id="event-list" class="flex flex-col gap-y-2 mt-2">
+      <div id="event-list" class="hidden md:flex flex-col gap-y-2 mt-2">
         <%= for {event, position} <- Enum.with_index(@events) do %>
           <div
             id={"event-#{event.id}"}
@@ -233,7 +239,7 @@
       <div class="prose text-center mt-2">
         <h4>Try out the component here:</h4>
       </div>
-      <div class="h-60 w-3/4">
+      <div class="w-3/4">
         <.form
           :let={f}
           for={@form_changeset}
@@ -272,7 +278,10 @@
         </.form>
       </div>
 
-      <div class="w-2/3 mb-5 relative border-info border rounded-lg p-2" id="live-select-code">
+      <div
+        class="w-full md:w-2/3 mt-5 relative border-info border rounded-lg p-2"
+        id="live-select-code"
+      >
         <div
           id="copy-to-clipboard-tooltip"
           class="tooltip-success absolute top-0 right-0 "

@@ -92,6 +92,62 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple_static(live, ~w(A))
   end
 
+  describe "when user_defined_options = true" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/?mode=tags&user_defined_options=true")
+      %{live: live}
+    end
+
+    test "hitting enter with no option adds entered text to selection", %{live: live} do
+      stub_options([])
+
+      type(live, "ABC")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple(live, ["ABC"])
+    end
+
+    test "hitting enter with no option does not add to selection if element with same label is already selected",
+         %{live: live} do
+      stub_options([{"ABC", 1}, {"DEF", 2}])
+
+      type(live, "ABC")
+
+      select_nth_option(live, 1, :key)
+
+      assert_selected_multiple(live, [1], ["ABC"])
+
+      stub_options([])
+
+      type(live, "ABC")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, [1], ["ABC"])
+    end
+
+    test "text added to selection should be trimmed", %{live: live} do
+      stub_options([])
+
+      type(live, "  ABC ")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, ["ABC"])
+    end
+
+    test "hitting enter with more than one option does not select", %{live: live} do
+      stub_options(~w(A B))
+
+      type(live, "ABC")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, [])
+    end
+  end
+
   describe "when max_selectable option is set" do
     setup %{conn: conn} do
       {:ok, live, _html} = live(conn, "/?mode=tags&max_selectable=2")
