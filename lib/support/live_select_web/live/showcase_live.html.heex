@@ -36,12 +36,9 @@
           </label>
         </div>
         <div class="form-control">
-          <.link
-            patch={Routes.live_path(@socket, __MODULE__, reset: true)}
-            class="btn btn-warning btn-sm mt-1"
-          >
+          <button phx-click={reset(@socket)} class="btn btn-warning btn-sm mt-1">
             Reset
-          </.link>
+          </button>
         </div>
       </div>
       <div class="prose text-center flex flex-row justify-center mt-2">

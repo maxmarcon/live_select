@@ -2,6 +2,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
   import LiveSelect
+  import Phoenix.HTML.Form, except: [reset: 1]
   alias Phoenix.LiveView.JS
 
   defmodule Settings do
@@ -441,5 +442,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
     """
+  end
+
+  defp reset(js \\ %JS{}, socket) do
+    js
+    |> JS.dispatch("reset-theme")
+    |> JS.patch(Routes.live_path(socket, __MODULE__, reset: true))
   end
 end
