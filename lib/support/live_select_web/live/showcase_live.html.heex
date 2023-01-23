@@ -83,6 +83,10 @@
               <span class="label-text mr-1">User-defined options:</span>
               <%= checkbox(f, :user_defined_options, class: "toggle") %>
             </label>
+            <%= label class: "label cursor-pointer" do %>
+              <span class="label-text mr-1">Disabled:&nbsp;</span>
+              <%= checkbox(f, :disabled, class: "toggle") %>
+            <% end %>
           </div>
           <div class="form-control max-w-sm">
             <%= label(f, :search_delay, "Search delay in ms:",
@@ -129,12 +133,6 @@
             ) %>
             <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
             <%= error_tag(f, :debounce) %>
-          </div>
-          <div class="form-control max-w-sm">
-            <%= label class: "label cursor-pointer" do %>
-              <span class="label-text mr-1">disabled:&nbsp;</span>
-              <%= checkbox(f, :disabled, class: "toggle") %>
-            <% end %>
           </div>
           <div class="form-control max-w-sm">
             <%= label class: "label cursor-pointer" do %>

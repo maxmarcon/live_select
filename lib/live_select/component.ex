@@ -171,7 +171,7 @@ defmodule LiveSelect.Component do
 
           assign(socket, hide_dropdown: false, current_text: text)
         else
-          assign(socket, options: [], current_text: text)
+          assign(socket, options: [], current_text: nil)
         end
       end
 
@@ -276,10 +276,11 @@ defmodule LiveSelect.Component do
   defp maybe_select(
          %{assigns: %{options: [], current_text: current_text, user_defined_options: true}} =
            socket
-       ) do
+       )
+       when is_binary(current_text) do
     option = normalize(current_text, :selection)
 
-    if option in socket.assigns.selection do
+    if already_selected?(option, socket.assigns.selection) do
       socket
     else
       select(socket, option)

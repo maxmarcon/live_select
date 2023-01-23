@@ -137,6 +137,16 @@ defmodule LiveSelectTagsTest do
       assert_selected_multiple_static(live, ["ABC"])
     end
 
+    test "text with only whitespace is ignored and not added to selection", %{live: live} do
+      stub_options([])
+
+      type(live, "    ")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, [])
+    end
+
     test "hitting enter with more than one option does not select", %{live: live} do
       stub_options(~w(A B))
 
