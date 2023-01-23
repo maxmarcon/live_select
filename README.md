@@ -116,9 +116,9 @@ module.exports = {
     content: [
         //...
         '../deps/live_select/lib/live_select/component.*ex', // <-- for a standalone app
-        '../../../deps/live_select/lib/live_select/component    .*ex' // <-- for an umbrella app
+        '../../../deps/live_select/lib/live_select/component.*ex' // <-- for an umbrella app
     ]
-//..
+    //..
 }
 ```
 

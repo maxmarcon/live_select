@@ -29,6 +29,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     @primary_key false
     embedded_schema do
+      field(:id, :string, default: nil)
       field(:debounce, :integer, default: 100)
       field(:disabled, :boolean)
       field(:field_name, :string, default: "city_search")
@@ -54,6 +55,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> cast(
         params,
         [
+          :id,
           :debounce,
           :disabled,
           :field_name,
@@ -79,7 +81,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     def live_select_opts(%__MODULE__{} = settings, remove_defaults \\ false) do
-      default_opts = LiveSelect.Component.default_opts()
+      default_opts = LiveSelect.Component.default_opts() ++ [id: nil]
 
       settings
       |> Map.drop([:search_delay, :form_name, :field_name, :new, :selection])

@@ -161,6 +161,7 @@ defmodule LiveSelect do
     
   **Opts:**
 
+  * `id` - an id to assign to the component. If none is provided, one will be generated automatically
   * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
   * `options` - initial available options to select from. See `update_options/2` for details on the format to use
   * `value` - used to manually set an initial selection - overrides any values from the form. 
@@ -183,7 +184,7 @@ defmodule LiveSelect do
     assigns =
       opts
       |> Map.new()
-      |> Map.put(:id, "#{form_name}_#{field}_component")
+      |> Map.put(:id, opts[:id] || "#{form_name}_#{field}_component")
       |> Map.put(:module, LiveSelect.Component)
       # Ecto forms expect atom fields:
       # https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/html.ex#L123
