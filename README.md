@@ -38,7 +38,11 @@ LiveView:
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
     cities = City.search(change_msg.text)
-    # cities = [ {"New York City", [-74.00597,40.71427]}, {"New Kingston", [-76.78319,18.00747]}, ... ]
+    # cities = [ 
+    # {"New York City", [-74.00597,40.71427]}, 
+    # {"New Kingston", [-76.78319,18.00747]}, 
+    # ... 
+    # ]
 
     update_options(change_msg, cities)
     

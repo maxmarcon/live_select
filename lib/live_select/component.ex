@@ -278,7 +278,7 @@ defmodule LiveSelect.Component do
            socket
        )
        when is_binary(current_text) do
-    option = normalize(current_text, :selection)
+    {:ok, option} = normalize(current_text)
 
     if already_selected?(option, socket.assigns.selection) do
       socket
@@ -346,7 +346,10 @@ defmodule LiveSelect.Component do
     if option = Enum.find(options, fn %{value: val} -> value == val end) do
       [option]
     else
-      List.wrap(normalize(value, :selection))
+      case normalize(value) do
+        {:ok, option} -> List.wrap(option)
+        :error -> invalid_option(value, :selection)
+      end
     end
   end
 
@@ -357,35 +360,46 @@ defmodule LiveSelect.Component do
       &if option = Enum.find(options, fn %{value: value} -> value == &1 end) do
         option
       else
-        normalize(&1, :selection)
+        case normalize(&1) do
+          {:ok, option} -> option
+          :error -> invalid_option(&1, :selection)
+        end
       end
     )
   end
 
   defp normalize_options(options) do
-    Enum.map(options, &normalize(&1, :options))
+    Enum.map(
+      options,
+      &case normalize(&1) do
+        {:ok, option} -> option
+        :error -> invalid_option(&1, :option)
+      end
+    )
   end
 
-  defp normalize(nil, _), do: nil
+  defp normalize(nil), do: {:ok, nil}
 
-  defp normalize(option_or_selection, what) when what in [:options, :selection] do
+  defp normalize(option_or_selection) do
     case option_or_selection do
+      %{key: key, value: _value} = option ->
+        {:ok, Map.put_new(option, :label, key)}
+
       %{value: value} = option ->
-        Map.put_new(option, :label, value)
+        {:ok, Map.put_new(option, :label, value)}
 
       option when is_list(option) ->
         Map.new(option)
-        |> tap(&if Map.take(&1, [:key, :value]) == %{}, do: invalid_option(option, what))
-        |> Map.put_new(:label, option[:key] || option[:value])
+        |> normalize()
 
       {label, value} ->
-        %{label: label, value: value}
+        {:ok, %{label: label, value: value}}
 
       option when is_binary(option) or is_atom(option) or is_number(option) ->
-        %{label: option, value: option}
+        {:ok, %{label: option, value: option}}
 
-      option ->
-        invalid_option(option, what)
+      _ ->
+        :error
     end
   end
 
