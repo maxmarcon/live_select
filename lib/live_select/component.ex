@@ -98,8 +98,15 @@ defmodule LiveSelect.Component do
     validate_assigns!(assigns)
 
     socket =
+      if assigns[:reset] do
+        assign(socket, :selection, [])
+      else
+        socket
+      end
+
+    socket =
       socket
-      |> assign(assigns)
+      |> assign(Map.delete(assigns, :reset))
       |> assign(:active_option, -1)
       |> update(:awaiting_update, fn
         _, %{options: _} -> false
