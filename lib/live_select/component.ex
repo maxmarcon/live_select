@@ -71,7 +71,8 @@ defmodule LiveSelect.Component do
       socket
       |> assign(
         active_option: -1,
-        hide_dropdown: true
+        hide_dropdown: true,
+        awaiting_update: true
       )
 
     {:ok, socket}
@@ -100,6 +101,10 @@ defmodule LiveSelect.Component do
       socket
       |> assign(assigns)
       |> assign(:active_option, -1)
+      |> update(:awaiting_update, fn
+        _, %{options: _} -> false
+        awaiting_update, _ -> awaiting_update
+      end)
 
     socket =
       @default_opts
@@ -169,7 +174,7 @@ defmodule LiveSelect.Component do
             }
           )
 
-          assign(socket, hide_dropdown: false, current_text: text)
+          assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
         else
           assign(socket, options: [], current_text: nil)
         end
@@ -274,8 +279,14 @@ defmodule LiveSelect.Component do
   end
 
   defp maybe_select(
-         %{assigns: %{options: [], current_text: current_text, user_defined_options: true}} =
-           socket
+         %{
+           assigns: %{
+             options: [],
+             current_text: current_text,
+             user_defined_options: true,
+             awaiting_update: false
+           }
+         } = socket
        )
        when is_binary(current_text) do
     {:ok, option} = normalize(current_text)

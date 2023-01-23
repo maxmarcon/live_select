@@ -103,12 +103,14 @@ defmodule LiveSelect.TestHelpers do
     !invisible
   end
 
-  def stub_options(options) do
+  def stub_options(options, do_not_update \\ false) do
     Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->
-      update_options(
-        change_msg,
-        options
-      )
+      unless do_not_update do
+        update_options(
+          change_msg,
+          options
+        )
+      end
     end)
 
     :ok
@@ -233,14 +235,13 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def normalize_selection(selection) do
-    mormalized_selection =
-      for element <- selection do
-        if is_binary(element) || is_integer(element) || is_atom(element) do
-          %{value: element, label: element}
-        else
-          element
-        end
+    for element <- selection do
+      if is_binary(element) || is_integer(element) || is_atom(element) do
+        %{value: element, label: element}
+      else
+        element
       end
+    end
   end
 
   def assert_selected_multiple_static(html, selection) when is_binary(html) do

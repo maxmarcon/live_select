@@ -166,6 +166,16 @@ defmodule LiveSelectTagsTest do
 
       assert_selected_multiple_static(live, [])
     end
+
+    test "hitting enter while options are awaiting update does not select", %{live: live} do
+      stub_options(~w(A B C), true)
+
+      type(live, "ABC")
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, [])
+    end
   end
 
   describe "when max_selectable option is set" do

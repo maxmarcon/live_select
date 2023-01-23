@@ -182,6 +182,16 @@ defmodule LiveSelectTest do
 
       refute_selected(live)
     end
+
+    test "hitting enter while options are awaiting update does not select", %{live: live} do
+      stub_options([{"A", 1}, {"B", 2}], true)
+
+      type(live, "ABC")
+
+      keydown(live, "Enter")
+
+      refute_selected(live)
+    end
   end
 
   test "supports dropdown filled with strings", %{conn: conn} do
