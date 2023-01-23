@@ -378,10 +378,11 @@ defmodule LiveSelect.Component do
     )
   end
 
-  defp normalize(nil), do: {:ok, nil}
-
   defp normalize(option_or_selection) do
     case option_or_selection do
+      nil ->
+        {:ok, nil}
+
       %{key: key, value: _value} = option ->
         {:ok, Map.put_new(option, :label, key)}
 
