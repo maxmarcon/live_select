@@ -116,7 +116,7 @@ defmodule LiveSelectTagsTest do
 
       select_nth_option(live, 1, :key)
 
-      assert_selected_multiple(live, [1], ["ABC"])
+      assert_selected_multiple(live, [%{label: "ABC", value: 1}])
 
       stub_options([])
 
@@ -124,7 +124,7 @@ defmodule LiveSelectTagsTest do
 
       keydown(live, "Enter")
 
-      assert_selected_multiple_static(live, [1], ["ABC"])
+      assert_selected_multiple_static(live, [%{label: "ABC", value: 1}])
     end
 
     test "text added to selection should be trimmed", %{live: live} do
@@ -209,7 +209,10 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, ["Rome", "New York"], ["Rome", "New York"], ["R", "NY"])
+    assert_selected_multiple(live, [
+      %{label: "Rome", value: "Rome", tag_label: "R"},
+      %{label: "New York", value: "New York", tag_label: "NY"}
+    ])
   end
 
   test "can specify alternative labels for tags using keywords", %{live: live} do
@@ -223,7 +226,10 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, ["Rome", "New York"], ["Rome", "New York"], ["R", "NY"])
+    assert_selected_multiple(live, [
+      %{label: "Rome", value: "Rome", tag_label: "R"},
+      %{label: "New York", value: "New York", tag_label: "NY"}
+    ])
   end
 
   test "can be disabled", %{conn: conn} do

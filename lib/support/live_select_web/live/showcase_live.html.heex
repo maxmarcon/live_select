@@ -81,7 +81,7 @@
           <div class="form-control max-w-sm">
             <label class="label cursor-pointer">
               <span class="label-text mr-1">User-defined options:</span>
-              <%= checkbox(f, :user_defined_options, class: "toggle", type: "checkbox") %>
+              <%= checkbox(f, :user_defined_options, class: "toggle") %>
             </label>
           </div>
           <div class="form-control max-w-sm">
@@ -132,8 +132,8 @@
           </div>
           <div class="form-control max-w-sm">
             <%= label class: "label cursor-pointer" do %>
-              <span class="label-text font-semibold">disabled:&nbsp;</span>
-              <%= checkbox(f, :disabled, class: "checkbox") %>
+              <span class="label-text mr-1">disabled:&nbsp;</span>
+              <%= checkbox(f, :disabled, class: "toggle") %>
             <% end %>
           </div>
           <div class="form-control max-w-sm">

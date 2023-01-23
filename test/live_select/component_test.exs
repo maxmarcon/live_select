@@ -195,7 +195,10 @@ defmodule LiveSelect.ComponentTest do
           ]
         )
 
-      assert_selected_multiple_static(component, [%{"x" => 1, "y" => 2}, [1, 2]], ["B", "C"])
+      assert_selected_multiple_static(component, [
+        %{value: %{"x" => 1, "y" => 2}, label: "B"},
+        %{value: [1, 2], label: "C"}
+      ])
     end
 
     test "can set initial selection from form without options" do
@@ -235,7 +238,10 @@ defmodule LiveSelect.ComponentTest do
           field: :city_search
         )
 
-      assert_selected_multiple_static(component, ["1", "2"], ["B", "D"])
+      assert_selected_multiple_static(component, [
+        %{label: "B", value: "1"},
+        %{label: "D", value: "2"}
+      ])
     end
 
     test "can set initial selection from form even it can't be found in the options" do
@@ -256,7 +262,11 @@ defmodule LiveSelect.ComponentTest do
           options: [{"D", 2}]
         )
 
-      assert_selected_multiple_static(component, ["1", "2", "3"], ["B", "D", "3"])
+      assert_selected_multiple_static(component, [
+        %{label: "B", value: "1"},
+        %{label: "D", value: "2"},
+        "3"
+      ])
     end
 
     test "can set initial selection explicitly, bypassing the form" do

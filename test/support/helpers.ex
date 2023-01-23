@@ -232,11 +232,25 @@ defmodule LiveSelect.TestHelpers do
              [label]
   end
 
-  def assert_selected_multiple_static(live, values) do
-    assert_selected_multiple_static(live, values, values)
+  def normalize_selection(selection) do
+    mormalized_selection =
+      for element <- selection do
+        if is_binary(element) || is_integer(element) || is_atom(element) do
+          %{value: element, label: element}
+        else
+          element
+        end
+      end
   end
 
-  def assert_selected_multiple_static(html, values, tag_labels) when is_binary(html) do
+  def assert_selected_multiple_static(html, selection) when is_binary(html) do
+    normalized_selection = normalize_selection(selection)
+
+    {values, tag_labels} =
+      normalized_selection
+      |> Enum.map(&{&1.value, &1[:tag_label] || &1.label})
+      |> Enum.unzip()
+
     assert Floki.attribute(html, "#{@selectors[:container]} input[type=hidden]", "value") ==
              encode_values(values)
 
@@ -247,33 +261,20 @@ defmodule LiveSelect.TestHelpers do
            |> Enum.reject(&(&1 == ""))
            |> Enum.map(&String.trim/1) ==
              tag_labels
+
+    normalized_selection
   end
 
-  def assert_selected_multiple_static(live, values, tag_labels) do
-    assert_selected_multiple_static(render(live), values, tag_labels)
+  def assert_selected_multiple_static(live, selection) do
+    assert_selected_multiple_static(render(live), selection)
   end
 
-  def assert_selected_multiple(live, values) do
-    assert_selected_multiple(live, values, values, values)
-  end
-
-  def assert_selected_multiple(live, values, labels) do
-    assert_selected_multiple(live, values, labels, labels)
-  end
-
-  def assert_selected_multiple(live, values, labels, tag_labels) do
-    assert_selected_multiple_static(live, values, tag_labels)
-
-    selection =
-      Enum.zip([labels, tag_labels, values])
-      |> Enum.map(fn
-        {tag, tag_label, value} when tag_label == tag -> %{label: tag, value: value}
-        {tag, tag_label, value} -> %{label: tag, tag_label: tag_label, value: value}
-      end)
+  def assert_selected_multiple(live, selection) do
+    normalized_selection = assert_selected_multiple_static(live, selection)
 
     assert_push_event(live, "select", %{
       id: "my_form_city_search_component",
-      selection: ^selection
+      selection: ^normalized_selection
     })
   end
 
