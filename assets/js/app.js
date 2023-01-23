@@ -28,15 +28,11 @@ import topbar from "../vendor/topbar"
 import ClipboardJS from "clipboard";
 import {themeChange} from 'theme-change'
 
-themeChange()
+const initialTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light"
 
-window.addEventListener("reset-theme", () => {
-    const systemTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light"
-    const currentTheme = localStorage.getItem("theme")
-    if (systemTheme !== currentTheme) {
-        document.getElementById("dark-mode-toggle").click()
-    }
-})
+localStorage.setItem("theme", initialTheme)
+
+themeChange()
 
 const hooks = {
     watchThemeChanges: {
