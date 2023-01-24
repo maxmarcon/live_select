@@ -9,6 +9,7 @@ defmodule LiveSelect.Component do
 
   @default_opts [
     active_option_class: nil,
+    available_option_class: nil,
     user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,
@@ -38,8 +39,9 @@ defmodule LiveSelect.Component do
   @styles [
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
+      available_option: ~S(cursor-pointer),
       container: ~S(relative h-full text-black),
-      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer),
+      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full),
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
       selected_option: ~S(text-gray-400),
       text_input:
@@ -50,9 +52,9 @@ defmodule LiveSelect.Component do
     ],
     daisyui: [
       active_option: ~S(active),
+      available_option: ~S(cursor-pointer),
       container: ~S(dropdown dropdown-open),
-      dropdown:
-        ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
       selected_option: ~S(disabled),
       text_input: ~S(input input-bordered w-full),

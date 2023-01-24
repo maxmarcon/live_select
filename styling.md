@@ -37,11 +37,12 @@ Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
-In `tags` mode there are 3 additional stylable elements:
+In `tags` mode there are 4 additional stylable elements:
 
 7. The **tag** showing the selected options
 8. The **tags_container** that contains the tags
-9. **selected_option**. This is an option in the dropdown that has been selected. It's still visible, but can't be selected again
+9. **selected_option**. This is an option in the dropdown that has already been selected. It's still visible, but can't be selected again
+10. **available_option**. This is an option in the dropdown that has not been selected and is available for selection 
 
 ![styled elements_tags](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements_tags.png)
 
@@ -57,15 +58,15 @@ The following table shows the default styles for each element and the options yo
 | Element | Default daisyui classes | Default tailwind classes | Class override option | Class extend option |
 |----|----|----|----|----|
 | *active_option* | active | bg-gray-600 text-white | active_option_class |  |
+| *available_option* | cursor-pointer | cursor-pointer | available_option_class |  |
 | *container* | dropdown dropdown-open | h-full relative text-black | container_class | container_extra_class |
-| *dropdown* | bg-base-200 cursor-pointer dropdown-content menu menu-compact p-1 rounded-box shadow w-full | absolute bg-gray-100 cursor-pointer rounded-xl shadow w-full z-50 | dropdown_class | dropdown_extra_class |
+| *dropdown* | bg-base-200 dropdown-content menu menu-compact p-1 rounded-box shadow w-full | absolute bg-gray-100 rounded-xl shadow w-full z-50 | dropdown_class | dropdown_extra_class |
 | *option* |  | hover:bg-gray-400 px-4 py-1 rounded-lg | option_class | option_extra_class |
 | *selected_option* | disabled | text-gray-400 | selected_option_class |  |
 | *tag* | badge badge-primary p-1.5 text-sm | bg-blue-400 flex p-1 rounded-lg text-sm | tag_class | tag_extra_class |
 | *tags_container* | flex flex-wrap gap-1 p-1 | flex flex-wrap gap-1 p-1 | tags_container_class | tags_container_extra_class |
 | *text_input* | input input-bordered w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 rounded-md w-full | text_input_class | text_input_extra_class |
 | *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
-
 
 For example, if you want the options to use black text, the active option to have a red background,
 and remove rounded borders from both the dropdown and the active option, call [live_select/3](`LiveSelect.live_select/3`)

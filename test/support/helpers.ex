@@ -11,9 +11,9 @@ defmodule LiveSelect.TestHelpers do
   @expected_class [
     daisyui: [
       active_option: ~S(active),
+      available_option: ~S(cursor-pointer),
       container: ~S(dropdown dropdown-open),
-      dropdown:
-        ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full cursor-pointer),
+      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       selected_option: ~S(disabled),
       tag: ~S(p-1.5 text-sm badge badge-primary),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
@@ -22,8 +22,9 @@ defmodule LiveSelect.TestHelpers do
     ],
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
+      available_option: ~S(cursor-pointer),
       container: ~S(relative h-full text-black),
-      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full cursor-pointer),
+      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full),
       option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
       selected_option: ~S(text-gray-400),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex),
@@ -36,6 +37,7 @@ defmodule LiveSelect.TestHelpers do
   def expected_class(), do: @expected_class
 
   @override_class_option [
+    available_option: :available_option_class,
     container: :container_class,
     dropdown: :dropdown_class,
     option: :option_class,
@@ -61,7 +63,7 @@ defmodule LiveSelect.TestHelpers do
     dropdown: "ul[name=live-select-dropdown]",
     dropdown_entries: "ul[name=live-select-dropdown] > li > div",
     hidden_input: "input#my_form_city_search",
-    option: "ul[name=live-select-dropdown] > li:first-of-type > div",
+    option: "ul[name=live-select-dropdown] > li > div",
     tag: "div[name=tags-container] > div",
     tags_container: "div[name=tags-container]",
     text_input: "input#my_form_city_search_text_input"
@@ -159,6 +161,8 @@ defmodule LiveSelect.TestHelpers do
       |> Floki.parse_document!()
       |> Floki.attribute(@selectors[:dropdown_entries], "class")
       |> Enum.map(&String.trim/1)
+
+    assert length(element_classes) > pos
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == pos do
@@ -284,14 +288,35 @@ defmodule LiveSelect.TestHelpers do
   def assert_selected_option_class(html, selected_pos, selected_class) when is_binary(html) do
     element_classes =
       html
-      |> Floki.attribute(@selectors[:option], "class")
+      |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
       |> Enum.map(&String.trim/1)
+
+    assert length(element_classes) > selected_pos
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do
         assert String.contains?(element_class, selected_class)
       else
         refute String.contains?(element_class, selected_class)
+      end
+    end
+  end
+
+  def assert_available_option_class(_live, _selected_pos, ""), do: true
+
+  def assert_available_option_class(html, selected_pos, available_class) when is_binary(html) do
+    element_classes =
+      html
+      |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
+      |> Enum.map(&String.trim/1)
+
+    assert length(element_classes) > selected_pos
+
+    for {element_class, idx} <- Enum.with_index(element_classes, 1) do
+      if idx == selected_pos do
+        refute String.contains?(element_class, available_class)
+      else
+        assert String.contains?(element_class, available_class)
       end
     end
   end

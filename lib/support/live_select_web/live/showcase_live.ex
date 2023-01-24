@@ -11,6 +11,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     @class_options [
       :active_option_class,
+      :available_option_class,
       :container_class,
       :container_extra_class,
       :dropdown_class,

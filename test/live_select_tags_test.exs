@@ -292,12 +292,6 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, [])
   end
 
-  for style <- [:daisyui, :tailwind, :none, nil] do
-    @style style
-    describe "when style = #{@style || "default"}" do
-    end
-  end
-
   defp select_and_open_dropdown(live, pos) do
     if pos < 1 || pos > 4, do: raise("pos must be between 1 and 4")
 
