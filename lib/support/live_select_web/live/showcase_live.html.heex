@@ -245,7 +245,7 @@
           phx-change="change"
           phx-submit="submit"
         >
-          <div class="grid grid-cols-4 gap-1 items-center">
+          <div class="grid grid-cols-4 gap-1">
             <div class="col-span-3 form-control">
               <%= live_select(
                 f,
@@ -257,10 +257,19 @@
                 end)
               ) %>
             </div>
-            <%= submit("Submit",
-              class: "btn btn-primary btn-sm md:btn-md text-xs md:text-md col-span-1",
-              disabled: !@changeset.valid?
-            ) %>
+            <div class="flex flex-col gap-y-1">
+              <%= submit("Submit",
+                class: "btn btn-primary btn-sm text-xs md:text-md",
+                disabled: !@changeset.valid?
+              ) %>
+              <button
+                class="btn btn-secondary btn-sm text-xs md:text-md"
+                type="button"
+                phx-click="clear-selection"
+              >
+                Clear
+              </button>
+            </div>
             <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
               !! This should not move when the dropdown opens !!
             </div>

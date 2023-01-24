@@ -4,7 +4,7 @@ defmodule LiveSelect.Component do
   alias LiveSelect.ChangeMsg
 
   use Phoenix.LiveComponent
-  import Phoenix.HTML.Form, except: [reset: 1, label: 2]
+  import Phoenix.HTML.Form, except: [reset: 1, reset: 2, label: 2]
   import LiveSelect.ClassUtil
 
   @default_opts [
@@ -96,17 +96,18 @@ defmodule LiveSelect.Component do
   @impl true
   def update(assigns, socket) do
     validate_assigns!(assigns)
+    {clear, assigns} = Map.pop(assigns, :clear)
 
     socket =
-      if assigns[:reset] do
-        assign(socket, :selection, [])
+      if clear do
+        clear_selection(socket)
       else
         socket
       end
 
     socket =
       socket
-      |> assign(Map.delete(assigns, :reset))
+      |> assign(assigns)
       |> assign(:active_option, -1)
       |> update(:awaiting_update, fn
         _, %{options: _} -> false
@@ -263,7 +264,7 @@ defmodule LiveSelect.Component do
       end
     end
 
-    valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options]
+    valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options, :clear]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do
@@ -344,8 +345,17 @@ defmodule LiveSelect.Component do
     })
   end
 
+  defp clear_selection(%{assigns: %{mode: :single}} = socket), do: reset(socket, false)
+
+  defp clear_selection(socket), do: unselect(socket, :all)
+
   defp unselect(socket, pos) do
-    socket = update(socket, :selection, &List.delete_at(&1, pos))
+    socket =
+      if pos == :all do
+        assign(socket, :selection, [])
+      else
+        update(socket, :selection, &List.delete_at(&1, pos))
+      end
 
     push_event(socket, "select", %{
       id: socket.assigns.id,
@@ -354,10 +364,10 @@ defmodule LiveSelect.Component do
     })
   end
 
-  defp reset(socket) do
+  defp reset(socket, focus \\ true) do
     socket
     |> assign(selection: [])
-    |> push_event("reset", %{id: socket.assigns.id})
+    |> push_event("reset", %{id: socket.assigns.id, focus: focus})
   end
 
   defp initial_selection(value, options, :single) do

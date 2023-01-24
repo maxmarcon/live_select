@@ -44,7 +44,7 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/")
 
     Mox.expect(LiveSelect.ChangeMsgHandlerMock, :handle, fn %ChangeMsg{
-                                                              id: "my_form_city_search_component",
+                                                              id: "live_select",
                                                               text: "Ber",
                                                               module: LiveSelect.Component,
                                                               field: :city_search
@@ -462,6 +462,27 @@ defmodule LiveSelectTest do
 
       assert dropdown_visible(live)
     end
+  end
+
+  test "can clear the selection", %{conn: conn} do
+    stub_options(
+      A: 1,
+      B: 2,
+      C: 3
+    )
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, :B, 2)
+
+    element(live, "button[phx-click=clear-selection]")
+    |> render_click()
+
+    assert_reset(live)
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do

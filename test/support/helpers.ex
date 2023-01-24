@@ -193,7 +193,7 @@ defmodule LiveSelect.TestHelpers do
              ["readonly"]
 
     assert_push_event(live, "select", %{
-      id: "my_form_city_search_component",
+      id: "live_select",
       selection: [%{label: ^label, value: ^value}]
     })
   end
@@ -274,7 +274,7 @@ defmodule LiveSelect.TestHelpers do
     normalized_selection = assert_selected_multiple_static(live, selection)
 
     assert_push_event(live, "select", %{
-      id: "my_form_city_search_component",
+      id: "live_select",
       selection: ^normalized_selection
     })
   end
@@ -311,7 +311,7 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.attribute("value") == List.wrap(default_value)
 
     assert_push_event(live, "reset", %{
-      id: "my_form_city_search_component"
+      id: "live_select"
     })
   end
 

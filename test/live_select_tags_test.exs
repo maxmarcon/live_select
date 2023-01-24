@@ -271,6 +271,27 @@ defmodule LiveSelectTagsTest do
            |> Floki.attribute("disabled") == ["disabled"]
   end
 
+  test "can clear the selection", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C D))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2, :click)
+
+    assert_selected_multiple(live, ~w(A B))
+
+    element(live, "button[phx-click=clear-selection]")
+    |> render_click()
+
+    assert_selected_multiple(live, [])
+  end
+
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
     describe "when style = #{@style || "default"}" do

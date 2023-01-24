@@ -28,9 +28,9 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.handleEvent("reset", ({id}) => {
+            this.handleEvent("reset", ({id, focus: focus = true}) => {
                 if (this.el.id === id) {
-                    this.setInputValue(null, true)
+                    this.setInputValue(null, focus)
                     this.inputEvent([], "single")
                 }
             })

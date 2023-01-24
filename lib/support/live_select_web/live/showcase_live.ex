@@ -29,7 +29,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     @primary_key false
     embedded_schema do
-      field(:id, :string, default: nil)
+      field(:id, :string, default: "live_select")
       field(:debounce, :integer, default: 100)
       field(:disabled, :boolean)
       field(:field_name, :string, default: "city_search")
@@ -304,6 +304,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   def handle_event("clear-style-filter", _params, socket) do
     {:noreply, assign(socket, style_filter: "")}
+  end
+
+  def handle_event("clear-selection", _params, socket) do
+    send_update(LiveSelect.Component,
+      id: Ecto.Changeset.get_field(socket.assigns.changeset, :id),
+      clear: true
+    )
+
+    {:noreply, socket}
   end
 
   @impl true
