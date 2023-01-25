@@ -22,10 +22,10 @@ defmodule LiveSelect.TestHelpers do
     ],
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
-      available_option: ~S(cursor-pointer),
+      available_option: ~S(cursor-pointer hover:bg-gray-400 rounded-md),
       container: ~S(relative h-full text-black),
-      dropdown: ~S(absolute rounded-xl shadow z-50 bg-gray-100 w-full),
-      option: ~S(rounded-lg px-4 py-1 hover:bg-gray-400),
+      dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 w-full),
+      option: ~S(rounded-lg px-4 py-1),
       selected_option: ~S(text-gray-400),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
