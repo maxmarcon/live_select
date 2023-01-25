@@ -12,7 +12,7 @@ defmodule LiveSelect do
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
-    
+
   Whenever an option is selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
 
@@ -23,7 +23,7 @@ defmodule LiveSelect do
   <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif" width="300" />
 
   ### Tags mode
-      
+    
   <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif" width="300" />
 
   ## Reacting to user's input
@@ -36,7 +36,7 @@ defmodule LiveSelect do
   ## Multiple selection with tags mode
 
   When `:tags` mode is enabled `LiveSelect` allows the user to select multiple entries. The entries will be visible above the text input field as removable tags.
-    
+
   The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
   ## Examples
@@ -50,11 +50,11 @@ defmodule LiveSelect do
   The LiveSelect main form input is called `city_search`.
   When a city is selected, the coordinates of that city will be the value of the form input.
   The name of the selected city is available in the text input field named `city_search_text_input`.
-    
+
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-      <%= live_select f, :city_search %> 
+    <%= live_select f, :city_search %> 
   </.form>
   ```
 
@@ -64,33 +64,33 @@ defmodule LiveSelect do
 
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-    cities = City.search(change_msg.text)
-    # cities could be:
-    # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
-    #
-    # but it could also be (no coordinates in this case):
-    # [ "city name 1", "city name 2", ... ]
-    #
-    # or:
-    # [ [label: "city name 1", value: [lat_1, long_1]], [label: "city name 2", value: [lat_2, long_2]], ... ] 
-    #
-    # or even:
-    # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
+  cities = City.search(change_msg.text)
+  # cities could be:
+  # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
+  #
+  # but it could also be (no coordinates in this case):
+  # [ "city name 1", "city name 2", ... ]
+  #
+  # or:
+  # [ [label: "city name 1", value: [lat_1, long_1]], [label: "city name 2", value: [lat_2, long_2]], ... ] 
+  #
+  # or even:
+  # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
 
-    update_options(change_msg, cities)
-    
-    {:noreply, socket}
+  update_options(change_msg, cities)
+
+  {:noreply, socket}
   end
 
   @impl true
   def handle_event(
-        "change",
-        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
-        socket
-      ) do
-    IO.puts("You selected city #{city_name} located at: #{city_coords}")
+      "change",
+      %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
+      socket
+    ) do
+  IO.puts("You selected city #{city_name} located at: #{city_coords}")
 
-    {:noreply, socket}
+  {:noreply, socket}
   end  
   ```
 
@@ -98,11 +98,11 @@ defmodule LiveSelect do
 
   Let's say you want to build on the previous example and allow the user to select multiple cities and not only one.
   The `:tags` mode allows you to do exactly this.
-    
+
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-      <%= live_select f, :city_search, mode: :tags %> 
+    <%= live_select f, :city_search, mode: :tags %> 
   </.form>
   ```
 
@@ -110,29 +110,29 @@ defmodule LiveSelect do
   ```
   @impl true
   def handle_event(
-        "change",
-        %{"my_form" => %{"city_search" => list_of_coords}},
-        socket
-      ) do
-    # list_of_coords will contain the list of the JSON-encoded coordinates of the selected cities, for example:
-    # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
+      "change",
+      %{"my_form" => %{"city_search" => list_of_coords}},
+      socket
+    ) do
+  # list_of_coords will contain the list of the JSON-encoded coordinates of the selected cities, for example:
+  # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
 
-    IO.puts("You selected cities located at: #{list_of_coords}")
+  IO.puts("You selected cities located at: #{list_of_coords}")
 
-    {:noreply, socket}
+  {:noreply, socket}
   end  
   ```
 
   ### Multiple LiveSelect inputs in the same LiveView  
-    
+
   If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field. 
   For example:
 
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-      <%= live_select f, :city_search %> 
-      <%= live_select f, :album_search %>
+    <%= live_select f, :city_search %> 
+    <%= live_select f, :album_search %>
   </.form>
   ```
 
@@ -140,17 +140,27 @@ defmodule LiveSelect do
   ```
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do
-    options =
-      case change_msg.field do
-        :city_search -> City.search(change_msg.text)
-        :album_search -> Album.search(change_msg.text)
-      end
+  options =
+    case change_msg.field do
+      :city_search -> City.search(change_msg.text)
+      :album_search -> Album.search(change_msg.text)
+    end
 
-    update_options(change_msg, options)
+  update_options(change_msg, options)
 
-    {:noreply, socket}
+  {:noreply, socket}
   end
   ```
+
+  ### Clearing the selection programmatically
+
+  You can clear the selection programmatically by sending a `clear: true` assign to `LiveSelect`
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, clear: true)
+  ```
+
+  To set a custom id for the component, use the `id` option when calling `live_select/3`.  
   """
 
   @doc ~S"""
