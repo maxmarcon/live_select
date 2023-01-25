@@ -4,7 +4,7 @@ defmodule LiveSelect.Component do
   alias LiveSelect.ChangeMsg
 
   use Phoenix.LiveComponent
-  import Phoenix.HTML.Form, except: [reset: 1, reset: 2, label: 2]
+  import Phoenix.HTML.Form, only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2]
   import LiveSelect.ClassUtil
 
   @default_opts [
