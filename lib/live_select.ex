@@ -39,6 +39,15 @@ defmodule LiveSelect do
 
   The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
+  ## Clearing the selection programmatically
+
+  You can clear the selection programmatically by sending a `clear: true` assign to `LiveSelect`
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, clear: true)
+  ```
+  To set a custom id for the component, use the `id` option when calling `live_select/3`.    
+  
   ## Examples
 
   These examples describe all the moving parts in detail. You can see these examples in action, see which messages and events are being sent, and play around
@@ -151,16 +160,6 @@ defmodule LiveSelect do
   {:noreply, socket}
   end
   ```
-
-  ### Clearing the selection programmatically
-
-  You can clear the selection programmatically by sending a `clear: true` assign to `LiveSelect`
-
-  ```
-  send_update(LiveSelect.Component, id: live_select_id, clear: true)
-  ```
-
-  To set a custom id for the component, use the `id` option when calling `live_select/3`.  
   """
 
   @doc ~S"""
