@@ -291,7 +291,6 @@ defmodule LiveSelect.Component do
   defp maybe_select(
          %{
            assigns: %{
-             options: [],
              current_text: current_text,
              user_defined_options: true,
              awaiting_update: false

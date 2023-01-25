@@ -105,9 +105,9 @@ defmodule LiveSelect.TestHelpers do
     !invisible
   end
 
-  def stub_options(options, do_not_update \\ false) do
+  def stub_options(options, opts \\ []) do
     Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->
-      unless do_not_update do
+      unless opts[:delay_forever] do
         update_options(
           change_msg,
           options
@@ -291,7 +291,8 @@ defmodule LiveSelect.TestHelpers do
       |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
       |> Enum.map(&String.trim/1)
 
-    assert length(element_classes) > selected_pos
+    # ensure we're checking both selected and unselected elements
+    assert length(element_classes) > selected_pos || selected_pos > 1
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do
@@ -310,7 +311,8 @@ defmodule LiveSelect.TestHelpers do
       |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
       |> Enum.map(&String.trim/1)
 
-    assert length(element_classes) > selected_pos
+    # ensure we're checking both selected and unselected elements
+    assert length(element_classes) > selected_pos || selected_pos > 1
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do

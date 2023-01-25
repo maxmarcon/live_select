@@ -98,8 +98,8 @@ defmodule LiveSelectTagsTest do
       %{live: live}
     end
 
-    test "hitting enter with no option adds entered text to selection", %{live: live} do
-      stub_options([])
+    test "hitting enter adds entered text to selection", %{live: live} do
+      stub_options(["A", "B"])
 
       type(live, "ABC")
 
@@ -108,23 +108,35 @@ defmodule LiveSelectTagsTest do
       assert_selected_multiple(live, ["ABC"])
     end
 
-    test "hitting enter with no option does not add to selection if element with same label is already selected",
+    test "hitting enter does not add text to selection if element with same label is already selected",
          %{live: live} do
-      stub_options([{"ABC", 1}, {"DEF", 2}])
+      stub_options(["ABC", "DEF"])
 
       type(live, "ABC")
 
       select_nth_option(live, 1, :key)
 
-      assert_selected_multiple(live, [%{label: "ABC", value: 1}])
+      assert_selected_multiple(live, ["ABC"])
 
-      stub_options([])
+      type(live, "ABC")
+
+      assert_options(live, ["ABC", "DEF"])
+
+      keydown(live, "Enter")
+
+      assert_selected_multiple_static(live, ["ABC"])
+    end
+
+    test "hitting enter adds text to selection even if there is only one available option", %{
+      live: live
+    } do
+      stub_options(["A"])
 
       type(live, "ABC")
 
       keydown(live, "Enter")
 
-      assert_selected_multiple_static(live, [%{label: "ABC", value: 1}])
+      assert_selected_multiple(live, ["ABC"])
     end
 
     test "text added to selection should be trimmed", %{live: live} do
@@ -138,7 +150,7 @@ defmodule LiveSelectTagsTest do
     end
 
     test "text with only whitespace is ignored and not added to selection", %{live: live} do
-      stub_options([])
+      stub_options(["ABC"])
 
       type(live, "    ")
 
@@ -148,7 +160,7 @@ defmodule LiveSelectTagsTest do
     end
 
     test "text shorter than update_min_len is ignored and not added to selection", %{live: live} do
-      stub_options([])
+      stub_options([{"ABC", 1}, {"DEF", 2}])
 
       type(live, "AB")
 
@@ -157,18 +169,8 @@ defmodule LiveSelectTagsTest do
       assert_selected_multiple_static(live, [])
     end
 
-    test "hitting enter with more than one option does not select", %{live: live} do
-      stub_options(~w(A B))
-
-      type(live, "ABC")
-
-      keydown(live, "Enter")
-
-      assert_selected_multiple_static(live, [])
-    end
-
     test "hitting enter while options are awaiting update does not select", %{live: live} do
-      stub_options(~w(A B C), true)
+      stub_options(~w(A B C), delay_forever: true)
 
       type(live, "ABC")
 

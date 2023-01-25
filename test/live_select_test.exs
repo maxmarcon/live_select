@@ -153,12 +153,12 @@ defmodule LiveSelectTest do
       %{live: live}
     end
 
-    test "hitting enter no options add entered text to selection", %{live: live} do
-      stub_options([])
+    test "hitting enter adds entered text to selection", %{live: live} do
+      stub_options(~w(A B))
 
       type(live, "ABC")
 
-      assert_options(live, [])
+      assert_options(live, ["A", "B"])
 
       keydown(live, "Enter")
 
@@ -177,20 +177,8 @@ defmodule LiveSelectTest do
       assert_selected(live, "ABC")
     end
 
-    test "hitting enter with more than one option does not select", %{live: live} do
-      stub_options([{"A", 1}, {"B", 2}])
-
-      type(live, "ABC")
-
-      assert_options(live, ["A", "B"])
-
-      keydown(live, "Enter")
-
-      refute_selected(live)
-    end
-
     test "hitting enter while options are awaiting update does not select", %{live: live} do
-      stub_options([{"A", 1}, {"B", 2}], true)
+      stub_options([{"A", 1}, {"B", 2}], delay_forever: true)
 
       type(live, "ABC")
 
