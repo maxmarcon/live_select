@@ -1,5 +1,10 @@
 # Changelog
 
+* add available_option_class to style options that have not been selected yet
+* add `user_defined_options` setting to allow user to enter any tag
+* enable custom id for component
+* enable clearing the selection programmatically via `clear` assign
+
 ## 0.3.3 (2023-01-15)
 
 * set initial selection from the form or manually with `value` option
