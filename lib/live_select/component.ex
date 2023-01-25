@@ -79,7 +79,7 @@ defmodule LiveSelect.Component do
 
     {:ok, socket}
   end
-  
+
   @doc false
   def default_opts(), do: @default_opts
 
