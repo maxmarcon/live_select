@@ -293,7 +293,8 @@ defmodule LiveSelect.Component do
            assigns: %{
              current_text: current_text,
              user_defined_options: true,
-             awaiting_update: false
+             awaiting_update: false,
+             active_option: -1
            }
          } = socket
        )

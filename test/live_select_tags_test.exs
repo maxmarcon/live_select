@@ -178,6 +178,20 @@ defmodule LiveSelectTagsTest do
 
       assert_selected_multiple_static(live, [])
     end
+
+    test "one can still select options from the dropdown", %{live: live} do
+      stub_options(~w(A B C))
+
+      type(live, "ABC")
+
+      select_nth_option(live, 1, :key)
+
+      type(live, "ABC")
+
+      select_nth_option(live, 2, :click)
+
+      assert_selected_multiple(live, ~w(A B))
+    end
   end
 
   describe "when max_selectable option is set" do
