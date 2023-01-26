@@ -39,10 +39,10 @@ defmodule LiveSelect.Component do
   @styles [
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
-      available_option: ~S(cursor-pointer hover:bg-gray-400 rounded-md),
+      available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
       container: ~S(relative h-full text-black),
       dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 w-full),
-      option: ~S(rounded-lg px-4 py-1),
+      option: ~S(rounded px-4 py-1),
       selected_option: ~S(text-gray-400),
       text_input:
         ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),

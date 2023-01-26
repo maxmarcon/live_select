@@ -58,10 +58,10 @@ The following table shows the default styles for each element and the options yo
 | Element | Default daisyui classes | Default tailwind classes | Class override option | Class extend option |
 |----|----|----|----|----|
 | *active_option* | active | bg-gray-600 text-white | active_option_class |  |
-| *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded-md | available_option_class |  |
+| *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded | available_option_class |  |
 | *container* | dropdown dropdown-open | h-full relative text-black | container_class | container_extra_class |
 | *dropdown* | bg-base-200 dropdown-content menu menu-compact p-1 rounded-box shadow w-full | absolute bg-gray-100 rounded-md shadow w-full z-50 | dropdown_class | dropdown_extra_class |
-| *option* |  | px-4 py-1 rounded-lg | option_class | option_extra_class |
+| *option* |  | px-4 py-1 rounded | option_class | option_extra_class |
 | *selected_option* | disabled | text-gray-400 | selected_option_class |  |
 | *tag* | badge badge-primary p-1.5 text-sm | bg-blue-400 flex p-1 rounded-lg text-sm | tag_class | tag_extra_class |
 | *tags_container* | flex flex-wrap gap-1 p-1 | flex flex-wrap gap-1 p-1 | tags_container_class | tags_container_extra_class |
