@@ -44,7 +44,7 @@ LiveView:
     # ... 
     # ]
 
-    update_options(change_msg, cities)
+    send_update(LiveSelect.Component, id: change_msg.id, options: cities)
     
     {:noreply, socket}
   end
