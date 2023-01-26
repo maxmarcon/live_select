@@ -6,7 +6,7 @@ defmodule LiveSelect do
   import Phoenix.LiveView.Helpers
 
   @moduledoc ~S"""
-  The `LiveSelect` field is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
+  The `LiveSelect` component is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
   As the input text changes, LiveSelect will render a dropdown below the text input containing the matching options, which the user can then select.
 
@@ -18,20 +18,57 @@ defmodule LiveSelect do
 
   After an option has been selected, the selection can be undone by clicking on the text field. In tags mode, single tags can be removed by clicking on them.
 
-  ### Single mode  
+  ## Single mode  
 
   <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_single.gif" width="300" />
 
-  ### Tags mode
+  ## Tags mode
     
   <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif" width="300" />
+
+  ## Options
+
+  You can pass or update the list of options the user can choose from with the `options` assign.
+  Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
+  LiveSelect input when the option is selected.
+   
+  `options` can be any enumeration of the following elements:
+
+  * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
+  * _tuples_: `{label, value}` corresponding to label and value for the option
+  * _maps_: `%{label: label, value: value}` or `%{value: value}` 
+  * _keywords_: `[label: label, value: value]` or `[value: value]`
+
+  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option. 
+
+  Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
+
+  ```
+  %{Red: 1, Yellow: 2, Green: 3}
+  ```
+
+  Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
+
+  Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
+    
+  ## Alternative tag labels
+    
+  Sometimes, in `:tags` mode, you might want to use alternative labels for the tags. For example, you might want the labels in the tags to be shorter 
+  in order to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
+
+  ```
+  [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  
+  ```
+
+  will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
 
   ## Reacting to user's input
 
   Whenever the user types something in the text input, LiveSelect sends a `t:LiveSelect.ChangeMsg.t/0` message to your LiveView.
-  The message has a `text` property containing the current text entered by the user, and a `field` property with the name of the LiveSelect field.
-  The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `update_options/2`
-  to update the dropdown's content with the new set of selectable options. See the "Examples" section below for details.
+  The message has a `text` property containing the current text entered by the user, as well as `id` and `field` properties with the id of the 
+  LiveSelect component and the name of the LiveSelect form field, respectively.
+  The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveView.send_update/3`
+  to update the list of selectable options. See the "Examples" section below for details.
 
   ## Multiple selection with tags mode
 
@@ -47,7 +84,7 @@ defmodule LiveSelect do
   send_update(LiveSelect.Component, id: live_select_id, clear: true)
   ```
   To set a custom id for the component, use the `id` option when calling `live_select/3`.    
-  
+
   ## Examples
 
   These examples describe all the moving parts in detail. You can see these examples in action, see which messages and events are being sent, and play around
@@ -73,22 +110,22 @@ defmodule LiveSelect do
 
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-  cities = City.search(change_msg.text)
-  # cities could be:
-  # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
-  #
-  # but it could also be (no coordinates in this case):
-  # [ "city name 1", "city name 2", ... ]
-  #
-  # or:
-  # [ [label: "city name 1", value: [lat_1, long_1]], [label: "city name 2", value: [lat_2, long_2]], ... ] 
-  #
-  # or even:
-  # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
+      cities = City.search(change_msg.text)
+      # cities could be:
+      # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
+      #
+      # but it could also be (no coordinates in this case):
+      # [ "city name 1", "city name 2", ... ]
+      #
+      # or:
+      # [ [label: "city name 1", value: [lat_1, long_1]], [label: "city name 2", value: [lat_2, long_2]], ... ] 
+      #
+      # or even:
+      # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
 
-  update_options(change_msg, cities)
-
-  {:noreply, socket}
+      send_update(LiveSelect.Component, id: change_msg.id, options: cities)
+    
+      {:noreply, socket}
   end
 
   @impl true
@@ -97,9 +134,9 @@ defmodule LiveSelect do
       %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
       socket
     ) do
-  IO.puts("You selected city #{city_name} located at: #{city_coords}")
+      IO.puts("You selected city #{city_name} located at: #{city_coords}")
 
-  {:noreply, socket}
+      {:noreply, socket}
   end  
   ```
 
@@ -123,18 +160,18 @@ defmodule LiveSelect do
       %{"my_form" => %{"city_search" => list_of_coords}},
       socket
     ) do
-  # list_of_coords will contain the list of the JSON-encoded coordinates of the selected cities, for example:
-  # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
+    # list_of_coords will contain the list of the JSON-encoded coordinates of the selected cities, for example:
+    # ["[-46.565,-23.69389]", "[-48.27722,-18.91861]"]    
 
-  IO.puts("You selected cities located at: #{list_of_coords}")
+    IO.puts("You selected cities located at: #{list_of_coords}")
 
-  {:noreply, socket}
+    {:noreply, socket}
   end  
   ```
 
   ### Multiple LiveSelect inputs in the same LiveView  
 
-  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field. 
+  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field or id. 
   For example:
 
   Template:
@@ -149,15 +186,15 @@ defmodule LiveSelect do
   ```
   @impl true
   def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do
-  options =
-    case change_msg.field do
-      :city_search -> City.search(change_msg.text)
-      :album_search -> Album.search(change_msg.text)
-    end
+    options =
+      case change_msg.field do
+        :city_search -> City.search(change_msg.text)
+        :album_search -> Album.search(change_msg.text)
+      end
 
-  update_options(change_msg, options)
+    send_update(LiveSelect.Component, id: change_msg.id, options: options)
 
-  {:noreply, socket}
+    {:noreply, socket}
   end
   ```
   """
@@ -170,9 +207,9 @@ defmodule LiveSelect do
     
   **Opts:**
 
-  * `id` - an id to assign to the component. If none is provided, one will be generated automatically
+  * `id` - an id to assign to the component. If none is provided, '#{form_name}_#{field_name}_component" will be used
   * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
-  * `options` - initial available options to select from. See `update_options/2` for details on the format to use
+  * `options` - initial available options to select from. See the "Options" section for details on what you can pass here
   * `value` - used to manually set an initial selection - overrides any values from the form. 
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode. 
   If an element can be found in the initial options, the corresponding label will be used. Otherwise, the element will be used for both value and label
@@ -208,40 +245,8 @@ defmodule LiveSelect do
   @doc ~S"""
   Updates a `LiveSelect` component with new options. `change_msg` must be the `t:LiveSelect.ChangeMsg.t/0` originally sent by the LiveSelect,
   and `options` is the new list of options that will be used to fill the dropdown.
-
-  Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
-  LiveSelect input when the option is selected.
-   
-  `options` can be any enumerable of the following elements:
-
-  * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
-  * _tuples_: `{label, value}` corresponding to label and value for the option
-  * _maps_: `%{label: label, value: value}` or `%{value: value}` 
-  * _keywords_: `[label: label, value: value]` or `[value: value]`
-
-  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option. 
-
-  Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
-
-  ```
-  %{Red: 1, Yellow: 2, Green: 3}
-  ```
-
-  Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
-
-  Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
-    
-  ## Alternative tag labels
-    
-  Sometimes, in `:tags` mode, you might want to use alternative labels for the tags. For example, you might want the labels in the tags to be shorter 
-  in order to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
-
-  ```
-  [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  
-  ```
-
-  will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
   """
+  @deprecated "Use LiveView.send_update/3 directly to update the options"
   def update_options(%ChangeMsg{} = change_msg, options) do
     Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
   end
