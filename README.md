@@ -144,6 +144,18 @@ quickly experiment with options and styles, providing an easy way to fine tune y
 shows the messages and events that your `LiveView` receives. For each event or message, the app shows the function head
 of the callback that your LiveView needs to implement in order to handle the event.
 
+## Contribute 🤝
+
+Contributions are very welcome! 
+
+Use `mix test` to run the entire test suite, which is subdivided into 3 main files:
+
+* `test/live_select/component_test.exs` - everything that can be tested by rendering the component statically
+* `test/live_select_test.exs` - tests for `single` mode that require a running LiveView 
+* `test/live_select_tags_test.exs` - tests for `tags` mode that require a running LiveView
+
+Tests that require a LiveView use the showcase app as the parent LiveView.
+
 ## Roadmap 🛣️
 
 - [X] Add `package.json` to enable `import live_select from "live_select"`
