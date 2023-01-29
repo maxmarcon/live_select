@@ -224,7 +224,7 @@ defmodule LiveSelect.Component do
       socket
       |> maybe_restore_selection
       |> assign(:hide_dropdown, true)
-      |> client_select(%{blur: true})
+      |> client_select(%{})
 
     {:noreply, socket}
   end

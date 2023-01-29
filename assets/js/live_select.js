@@ -21,8 +21,6 @@ export default {
             this.textInput().value = value
             if (focus) {
                 this.textInput().focus()
-            } else if (blur) {
-                this.textInput().blur()
             }
         },
         inputEvent(selection, mode) {
@@ -30,8 +28,7 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.handleEvent("select", ({id, selection, mode, focus, blur, input_event}) => {
-                console.log({id, selection, mode, focus, blur, input_event})
+            this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
