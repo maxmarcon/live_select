@@ -17,7 +17,7 @@ export default {
                 }
             }
         },
-        setInputValue(value, {focus, blur}) {
+        setInputValue(value, {focus}) {
             this.textInput().value = value
             if (focus) {
                 this.textInput().focus()
