@@ -31,6 +31,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     @primary_key false
     embedded_schema do
       field(:id, :string, default: "live_select")
+      field(:allow_clear, :boolean)
       field(:debounce, :integer, default: 100)
       field(:disabled, :boolean)
       field(:field_name, :string, default: "city_search")
@@ -57,6 +58,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         params,
         [
           :id,
+          :allow_clear,
           :debounce,
           :disabled,
           :field_name,
@@ -280,6 +282,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         %{"settings" => params},
         socket
       ) do
+    params = Map.reject(params, fn {_, value} -> value == "" end)
+
     socket =
       socket
       |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
@@ -374,7 +378,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_info(message, socket) do
-    message_handler().handle(message, delay: socket.assigns.changeset.data.search_delay)
+    if is_struct(message, LiveSelect.ChangeMsg) do
+      message_handler().handle(message, delay: socket.assigns.changeset.data.search_delay)
+    end
 
     socket =
       socket

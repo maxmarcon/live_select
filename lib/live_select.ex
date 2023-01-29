@@ -215,6 +215,7 @@ defmodule LiveSelect do
   If an element can be found in the initial options, the corresponding label will be used. Otherwise, the element will be used for both value and label
   * `max_selectable` - limits the maximum number of selectable elements. Defaults to `0`, meaning no limit
   * `user_defined_options` - if `true`, hitting enter will always add the text entered by the user to the selection. Defaults to `false` 
+  * `allow_clear` - if `true`, when in single mode, display a "x" button in the input field to clear the selection
   * `disabled` - set this to `true` to disable the input field
   * `placeholder` - placeholder text for the input field  
   * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms

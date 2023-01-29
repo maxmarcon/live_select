@@ -188,6 +188,29 @@ defmodule LiveSelectTest do
     end
   end
 
+  describe "when allow_clear is set" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/?allow_clear=true")
+
+      %{live: live}
+    end
+
+    test "clicking on clear button clears the selection", %{live: live} do
+      stub_options([{"A", 1}, {"B", 1}])
+
+      type(live, "ABC")
+
+      select_nth_option(live, 1)
+
+      assert_selected(live, "A", 1)
+
+      element(live, "#{selectors()[:container]} [phx-click=clear]")
+      |> render_click()
+
+      assert_clear(live)
+    end
+  end
+
   test "supports dropdown filled with strings", %{conn: conn} do
     stub_options(["A", "B", "C"])
 
@@ -336,25 +359,44 @@ defmodule LiveSelectTest do
     assert_selected(live, "B", 2)
   end
 
-  test "clicking on the text input field resets the selection", %{conn: conn} do
-    stub_options(
-      A: 1,
-      B: 2,
-      C: 3
-    )
+  describe "after focusing on the text input field" do
+    setup %{conn: conn} do
+      stub_options(
+        A: 1,
+        B: 2,
+        C: 3
+      )
 
-    {:ok, live, _html} = live(conn, "/")
+      {:ok, live, _html} = live(conn, "/")
 
-    type(live, "ABC")
+      type(live, "ABC")
 
-    select_nth_option(live, 2)
+      select_nth_option(live, 2)
 
-    assert_selected(live, :B, 2)
+      assert_selected(live, :B, 2)
 
-    element(live, selectors()[:text_input])
-    |> render_click()
+      element(live, selectors()[:text_input])
+      |> render_focus()
 
-    assert_reset(live)
+      %{live: live}
+    end
+
+    test "the text input field is cleared", %{live: live} do
+      assert_clear(live, false)
+    end
+
+    test "hitting Escape restores the selection", %{live: live} do
+      keydown(live, "Escape")
+
+      assert_selected_static(live, :B, 2)
+    end
+
+    test "blurring the field restores the selection", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :B, 2)
+    end
   end
 
   test "can navigate options with arrows", %{conn: conn} do
@@ -410,7 +452,7 @@ defmodule LiveSelectTest do
     setup %{conn: conn} do
       stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
 
-      {:ok, live, _html} = live(conn, "/?style=daisyui")
+      {:ok, live, _html} = live(conn, "/")
 
       type(live, "ABC")
 
@@ -423,12 +465,6 @@ defmodule LiveSelectTest do
 
     test "focus on text input shows it", %{live: live} do
       render_focus(element(live, selectors()[:text_input]))
-
-      assert dropdown_visible(live)
-    end
-
-    test "clicking on the input shows it", %{live: live} do
-      render_click(element(live, selectors()[:text_input]))
 
       assert dropdown_visible(live)
     end
@@ -467,10 +503,9 @@ defmodule LiveSelectTest do
 
     assert_selected(live, :B, 2)
 
-    element(live, "button[phx-click=clear-selection]")
-    |> render_click()
+    render_click(live, "clear-selection", %{})
 
-    assert_reset(live)
+    assert_clear(live)
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do

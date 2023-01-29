@@ -4,11 +4,15 @@ defmodule LiveSelect.Component do
   alias LiveSelect.ChangeMsg
 
   use Phoenix.LiveComponent
-  import Phoenix.HTML.Form, only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2]
+
+  import Phoenix.HTML.Form,
+    only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2]
+
   import LiveSelect.ClassUtil
 
   @default_opts [
     active_option_class: nil,
+    allow_clear: false,
     available_option_class: nil,
     user_defined_options: false,
     container_class: nil,
@@ -45,7 +49,7 @@ defmodule LiveSelect.Component do
       option: ~S(rounded px-4 py-1),
       selected_option: ~S(text-gray-400),
       text_input:
-        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
+        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
       text_input_selected: ~S(border-gray-600 text-gray-600),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
@@ -57,7 +61,7 @@ defmodule LiveSelect.Component do
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
       selected_option: ~S(disabled),
-      text_input: ~S(input input-bordered w-full),
+      text_input: ~S(input input-bordered w-full pr-6),
       text_input_selected: ~S(input-primary),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
       tag: ~S(p-1.5 text-sm badge badge-primary)
@@ -74,7 +78,8 @@ defmodule LiveSelect.Component do
       |> assign(
         active_option: -1,
         hide_dropdown: true,
-        awaiting_update: true
+        awaiting_update: true,
+        saved_selection: nil
       )
 
     {:ok, socket}
@@ -140,54 +145,50 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("click", _params, socket) do
+  def handle_event("blur", _params, socket) do
     socket =
-      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) &&
-           !socket.assigns.disabled do
-        reset(socket)
-      else
-        socket
-      end
-      |> assign(hide_dropdown: false)
+      maybe_restore_selection(socket)
+      |> assign(:hide_dropdown, true)
+      |> client_select(%{})
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("blur", _params, socket) do
-    {:noreply, assign(socket, :hide_dropdown, true)}
-  end
-
-  @impl true
   def handle_event("focus", _params, socket) do
+    socket =
+      socket
+      |> maybe_save_selection()
+      |> then(
+        &if &1.assigns.mode == :single,
+          do: clear(&1, %{input_event: false, focus: true}),
+          else: &1
+      )
+
     {:noreply, assign(socket, :hide_dropdown, false)}
   end
 
   @impl true
   def handle_event("keyup", %{"value" => text, "key" => key}, socket)
       when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"] do
+    text = String.trim(text)
+
     socket =
-      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
-        socket
+      if String.length(text) >=
+           socket.assigns.update_min_len do
+        send(
+          self(),
+          %ChangeMsg{
+            module: __MODULE__,
+            id: socket.assigns.id,
+            text: text,
+            field: socket.assigns.field
+          }
+        )
+
+        assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
       else
-        text = String.trim(text)
-
-        if String.length(text) >=
-             socket.assigns.update_min_len do
-          send(
-            self(),
-            %ChangeMsg{
-              module: __MODULE__,
-              id: socket.assigns.id,
-              text: text,
-              field: socket.assigns.field
-            }
-          )
-
-          assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
-        else
-          assign(socket, options: [], current_text: nil)
-        end
+        assign(socket, options: [], current_text: nil)
       end
 
     {:noreply, socket}
@@ -214,19 +215,18 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
-    socket =
-      if socket.assigns.mode == :single && Enum.any?(socket.assigns.selection) do
-        reset(socket)
-      else
-        maybe_select(socket)
-      end
-
-    {:noreply, socket}
+    {:noreply, maybe_select(socket)}
   end
 
   @impl true
   def handle_event("keydown", %{"key" => "Escape"}, socket) do
-    {:noreply, assign(socket, :hide_dropdown, true)}
+    socket =
+      socket
+      |> maybe_restore_selection
+      |> assign(:hide_dropdown, true)
+      |> client_select(%{blur: true})
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -238,6 +238,11 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("option_remove", %{"idx" => idx}, socket) do
     {:noreply, unselect(socket, String.to_integer(idx))}
+  end
+
+  @impl true
+  def handle_event("clear", _params, socket) do
+    {:noreply, clear(socket, %{input_event: true, focus: false})}
   end
 
   @impl true
@@ -340,14 +345,11 @@ defmodule LiveSelect.Component do
       selection: selection,
       hide_dropdown: true
     )
-    |> push_event("select", %{
-      id: socket.assigns.id,
-      mode: socket.assigns.mode,
-      selection: selection
-    })
+    |> client_select(%{input_event: true})
   end
 
-  defp clear_selection(%{assigns: %{mode: :single}} = socket), do: reset(socket, false)
+  defp clear_selection(%{assigns: %{mode: :single}} = socket),
+    do: clear(socket, %{input_event: true})
 
   defp clear_selection(socket), do: unselect(socket, :all)
 
@@ -359,17 +361,41 @@ defmodule LiveSelect.Component do
         update(socket, :selection, &List.delete_at(&1, pos))
       end
 
-    push_event(socket, "select", %{
-      id: socket.assigns.id,
-      mode: socket.assigns.mode,
-      selection: socket.assigns.selection
-    })
+    client_select(socket, %{input_event: true})
   end
 
-  defp reset(socket, focus \\ true) do
+  def maybe_save_selection(socket) do
+    socket
+    |> update(:saved_selection, fn
+      _, %{selection: selection, mode: :single} when selection != [] -> selection
+      saved_selection, _ -> saved_selection
+    end)
+  end
+
+  defp maybe_restore_selection(socket) do
+    update(socket, :selection, fn
+      _, %{saved_selection: saved_selection, mode: :single} when saved_selection != nil ->
+        saved_selection
+
+      selection, _ ->
+        selection
+    end)
+    |> assign(:saved_selection, nil)
+  end
+
+  defp clear(socket, params) do
     socket
     |> assign(selection: [])
-    |> push_event("reset", %{id: socket.assigns.id, focus: focus})
+    |> client_select(params)
+  end
+
+  defp client_select(socket, extra_params) do
+    socket
+    |> push_event(
+      "select",
+      %{id: socket.assigns.id, mode: socket.assigns.mode, selection: socket.assigns.selection}
+      |> Map.merge(extra_params)
+    )
   end
 
   defp initial_selection(value, options, :single) do

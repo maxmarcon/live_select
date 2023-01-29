@@ -3,8 +3,6 @@ defmodule LiveSelect.TestHelpers do
 
   use LiveSelectWeb.ConnCase, async: true
 
-  import LiveSelect
-
   @default_style :tailwind
   def default_style(), do: @default_style
 
@@ -17,7 +15,7 @@ defmodule LiveSelect.TestHelpers do
       selected_option: ~S(disabled),
       tag: ~S(p-1.5 text-sm badge badge-primary),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
-      text_input: ~S(input input-bordered w-full),
+      text_input: ~S(input input-bordered w-full pr-6),
       text_input_selected: ~S(input-primary)
     ],
     tailwind: [
@@ -30,7 +28,7 @@ defmodule LiveSelect.TestHelpers do
       tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex),
       tags_container: ~S(flex flex-wrap gap-1 p-1),
       text_input:
-        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400),
+        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
       text_input_selected: ~S(border-gray-600 text-gray-600)
     ]
   ]
@@ -108,9 +106,9 @@ defmodule LiveSelect.TestHelpers do
   def stub_options(options, opts \\ []) do
     Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->
       unless opts[:delay_forever] do
-        update_options(
-          change_msg,
-          options
+        send(
+          self(),
+          {:update_live_select, change_msg, options}
         )
       end
     end)
@@ -174,33 +172,36 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_selected(live, label, value \\ nil) do
-    value = if value, do: value, else: label
-
-    hidden_input =
-      live
-      |> element(@selectors[:hidden_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert hidden_input
-           |> Floki.attribute("value") ==
-             [to_string(value)]
-
-    text_input =
-      live
-      |> element(@selectors[:text_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert text_input
-           |> Floki.attribute("readonly") ==
-             ["readonly"]
+    {label, value} = assert_selected_static(live, label, value)
 
     assert_push_event(live, "select", %{
       id: "live_select",
-      selection: [%{label: ^label, value: ^value}]
+      selection: [%{label: ^label, value: ^value}],
+      input_event: true,
+      mode: :single
     })
   end
+
+  def assert_selected_static(html, label, value \\ nil)
+
+  def assert_selected_static(html, label, value) when is_binary(html) do
+    value = if value, do: value, else: label
+
+    assert Floki.attribute(html, @selectors[:hidden_input], "value") == [encode_value(value)]
+
+    text_input = Floki.find(html, @selectors[:text_input])
+
+    assert Floki.attribute(text_input, "readonly") ==
+             ["readonly"]
+
+    assert Floki.attribute(text_input, "value") ==
+             [to_string(label)]
+
+    {label, value}
+  end
+
+  def assert_selected_static(live, label, value),
+    do: assert_selected_static(render(live), label, value)
 
   def refute_selected(live) do
     hidden_input =
@@ -222,20 +223,6 @@ defmodule LiveSelect.TestHelpers do
     assert text_input
            |> Floki.attribute("readonly") ==
              []
-  end
-
-  def assert_selected_static(html, label, value \\ nil) do
-    value = if value, do: value, else: label
-
-    assert Floki.attribute(html, @selectors[:hidden_input], "value") == [encode_value(value)]
-
-    text_input = Floki.find(html, @selectors[:text_input])
-
-    assert Floki.attribute(text_input, "readonly") ==
-             ["readonly"]
-
-    assert Floki.attribute(text_input, "value") ==
-             [label]
   end
 
   def normalize_selection(selection) do
@@ -323,7 +310,7 @@ defmodule LiveSelect.TestHelpers do
     end
   end
 
-  def assert_reset(live, default_value \\ nil) do
+  def assert_clear(live, input_event \\ true) do
     assert live
            |> element(@selectors[:text_input])
            |> render()
@@ -335,10 +322,12 @@ defmodule LiveSelect.TestHelpers do
            |> element(@selectors[:hidden_input])
            |> render()
            |> Floki.parse_fragment!()
-           |> Floki.attribute("value") == List.wrap(default_value)
+           |> Floki.attribute("value") == []
 
-    assert_push_event(live, "reset", %{
-      id: "live_select"
+    assert_push_event(live, "select", %{
+      id: "live_select",
+      selection: [],
+      input_event: ^input_event
     })
   end
 

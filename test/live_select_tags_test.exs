@@ -302,8 +302,7 @@ defmodule LiveSelectTagsTest do
 
     assert_selected_multiple(live, ~w(A B))
 
-    element(live, "button[phx-click=clear-selection]")
-    |> render_click()
+    render_click(live, "clear-selection", %{})
 
     assert_selected_multiple(live, [])
   end

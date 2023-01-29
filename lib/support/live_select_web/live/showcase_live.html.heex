@@ -83,6 +83,10 @@
               <span class="label-text mr-1">User-defined options:</span>
               <%= checkbox(f, :user_defined_options, class: "toggle") %>
             </label>
+            <label class="label cursor-pointer">
+              <span class="label-text mr-1">Allow clear:</span>
+              <%= checkbox(f, :allow_clear, class: "toggle") %>
+            </label>
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
               <%= checkbox(f, :disabled, class: "toggle") %>
@@ -262,13 +266,6 @@
                 class: "btn btn-primary btn-sm text-xs md:text-md",
                 disabled: !@changeset.valid?
               ) %>
-              <button
-                class="btn btn-secondary btn-sm text-xs md:text-md"
-                type="button"
-                phx-click="clear-selection"
-              >
-                Clear
-              </button>
             </div>
             <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
               !! This should not move when the dropdown opens !!

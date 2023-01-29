@@ -17,10 +17,12 @@ export default {
                 }
             }
         },
-        setInputValue(value, setFocus) {
+        setInputValue(value, {focus, blur}) {
             this.textInput().value = value
-            if (setFocus) {
+            if (focus) {
                 this.textInput().focus()
+            } else if (blur) {
+                this.textInput().blur()
             }
         },
         inputEvent(selection, mode) {
@@ -28,20 +30,16 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.handleEvent("reset", ({id, focus: focus = true}) => {
-                if (this.el.id === id) {
-                    this.setInputValue(null, focus)
-                    this.inputEvent([], "single")
-                }
-            })
-            this.handleEvent("select", ({id, selection, mode}) => {
+            this.handleEvent("select", ({id, selection, mode, focus, blur, input_event}) => {
+                console.log({id, selection, mode, focus, blur, input_event})
                 if (this.el.id === id) {
                     if (mode === "single") {
-                        const [{label}] = selection
-                        this.setInputValue(label)
-                        this.inputEvent(selection, mode)
+                        const label = selection.length > 0 ? selection[0].label : null
+                        this.setInputValue(label, {focus, blur})
                     } else {
-                        this.setInputValue(null)
+                        this.setInputValue(null, {focus, blur})
+                    }
+                    if (input_event) {
                         this.inputEvent(selection, mode)
                     }
                 }
