@@ -282,8 +282,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         %{"settings" => params},
         socket
       ) do
-    params = Map.reject(params, fn {_, value} -> value == "" end)
-
+    # we can't filter out empty params here otherwise we won't be able to reset options to the default values
     socket =
       socket
       |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
