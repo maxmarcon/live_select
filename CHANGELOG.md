@@ -1,9 +1,14 @@
-# Changelog
+## 0.4.0 (2023-01-30)
 
-* add available_option_class to style options that have not been selected yet
-* add `user_defined_options` setting to allow user to enter any tag
-* enable custom id for component
-* enable clearing the selection programmatically via `clear` assign
+* add `available_option_class` configuration option to style options that have not been selected yet
+* add `user_defined_options` configuration option to allow user to enter any tag
+* enable assigning a custom id to the component
+* enable programmatically clearing of the selection via `clear` assign
+* add `allow_clear` configuration option. If set, an `x` button will appear next to the text input in single mode. Clicking the button clears the selection
+
+### Deprecations
+
+`LiveSelect.update_options/2` has been deprecated in favor of directly using `Phoenix.LiveView.send_update/3` 
 
 ## 0.3.3 (2023-01-15)
 

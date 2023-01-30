@@ -4,7 +4,7 @@ defmodule LiveSelect.MixProject do
   def project do
     [
       app: app(),
-      version: "0.3.3",
+      version: "0.4.0",
       elixir: "~> 1.13",
       description: "Dynamic selection field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -87,8 +87,7 @@ defmodule LiveSelect.MixProject do
       links: %{
         "GitHub" => "https://github.com/maxmarcon/live_select"
       },
-      files:
-        ~w(mix.exs lib/live_select/*.*ex lib/live_select.ex package.json priv/static/live_select.min.js)
+      files: ~w(mix.exs lib/live_select** package.json priv/static/live_select.min.js)
     ]
   end
 
