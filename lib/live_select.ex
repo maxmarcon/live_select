@@ -16,7 +16,8 @@ defmodule LiveSelect do
   Whenever an option is selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
   below for details on how to handle the event.
 
-  After an option has been selected, the selection can be undone by clicking on the text field. In tags mode, single tags can be removed by clicking on them.
+  In single mode, if the configuration option `allow_clear` is set, the user can manually clear the selection by clicking on the `x` button on the input field.
+  In tags mode, single tags can be removed by clicking on them.
 
   ## Single mode  
 
