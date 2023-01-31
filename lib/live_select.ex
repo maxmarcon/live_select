@@ -248,7 +248,17 @@ defmodule LiveSelect do
   Updates a `LiveSelect` component with new options. `change_msg` must be the `t:LiveSelect.ChangeMsg.t/0` originally sent by the LiveSelect,
   and `options` is the new list of options that will be used to fill the dropdown.
   """
-  @deprecated "Use LiveView.send_update/3 directly to update the options"
+  @deprecated ~S"""
+  Use LiveView.send_update/3 directly to update the options.
+
+  Replace this:
+
+  update_options(change_msg, options)
+
+  with this:
+
+  send_update(LiveSelect.Component, id: change_msg.id, options: options)
+  """
   def update_options(%ChangeMsg{} = change_msg, options) do
     Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
   end
