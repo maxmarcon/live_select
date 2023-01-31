@@ -208,7 +208,7 @@ defmodule LiveSelect do
     
   **Opts:**
 
-  * `id` - an id to assign to the component. If none is provided, '#{form_name}_#{field_name}_component" will be used
+  * `id` - an id to assign to the component. If none is provided, `#{form_name}_#{field_name}_component` will be used
   * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
   * `options` - initial available options to select from. See the "Options" section for details on what you can pass here
   * `value` - used to manually set an initial selection - overrides any values from the form. 
