@@ -123,9 +123,9 @@
               class: "input input-sm input-bordered",
               spellcheck: "false"
             ) %>
-            <%= label(f, :update_min_len, default_value_descr(:update_min_len),
-              class: "label label-text"
-            ) %>
+            <label class="label label-text-alt">
+              Min text length to trigger update<br /><%= default_value_descr(:update_min_len) %>
+            </label>
             <%= error_tag(f, :update_min_len) %>
           </div>
           <div class="form-control max-w-sm">
@@ -135,7 +135,9 @@
               class: "input input-sm input-bordered",
               spellcheck: "false"
             ) %>
-            <%= label(f, :debounce, default_value_descr(:debounce), class: "label label-text") %>
+            <label class="label label-text-alt">
+              delay in ms before update<br /><%= default_value_descr(:debounce) %>
+            </label>
             <%= error_tag(f, :debounce) %>
           </div>
           <div class="form-control max-w-sm">
@@ -156,7 +158,13 @@
           >
             <%= checkbox(f, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
             <div class="collapse-title text-sm font-medium">
-              Styling options
+              <%= if @show_styles, do: "Hide styling options", else: "Show styling options" %> &nbsp;
+              <label
+                :if={!@show_styles && Settings.has_style_options?(@changeset)}
+                class="text-warning"
+              >
+                Some styling options are set
+              </label>
             </div>
             <div class="collapse-content">
               <p class="whitespace-normal font-light text-sm">
@@ -193,14 +201,17 @@
               <%= for class <- @class_options do %>
                 <%= if valid_class(@changeset, class) do %>
                   <div class={"form-control w-full #{unless String.contains?(to_string(class), @style_filter), do: "hidden"}"}>
-                    <%= label(f, class, "#{class}:", class: "label label-text font-semibold") %>
+                    <%= label(f, class, "#{class}:",
+                      class:
+                        "label label-text font-semibold #{if Ecto.Changeset.get_field(@changeset, class), do: "text-info"}"
+                    ) %>
                     <%= text_input(f, class,
                       class: "input input-sm input-bordered",
                       spellcheck: "false"
                     ) %>
                     <%= if default_class(Ecto.Changeset.get_field(@changeset, :style), class) do %>
-                      <label class="label label-text">
-                        default from style: &ldquo;<%= default_class(
+                      <label class="label label-text italic">
+                        default from <%= Ecto.Changeset.get_field(@changeset, :style) %> style: &ldquo;<%= default_class(
                           Ecto.Changeset.get_field(@changeset, :style),
                           class
                         ) %>&rdquo;

@@ -108,6 +108,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> Enum.any?()
     end
 
+    def has_style_options?(changeset) do
+      Enum.any?(@class_options, &Ecto.Changeset.get_field(changeset, &1))
+    end
+
     def class_options(), do: @class_options
 
     defp validate_styles(changeset) do
