@@ -10,10 +10,13 @@ export default {
                 }
                 this.pushEventTo(this.el, 'keydown', {key: event.code})
             }
-            this.el.querySelector("ul").onmousedown = (event) => {
-                if (event.target.dataset.idx) {
-                    this.textInput().blur()
-                    this.pushEventTo(this.el, 'option_click', {idx: event.target.dataset.idx})
+            const dropdown = this.el.querySelector("ul")
+            if (dropdown) {
+                dropdown.onmousedown = (event) => {
+                    if (event.target.dataset.idx) {
+                        this.textInput().blur()
+                        this.pushEventTo(this.el, 'option_click', {idx: event.target.dataset.idx})
+                    }
                 }
             }
         },
