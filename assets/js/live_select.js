@@ -3,6 +3,14 @@ export default {
         textInput() {
             return this.el.querySelector("input[type=text]")
         },
+        turnHiddenInputIntoTextInput() {
+            // TODO: we can leave this an ordinary hidden input when this fix is released: 
+            // https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1
+            // (released in LV 0.18.4)
+            const hidden_input = this.el.querySelector('input[name=hidden-input]')
+            hidden_input.style.display = "none"
+            hidden_input.type = "text"
+        },
         attachDomEventHandlers() {
             this.textInput().onkeydown = (event) => {
                 if (event.code === "Enter") {
@@ -27,10 +35,11 @@ export default {
             }
         },
         inputEvent(selection, mode) {
-            const selector = mode === "single" ? "input.hidden" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
+            const selector = mode === "single" ? "input[name=hidden-input]" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
+            this.turnHiddenInputIntoTextInput()
             this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {
@@ -47,6 +56,7 @@ export default {
             this.attachDomEventHandlers()
         },
         updated() {
+            this.turnHiddenInputIntoTextInput()
             this.attachDomEventHandlers()
         }
     }

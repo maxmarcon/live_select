@@ -6,7 +6,7 @@ defmodule LiveSelect.Component do
   use Phoenix.LiveComponent
 
   import Phoenix.HTML.Form,
-    only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2]
+    only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2, hidden_input: 3]
 
   import LiveSelect.ClassUtil
 

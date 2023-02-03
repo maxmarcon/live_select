@@ -48,11 +48,9 @@
     <% end %>
   </div>
   <%= if @mode == :single do %>
-    <!-- TODO: this can become a hidden input when this fix is released: https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1 -->
-    <%= text_input(@form, @field,
+    <%= hidden_input(@form, @field,
       disabled: @disabled,
-      style: "display: none;",
-      class: "hidden",
+      name: "hidden-input",
       value: value(@selection)
     ) %>
   <% else %>
