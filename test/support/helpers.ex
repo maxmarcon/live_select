@@ -92,16 +92,7 @@ defmodule LiveSelect.TestHelpers do
     |> render_hook("keydown", %{"key" => key})
   end
 
-  def dropdown_visible(live) do
-    invisible =
-      element(live, @selectors[:dropdown])
-      |> render()
-      |> Floki.parse_fragment!()
-      |> Floki.attribute("style")
-      |> List.first() =~ "display: none;"
-
-    !invisible
-  end
+  def dropdown_visible(live), do: has_element?(live, @selectors[:dropdown])
 
   def stub_options(options, opts \\ []) do
     Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->

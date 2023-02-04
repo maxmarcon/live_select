@@ -271,7 +271,8 @@ defmodule LiveSelect.Component do
       end
     end
 
-    valid_assigns = Keyword.keys(@default_opts) ++ [:field, :form, :id, :options, :clear]
+    valid_assigns =
+      Keyword.keys(@default_opts) ++ [:field, :form, :id, :options, :clear, :hide_dropdown]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do

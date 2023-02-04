@@ -25,7 +25,8 @@ defmodule LiveSelect.ComponentTest do
         id: "live_select",
         form: :form,
         field: :input,
-        options: ["A", "B", "C"]
+        options: ["A", "B", "C"],
+        hide_dropdown: false
       )
 
     assert_options(component, ["A", "B", "C"])
@@ -445,7 +446,8 @@ defmodule LiveSelect.ComponentTest do
               field: :input,
               options: ["A", "B", "C"],
               value: ["A", "B"],
-              mode: :tags
+              mode: :tags,
+              hide_dropdown: false
             ]
             |> Keyword.put(@override_class, "foo")
             |> Keyword.put(@extend_class, "boo")
@@ -472,7 +474,13 @@ defmodule LiveSelect.ComponentTest do
           component =
             render_component(
               LiveSelect.Component,
-              [id: "live_select", form: :my_form, field: :city_search, options: ["A"]] ++
+              [
+                id: "live_select",
+                form: :my_form,
+                field: :city_search,
+                options: ["A"],
+                hide_dropdown: false
+              ] ++
                 if(@style, do: [style: @style], else: [])
             )
 
@@ -488,7 +496,13 @@ defmodule LiveSelect.ComponentTest do
             component =
               render_component(
                 LiveSelect.Component,
-                [id: "live_select", form: :my_form, field: :city_search, options: ["A"]] ++
+                [
+                  id: "live_select",
+                  form: :my_form,
+                  field: :city_search,
+                  options: ["A"],
+                  hide_dropdown: false
+                ] ++
                   if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
               )
 
@@ -505,7 +519,13 @@ defmodule LiveSelect.ComponentTest do
             component =
               render_component(
                 LiveSelect.Component,
-                [id: "live_select", form: :my_form, field: :city_search, options: ["A"]] ++
+                [
+                  id: "live_select",
+                  form: :my_form,
+                  field: :city_search,
+                  options: ["A"],
+                  hide_dropdown: false
+                ] ++
                   if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
               )
 
@@ -536,7 +556,8 @@ defmodule LiveSelect.ComponentTest do
                     id: "live_select",
                     form: :my_form,
                     field: :city_search,
-                    options: ["A"]
+                    options: ["A"],
+                    hide_dropdown: false
                   ] ++
                     if(@style, do: [style: @style], else: []) ++ [{option, "!#{class_to_remove}"}]
                 )

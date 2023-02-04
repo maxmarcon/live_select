@@ -11,6 +11,16 @@ export default {
             hidden_input.style.display = "none"
             hidden_input.type = "text"
         },
+        maybeStyleClearButton() {
+            const clear_button = this.el.querySelector('button[phx-click=clear]')
+            if (clear_button) {
+                this.textInput().style.position = 'relative'
+                clear_button.style.position = 'absolute'
+                clear_button.style.top = '0px'
+                clear_button.style.bottom = '0px'
+                clear_button.style.right = '5px'
+            }
+        },
         attachDomEventHandlers() {
             this.textInput().onkeydown = (event) => {
                 if (event.code === "Enter") {
@@ -39,6 +49,7 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
+            this.maybeStyleClearButton();
             this.turnHiddenInputIntoTextInput()
             this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
@@ -56,6 +67,7 @@ export default {
             this.attachDomEventHandlers()
         },
         updated() {
+            this.maybeStyleClearButton();
             this.turnHiddenInputIntoTextInput()
             this.attachDomEventHandlers()
         }

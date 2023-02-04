@@ -20,7 +20,7 @@
       <% end %>
     </div>
   <% end %>
-  <div style={if @allow_clear, do: "position: relative;"}>
+  <div>
     <%= text_input(@form, @text_input_field,
       class:
         "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
@@ -37,12 +37,7 @@
       value: label(@mode, @selection)
     ) %>
     <%= if @mode == :single && @allow_clear && Enum.any?(@selection) do %>
-      <button
-        type="button"
-        style="position: absolute; top: 0px; bottom: 0px; right: 5px;"
-        phx-click="clear"
-        phx-target={@myself}
-      >
+      <button type="button" phx-click="clear" phx-target={@myself}>
         <.x class="cursor-pointer" />
       </button>
     <% end %>
