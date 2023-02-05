@@ -45,7 +45,7 @@
   <%= if @mode == :single do %>
     <%= hidden_input(@form, @field,
       disabled: @disabled,
-      name: "hidden-input",
+      class: "single-mode",
       value: value(@selection)
     ) %>
   <% else %>

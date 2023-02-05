@@ -7,9 +7,11 @@ export default {
             // TODO: we can leave this an ordinary hidden input when this fix is released: 
             // https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1
             // (released in LV 0.18.4)
-            const hidden_input = this.el.querySelector('input[name=hidden-input]')
-            hidden_input.style.display = "none"
-            hidden_input.type = "text"
+            const hidden_input = this.el.querySelector('input[type=hidden][class=single-mode]')
+            if (hidden_input) {
+                hidden_input.style.display = "none"
+                hidden_input.type = "text"
+            }
         },
         maybeStyleClearButton() {
             const clear_button = this.el.querySelector('button[phx-click=clear]')
@@ -45,7 +47,7 @@ export default {
             }
         },
         inputEvent(selection, mode) {
-            const selector = mode === "single" ? "input[name=hidden-input]" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
+            const selector = mode === "single" ? "input[class=single-mode]" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
