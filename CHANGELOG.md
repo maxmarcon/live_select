@@ -1,3 +1,7 @@
+## 0.4.1 (2023-02-07)
+
+Bugfix: component now works event when strict Content Security Policy are set
+
 ## 0.4.0 (2023-01-30)
 
 * add `available_option_class` configuration option to style options that have not been selected yet
