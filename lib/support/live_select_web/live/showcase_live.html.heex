@@ -50,22 +50,6 @@
       <.form :let={f} for={@changeset} phx-change="update-settings">
         <div class="flex flex-wrap p-5 gap-2">
           <div class="form-control max-w-sm">
-            <%= label(f, :form_name, "Form name:", class: "label label-text font-semibold") %>
-            <%= text_input(f, :form_name,
-              class: "input input-sm input-bordered",
-              spellcheck: "false"
-            ) %>
-            <%= error_tag(f, :form_name) %>
-          </div>
-          <div class="form-control max-w-sm">
-            <%= label(f, :field_name, "Field name:", class: "label label-text font-semibold") %>
-            <%= text_input(f, :field_name,
-              class: "input input-sm input-bordered",
-              spellcheck: "false"
-            ) %>
-            <%= error_tag(f, :field_name) %>
-          </div>
-          <div class="form-control max-w-sm">
             <%= label(f, :mode, "Mode:", class: "label label-text font-semibold") %>
             <%= select(f, :mode, [:single, :tags],
               class: "select select-sm select-bordered text-xs"
@@ -256,21 +240,13 @@
         <.form
           :let={f}
           for={@form_changeset}
-          as={@changeset.data.form_name}
+          as={@form_name}
           phx-change="change"
           phx-submit="submit"
         >
           <div class="grid grid-cols-4 gap-1">
             <div class="col-span-3 form-control">
-              <%= live_select(
-                f,
-                @changeset.data.field_name,
-                Settings.live_select_opts(@changeset.data)
-                |> Keyword.update(:disabled, !@changeset.valid?, fn
-                  true -> true
-                  _ -> !@changeset.valid?
-                end)
-              ) %>
+              <.live_select form={f} field={@field_name} {live_select_assigns(@changeset)} />
             </div>
             <div class="flex flex-col gap-y-1">
               <%= submit("Submit",
@@ -311,8 +287,8 @@
           </button>
         </div>
         <Render.live_select
-          form_name={@changeset.data.form_name}
-          field_name={@changeset.data.field_name}
+          form_name={@form_name}
+          field_name={@field_name}
           opts={Settings.live_select_opts(@changeset.data, true)}
         />
       </div>

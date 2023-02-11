@@ -44,7 +44,7 @@ defmodule LiveSelect.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix_live_view, "~> 0.17"},
+      {:phoenix_live_view, "~> 0.18.4"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix, "~> 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

@@ -1,9 +1,6 @@
 defmodule LiveSelect do
   alias LiveSelect.ChangeMsg
-  import Phoenix.Component
-  # for backward compatibility with LiveView 0.17
-  # generates compile warning if run with LiveView 0.18
-  import Phoenix.LiveView.Helpers
+  use Phoenix.Component
 
   @moduledoc ~S"""
   The `LiveSelect` component is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
@@ -201,43 +198,84 @@ defmodule LiveSelect do
   """
 
   @doc ~S"""
-  Renders a `LiveSelect` input in a `form` with a given `field` name.
-
-  LiveSelect renders two inputs: a hidden input (of type either text or select, depending on the specified mode) named `field` that holds the value of the selected option(s), 
-  and a visible text input field named `#{field}_text_input` that contains the text entered by the user.
-    
-  **Opts:**
-
-  * `id` - an id to assign to the component. If none is provided, `#{form_name}_#{field_name}_component` will be used
-  * `mode` - either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)  
-  * `options` - initial available options to select from. See the "Options" section for details on what you can pass here
-  * `value` - used to manually set an initial selection - overrides any values from the form. 
-  Must be a single element in `:single` mode, or a list of elements in `:tags` mode. 
-  If an element can be found in the initial options, the corresponding label will be used. Otherwise, the element will be used for both value and label
-  * `max_selectable` - limits the maximum number of selectable elements. Defaults to `0`, meaning no limit
-  * `user_defined_options` - if `true`, hitting enter will always add the text entered by the user to the selection. Defaults to `false` 
-  * `allow_clear` - if `true`, when in single mode, display a "x" button in the input field to clear the selection
-  * `disabled` - set this to `true` to disable the input field
-  * `placeholder` - placeholder text for the input field  
-  * `debounce` - number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms
-  * `update_min_len` - the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3
-  * `style` - one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details
-  * `active_option_class`, `available_option_class`, `container_class`, `container_extra_class`, `dropdown_class`, `dropdown_extra_class`, `option_class`, `option_extra_class`, `text_input_class`, `text_input_extra_class`, `text_input_selected_class`,`selected_option_class`, `tag_class`, `tag_extra_class`, `tags_container_class`, `tags_container_extra_class` - see the [Styling section](styling.html) for details
-    
+  Renders a `LiveSelect` input in a form.
   """
-  def live_select(form, field, opts \\ [])
-      when (is_binary(field) or is_atom(field)) and is_list(opts) do
-    form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
+  @doc type: :component
 
+  attr :form, :any, required: true, doc: "the form"
+
+  attr :field, :atom, required: true, doc: "the form field"
+
+  attr :id, :string,
+    doc:
+      ~S(an id to assign to the component. If none is provided, `#{form_name}_#{field}_component` will be used)
+
+  attr :mode, :atom,
+    values: [:single, :tags],
+    default: :single,
+    doc:
+      "either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)"
+
+  attr :options, :list,
+    doc:
+      ~s(initial available options to select from. See the "Options" section for details on what you can pass here)
+
+  attr :value, :any,
+    doc: "used to manually set an initial selection - overrides any values from the form. 
+  Must be a single element in `:single` mode, or a list of elements in `:tags` mode."
+
+  attr :max_selectable, :integer,
+    default: 0,
+    doc: "limits the maximum number of selectable elements. Defaults to `0`, meaning no limit"
+
+  attr :user_defined_options, :boolean,
+    doc:
+      "if `true`, hitting enter will always add the text entered by the user to the selection. Defaults to `false`"
+
+  attr :allow_clear, :boolean,
+    doc:
+      ~s(if `true`, when in single mode, display a "x" button in the input field to clear the selection)
+
+  attr :disabled, :boolean, doc: "set this to `true` to disable the input field"
+
+  attr :placeholder, :string, doc: "placeholder text for the input field"
+
+  attr :debounce, :integer,
+    default: 100,
+    doc:
+      "number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms"
+
+  attr :update_min_len, :integer,
+    default: 3,
+    doc:
+      "the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3"
+
+  attr :style, :atom,
+    values: [:tailwind, :daisyui, :none],
+    default: :tailwind,
+    doc:
+      "one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
+
+  @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
+
+  for attr_name <- @styling_options do
+    Phoenix.Component.Declarative.__attr__!(
+      __MODULE__,
+      attr_name,
+      :string,
+      [doc: "styling"],
+      __ENV__.line,
+      __ENV__.file
+    )
+  end
+
+  def live_select(assigns) do
     assigns =
-      opts
-      |> Map.new()
-      |> Map.put(:id, opts[:id] || "#{form_name}_#{field}_component")
-      |> Map.put(:module, LiveSelect.Component)
-      # Ecto forms expect atom fields:
-      # https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/html.ex#L123
-      |> Map.put(:field, String.to_atom("#{field}"))
-      |> Map.put(:form, form)
+      assigns
+      |> assign_new(:id, fn ->
+        "#{assigns[:form]}_#{assigns[:field]}"
+      end)
+      |> assign(:module, LiveSelect.Component)
 
     ~H"""
     <.live_component {assigns} />

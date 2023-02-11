@@ -34,8 +34,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:allow_clear, :boolean)
       field(:debounce, :integer, default: 100)
       field(:disabled, :boolean)
-      field(:field_name, :string, default: "city_search")
-      field(:form_name, :string, default: "my_form")
       field(:max_selectable, :integer, default: 0)
       field(:user_defined_options, :boolean)
       field(:mode, Ecto.Enum, values: [:single, :tags], default: :single)
@@ -61,8 +59,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :allow_clear,
           :debounce,
           :disabled,
-          :field_name,
-          :form_name,
           :max_selectable,
           :user_defined_options,
           :mode,
@@ -74,7 +70,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :update_min_len
         ] ++ @class_options
       )
-      |> validate_required([:field_name, :form_name, :search_delay])
+      |> validate_required([:search_delay])
       |> validate_number(:debounce, greater_than_or_equal_to: 0)
       |> validate_number(:search_delay, greater_than_or_equal_to: 0)
       |> validate_number(:update_min_len, greater_than: 0)
@@ -87,7 +83,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       default_opts = LiveSelect.Component.default_opts() ++ [id: nil]
 
       settings
-      |> Map.drop([:search_delay, :form_name, :field_name, :new, :selection])
+      |> Map.drop([:search_delay, :new, :selection])
       |> Map.from_struct()
       |> then(
         &if is_nil(&1.style) do
@@ -201,14 +197,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
       ~H"""
       <div>
-        <span class="text-success">live_select</span>(<span class="font-bold"><%= @form_name %></span>, <span class="font-bold"><%= @field_name %></span>,
+        <span class="text-success">&lt;.live_select</span>
+        <br />&nbsp;&nbsp; <span class="text-success">form</span>=<span class="text-info">{<%= @form_name %>}</span>
+        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{:<%= @field_name %>}</span>
         <%= for {{key, value}, idx} <- Enum.with_index(@opts), !is_nil(value) do %>
-          <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>:
-          <span class="text-info">
-            <%= inspect(value) <> if idx < length(@opts) - 1, do: ",", else: "" %>
-          </span>
+          <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= inspect(value) %></span>
         <% end %>
-        <br />)
+        <br /><span class="text-success">/&gt;</span>
       </div>
       """
     end
@@ -218,6 +213,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
+        form_name: :my_form,
+        field_name: :city_search,
         events: [],
         next_event_id: 0,
         locations: nil,
@@ -261,7 +258,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket =
           socket
-          |> assign(:form_changeset, make_form_changeset(settings))
+          |> assign(
+            :form_changeset,
+            make_form_changeset(socket.assigns.form_name, socket.assigns.field_name, settings)
+          )
           |> assign(:changeset, Ecto.Changeset.change(settings))
 
         {:noreply, socket}
@@ -328,8 +328,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       case event do
         "submit" ->
-          form_name = socket.assigns.changeset.data.form_name
-          field_name = socket.assigns.changeset.data.field_name
+          form_name = socket.assigns.form_name |> to_string
+          field_name = socket.assigns.field_name |> to_string
           mode = socket.assigns.changeset.data.mode
 
           selected = get_in(params, [form_name, field_name])
@@ -397,6 +397,14 @@ defmodule LiveSelectWeb.ShowcaseLive do
     {:noreply, socket}
   end
 
+  defp live_select_assigns(changeset) do
+    Settings.live_select_opts(changeset.data)
+    |> Keyword.update(:disabled, !changeset.valid?, fn
+      true -> true
+      _ -> !changeset.valid?
+    end)
+  end
+
   defp default_value_descr(field) do
     if default = LiveSelect.Component.default_opts()[field] do
       "default: #{default}"
@@ -407,14 +415,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   defp default_class(style, class), do: LiveSelect.Component.default_class(style, class)
 
-  defp make_form_changeset(settings) do
+  defp make_form_changeset(form_name, field_name, settings) do
     {Map.new([
-       {String.to_atom(settings.field_name),
+       {field_name,
         if(settings.mode == :single, do: List.first(settings.selection), else: settings.selection)}
      ]),
      Map.new([
-       {String.to_atom(settings.field_name),
-        if(settings.mode == :single, do: :string, else: {:array, :string})}
+       {field_name, if(settings.mode == :single, do: :string, else: {:array, :string})}
      ])}
     |> Ecto.Changeset.change(%{})
   end

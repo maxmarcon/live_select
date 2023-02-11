@@ -2,12 +2,15 @@ defmodule LiveSelect.ComponentTest do
   @moduledoc false
 
   use LiveSelectWeb.ConnCase, async: true
-  alias LiveSelect.Component
   import LiveSelect.TestHelpers
 
   test "can be rendered" do
     component =
-      render_component(Component, id: "live_select", form: :my_form, field: :live_select)
+      render_component(&LiveSelect.live_select/1,
+        id: "live_select",
+        form: :my_form,
+        field: :live_select
+      )
       |> Floki.parse_document!()
 
     assert component
@@ -314,7 +317,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "raises if invalid assign is passed" do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
-      render_component(Component,
+      render_component(&LiveSelect.live_select/1,
         id: "live_select",
         form: :my_form,
         field: :live_select,
@@ -328,7 +331,7 @@ defmodule LiveSelect.ComponentTest do
       RuntimeError,
       ~r/when using `style: :none`, please use only `container_class`/i,
       fn ->
-        render_component(Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: :my_form,
           field: :live_select,

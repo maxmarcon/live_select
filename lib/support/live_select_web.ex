@@ -44,7 +44,7 @@ defmodule LiveSelectWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {LiveSelectWeb.LayoutView, "live.html"}
+        layout: {LiveSelectWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
