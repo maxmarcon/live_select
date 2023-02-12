@@ -3,16 +3,6 @@ export default {
         textInput() {
             return this.el.querySelector("input[type=text]")
         },
-        turnHiddenInputIntoTextInput() {
-            // TODO: we can leave this an ordinary hidden input when this fix is released: 
-            // https://github.com/phoenixframework/phoenix_live_view/commit/2d6495a4fd4e3cc9b67ee631102e65b1bc7912f1
-            // (released in LV 0.18.4)
-            const hidden_input = this.el.querySelector('input[type=hidden][class=single-mode]')
-            if (hidden_input) {
-                hidden_input.style.display = "none"
-                hidden_input.type = "text"
-            }
-        },
         maybeStyleClearButton() {
             const clear_button = this.el.querySelector('button[phx-click=clear]')
             if (clear_button) {
@@ -51,8 +41,7 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
-            this.maybeStyleClearButton();
-            this.turnHiddenInputIntoTextInput()
+            this.maybeStyleClearButton()
             this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {
@@ -69,8 +58,7 @@ export default {
             this.attachDomEventHandlers()
         },
         updated() {
-            this.maybeStyleClearButton();
-            this.turnHiddenInputIntoTextInput()
+            this.maybeStyleClearButton()
             this.attachDomEventHandlers()
         }
     }
