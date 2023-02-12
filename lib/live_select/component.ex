@@ -10,6 +10,8 @@ defmodule LiveSelect.Component do
 
   import LiveSelect.ClassUtil
 
+  @required_assigns ~w(form field)a
+
   @default_opts [
     active_option_class: nil,
     allow_clear: false,
@@ -120,6 +122,12 @@ defmodule LiveSelect.Component do
         _, %{options: _} -> false
         awaiting_update, _ -> awaiting_update
       end)
+
+    for required <- @required_assigns do
+      unless socket.assigns[required] do
+        raise ~s/Missing required assign "#{required}"/
+      end
+    end
 
     socket =
       @default_opts
@@ -272,12 +280,12 @@ defmodule LiveSelect.Component do
     end
 
     valid_assigns =
-      Keyword.keys(@default_opts) ++ [:field, :form, :id, :options, :clear, :hide_dropdown]
+      Keyword.keys(@default_opts) ++ @required_assigns ++ [:id, :options, :clear, :hide_dropdown]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do
         most_similar =
-          (valid_assigns -- [:field, :form, :id, :options])
+          valid_assigns
           |> Enum.sort_by(&String.jaro_distance(to_string(&1), to_string(assign)))
           |> List.last()
 

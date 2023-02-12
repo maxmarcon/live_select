@@ -32,14 +32,6 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#my_form_city_search_text_input")
   end
 
-  test "can be rendered with a given form name", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?form_name=special_form")
-
-    assert has_element?(live, "input#special_form_city_search")
-
-    assert has_element?(live, "input#special_form_city_search_text_input")
-  end
-
   test "sends a ChangeMsg message as reaction to user's input", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
