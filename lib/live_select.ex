@@ -98,7 +98,7 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-    <%= live_select f, :city_search %> 
+    <.live_select form={f} field={:city_search} /> 
   </.form>
   ```
 
@@ -146,7 +146,7 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-    <%= live_select f, :city_search, mode: :tags %> 
+    <.live_select form={f} field={:city_search} mode={:tags} /> 
   </.form>
   ```
 
@@ -175,8 +175,8 @@ defmodule LiveSelect do
   Template:
   ```
   <.form for={:my_form} :let={f} phx-change="change">
-    <%= live_select f, :city_search %> 
-    <%= live_select f, :album_search %>
+    <.live_select form={f} field={:city_search} />
+    <.live_select form={f} field={:album_search} />
   </.form>
   ```
 

@@ -1,5 +1,5 @@
 defmodule LiveSelect.Component do
-  @moduledoc "The module that implements the `LiveSelect` live component"
+  @moduledoc false
 
   alias LiveSelect.ChangeMsg
 
