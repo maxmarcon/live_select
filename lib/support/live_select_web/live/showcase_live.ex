@@ -193,17 +193,22 @@ defmodule LiveSelectWeb.ShowcaseLive do
         assigns[:opts]
         |> Enum.reject(fn {_key, value} -> is_nil(value) end)
 
-      assigns = assign(assigns, :opts, opts)
+      format_value = fn
+        value when is_binary(value) -> inspect(value)
+        value -> "{#{inspect(value)}}"
+      end
+
+      assigns = assign(assigns, opts: opts, format_value: format_value)
 
       ~H"""
       <div>
         <span class="text-success">&lt;.live_select</span>
         <br />&nbsp;&nbsp; <span class="text-success">form</span>=<span class="text-info">{<%= @form_name %>}</span>
         <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{:<%= @field_name %>}</span>
-        <%= for {{key, value}, idx} <- Enum.with_index(@opts), !is_nil(value) do %>
-          <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= inspect(value) %></span>
+        <%= for {key, value} <- @opts, !is_nil(value) do %>
+          <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
         <% end %>
-        <br /><span class="text-success">/&gt;</span>
+        <span class="text-success">/&gt;</span>
       </div>
       """
     end
@@ -260,7 +265,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           socket
           |> assign(
             :form_changeset,
-            make_form_changeset(socket.assigns.form_name, socket.assigns.field_name, settings)
+            make_form_changeset(socket.assigns.field_name, settings)
           )
           |> assign(:changeset, Ecto.Changeset.change(settings))
 
@@ -415,7 +420,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   defp default_class(style, class), do: LiveSelect.Component.default_class(style, class)
 
-  defp make_form_changeset(form_name, field_name, settings) do
+  defp make_form_changeset(field_name, settings) do
     {Map.new([
        {field_name,
         if(settings.mode == :single, do: List.first(settings.selection), else: settings.selection)}
