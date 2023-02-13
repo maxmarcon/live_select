@@ -26,7 +26,7 @@ Template:
 
   ```elixir
   <.form for={:my_form} :let={f} phx-change="change">
-      <%= live_select f, :city_search %> 
+      <.live_select form={f} field={:city_search} /> 
   </.form>
   ```
 
@@ -36,15 +36,15 @@ LiveView:
   import LiveSelect
 
   @impl true
-  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-    cities = City.search(change_msg.text)
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id} socket) do 
+    cities = City.search(text)
     # cities = [ 
     # {"New York City", [-74.00597,40.71427]}, 
     # {"New Kingston", [-76.78319,18.00747]}, 
     # ... 
     # ]
 
-    send_update(LiveSelect.Component, id: change_msg.id, options: cities)
+    send_update(LiveSelect.Component, id: live_select_id, options: cities)
     
     {:noreply, socket}
   end
@@ -105,7 +105,7 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 * `none`: no styling at all.
 
 The choice of style is controlled by the `style` option
-in [live_select/3](https://hexdocs.pm/live_select/LiveSelect.html#live_select/3).
+in [live_select/1](https://hexdocs.pm/live_select/LiveSelect.html#live_select/1).
 `tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
 
 If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
