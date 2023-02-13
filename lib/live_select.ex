@@ -1,5 +1,4 @@
 defmodule LiveSelect do
-  alias LiveSelect.ChangeMsg
   use Phoenix.Component
 
   @moduledoc ~S"""
@@ -62,11 +61,11 @@ defmodule LiveSelect do
 
   ## Reacting to user's input
 
-  Whenever the user types something in the text input, LiveSelect sends a `t:LiveSelect.ChangeMsg.t/0` message to your LiveView.
-  The message has a `text` property containing the current text entered by the user, as well as `id` and `field` properties with the id of the 
+  Whenever the user types something in the text input, LiveSelect sends a "live_select_change" event to your LiveView or LiveComponent.
+  The message has a `text` parameter containing the current text entered by the user, as well as `id` and `field` parameters with the id of the 
   LiveSelect component and the name of the LiveSelect form field, respectively.
-  The LiveView's job is to [`handle_info/2`](`c:Phoenix.LiveView.handle_info/2`) the message and then call `LiveView.send_update/3`
-  to update the list of selectable options. See the "Examples" section below for details.
+  Your job is to handle the event, retrieve the list of selectable options and then call `LiveView.send_update/3`
+  to send the list of options to LiveSelect. See the "Examples" section below for details.
 
   ## Multiple selection with tags mode
 
@@ -107,8 +106,8 @@ defmodule LiveSelect do
   import LiveSelect
 
   @impl true
-  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do 
-      cities = City.search(change_msg.text)
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do 
+      cities = City.search(text)
       # cities could be:
       # [ {"city name 1", [lat_1, long_1]}, {"city name 2", [lat_2, long_2]}, ... ]
       #
@@ -121,7 +120,7 @@ defmodule LiveSelect do
       # or even:
       # ["city name 1": [lat_1, long_1], "city name 2": [lat_2, long_2]]
 
-      send_update(LiveSelect.Component, id: change_msg.id, options: cities)
+      send_update(LiveSelect.Component, id: live_select_id, options: cities)
     
       {:noreply, socket}
   end
@@ -183,14 +182,14 @@ defmodule LiveSelect do
   LiveView:
   ```
   @impl true
-  def handle_info(%LiveSelect.ChangeMsg{} = change_msg, socket) do
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id, "field" => live_select_field}, socket) do
     options =
-      case change_msg.field do
-        :city_search -> City.search(change_msg.text)
-        :album_search -> Album.search(change_msg.text)
+      case live_select_field do
+        :city_search -> City.search(text)
+        :album_search -> Album.search(text)
       end
 
-    send_update(LiveSelect.Component, id: change_msg.id, options: options)
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
 
     {:noreply, socket}
   end
@@ -199,6 +198,12 @@ defmodule LiveSelect do
 
   @doc ~S"""
   Renders a `LiveSelect` input in a form.
+    
+  [INSERT LVATTRDOCS]
+
+  ## Styling attributes
+
+  * See [the styling section](styling.md) for details 
   """
   @doc type: :component
 
@@ -243,7 +248,7 @@ defmodule LiveSelect do
   attr :debounce, :integer,
     default: 100,
     doc:
-      "number of milliseconds to wait after the last keystroke before sending a `t:LiveSelect.ChangeMsg.t/0` message. Defaults to 100ms"
+      ~S(number of milliseconds to wait after the last keystroke before triggering a "live_select_change" event. Defaults to 100ms)
 
   attr :update_min_len, :integer,
     default: 3,
@@ -280,24 +285,5 @@ defmodule LiveSelect do
     ~H"""
     <.live_component {assigns} />
     """
-  end
-
-  @doc ~S"""
-  Updates a `LiveSelect` component with new options. `change_msg` must be the `t:LiveSelect.ChangeMsg.t/0` originally sent by the LiveSelect,
-  and `options` is the new list of options that will be used to fill the dropdown.
-  """
-  @deprecated ~S"""
-  Use LiveView.send_update/3 directly to update the options.
-
-  Replace this:
-
-  update_options(change_msg, options)
-
-  with this:
-
-  send_update(LiveSelect.Component, id: change_msg.id, options: options)
-  """
-  def update_options(%ChangeMsg{} = change_msg, options) do
-    Phoenix.LiveView.send_update(change_msg.module, id: change_msg.id, options: options)
   end
 end

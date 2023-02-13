@@ -1,7 +1,6 @@
-defmodule LiveSelect.ChangeMsgHandler do
+defmodule LiveSelect.ChangeEventHandler do
   @moduledoc false
 
-  alias LiveSelect.ChangeMsg
   alias LiveSelect.CityFinder
 
   defmodule Behaviour do

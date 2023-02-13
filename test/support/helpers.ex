@@ -68,6 +68,14 @@ defmodule LiveSelect.TestHelpers do
   ]
   def selectors(), do: @selectors
 
+  defmacrop refute_push_event(view, event, timeout \\ 100) do
+    quote do
+      %{proxy: {ref, _topic, _}} = unquote(view)
+
+      refute_receive {^ref, {:push_event, unquote(event), _}}, unquote(timeout)
+    end
+  end
+
   def select_nth_option(live, n, method \\ :key) do
     case method do
       :key ->
@@ -95,7 +103,7 @@ defmodule LiveSelect.TestHelpers do
   def dropdown_visible(live), do: has_element?(live, @selectors[:dropdown])
 
   def stub_options(options, opts \\ []) do
-    Mox.stub(LiveSelect.ChangeMsgHandlerMock, :handle, fn change_msg, _ ->
+    Mox.stub(LiveSelect.ChangeEventHandlerMock, :handle, fn change_msg, _ ->
       unless opts[:delay_forever] do
         send(
           self(),
@@ -119,12 +127,26 @@ defmodule LiveSelect.TestHelpers do
            |> then(&fun.(&1))
   end
 
-  def type(live, text) do
+  def type(live, text, update_min_len \\ 3) do
     0..String.length(text)
     |> Enum.each(fn pos ->
       element(live, @selectors[:text_input])
       |> render_keyup(%{"key" => String.at(text, pos), "value" => String.slice(text, 0..pos)})
     end)
+
+    text = String.trim(text)
+
+    if String.length(text) >= update_min_len do
+      assert_push_event(live, "change", %{text: ^text, id: "live_select", field: :city_search})
+
+      render_hook(live, "live_select_change", %{
+        text: text,
+        id: "live_select",
+        field: "city_search"
+      })
+    else
+      refute_push_event(live, "change")
+    end
   end
 
   def assert_options(rendered, elements) when is_binary(rendered) do

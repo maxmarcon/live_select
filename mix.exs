@@ -99,7 +99,10 @@ defmodule LiveSelect.MixProject do
         "styling.md": [],
         "CHANGELOG.md": []
       ],
-      filter_modules: ~r/LiveSelect($|\.)/
+      filter_modules: ~r/LiveSelect($|\.)/,
+      groups_for_functions: [
+        Components: &(&1[:type] == :component)
+      ]
     ]
   end
 end

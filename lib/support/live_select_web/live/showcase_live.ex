@@ -340,18 +340,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           selected = get_in(params, [form_name, field_name])
           selected_text = get_in(params, [form_name, field_name <> "_text_input"])
 
-          {cities, locations} =
-            cond do
-              mode == :single && selected != "" && selected_text != "" ->
-                {"city #{selected_text}", selected}
-
-              mode == :tags && selected ->
-                {"#{Enum.count(selected)} #{if Enum.count(selected) > 1, do: "cities", else: "city"}",
-                 Enum.join(selected, ", ")}
-
-              true ->
-                {nil, nil}
-            end
+          {cities, locations} = extract_cities_and_locations(mode, selected_text, selected)
 
           assign(socket,
             cities: cities,
@@ -360,7 +349,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           )
 
         "live_select_change" ->
-          message_handler().handle(params, delay: socket.assigns.changeset.data.search_delay)
+          change_event_handler().handle(params, delay: socket.assigns.changeset.data.search_delay)
 
           socket
 
@@ -384,7 +373,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
-    IO.inspect(id, label: "id")
     send_update(LiveSelect.Component, id: id, options: options)
 
     {:noreply, socket}
@@ -420,6 +408,20 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
   end
 
+  defp extract_cities_and_locations(mode, selected_text, selected) do
+    cond do
+      mode == :single && selected != "" && selected_text != "" ->
+        {"city #{selected_text}", selected}
+
+      mode == :tags && selected ->
+        {"#{Enum.count(selected)} #{if Enum.count(selected) > 1, do: "cities", else: "city"}",
+         Enum.join(selected, ", ")}
+
+      true ->
+        {nil, nil}
+    end
+  end
+
   defp default_class(style, class), do: LiveSelect.Component.default_class(style, class)
 
   defp make_form_changeset(field_name, settings) do
@@ -433,9 +435,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
     |> Ecto.Changeset.change(%{})
   end
 
-  defp message_handler() do
-    Application.get_env(:live_select, :message_handler) ||
-      raise "you need to specify a :message_handler in your :live_select config"
+  defp change_event_handler() do
+    Application.get_env(:live_select, :change_event_handler) ||
+      raise "you need to specify a :change_event_handler in your :live_select config"
   end
 
   defp valid_class(changeset, class) do

@@ -1,7 +1,5 @@
 defmodule LiveSelect.Component do
-  @moduledoc false
-
-  alias LiveSelect.ChangeMsg
+  @moduledoc "The module that implements the `LiveSelect` live component"
 
   use Phoenix.LiveComponent
 
@@ -364,7 +362,7 @@ defmodule LiveSelect.Component do
     client_select(socket, %{input_event: true})
   end
 
-  def maybe_save_selection(socket) do
+  defp maybe_save_selection(socket) do
     socket
     |> update(:saved_selection, fn
       _, %{selection: selection, mode: :single} when selection != [] -> selection

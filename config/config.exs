@@ -9,7 +9,7 @@ import Config
 
 config :live_select, :start_application, true
 
-config :live_select, :message_handler, LiveSelect.ChangeMsgHandler
+config :live_select, :change_event_handler, LiveSelect.ChangeEventHandler
 
 # Configures the endpoint
 config :live_select, LiveSelectWeb.Endpoint,

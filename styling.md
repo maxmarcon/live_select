@@ -6,7 +6,7 @@
 * `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
 * `none`: no styling at all.
 
-The choice of style is controlled by the `style` option in [live_select/3](`LiveSelect.live_select/3`).
+The choice of style is controlled by the `style` option in [live_select/1](`LiveSelect.live_select/1`).
 `tailwind` and `daisyui` styles come with sensible defaults which can be extended or overridden via options.
 
 This is what each default style looks like:
@@ -22,7 +22,7 @@ This is what each default style looks like:
 <img alt="tailwind example" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/tailwind.png" width="200">
 
 These defaults can be _selectively overridden or extended_ using the appropriate options
-to [live_select/3](`LiveSelect.live_select/3`).
+to [live_select/1](`LiveSelect.live_select/1`).
 
 You can control the style of the following elements:
 
@@ -69,16 +69,17 @@ The following table shows the default styles for each element and the options yo
 | *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
 
 For example, if you want the options to use black text, the active option to have a red background,
-and remove rounded borders from both the dropdown and the active option, call [live_select/3](`LiveSelect.live_select/3`)
+and remove rounded borders from both the dropdown and the active option, render [live_select/1](`LiveSelect.live_select/1`)
 like this:
 
 ```
-live_select(form, field,
-      active_option_class: "text-white bg-red-800",
-      dropdown_extra_class: "!rounded-xl",
-      option_extra_class: "!rounded-lg text-black",
-      style: :tailwind
-)
+<.live_select 
+      form={form} 
+      field={field}
+      active_option_class="text-white bg-red-800"
+      dropdown_extra_class="!rounded-xl"
+      option_extra_class="!rounded-lg text-black"
+      style={:tailwind} />
 ```
 
 > #### Selectively removing classes from defaults {: .tip}

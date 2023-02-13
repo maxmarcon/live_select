@@ -6,8 +6,6 @@ defmodule LiveSelectTest do
   import LiveSelect.TestHelpers
   import Mox
 
-  alias LiveSelect.ChangeMsg
-
   setup :verify_on_exit!
 
   test "can be rendered", %{conn: conn} do
@@ -30,22 +28,6 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#my_form_city_search")
 
     assert has_element?(live, "input#my_form_city_search_text_input")
-  end
-
-  test "sends a ChangeMsg message as reaction to user's input", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/")
-
-    Mox.expect(LiveSelect.ChangeMsgHandlerMock, :handle, fn %ChangeMsg{
-                                                              id: "live_select",
-                                                              text: "Ber",
-                                                              module: LiveSelect.Component,
-                                                              field: :city_search
-                                                            },
-                                                            _ ->
-      nil
-    end)
-
-    type(live, "Ber")
   end
 
   test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
@@ -73,7 +55,7 @@ defmodule LiveSelectTest do
 
     {:ok, live, _html} = live(conn, "/?update_min_len=4")
 
-    type(live, "Ber")
+    type(live, "Ber", 4)
 
     assert_option_size(live, 0)
 
