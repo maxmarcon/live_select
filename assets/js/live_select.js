@@ -42,6 +42,11 @@ export default {
         },
         mounted() {
             this.maybeStyleClearButton()
+            this.handleEvent("change", payload => {
+                if (this.el.id === payload.id) {
+                    this.pushEvent("live_select_change", payload)
+                }
+            })
             this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {

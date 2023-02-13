@@ -359,6 +359,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
             submitted: true
           )
 
+        "live_select_change" ->
+          message_handler().handle(params, delay: socket.assigns.changeset.data.search_delay)
+
+          socket
+
         _ ->
           socket
       end
@@ -378,18 +383,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
     {:noreply, socket}
   end
 
-  def handle_info({:update_live_select, change_msg, options}, socket) do
-    send_update(LiveSelect.Component, id: change_msg.id, options: options)
+  def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
+    IO.inspect(id, label: "id")
+    send_update(LiveSelect.Component, id: id, options: options)
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_info(message, socket) do
-    if is_struct(message, LiveSelect.ChangeMsg) do
-      message_handler().handle(message, delay: socket.assigns.changeset.data.search_delay)
-    end
-
     socket =
       socket
       |> update(:next_event_id, &(&1 + 1))

@@ -184,17 +184,8 @@ defmodule LiveSelect.Component do
     socket =
       if String.length(text) >=
            socket.assigns.update_min_len do
-        send(
-          self(),
-          %ChangeMsg{
-            module: __MODULE__,
-            id: socket.assigns.id,
-            text: text,
-            field: socket.assigns.field
-          }
-        )
-
         assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
+        |> push_event("change", %{id: socket.assigns.id, field: socket.assigns.field, text: text})
       else
         assign(socket, options: [], current_text: nil)
       end
