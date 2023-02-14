@@ -36,7 +36,7 @@ In the LiveView or LiveComponent that's the target of your form events:
   import LiveSelect
 
   @impl true
-  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id} socket) do 
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do 
     cities = City.search(text)
     # cities = [ 
     # {"New York City", [-74.00597,40.71427]}, 

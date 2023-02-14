@@ -271,7 +271,7 @@ defmodule LiveSelect do
       __MODULE__,
       attr_name,
       :string,
-      [doc: "styling"],
+      [doc: false],
       __ENV__.line,
       __ENV__.file
     )
