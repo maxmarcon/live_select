@@ -182,8 +182,17 @@ defmodule LiveSelect.Component do
     socket =
       if String.length(text) >=
            socket.assigns.update_min_len do
+        target =
+          with %Phoenix.HTML.Form{options: options} <- socket.assigns.form,
+               %Phoenix.LiveComponent.CID{cid: cid} <- options[:"phx-target"] do
+            cid
+          end
+
         assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
-        |> push_event("change", %{id: socket.assigns.id, field: socket.assigns.field, text: text})
+        |> push_event("change", %{
+          payload: %{id: socket.assigns.id, field: socket.assigns.field, text: text},
+          target: target
+        })
       else
         assign(socket, options: [], current_text: nil)
       end

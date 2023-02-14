@@ -137,7 +137,10 @@ defmodule LiveSelect.TestHelpers do
     text = String.trim(text)
 
     if String.length(text) >= update_min_len do
-      assert_push_event(live, "change", %{text: ^text, id: "live_select", field: :city_search})
+      assert_push_event(live, "change", %{
+        payload: %{text: ^text, id: "live_select", field: :city_search},
+        target: _
+      })
 
       render_hook(live, "live_select_change", %{
         text: text,

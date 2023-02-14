@@ -18,6 +18,7 @@ defmodule LiveSelectWeb.Router do
     pipe_through :browser
 
     live "/", ShowcaseLive
+    live "/lc", LiveComponentTest
   end
 
   # Other scopes may use custom stacks.

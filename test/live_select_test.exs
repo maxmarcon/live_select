@@ -482,6 +482,32 @@ defmodule LiveSelectTest do
     assert_clear(live)
   end
 
+  describe "when rendered inside a live component" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/lc")
+
+      %{live: live}
+    end
+
+    test "takes the target from the form and sends it to the client", %{live: live} do
+      stub_options(
+        A: 1,
+        B: 2,
+        C: 3
+      )
+
+      element(live, selectors()[:text_input])
+      |> render_keyup(%{"key" => "C", "value" => "ABC"})
+
+      assert_push_event(live, "change", %{
+        payload: %{text: "ABC", id: "live_select", field: :city_search},
+        target: target
+      })
+
+      assert target
+    end
+  end
+
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
 

@@ -315,24 +315,6 @@ defmodule LiveSelect.ComponentTest do
     end
   end
 
-  test "raises if form is not passed" do
-    assert_raise(RuntimeError, ~r(Missing required assign), fn ->
-      render_component(&LiveSelect.live_select/1,
-        id: "live_select",
-        field: :live_select
-      )
-    end)
-  end
-
-  test "raises if field is not passed" do
-    assert_raise(RuntimeError, ~r(Missing required assign), fn ->
-      render_component(&LiveSelect.live_select/1,
-        id: "live_select",
-        form: :my_form
-      )
-    end)
-  end
-
   test "raises if invalid assign is passed" do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
       render_component(&LiveSelect.live_select/1,

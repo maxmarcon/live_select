@@ -277,11 +277,15 @@ defmodule LiveSelect do
     )
   end
 
-  def live_select(assigns) do
+  def live_select(%{form: form, field: field} = assigns) do
+    form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
+
+    IO.inspect(form)
+
     assigns =
       assigns
       |> assign_new(:id, fn ->
-        "#{assigns[:form]}_#{assigns[:field]}"
+        "#{form_name}_#{field}"
       end)
       |> assign(:module, LiveSelect.Component)
 
