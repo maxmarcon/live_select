@@ -30,7 +30,7 @@ Template:
   </.form>
   ```
 
-LiveView:
+In the LiveView or LiveComponent that's the target of your form events:
 
   ```elixir
   import LiveSelect

@@ -68,18 +68,20 @@ The following table shows the default styles for each element and the options yo
 | *text_input* | input input-bordered pr-6 w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6 rounded-md w-full | text_input_class | text_input_extra_class |
 | *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
 
-For example, if you want the options to use black text, the active option to have a red background,
-and remove rounded borders from both the dropdown and the active option, render [live_select/1](`LiveSelect.live_select/1`)
+For example, if you want to remove rounded borders from the options, have the active option use white text on a red background,
+and use green as a background color for tags instead of blue, render [live_select/1](`LiveSelect.live_select/1`)
 like this:
 
 ```
-<.live_select 
-      form={form} 
-      field={field}
-      active_option_class="text-white bg-red-800"
-      dropdown_extra_class="!rounded-xl"
-      option_extra_class="!rounded-lg text-black"
-      style={:tailwind} />
+<.live_select
+   form={my_form}
+   field={my_field}
+   id="live_select"
+   mode={:tags}
+   placeholder="Search for a city"
+   active_option_class="text-white bg-red-800"
+   option_extra_class="!rounded"
+   tag_extra_class="!bg-blue-400 bg-green-200" />
 ```
 
 > #### Selectively removing classes from defaults {: .tip}

@@ -4,7 +4,10 @@ defmodule LiveSelect do
   @moduledoc ~S"""
   The `LiveSelect` component is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
-  As the input text changes, LiveSelect will render a dropdown below the text input containing the matching options, which the user can then select.
+    
+  As the input text changes, LiveSelect triggers a `live_select_change` event for the LiveView or LiveComponent that is the target of the form's events.
+  The LiveView or LiveComponent then uses `LiveView.send_update/3` to inform LiveSelect about the updated list of options, which are
+  rendered in a dropdown below the text input.
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
@@ -101,7 +104,7 @@ defmodule LiveSelect do
   </.form>
   ```
 
-  LiveView:
+  LiveView or LiveComponent that is the target of the form's events:
   ```
   import LiveSelect
 
@@ -149,7 +152,7 @@ defmodule LiveSelect do
   </.form>
   ```
 
-  LiveView:
+  LiveView or LiveComponent that is the target of the form's events:
   ```
   @impl true
   def handle_event(
