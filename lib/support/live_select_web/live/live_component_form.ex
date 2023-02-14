@@ -30,7 +30,6 @@ defmodule LiveSelectWeb.LiveComponentForm do
 
   @impl true
   def handle_event("submit", %{"live_select" => live_select}, socket) do
-    IO.inspect(live_select, label: "submit")
     {:noreply, socket}
   end
 end
