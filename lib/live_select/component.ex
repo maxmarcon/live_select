@@ -186,6 +186,8 @@ defmodule LiveSelect.Component do
           with %Phoenix.HTML.Form{options: options} <- socket.assigns.form,
                %Phoenix.LiveComponent.CID{cid: cid} <- options[:"phx-target"] do
             cid
+          else
+            _ -> nil
           end
 
         assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)

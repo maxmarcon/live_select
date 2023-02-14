@@ -11,7 +11,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   def render(assigns) do
     ~H"""
     <div>
-      <.form :let={f} for={%{}} as="my_form" phx-submit="submit" phx-target={@myself}>
+      <.form :let={f} for={%{}} as={:my_form} phx-submit="submit" phx-target={@myself}>
         <.live_select form={f} field={:city_search} id="live_select" />
         <%= submit("Submit", class: "btn btn-primary") %>
       </.form>
@@ -29,7 +29,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   end
 
   @impl true
-  def handle_event("submit", %{"live_select" => live_select}, socket) do
+  def handle_event("submit", %{"live_select" => _live_select}, socket) do
     {:noreply, socket}
   end
 end
