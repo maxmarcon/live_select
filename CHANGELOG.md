@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.0 (2023-02-15)
 
 This version introduces the following breaking changes and new features:
 
@@ -38,7 +38,6 @@ end
 ```
 
 4. If you're rendering LiveSelect in a LiveComponent, you can now place your `handle_event/3` callback in the LiveComponent, there's no need to put the update logic in the view anymore
-
 
 ## 0.4.1 (2023-02-07)
 
