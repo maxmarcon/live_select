@@ -99,11 +99,22 @@ defmodule LiveSelect do
 
   Template:
   ```
-  <.form for={:my_form} :let={f} phx-change="change">
+  <.form for={@changeset} :let={f} phx-change="change">
     <.live_select form={f} field={:city_search} /> 
   </.form>
   ```
-
+    
+  > #### Forms implemented in LiveComponents {: .warning}
+  > 
+  > If your form is implemented in a LiveComponent and not in a LiveView, you might have to add the `phx-target` attribute
+  > when rendering LiveSelect:
+  >
+  > ```elixir
+  >  <.live_select form={f} field={:city_search} phx-target={@myself} />
+  > ```  
+  >
+  > We say "might" because LiveSelect will look for the target in the form's options if none has been explicitly passed with the `phx-target` attribute 
+    
   LiveView or LiveComponent that is the target of the form's events:
   ```
   import LiveSelect
@@ -264,6 +275,8 @@ defmodule LiveSelect do
     doc:
       "one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
+  attr :rest, :global
+
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 
   for attr_name <- @styling_options do
@@ -280,12 +293,15 @@ defmodule LiveSelect do
   def live_select(%{form: form, field: field} = assigns) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
+    {globals, assigns} = Map.pop(assigns, :rest)
+
     assigns =
       assigns
       |> assign_new(:id, fn ->
-        "#{form_name}_#{field}"
+        "#{form_name}_#{field}_live_select_component"
       end)
       |> assign(:module, LiveSelect.Component)
+      |> assign(globals)
 
     ~H"""
     <.live_component {assigns} />

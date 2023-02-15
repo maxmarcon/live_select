@@ -25,10 +25,16 @@ interface for features such as search. It supports both single and multiple sele
 Template:
 
   ```elixir
-  <.form for={:my_form} :let={f} phx-change="change">
+  <.form for={@changeset} :let={f} phx-change="change">
       <.live_select form={f} field={:city_search} /> 
   </.form>
   ```
+
+**NOTE:** add `phx-target={@myself}` if your form is implemented in a LiveComponent:
+
+```elixir
+<.live_select form={f} field={:city_search} phx-target={@myself} />
+```
 
 In the LiveView or LiveComponent that's the target of your form events:
 

@@ -12,7 +12,7 @@ Bugfix: component now works event when strict Content Security Policy are set
 
 ### Deprecations
 
-`LiveSelect.update_options/2` has been deprecated in favor of directly using `Phoenix.LiveView.send_update/3` 
+LiveSelect.update_options/2 has been deprecated in favor of directly using Phoenix.LiveView.send_update/3 
 
 ## 0.3.3 (2023-01-15)
 

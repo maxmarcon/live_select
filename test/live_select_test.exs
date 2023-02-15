@@ -489,18 +489,46 @@ defmodule LiveSelectTest do
       %{live: live}
     end
 
-    test "takes the target from the form and sends it to the client", %{live: live} do
+    test "takes the target from the form and sends it to the client (old style form using :let)",
+         %{live: live} do
       stub_options(
         A: 1,
         B: 2,
         C: 3
       )
 
-      element(live, selectors()[:text_input])
+      element(live, "#my_form_old_style_city_search_text_input")
       |> render_keyup(%{"key" => "C", "value" => "ABC"})
 
       assert_push_event(live, "change", %{
-        payload: %{text: "ABC", id: "live_select", field: :city_search},
+        payload: %{
+          text: "ABC",
+          id: "my_form_old_style_city_search_live_select_component",
+          field: :city_search
+        },
+        target: target
+      })
+
+      assert target
+    end
+
+    test "takes the target from phx-target attr and sends it to the client (new style form using to_form/2)",
+         %{live: live} do
+      stub_options(
+        A: 1,
+        B: 2,
+        C: 3
+      )
+
+      element(live, "#my_form_new_style_city_search_text_input")
+      |> render_keyup(%{"key" => "C", "value" => "ABC"})
+
+      assert_push_event(live, "change", %{
+        payload: %{
+          text: "ABC",
+          id: "my_form_new_style_city_search_live_select_component",
+          field: :city_search
+        },
         target: target
       })
 

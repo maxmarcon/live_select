@@ -183,10 +183,8 @@ defmodule LiveSelect.Component do
       if String.length(text) >=
            socket.assigns.update_min_len do
         target =
-          with %Phoenix.HTML.Form{options: options} <- socket.assigns.form,
-               %Phoenix.LiveComponent.CID{cid: cid} <- options[:"phx-target"] do
-            cid
-          else
+          case socket.assigns[:"phx-target"] || socket.assigns.form.options[:"phx-target"] do
+            %Phoenix.LiveComponent.CID{cid: cid} -> cid
             _ -> nil
           end
 
@@ -280,7 +278,8 @@ defmodule LiveSelect.Component do
     end
 
     valid_assigns =
-      Keyword.keys(@default_opts) ++ @required_assigns ++ [:id, :options, :clear, :hide_dropdown]
+      Keyword.keys(@default_opts) ++
+        @required_assigns ++ [:id, :options, :"phx-target", :clear, :hide_dropdown]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do
