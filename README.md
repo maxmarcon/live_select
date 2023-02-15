@@ -76,7 +76,7 @@ To install, add this to your dependencies:
 
 ```elixir
 [
-    {:live_select, "~> 0.4.0"}
+    {:live_select, "~> 1.0"}
 ]
 ```
 

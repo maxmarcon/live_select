@@ -51,7 +51,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
         </a>
       </div>
       <.form :let={f} for={%{}} as={:my_form_old_style} phx-submit="submit" phx-target={@myself}>
-        <.live_select form={f} field={:city_search} />
+        <.live_select form={f} field={:city_search} mode={:tags} />
         <%= submit("Submit", class: "btn btn-primary") %>
       </.form>
     </div>
