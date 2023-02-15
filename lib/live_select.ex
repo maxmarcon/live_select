@@ -116,7 +116,7 @@ defmodule LiveSelect do
   When a city is selected, the coordinates of that city will be the value of the form input.
   The name of the selected city is available in the text input field named `city_search_text_input`.
 
-  Template:
+  _Template:_
   ```
   <.form for={@changeset} :let={f} phx-change="change">
     <.live_select form={f} field={:city_search} /> 
@@ -135,7 +135,7 @@ defmodule LiveSelect do
   > We say "might" because LiveSelect will look for the target in the form's options if none has been explicitly passed with the `phx-target` attribute.
   > By passing `phx-target` explicitly however, you're always on the safe side.
     
-  LiveView or LiveComponent that is the target of the form's events:
+  _LiveView or LiveComponent that is the target of the form's events:_
   ```
   import LiveSelect
 
@@ -176,14 +176,14 @@ defmodule LiveSelect do
   Let's say you want to build on the previous example and allow the user to select multiple cities and not only one.
   The `:tags` mode allows you to do exactly this.
 
-  Template:
+  _Template:_
   ```
   <.form for={:my_form} :let={f} phx-change="change">
     <.live_select form={f} field={:city_search} mode={:tags} /> 
   </.form>
   ```
 
-  LiveView or LiveComponent that is the target of the form's events:
+  _LiveView or LiveComponent that is the target of the form's events:_
   ```
   @impl true
   def handle_event(
@@ -205,7 +205,7 @@ defmodule LiveSelect do
   If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field or id. 
   For example:
 
-  Template:
+  _Template:_
   ```
   <.form for={:my_form} :let={f} phx-change="change">
     <.live_select form={f} field={:city_search} />
@@ -213,7 +213,7 @@ defmodule LiveSelect do
   </.form>
   ```
 
-  LiveView:
+  _LiveView or LiveComponent:_
   ```
   @impl true
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id, "field" => live_select_field}, socket) do

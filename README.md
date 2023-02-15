@@ -23,7 +23,7 @@ that makes it highly customizable. The default rendering of tags and the dropdow
 
 ## Usage 🧭
 
-Template:
+_Template:_
 
 ```elixir
   <.form for={@changeset} :let={f} phx-change="change">
@@ -37,7 +37,7 @@ Template:
   <.live_select form={f} field={:city_search} phx-target={@myself} />
 ```
 
-In the LiveView or LiveComponent that's the target of your form events:
+_In the LiveView or LiveComponent that's the target of your form events:_
 
   ```elixir
   import LiveSelect
