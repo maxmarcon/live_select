@@ -79,7 +79,9 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        saved_selection: nil
+        saved_selection: nil,
+        tag: [],
+        option: []
       )
 
     {:ok, socket}
@@ -279,7 +281,7 @@ defmodule LiveSelect.Component do
 
     valid_assigns =
       Keyword.keys(@default_opts) ++
-        @required_assigns ++ [:id, :options, :"phx-target", :clear, :hide_dropdown]
+        @required_assigns ++ [:id, :options, :"phx-target", :option, :tag, :clear, :hide_dropdown]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do

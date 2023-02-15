@@ -5,9 +5,11 @@ defmodule LiveSelect do
   The `LiveSelect` component is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
     
-  As the input text changes, LiveSelect triggers a `live_select_change` event for the LiveView or LiveComponent that is the target of the form's events.
-  The LiveView or LiveComponent then uses `LiveView.send_update/3` to inform LiveSelect about the updated list of options, which are
-  rendered in a dropdown below the text input.
+  Whenever the user types something in the text input, LiveSelect triggers a `live_select_change` event for your LiveView or LiveComponent.
+  The message has a `text` parameter containing the current text entered by the user, as well as `id` and `field` parameters with the id of the 
+  LiveSelect component and the name of the LiveSelect form field, respectively.
+  Your job is to handle the event, retrieve the list of selectable options and then call `LiveView.send_update/3`
+  to send the list of options to LiveSelect. See the "Examples" section below for details.    
 
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
@@ -25,6 +27,10 @@ defmodule LiveSelect do
   ## Tags mode
     
   <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif" width="300" />
+
+  When `:tags` mode is enabled `LiveSelect` allows the user to select multiple entries. The entries will be visible above the text input field as removable tags.
+
+  The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
   ## Options
 
@@ -61,20 +67,33 @@ defmodule LiveSelect do
   ```
 
   will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
+    
+  ## Slots
+    
+  You can have complete control on how your options and tags are rendered by using the `:option` and `:tag` slots.
+  Let's say you want to show some fancy icons next to each option in the dropdown and the tags:
 
-  ## Reacting to user's input
+  ```elixir  
+  <.live_select
+          form={@form}
+          field={:city_search}
+          phx-target={@myself}
+          mode={:tags}
+        >
+          <:option :let={option}>
+            <div class="flex">
+              <.globe />&nbsp;<%= option.label %>
+            </div>
+          </:option>
+          <:tag :let={option}>
+              <.check />&nbsp;<%= option.label %>
+          </:tag>
+  </.live_select>
+  ```
 
-  Whenever the user types something in the text input, LiveSelect sends a "live_select_change" event to your LiveView or LiveComponent.
-  The message has a `text` parameter containing the current text entered by the user, as well as `id` and `field` parameters with the id of the 
-  LiveSelect component and the name of the LiveSelect form field, respectively.
-  Your job is to handle the event, retrieve the list of selectable options and then call `LiveView.send_update/3`
-  to send the list of options to LiveSelect. See the "Examples" section below for details.
-
-  ## Multiple selection with tags mode
-
-  When `:tags` mode is enabled `LiveSelect` allows the user to select multiple entries. The entries will be visible above the text input field as removable tags.
-
-  The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
+  Here's the result:
+      
+  <img alt="slots" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/slots.png" width="200" />
 
   ## Clearing the selection programmatically
 
@@ -113,7 +132,8 @@ defmodule LiveSelect do
   >  <.live_select form={f} field={:city_search} phx-target={@myself} />
   > ```  
   >
-  > We say "might" because LiveSelect will look for the target in the form's options if none has been explicitly passed with the `phx-target` attribute 
+  > We say "might" because LiveSelect will look for the target in the form's options if none has been explicitly passed with the `phx-target` attribute.
+  > By passing `phx-target` explicitly however, you're always on the safe side.
     
   LiveView or LiveComponent that is the target of the form's events:
   ```
@@ -274,6 +294,13 @@ defmodule LiveSelect do
     default: :tailwind,
     doc:
       "one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
+
+  slot(:option,
+    doc:
+      "optional slot that renders an option in the dropdown. The option's data is available via `:let`"
+  )
+
+  slot(:tag, doc: "optional slot that renders a tag. The option's data is available via `:let`")
 
   attr :rest, :global
 

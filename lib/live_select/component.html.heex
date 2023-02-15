@@ -12,7 +12,11 @@
     >
       <%= for {option, idx} <- Enum.with_index(@selection) do %>
         <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
-          <%= option[:tag_label] || option[:label] %>
+          <%= if @tag == [] do %>
+            <%= option[:tag_label] || option[:label] %>
+          <% else %>
+            <%= render_slot(@tag, option) %>
+          <% end %>
           <button type="button" phx-click="option_remove" phx-value-idx={idx} phx-target={@myself}>
             <.x class="cursor-pointer" />
           </button>
@@ -87,7 +91,11 @@
             ]}
             data-idx={unless already_selected?(option, @selection), do: idx}
           >
-            <%= option.label %>
+            <%= if @option == [] do %>
+              <%= option.label %>
+            <% else %>
+              <%= render_slot(@option, option) %>
+            <% end %>
           </div>
         </li>
       <% end %>

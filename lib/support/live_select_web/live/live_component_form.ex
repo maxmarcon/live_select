@@ -17,7 +17,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div id="form_component" phx-hook="Foo" phx-target={@myself}>
       <div>
         New form style
         <a
@@ -29,7 +29,14 @@ defmodule LiveSelectWeb.LiveComponentForm do
         </a>
       </div>
       <.form for={@form} phx-submit="submit" phx-target={@myself}>
-        <.live_select form={@form} field={:city_search} phx-target={@myself} />
+        <.live_select form={@form} field={:city_search} mode={:tags} phx-target={@myself}>
+          <:option :let={option}>
+            with custom slot: <%= option.label %>
+          </:option>
+          <:tag :let={option}>
+            with custom slot: <%= option.label %>
+          </:tag>
+        </.live_select>
         <%= submit("Submit", class: "btn btn-primary") %>
       </.form>
 

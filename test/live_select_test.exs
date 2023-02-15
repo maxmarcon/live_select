@@ -536,6 +536,62 @@ defmodule LiveSelectTest do
     end
   end
 
+  test "renders custom :option slots", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/lc")
+
+    element(live, "#my_form_new_style_city_search_text_input")
+    |> render_keyup(%{"key" => "C", "value" => "ABC"})
+
+    render_hook(element(live, "#form_component"), "live_select_change", %{
+      text: "Ber",
+      id: "my_form_new_style_city_search_live_select_component",
+      field: "city_search"
+    })
+
+    options =
+      render(live)
+      |> Floki.find(
+        "#my_form_new_style_city_search_live_select_component ul[name=live-select-dropdown] > li"
+      )
+
+    assert length(options) > 0
+
+    for option <- options do
+      assert Floki.text(option) =~ "with custom slot"
+    end
+  end
+
+  test "renders custom :tag slots", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/lc")
+
+    element(live, "#my_form_new_style_city_search_text_input")
+    |> render_keyup(%{"key" => "C", "value" => "ABC"})
+
+    render_hook(element(live, "#form_component"), "live_select_change", %{
+      text: "Ber",
+      id: "my_form_new_style_city_search_live_select_component",
+      field: "city_search"
+    })
+
+    options =
+      render(live)
+      |> Floki.find(
+        "#my_form_new_style_city_search_live_select_component ul[name=live-select-dropdown] > li"
+      )
+
+    assert length(options) > 0
+
+    element(live, "#my_form_new_style_city_search_live_select_component")
+    |> render_hook("option_click", %{"idx" => "0"})
+
+    tag =
+      render(live)
+      |> Floki.find("div[name=tags-container] > div")
+      |> Floki.text()
+
+    assert tag =~ "with custom slot"
+  end
+
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
 
