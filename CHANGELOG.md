@@ -1,3 +1,45 @@
+## 1.0.0
+
+This version introduces the following breaking changes and new features:
+
+* Rendering using a function component `<.live_select />` instead of the old function style (`<%= live_select ... %>`)
+* Dropping the message-based update cycle (which used `handle_info/2`) in favour of an event-based update cycle (which uses `handle_event/3`). This makes it much easier
+and more intuitive to use LiveSelect from another LiveComponent.
+* Ability to customize the default rendering of dropdown entries and tags using the `:option` and `:tag` slots 
+
+** How to upgrade from version 0.x.x: **
+
+1. Instead of rendering LiveSelect in this way: `<%= live_select form, field, mode: :tags %>`, render it in this way: `<.live_select form={form} field={field} mode={:tags} />`
+2. Don't forget to add `phx-target={@myself}` if you're using LiveSelect from another LiveComponent
+3. Turn your `handle_info/2` implementations into `handle_event/3`:
+
+Turn this:
+
+```elixir
+def handle_info(%ChangeMsg{} = change_msg, socket) do
+     options = retrieve_options(change_msg.text)
+    
+     send_update(LiveSelect.Component, id: change_msg.id, options: options)
+    
+     {:noreply, socket}
+end
+```
+
+into:
+
+```elixir
+def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do
+    options = retrieve_options(text)
+    
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
+    
+    {:noreply, socket}
+end
+```
+
+4. If you're rendering LiveSelect in a LiveComponent, you can now place your `handle_event/3` callback in the LiveComponent, there's no need to put the update logic in the view anymore
+
+
 ## 0.4.1 (2023-02-07)
 
 Bugfix: component now works event when strict Content Security Policy are set

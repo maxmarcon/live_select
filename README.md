@@ -8,8 +8,8 @@ Dynamic selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the
 dropdown is filled dynamically by your LiveView as a reaction to user's input. This allows you to easily create an
-interface for features such as search. It supports both single and multiple selections and comes a rich set of styling options
-that makes it highly customizable.
+interface for features such as search. It supports both single and multiple selection and comes with a rich set of styling options
+that makes it highly customizable. The default rendering of tags and the dropdown entries can also be customized using slots.
 
 ### [Try it in the showcase app](https://live-select.fly.dev/) 🔬
 
@@ -25,16 +25,16 @@ that makes it highly customizable.
 
 Template:
 
-  ```elixir
+```elixir
   <.form for={@changeset} :let={f} phx-change="change">
-      <.live_select form={f} field={:city_search} /> 
+    <.live_select form={f} field={:city_search} /> 
   </.form>
-  ```
+```
 
 **NOTE:** add `phx-target={@myself}` if your form is implemented in a LiveComponent:
-
+    
 ```elixir
-<.live_select form={f} field={:city_search} phx-target={@myself} />
+  <.live_select form={f} field={:city_search} phx-target={@myself} />
 ```
 
 In the LiveView or LiveComponent that's the target of your form events:
@@ -173,5 +173,5 @@ Tests that require a LiveView use the showcase app as the parent LiveView.
 - [X] Enable configuration of styles in the showcase app
 - [X] Add support for vanilla tailwind styles
 - [X] Enable multiple selection mode
-- [ ] Expose as function component (and drop LV 0.17 support)
+- [X] Expose as function component (and drop LV 0.17 support)
 - [ ] Maybe additional multiple selection mode(s)? 
