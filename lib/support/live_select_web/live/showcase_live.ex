@@ -275,7 +275,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket =
           socket
           |> assign(:changeset, changeset)
-          |> assign(:form_changeset, Ecto.Changeset.change({%{foo: 1}, %{foo: :integer}}, %{}))
           |> assign(
             :show_styles,
             socket.assigns.show_styles || Settings.has_style_errors?(changeset)
