@@ -30,7 +30,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     @primary_key false
     embedded_schema do
-      field(:id, :string, default: "live_select")
       field(:allow_clear, :boolean)
       field(:debounce, :integer, default: 100)
       field(:disabled, :boolean)
@@ -55,7 +54,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> cast(
         params,
         [
-          :id,
           :allow_clear,
           :debounce,
           :disabled,
@@ -80,7 +78,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     def live_select_opts(%__MODULE__{} = settings, remove_defaults \\ false) do
-      default_opts = LiveSelect.Component.default_opts() ++ [id: nil]
+      default_opts = LiveSelect.Component.default_opts()
 
       settings
       |> Map.drop([:search_delay, :new, :selection])
@@ -93,7 +91,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         end
       )
       |> Map.reject(fn {option, value} ->
-        remove_defaults && value == Keyword.fetch!(default_opts, option)
+        remove_defaults && value == Keyword.get(default_opts, option)
       end)
       |> Keyword.new()
     end
@@ -320,7 +318,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   def handle_event("clear-selection", _params, socket) do
     send_update(LiveSelect.Component,
-      id: Ecto.Changeset.get_field(socket.assigns.changeset, :id),
+      id: "my_form_city_search_live_select_component",
       clear: true
     )
 

@@ -7,7 +7,6 @@ defmodule LiveSelect.ComponentTest do
   test "can be rendered" do
     component =
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :my_form,
         field: :live_select
       )
@@ -25,7 +24,6 @@ defmodule LiveSelect.ComponentTest do
   test "can set initial options" do
     component =
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :form,
         field: :input,
         options: ["A", "B", "C"],
@@ -33,6 +31,17 @@ defmodule LiveSelect.ComponentTest do
       )
 
     assert_options(component, ["A", "B", "C"])
+  end
+
+  test "can be rendered with a custom id" do
+    component =
+      render_component(&LiveSelect.live_select/1,
+        id: "live_select_custom_id",
+        form: :form,
+        field: :input
+      )
+
+    assert length(Floki.find(component, "#live_select_custom_id")) == 1
   end
 
   describe "in single mode" do
@@ -43,7 +52,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search,
           options: ["A", "B", "C"]
@@ -63,7 +71,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search,
           options: [
@@ -83,7 +90,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search
         )
@@ -98,7 +104,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search
         )
@@ -113,7 +118,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search,
           options: ["B"]
@@ -129,7 +133,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search,
           value: "D",
@@ -147,7 +150,6 @@ defmodule LiveSelect.ComponentTest do
 
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           field: :city_search
         )
@@ -167,7 +169,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search,
@@ -188,7 +189,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search,
@@ -216,7 +216,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search
@@ -236,7 +235,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search
@@ -259,7 +257,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search,
@@ -284,7 +281,6 @@ defmodule LiveSelect.ComponentTest do
 
       component =
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           mode: :tags,
           form: form,
           field: :city_search,
@@ -306,7 +302,6 @@ defmodule LiveSelect.ComponentTest do
 
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: form,
           mode: :tags,
           field: :city_search
@@ -318,7 +313,6 @@ defmodule LiveSelect.ComponentTest do
   test "raises if invalid assign is passed" do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :my_form,
         field: :live_select,
         invalid_assign: "foo"
@@ -332,7 +326,6 @@ defmodule LiveSelect.ComponentTest do
       ~r/when using `style: :none`, please use only `container_class`/i,
       fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: :my_form,
           field: :live_select,
           style: :none,
@@ -348,7 +341,6 @@ defmodule LiveSelect.ComponentTest do
       ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: :form,
           field: :input,
           mode: :not_a_valid_mode
@@ -363,7 +355,6 @@ defmodule LiveSelect.ComponentTest do
       ~s(Invalid style: :not_a_valid_style. Style must be one of: [:tailwind, :daisyui, :none]),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: :form,
           field: :input,
           style: :not_a_valid_style
@@ -378,7 +369,6 @@ defmodule LiveSelect.ComponentTest do
       ~s(options must be enumerable),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          id: "live_select",
           form: :form,
           field: :input,
           options: "not a list"
@@ -390,7 +380,6 @@ defmodule LiveSelect.ComponentTest do
   test "can be disabled" do
     component =
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :my_form,
         field: :city_search,
         disabled: true
@@ -404,7 +393,6 @@ defmodule LiveSelect.ComponentTest do
   test "can set the debounce value" do
     component =
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :my_form,
         field: :city_search,
         debounce: 500
@@ -416,7 +404,6 @@ defmodule LiveSelect.ComponentTest do
   test "can set a placeholder text" do
     component =
       render_component(&LiveSelect.live_select/1,
-        id: "live_select",
         form: :my_form,
         field: :city_search,
         placeholder: "Give it a try"
@@ -444,7 +431,6 @@ defmodule LiveSelect.ComponentTest do
         fn ->
           opts =
             [
-              id: "live_select",
               form: :form,
               field: :input,
               options: ["A", "B", "C"],
@@ -478,7 +464,6 @@ defmodule LiveSelect.ComponentTest do
             render_component(
               &LiveSelect.live_select/1,
               [
-                id: "live_select",
                 form: :my_form,
                 field: :city_search,
                 options: ["A"],
@@ -500,7 +485,6 @@ defmodule LiveSelect.ComponentTest do
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  id: "live_select",
                   form: :my_form,
                   field: :city_search,
                   options: ["A"],
@@ -523,7 +507,6 @@ defmodule LiveSelect.ComponentTest do
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  id: "live_select",
                   form: :my_form,
                   field: :city_search,
                   options: ["A"],
@@ -556,7 +539,6 @@ defmodule LiveSelect.ComponentTest do
                 render_component(
                   &LiveSelect.live_select/1,
                   [
-                    id: "live_select",
                     form: :my_form,
                     field: :city_search,
                     options: ["A"],
@@ -578,7 +560,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               field: :city_search,
               options: ["A", "B", "C"],
@@ -602,7 +583,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               field: :city_search,
               options: ["A", "B", "C"],
@@ -626,7 +606,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               mode: :tags,
               field: :city_search,
@@ -648,7 +627,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               mode: :tags,
               field: :city_search,
@@ -671,7 +649,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               mode: :tags,
               field: :city_search,
@@ -693,7 +670,6 @@ defmodule LiveSelect.ComponentTest do
           render_component(
             &LiveSelect.live_select/1,
             [
-              id: "live_select",
               form: :my_form,
               mode: :tags,
               field: :city_search,
@@ -722,7 +698,6 @@ defmodule LiveSelect.ComponentTest do
             render_component(
               &LiveSelect.live_select/1,
               [
-                id: "live_select",
                 form: :my_form,
                 mode: :tags,
                 field: :city_search,
@@ -745,7 +720,6 @@ defmodule LiveSelect.ComponentTest do
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  id: "live_select",
                   form: :my_form,
                   mode: :tags,
                   field: :city_search,
@@ -769,7 +743,6 @@ defmodule LiveSelect.ComponentTest do
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  id: "live_select",
                   form: :my_form,
                   mode: :tags,
                   field: :city_search,
@@ -803,7 +776,6 @@ defmodule LiveSelect.ComponentTest do
                 render_component(
                   &LiveSelect.live_select/1,
                   [
-                    id: "live_select",
                     form: :my_form,
                     mode: :tags,
                     field: :city_search,

@@ -16,12 +16,6 @@ defmodule LiveSelectTest do
     assert has_element?(live, selectors()[:text_input])
   end
 
-  test "can be rendered with a custom id", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?id=custom_id")
-
-    assert has_element?(live, "#custom_id")
-  end
-
   test "can be rendered with a given field name", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?field_name=city_search")
 

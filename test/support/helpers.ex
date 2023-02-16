@@ -138,13 +138,17 @@ defmodule LiveSelect.TestHelpers do
 
     if String.length(text) >= update_min_len do
       assert_push_event(live, "change", %{
-        payload: %{text: ^text, id: "live_select", field: :city_search},
+        payload: %{
+          text: ^text,
+          id: "my_form_city_search_live_select_component",
+          field: :city_search
+        },
         target: _
       })
 
       render_hook(live, "live_select_change", %{
         text: text,
-        id: "live_select",
+        id: "my_form_city_search_live_select_component",
         field: "city_search"
       })
     else
@@ -191,7 +195,7 @@ defmodule LiveSelect.TestHelpers do
     {label, value} = assert_selected_static(live, label, value)
 
     assert_push_event(live, "select", %{
-      id: "live_select",
+      id: "my_form_city_search_live_select_component",
       selection: [%{label: ^label, value: ^value}],
       input_event: true,
       mode: :single
@@ -281,7 +285,7 @@ defmodule LiveSelect.TestHelpers do
     normalized_selection = assert_selected_multiple_static(live, selection)
 
     assert_push_event(live, "select", %{
-      id: "live_select",
+      id: "my_form_city_search_live_select_component",
       selection: ^normalized_selection
     })
   end
@@ -341,7 +345,7 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.attribute("value") == []
 
     assert_push_event(live, "select", %{
-      id: "live_select",
+      id: "my_form_city_search_live_select_component",
       selection: [],
       input_event: ^input_event
     })
