@@ -185,7 +185,7 @@ defmodule LiveSelect.Component do
       if String.length(text) >=
            socket.assigns.update_min_len do
         target =
-          case socket.assigns[:"phx-target"] || socket.assigns.form.options[:"phx-target"] do
+          case socket.assigns[:"phx-target"] || target_from_form(socket.assigns.form) do
             %Phoenix.LiveComponent.CID{cid: cid} -> cid
             _ -> nil
           end
@@ -257,6 +257,10 @@ defmodule LiveSelect.Component do
   def handle_event(_event, _params, socket) do
     {:noreply, socket}
   end
+
+  defp target_from_form(%Phoenix.HTML.Form{options: options}), do: options[:"phx-target"]
+
+  defp target_from_form(_), do: nil
 
   defp validate_assigns!(assigns) do
     if Map.has_key?(assigns, :style) do
