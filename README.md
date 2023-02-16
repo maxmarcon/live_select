@@ -8,8 +8,12 @@ Dynamic selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the
 dropdown is filled dynamically by your LiveView as a reaction to user's input. This allows you to easily create an
-interface for features such as search. It supports both single and multiple selection and comes with a rich set of styling options
-that makes it highly customizable. The default rendering of tags and the dropdown entries can also be customized using slots.
+interface for features such as search. Its features include:
+
+* Single as well as multiple selection
+* Options to configure its behaviour, such as minimum number of entered characters that trigger an update or the maximum number of selectable options
+* Default styles for daisyUI and tailwindcss, which are fully customizable and can be even completely overriden if needed
+* Ability to fully customize the rendered HTML for dropdown entries and tags using slots.
 
 ### [Try it in the showcase app](https://live-select.fly.dev/) 🔬
 
