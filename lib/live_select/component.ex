@@ -79,9 +79,7 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        saved_selection: nil,
-        tag: [],
-        option: []
+        saved_selection: nil
       )
 
     {:ok, socket}

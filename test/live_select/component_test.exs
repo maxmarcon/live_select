@@ -24,7 +24,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "can set initial options" do
     component =
-      render_component(LiveSelect.Component,
+      render_component(&LiveSelect.live_select/1,
         id: "live_select",
         form: :form,
         field: :input,
@@ -42,7 +42,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search,
@@ -62,7 +62,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search,
@@ -82,7 +82,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search
@@ -97,7 +97,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search
@@ -112,7 +112,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search,
@@ -128,7 +128,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search,
@@ -146,7 +146,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           field: :city_search
@@ -166,7 +166,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -187,7 +187,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -215,7 +215,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -235,7 +235,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -258,7 +258,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -283,7 +283,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       component =
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           mode: :tags,
           form: form,
@@ -305,7 +305,7 @@ defmodule LiveSelect.ComponentTest do
       form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
 
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: form,
           mode: :tags,
@@ -347,7 +347,7 @@ defmodule LiveSelect.ComponentTest do
       RuntimeError,
       ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
       fn ->
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: :form,
           field: :input,
@@ -362,7 +362,7 @@ defmodule LiveSelect.ComponentTest do
       RuntimeError,
       ~s(Invalid style: :not_a_valid_style. Style must be one of: [:tailwind, :daisyui, :none]),
       fn ->
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: :form,
           field: :input,
@@ -377,7 +377,7 @@ defmodule LiveSelect.ComponentTest do
       RuntimeError,
       ~s(options must be enumerable),
       fn ->
-        render_component(LiveSelect.Component,
+        render_component(&LiveSelect.live_select/1,
           id: "live_select",
           form: :form,
           field: :input,
@@ -389,7 +389,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "can be disabled" do
     component =
-      render_component(LiveSelect.Component,
+      render_component(&LiveSelect.live_select/1,
         id: "live_select",
         form: :my_form,
         field: :city_search,
@@ -403,7 +403,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "can set the debounce value" do
     component =
-      render_component(LiveSelect.Component,
+      render_component(&LiveSelect.live_select/1,
         id: "live_select",
         form: :my_form,
         field: :city_search,
@@ -415,7 +415,7 @@ defmodule LiveSelect.ComponentTest do
 
   test "can set a placeholder text" do
     component =
-      render_component(LiveSelect.Component,
+      render_component(&LiveSelect.live_select/1,
         id: "live_select",
         form: :my_form,
         field: :city_search,
@@ -455,7 +455,7 @@ defmodule LiveSelect.ComponentTest do
             |> Keyword.put(@override_class, "foo")
             |> Keyword.put(@extend_class, "boo")
 
-          render_component(LiveSelect.Component, opts)
+          render_component(&LiveSelect.live_select/1, opts)
         end
       )
     end
@@ -476,7 +476,7 @@ defmodule LiveSelect.ComponentTest do
         test "#{@element} has default class" do
           component =
             render_component(
-              LiveSelect.Component,
+              &LiveSelect.live_select/1,
               [
                 id: "live_select",
                 form: :my_form,
@@ -498,7 +498,7 @@ defmodule LiveSelect.ComponentTest do
 
             component =
               render_component(
-                LiveSelect.Component,
+                &LiveSelect.live_select/1,
                 [
                   id: "live_select",
                   form: :my_form,
@@ -521,7 +521,7 @@ defmodule LiveSelect.ComponentTest do
 
             component =
               render_component(
-                LiveSelect.Component,
+                &LiveSelect.live_select/1,
                 [
                   id: "live_select",
                   form: :my_form,
@@ -554,7 +554,7 @@ defmodule LiveSelect.ComponentTest do
 
               component =
                 render_component(
-                  LiveSelect.Component,
+                  &LiveSelect.live_select/1,
                   [
                     id: "live_select",
                     form: :my_form,
@@ -576,7 +576,7 @@ defmodule LiveSelect.ComponentTest do
       test "additional class for text input selected is set" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -600,7 +600,7 @@ defmodule LiveSelect.ComponentTest do
       test "additional class for text input selected can be overridden" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -624,7 +624,7 @@ defmodule LiveSelect.ComponentTest do
       test "class for selected option is set" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -646,7 +646,7 @@ defmodule LiveSelect.ComponentTest do
       test "class for selected option can be overridden" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -669,7 +669,7 @@ defmodule LiveSelect.ComponentTest do
       test "class for available option is set" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -691,7 +691,7 @@ defmodule LiveSelect.ComponentTest do
       test "class for available option can be overridden" do
         component =
           render_component(
-            LiveSelect.Component,
+            &LiveSelect.live_select/1,
             [
               id: "live_select",
               form: :my_form,
@@ -720,7 +720,7 @@ defmodule LiveSelect.ComponentTest do
         test "#{@element} has default class" do
           component =
             render_component(
-              LiveSelect.Component,
+              &LiveSelect.live_select/1,
               [
                 id: "live_select",
                 form: :my_form,
@@ -743,7 +743,7 @@ defmodule LiveSelect.ComponentTest do
 
             component =
               render_component(
-                LiveSelect.Component,
+                &LiveSelect.live_select/1,
                 [
                   id: "live_select",
                   form: :my_form,
@@ -767,7 +767,7 @@ defmodule LiveSelect.ComponentTest do
 
             component =
               render_component(
-                LiveSelect.Component,
+                &LiveSelect.live_select/1,
                 [
                   id: "live_select",
                   form: :my_form,
@@ -801,7 +801,7 @@ defmodule LiveSelect.ComponentTest do
 
               component =
                 render_component(
-                  LiveSelect.Component,
+                  &LiveSelect.live_select/1,
                   [
                     id: "live_select",
                     form: :my_form,
