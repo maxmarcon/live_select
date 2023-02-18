@@ -1,3 +1,7 @@
+## 1.0.1 (2023-02-18)
+
+Bugfix: fix error when using atom form
+
 ## 1.0.0 (2023-02-15)
 
 This version introduces the following breaking changes and new features:
