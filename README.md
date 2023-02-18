@@ -118,7 +118,7 @@ If you're using an npm-based builder such as Webpack, you will need to add `Live
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
-    "live_select":  "file:../deps/live_select" // <-- add this line
+    "live_select":  "file:../deps/live_select" // <-- add this line, and add an extra "../" if you're in an umbrella app
   }
 }
 ```
