@@ -11,7 +11,7 @@ dropdown is filled dynamically by your LiveView as a reaction to user's input. T
 interface for features such as search. Its features include:
 
 * Single as well as multiple selection
-* Options to configure its behaviour, such as minimum number of entered characters that trigger an update or the maximum number of selectable options
+* Options to configure the behaviour, such as minimum number of entered characters that trigger an update or the maximum number of selectable options
 * Default styles for daisyUI and tailwindcss, which are fully customizable and can be even completely overriden if needed
 * Ability to fully customize the rendered HTML for dropdown entries and tags using slots.
 
@@ -87,15 +87,16 @@ To install, add this to your dependencies:
 ## Javascript hooks 🪝
 
 `LiveSelect` relies on Javascript hooks to work. You need to add `LiveSelect`'s hooks to your live socket.
+`LiveSelect` distributes its Javascript code (a single file) in the same way as LiveView, by including an
+npm package as part of its hex package.
 
-In your `app.js` file:
+To include `LiveSelect`'s hooks, add this to your `app.js` file:
 
 ```javascript
 import live_select from "live_select"
 
 // if you don't have any other hooks:
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: live_select})
-
 
 // if you have other hooks:
 const hooks = {
@@ -106,6 +107,24 @@ const hooks = {
 }
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
+
+### If you're using Webpack or another NPM-based builder
+
+If you're using an npm-based builder such as Webpack, you will need to add `LiveSelect` to the list of your dependencies in your `package.json` (just as you did with LiveView):
+
+```js
+{
+  "dependencies": {
+    "phoenix": "file:../deps/phoenix",
+    "phoenix_html": "file:../deps/phoenix_html",
+    "phoenix_live_view": "file:../deps/phoenix_live_view",
+    "live_select":  "file:../deps/live_select" // <-- add this line
+  }
+}
+```
+
+And then run `npm install` from your `assets` folder. You will also need to run `npm install --force live_select`
+whenever you update the `LiveSelect` hex package in order to get the latest JS code.
 
 ## Tailwind configuration 🎨
 

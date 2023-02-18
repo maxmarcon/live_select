@@ -6,7 +6,7 @@ defmodule LiveSelect.MixProject do
       app: app(),
       version: "1.0.0",
       elixir: "~> 1.13",
-      description: "Dynamic selection field for LiveView",
+      description: "Dynamic (multi)selection field for LiveView",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -46,7 +46,7 @@ defmodule LiveSelect.MixProject do
     [
       {:phoenix_live_view, "~> 0.18.4"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix, "~> 1.6.0", optional: true},
+      {:phoenix, ">= 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
       {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
