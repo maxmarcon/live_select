@@ -2,7 +2,7 @@ defmodule LiveSelect do
   use Phoenix.Component
 
   @moduledoc ~S"""
-  The `LiveSelect` component is rendered by calling the `live_select/3` function and passing it a form and the name of the field.
+  The `LiveSelect` component is rendered by calling the `live_select/1` function and passing it a form and the name of a field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
     
   Whenever the user types something in the text input, LiveSelect triggers a `live_select_change` event for your LiveView or LiveComponent.
@@ -102,7 +102,7 @@ defmodule LiveSelect do
   ```
   send_update(LiveSelect.Component, id: live_select_id, clear: true)
   ```
-  To set a custom id for the component, use the `id` option when calling `live_select/3`.    
+  To set a custom id for the component, use the `id` assign when calling `live_select/1`.    
 
   ## Examples
 
