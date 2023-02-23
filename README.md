@@ -4,7 +4,7 @@
 [![Hexdocs](https://img.shields.io/badge/-docs-green)](https://hexdocs.pm/live_select)
 [![Elixir CI](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml/badge.svg)](https://github.com/maxmarcon/live_select/actions/workflows/elixir.yml)
 
-Dynamic (mult)selection field for LiveView.
+Dynamic (multi)selection field for LiveView.
 
 `LiveSelect` is a LiveView component that implements a dynamic selection field with a dropdown. The content of the
 dropdown is filled dynamically by your LiveView as a reaction to user's input. This allows you to easily create an
