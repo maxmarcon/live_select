@@ -91,7 +91,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
         end
       )
       |> Map.reject(fn {option, value} ->
-        remove_defaults && value == Keyword.get(default_opts, option)
+        (remove_defaults && value == Keyword.get(default_opts, option)) ||
+          (settings.mode == :single && option == :max_selectable) ||
+          (settings.mode != :single && option == :allow_clear)
       end)
       |> Keyword.new()
     end
@@ -204,7 +206,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
         <br />&nbsp;&nbsp; <span class="text-success">form</span>=<span class="text-info">{<%= @form_name %>}</span>
         <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{:<%= @field_name %>}</span>
         <%= for {key, value} <- @opts, !is_nil(value) do %>
-          <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
+          <%= if value == true do %>
+            <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>
+          <% else %>
+            <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
+          <% end %>
         <% end %>
         <span class="text-success">/&gt;</span>
       </div>

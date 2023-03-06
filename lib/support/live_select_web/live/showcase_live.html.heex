@@ -59,7 +59,11 @@
             <%= label(f, :max_selectable, "Max selectable:",
               class: "label label-text font-semibold"
             ) %>
-            <%= number_input(f, :max_selectable, min: 0, class: "input input-sm input-bordered") %>
+            <%= number_input(f, :max_selectable,
+              min: 0,
+              class: "input input-sm input-bordered",
+              disabled: Ecto.Changeset.get_field(@changeset, :mode) == :single
+            ) %>
             <%= error_tag(f, :max_selectable) %>
           </div>
           <div class="form-control max-w-sm">
@@ -69,7 +73,10 @@
             </label>
             <label class="label cursor-pointer">
               <span class="label-text mr-1">Allow clear:</span>
-              <%= checkbox(f, :allow_clear, class: "toggle") %>
+              <%= checkbox(f, :allow_clear,
+                class: "toggle",
+                disabled: Ecto.Changeset.get_field(@changeset, :mode) != :single
+              ) %>
             </label>
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
