@@ -197,4 +197,6 @@ Tests that require a LiveView use the showcase app as the parent LiveView.
 - [X] Add support for vanilla tailwind styles
 - [X] Enable multiple selection mode
 - [X] Expose as function component (and drop LV 0.17 support)
-- [ ] Maybe additional multiple selection mode(s)? 
+- [ ] Use styles of Phoenix core components as tailwind default styles  
+- [ ] Add errors and labels
+- [ ] Additional multiple selection mode 
