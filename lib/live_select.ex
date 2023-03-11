@@ -302,6 +302,7 @@ defmodule LiveSelect do
 
   slot(:tag, doc: "optional slot that renders a tag. The option's data is available via `:let`")
 
+  # used to pass phx-target
   attr :rest, :global
 
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
@@ -320,7 +321,7 @@ defmodule LiveSelect do
   def live_select(%{form: form, field: field} = assigns) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
-    {globals, assigns} = Map.pop(assigns, :rest)
+    {rest, assigns} = Map.pop(assigns, :rest)
 
     assigns =
       assigns
@@ -328,7 +329,7 @@ defmodule LiveSelect do
         "#{form_name}_#{field}_live_select_component"
       end)
       |> assign(:module, LiveSelect.Component)
-      |> assign(globals)
+      |> assign(rest)
 
     ~H"""
     <.live_component {assigns} />
