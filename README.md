@@ -103,7 +103,7 @@ const hooks = {
     MyHook: {
         // ...
     },
-    ...live_select
+    LiveSelect: live_select.LiveSelect
 }
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 ```
