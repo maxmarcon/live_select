@@ -57,6 +57,16 @@ defmodule LiveSelect do
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
     
+  ## Styling 
+    
+  `LiveSelect` supports 3 styling modes:
+
+  * `tailwind`: uses standard tailwind utility classes (the default)
+  * `daisyui`: uses [daisyUI](https://daisyui.com/) classes.
+  * `none`: no styling at all.
+
+  Please see [the styling section](styling.md) for details 
+
   ## Alternative tag labels
     
   Sometimes, in `:tags` mode, you might want to use alternative labels for the tags. For example, you might want the labels in the tags to be shorter 

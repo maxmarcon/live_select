@@ -126,7 +126,7 @@ If you're using an npm-based builder such as Webpack, you will need to add `Live
 And then run `npm install` from your `assets` folder. You will also need to run `npm install --force live_select`
 whenever you update the `LiveSelect` hex package in order to get the latest JS code.
 
-## Tailwind configuration 🎨
+## Styling 🎨
 
 `LiveSelect` supports 3 styling modes:
 
