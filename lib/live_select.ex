@@ -252,8 +252,7 @@ defmodule LiveSelect do
   attr :mode, :atom,
     values: [:single, :tags],
     default: :single,
-    doc:
-      "either `:single` (for single selection, the default), or `:tags` (for multiple selection using tags)"
+    doc: "either `:single` (for single selection), or `:tags` (for multiple selection using tags)"
 
   attr :options, :list,
     doc:
@@ -265,11 +264,11 @@ defmodule LiveSelect do
 
   attr :max_selectable, :integer,
     default: 0,
-    doc: "limits the maximum number of selectable elements. Defaults to `0`, meaning no limit"
+    doc: "limits the maximum number of selectable elements. `0` means unlimited"
 
   attr :user_defined_options, :boolean,
-    doc:
-      "if `true`, hitting enter will always add the text entered by the user to the selection. Defaults to `false`"
+    default: false,
+    doc: "if `true`, hitting enter will always add the text entered by the user to the selection"
 
   attr :allow_clear, :boolean,
     doc:
@@ -282,18 +281,18 @@ defmodule LiveSelect do
   attr :debounce, :integer,
     default: 100,
     doc:
-      ~S(number of milliseconds to wait after the last keystroke before triggering a "live_select_change" event. Defaults to 100ms)
+      ~S(number of milliseconds to wait after the last keystroke before triggering a "live_select_change" event)
 
   attr :update_min_len, :integer,
     default: 3,
     doc:
-      "the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer. Defaults to 3"
+      "the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer"
 
   attr :style, :atom,
     values: [:tailwind, :daisyui, :none],
     default: :tailwind,
     doc:
-      "one of `:tailwind` (the default), `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
+      "one of `:tailwind`, `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
   slot(:option,
     doc:
@@ -302,8 +301,8 @@ defmodule LiveSelect do
 
   slot(:tag, doc: "optional slot that renders a tag. The option's data is available via `:let`")
 
-  # used to pass phx-target
-  attr :rest, :global
+  attr :"phx-target", :any,
+    doc: "Optional target for change events. Usually the same target as the form"
 
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 
@@ -321,15 +320,12 @@ defmodule LiveSelect do
   def live_select(%{form: form, field: field} = assigns) do
     form_name = if is_struct(form, Phoenix.HTML.Form), do: form.name, else: to_string(form)
 
-    {rest, assigns} = Map.pop(assigns, :rest)
-
     assigns =
       assigns
       |> assign_new(:id, fn ->
         "#{form_name}_#{field}_live_select_component"
       end)
       |> assign(:module, LiveSelect.Component)
-      |> assign(rest)
 
     ~H"""
     <.live_component {assigns} />
