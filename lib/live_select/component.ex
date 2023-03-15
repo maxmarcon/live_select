@@ -42,29 +42,29 @@ defmodule LiveSelect.Component do
 
   @styles [
     tailwind: [
-      active_option: ~S(text-white bg-gray-600),
-      available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
-      container: ~S(relative h-full text-black),
-      dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 w-full),
-      option: ~S(rounded px-4 py-1),
-      selected_option: ~S(text-gray-400),
+      active_option: ~W(text-white bg-gray-600),
+      available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
+      container: ~W(relative h-full text-black),
+      dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 w-full),
+      option: ~W(rounded px-4 py-1),
+      selected_option: ~W(text-gray-400),
       text_input:
-        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
-      text_input_selected: ~S(border-gray-600 text-gray-600),
-      tags_container: ~S(flex flex-wrap gap-1 p-1),
-      tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex)
+        ~W(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
+      text_input_selected: ~W(border-gray-600 text-gray-600),
+      tags_container: ~W(flex flex-wrap gap-1 p-1),
+      tag: ~W(p-1 text-sm rounded-lg bg-blue-400 flex)
     ],
     daisyui: [
-      active_option: ~S(active),
-      available_option: ~S(cursor-pointer),
-      container: ~S(dropdown dropdown-open),
-      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
+      active_option: ~W(active),
+      available_option: ~W(cursor-pointer),
+      container: ~W(dropdown dropdown-open),
+      dropdown: ~W(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
-      selected_option: ~S(disabled),
-      text_input: ~S(input input-bordered w-full pr-6),
-      text_input_selected: ~S(input-primary),
-      tags_container: ~S(flex flex-wrap gap-1 p-1),
-      tag: ~S(p-1.5 text-sm badge badge-primary)
+      selected_option: ~W(disabled),
+      text_input: ~W(input input-bordered w-full pr-6),
+      text_input_selected: ~W(input-primary),
+      tags_container: ~W(flex flex-wrap gap-1 p-1),
+      tag: ~W(p-1.5 text-sm badge badge-primary)
     ],
     none: []
   ]
@@ -498,11 +498,15 @@ defmodule LiveSelect.Component do
   defp class(style, element, class_override, class_extend \\ nil)
 
   defp class(style, element, nil, nil) do
-    get_in(@styles, [style, element])
+    get_in(@styles, [style, element]) |> List.wrap()
+  end
+
+  defp class(_style, _element, class_override, nil) when is_list(class_override) do
+    class_override
   end
 
   defp class(_style, _element, class_override, nil) do
-    class_override
+    String.split(class_override)
   end
 
   defp class(:none, element, nil, _class_extend) do
@@ -511,11 +515,15 @@ defmodule LiveSelect.Component do
     """
   end
 
-  defp class(style, element, nil, class_extend) do
+  defp class(style, element, nil, class_extend) when is_list(class_extend) do
     extend(
-      get_in(@styles, [style, element]) || "",
+      get_in(@styles, [style, element]) |> List.wrap(),
       class_extend
     )
+  end
+
+  defp class(style, element, nil, class_extend) do
+    class(style, element, nil, String.split(class_extend))
   end
 
   defp class(_style, element, _class_override, _class_extend) do

@@ -27,7 +27,12 @@
   <div>
     <%= text_input(@form, @text_input_field,
       class:
-        "#{class(@style, :text_input, @text_input_class, @text_input_extra_class)}#{if Enum.any?(@selection), do: " #{class(@style, :text_input_selected, @text_input_selected_class)}"}",
+        class(@style, :text_input, @text_input_class, @text_input_extra_class) ++
+          List.wrap(
+            if(Enum.any?(@selection),
+              do: class(@style, :text_input_selected, @text_input_selected_class)
+            )
+          ),
       placeholder: @placeholder,
       phx_debounce: @debounce,
       phx_keyup: "keyup",
@@ -85,10 +90,14 @@
              else: class(@style, :available_option, @available_option_class)
         }>
           <div
-            class={[
-              class(@style, :option, @option_class, @option_extra_class),
-              if(idx == @active_option, do: class(@style, :active_option, @active_option_class))
-            ]}
+            class={
+              class(@style, :option, @option_class, @option_extra_class) ++
+                List.wrap(
+                  if(idx == @active_option,
+                    do: class(@style, :active_option, @active_option_class)
+                  )
+                )
+            }
             data-idx={unless already_selected?(option, @selection), do: idx}
           >
             <%= if @option == [] do %>

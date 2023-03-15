@@ -50,7 +50,6 @@ defmodule Mix.Tasks.DumpStyleTable do
 
   defp format_styles(styles) do
     styles
-    |> String.split()
     |> Enum.sort()
     |> Enum.join(" ")
   end

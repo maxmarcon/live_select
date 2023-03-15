@@ -447,6 +447,23 @@ defmodule LiveSelect.ComponentTest do
     end
   end
 
+  test "can set class with list" do
+    component =
+      render_component(
+        &LiveSelect.live_select/1,
+        [
+          form: :my_form,
+          field: :city_search,
+          options: ["A"],
+          hide_dropdown: false
+        ] ++ [{override_class_option()[:text_input], ["class_1", "class_2"]}]
+      )
+
+    assert Floki.attribute(component, selectors()[:text_input], "class") == [
+             "class_1 class_2"
+           ]
+  end
+
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
 
@@ -478,7 +495,7 @@ defmodule LiveSelect.ComponentTest do
         end
 
         if override_class_option()[@element] do
-          test "#{@element} class can be overridden with #{override_class_option()[@element]}" do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a string" do
             option = override_class_option()[@element]
 
             component =
@@ -497,10 +514,30 @@ defmodule LiveSelect.ComponentTest do
                      "foo"
                    ]
           end
+
+          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a list" do
+            option = override_class_option()[@element]
+
+            component =
+              render_component(
+                &LiveSelect.live_select/1,
+                [
+                  form: :my_form,
+                  field: :city_search,
+                  options: ["A"],
+                  hide_dropdown: false
+                ] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, ["foo", nil, "goo"]}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     "foo goo"
+                   ]
+          end
         end
 
         if extend_class_option()[@element] && @style != :none do
-          test "#{@element} class can be extended with #{extend_class_option()[@element]}" do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a string" do
             option = extend_class_option()[@element]
 
             component =
@@ -518,6 +555,28 @@ defmodule LiveSelect.ComponentTest do
             assert Floki.attribute(component, selectors()[@element], "class") == [
                      ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
                         " foo")
+                     |> String.trim()
+                   ]
+          end
+
+          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a list" do
+            option = extend_class_option()[@element]
+
+            component =
+              render_component(
+                &LiveSelect.live_select/1,
+                [
+                  form: :my_form,
+                  field: :city_search,
+                  options: ["A"],
+                  hide_dropdown: false
+                ] ++
+                  if(@style, do: [style: @style], else: []) ++ [{option, ["foo", nil, "goo"]}]
+              )
+
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
+                        " foo goo")
                      |> String.trim()
                    ]
           end
@@ -574,7 +633,7 @@ defmodule LiveSelect.ComponentTest do
             (get_in(expected_class(), [@style || default_style(), :text_input_selected]) || "")
 
         assert Floki.attribute(component, selectors()[:text_input], "class") == [
-                 expected_class
+                 String.trim(expected_class)
                ]
       end
 
@@ -597,7 +656,7 @@ defmodule LiveSelect.ComponentTest do
             " foo"
 
         assert Floki.attribute(component, selectors()[:text_input], "class") == [
-                 expected_class
+                 String.trim(expected_class)
                ]
       end
 
