@@ -37,7 +37,15 @@ defmodule LiveSelect.MixProject do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+
+  defp elixirc_paths(:prod) do
+    # so we do not compile web stuff when used as dependency
+    ["lib/live_select", "lib/live_select.ex"]
+  end
+
+  defp elixirc_paths(_) do
+    ["lib"]
+  end
 
   # Specifies your project dependencies.
   #
