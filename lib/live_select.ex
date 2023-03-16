@@ -320,7 +320,7 @@ defmodule LiveSelect do
     Phoenix.Component.Declarative.__attr__!(
       __MODULE__,
       attr_name,
-      :string,
+      :any,
       [doc: false],
       __ENV__.line,
       __ENV__.file

@@ -48,7 +48,7 @@ In `tags` mode there are 4 additional stylable elements:
 
 For each of these elements there is an `{element}_class` and for some also an `{element}_extra_class` option, which can
 be used
-to override or extend the default CSS classes for the element, respectively.
+to override or extend the default CSS classes for the element, respectively. These options accept both strings and lists of strings.
 You can't use both options together:
 use `{element}_class`
 to completely override the default classes, or use `{element}_extra_class` to extend the default.
