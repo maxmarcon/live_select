@@ -246,6 +246,29 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
+    test "can set initial selection from form using labels from options" do
+      changeset =
+        Ecto.Changeset.change(
+          {%{city_search: [1, 2]}, %{city_search: {:array, :integer}}},
+          %{}
+        )
+
+      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
+
+      component =
+        render_component(&LiveSelect.live_select/1,
+          mode: :tags,
+          form: form,
+          field: :city_search,
+          options: [{"B", 1}, {"D", 2}]
+        )
+
+      assert_selected_multiple_static(component, [
+        %{label: "B", value: "1"},
+        %{label: "D", value: "2"}
+      ])
+    end
+
     test "can set initial selection from form even it can't be found in the options" do
       changeset =
         Ecto.Changeset.change(
