@@ -1,3 +1,7 @@
+## 1.0.2 (2023-03-20)
+
+styling options now also accept lists of strings
+
 ## 1.0.1 (2023-02-18)
 
 Bugfix: fix error when using atom form
