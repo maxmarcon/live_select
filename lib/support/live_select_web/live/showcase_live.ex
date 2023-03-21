@@ -425,7 +425,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
   end
 
-  defp default_class(style, class), do: LiveSelect.Component.default_class(style, class)
+  defp default_class(style, class) do
+    case LiveSelect.Component.default_class(style, class) do
+      nil -> nil
+      list -> Enum.join(list, " ")
+    end
+  end
 
   defp make_form_changeset(field_name, settings) do
     {Map.new([
