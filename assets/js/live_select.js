@@ -23,9 +23,10 @@ export default {
             const dropdown = this.el.querySelector("ul")
             if (dropdown) {
                 dropdown.onmousedown = (event) => {
-                    if (event.target.dataset.idx) {
+                    const option = event.target.closest('div[data-idx]')
+                    if (option) {
                         this.textInput().blur()
-                        this.pushEventTo(this.el, 'option_click', {idx: event.target.dataset.idx})
+                        this.pushEventTo(this.el, 'option_click', {idx: option.dataset.idx})
                     }
                 }
             }
