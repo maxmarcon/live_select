@@ -302,9 +302,29 @@ defmodule LiveSelectTagsTest do
 
     assert_selected_multiple(live, ~w(A B))
 
-    send_update(live, clear: true)
+    send_update(live, value: nil)
 
     assert_selected_multiple(live, [])
+  end
+
+  test "can force the selection", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C D))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2, :click)
+
+    assert_selected_multiple(live, ~w(A B))
+
+    send_update(live, value: ~w(B C))
+
+    assert_selected_multiple(live, ~w(B C))
   end
 
   defp select_and_open_dropdown(live, pos) do

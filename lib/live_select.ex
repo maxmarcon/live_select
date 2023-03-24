@@ -8,9 +8,9 @@ defmodule LiveSelect do
   Whenever the user types something in the text input, LiveSelect triggers a `live_select_change` event for your LiveView or LiveComponent.
   The message has a `text` parameter containing the current text entered by the user, as well as `id` and `field` parameters with the id of the 
   LiveSelect component and the name of the LiveSelect form field, respectively.
-  Your job is to handle the event, retrieve the list of selectable options and then call `LiveView.send_update/3`
-  to send the list of options to LiveSelect. See the "Examples" section below for details.    
-
+  Your job is to handle the event, retrieve the list of selectable options and then call `Phoenix.LiveView.send_update/3`
+  to send the list of options to LiveSelect. See the "Examples" section below for details.  
+    
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
 
@@ -105,14 +105,19 @@ defmodule LiveSelect do
       
   <img alt="slots" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/slots.png" width="200" />
 
-  ## Clearing the selection programmatically
+  ## Controlling the selection programmatically
 
-  You can clear the selection programmatically by sending a `clear: true` assign to `LiveSelect`
+  You can always control the selection programmatically, overriding the current user-selected values,
+  by sending a `:selection` assign to `LiveSelect` via `Phoenix.LiveView.send_update/3`:
 
   ```
-  send_update(LiveSelect.Component, id: live_select_id, clear: true)
+  send_update(LiveSelect.Component, id: live_select_id, value: selected_value)
   ```
-  To set a custom id for the component, use the `id` assign when calling `live_select/1`.    
+
+  `selected_value` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
+  After updating the selection, `LiveSelect` will trigger a change event in the form.  
+
+  To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
   ## Examples
 

@@ -471,9 +471,29 @@ defmodule LiveSelectTest do
 
     assert_selected(live, :B, 2)
 
-    send_update(live, clear: true)
+    send_update(live, value: nil)
 
     assert_clear(live)
+  end
+
+  test "can force the selection", %{conn: conn} do
+    stub_options(
+      A: 1,
+      B: 2,
+      C: 3
+    )
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, :B, 2)
+
+    send_update(live, value: 3)
+
+    assert_selected(live, :C, 3)
   end
 
   describe "when rendered inside a live component" do

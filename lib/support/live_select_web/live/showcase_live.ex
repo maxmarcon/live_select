@@ -325,7 +325,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def handle_event("clear-selection", _params, socket) do
     send_update(LiveSelect.Component,
       id: "my_form_city_search_live_select_component",
-      clear: true
+      value: nil
     )
 
     {:noreply, socket}

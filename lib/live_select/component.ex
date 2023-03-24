@@ -103,11 +103,15 @@ defmodule LiveSelect.Component do
   @impl true
   def update(assigns, socket) do
     validate_assigns!(assigns)
-    {clear, assigns} = Map.pop(assigns, :clear)
 
     socket =
-      if clear do
-        clear_selection(socket)
+      if socket.assigns[:selection] && Map.has_key?(assigns, :value) do
+        # not the initial selection, so we use value in the assigns to override the current selection
+        socket
+        |> assign(
+          selection: initial_selection(assigns.value, socket.assigns.options, socket.assigns.mode)
+        )
+        |> client_select(%{input_event: true})
       else
         socket
       end
@@ -281,6 +285,10 @@ defmodule LiveSelect.Component do
       end
     end
 
+    if assigns[:clear] do
+      raise "The `:clear` assign has been removed. To clear the selection (or set it to any other value programmatically), pass a `value: nil` assign"
+    end
+
     valid_assigns =
       Keyword.keys(@default_opts) ++
         @required_assigns ++ [:id, :options, :"phx-target", :option, :tag, :clear, :hide_dropdown]
@@ -359,11 +367,6 @@ defmodule LiveSelect.Component do
     )
     |> client_select(%{input_event: true})
   end
-
-  defp clear_selection(%{assigns: %{mode: :single}} = socket),
-    do: clear(socket, %{input_event: true})
-
-  defp clear_selection(socket), do: unselect(socket, :all)
 
   defp unselect(socket, pos) do
     socket =
