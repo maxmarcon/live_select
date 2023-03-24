@@ -180,7 +180,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keyup", %{"value" => text, "key" => key}, socket)
-      when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"] do
+      when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape", "Meta"] do
     text = String.trim(text)
 
     socket =
@@ -192,13 +192,16 @@ defmodule LiveSelect.Component do
             _ -> nil
           end
 
-        assign(socket, hide_dropdown: false, current_text: text, awaiting_update: true)
+        socket
+        |> assign(hide_dropdown: false, current_text: text, awaiting_update: true)
         |> push_event("change", %{
           payload: %{id: socket.assigns.id, field: socket.assigns.field, text: text},
           target: target
         })
       else
-        assign(socket, options: [], current_text: nil)
+        socket
+        |> assign(current_text: nil)
+        |> then(&if key == "Backspace", do: assign(&1, options: []), else: &1)
       end
 
     {:noreply, socket}
