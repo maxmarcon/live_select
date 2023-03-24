@@ -1,3 +1,6 @@
+
+Bugfix: fix selection via mouseclick not working when rendering nested elements via the :option slot
+
 ## 1.0.2 (2023-03-20)
 
 styling options now also accept lists of strings
