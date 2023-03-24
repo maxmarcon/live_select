@@ -68,6 +68,8 @@ defmodule LiveSelect.TestHelpers do
   ]
   def selectors(), do: @selectors
 
+  @component_id "my_form_city_search_live_select_component"
+
   defmacrop refute_push_event(view, event, timeout \\ 100) do
     quote do
       %{proxy: {ref, _topic, _}} = unquote(view)
@@ -140,7 +142,7 @@ defmodule LiveSelect.TestHelpers do
       assert_push_event(live, "change", %{
         payload: %{
           text: ^text,
-          id: "my_form_city_search_live_select_component",
+          id: @component_id,
           field: :city_search
         },
         target: _
@@ -148,7 +150,7 @@ defmodule LiveSelect.TestHelpers do
 
       render_hook(live, "live_select_change", %{
         text: text,
-        id: "my_form_city_search_live_select_component",
+        id: @component_id,
         field: "city_search"
       })
     else
@@ -195,7 +197,7 @@ defmodule LiveSelect.TestHelpers do
     {label, value} = assert_selected_static(live, label, value)
 
     assert_push_event(live, "select", %{
-      id: "my_form_city_search_live_select_component",
+      id: @component_id,
       selection: [%{label: ^label, value: ^value}],
       input_event: true,
       mode: :single
@@ -285,7 +287,7 @@ defmodule LiveSelect.TestHelpers do
     normalized_selection = assert_selected_multiple_static(live, selection)
 
     assert_push_event(live, "select", %{
-      id: "my_form_city_search_live_select_component",
+      id: @component_id,
       selection: ^normalized_selection
     })
   end
@@ -345,7 +347,7 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.attribute("value") == []
 
     assert_push_event(live, "select", %{
-      id: "my_form_city_search_live_select_component",
+      id: @component_id,
       selection: [],
       input_event: ^input_event
     })
@@ -361,6 +363,14 @@ defmodule LiveSelect.TestHelpers do
     for _ <- 1..n do
       keydown(live, key)
     end
+  end
+
+  def send_update(live, assigns) do
+    Phoenix.LiveView.send_update(
+      live.pid,
+      LiveSelect.Component,
+      Keyword.merge(assigns, id: @component_id)
+    )
   end
 
   defp encode_values(values) when is_list(values) do

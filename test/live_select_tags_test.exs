@@ -302,7 +302,7 @@ defmodule LiveSelectTagsTest do
 
     assert_selected_multiple(live, ~w(A B))
 
-    render_click(live, "clear-selection", %{})
+    send_update(live, clear: true)
 
     assert_selected_multiple(live, [])
   end

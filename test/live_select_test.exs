@@ -471,7 +471,7 @@ defmodule LiveSelectTest do
 
     assert_selected(live, :B, 2)
 
-    render_click(live, "clear-selection", %{})
+    send_update(live, clear: true)
 
     assert_clear(live)
   end
