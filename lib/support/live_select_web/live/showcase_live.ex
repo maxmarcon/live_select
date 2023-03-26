@@ -3,6 +3,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   import LiveSelect
   alias Phoenix.LiveView.JS
+  alias LiveSelect.Component
 
   defmodule Settings do
     use Ecto.Schema
@@ -31,16 +32,16 @@ defmodule LiveSelectWeb.ShowcaseLive do
     @primary_key false
     embedded_schema do
       field(:allow_clear, :boolean)
-      field(:debounce, :integer, default: 100)
+      field(:debounce, :integer, default: Component.default_opts()[:integer])
       field(:disabled, :boolean)
-      field(:max_selectable, :integer, default: 0)
+      field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
-      field(:mode, Ecto.Enum, values: [:single, :tags], default: :single)
+      field(:mode, Ecto.Enum, values: [:single, :tags], default: Component.default_opts()[:mode])
       field(:new, :boolean, default: true)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
-      field(:update_min_len, :integer)
+      field(:update_min_len, :integer, default: Component.default_opts()[:update_min_len])
       field(:options, {:array, :string}, default: [])
       field(:selection, {:array, :string}, default: [])
 
@@ -78,7 +79,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     def live_select_opts(%__MODULE__{} = settings, remove_defaults \\ false) do
-      default_opts = LiveSelect.Component.default_opts()
+      default_opts = Component.default_opts()
 
       settings
       |> Map.drop([:search_delay, :new, :selection])
@@ -145,7 +146,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       if new_settings do
         initial_classes =
           Application.get_env(:live_select, :initial_classes, [])
-          |> Keyword.get(LiveSelect.Component.default_opts()[:style], [])
+          |> Keyword.get(Component.default_opts()[:style], [])
 
         initial_classes
         |> Enum.reduce(changeset, fn {class, initial_value}, changeset ->
@@ -323,7 +324,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   def handle_event("clear-selection", _params, socket) do
-    send_update(LiveSelect.Component,
+    send_update(Component,
       id: "my_form_city_search_live_select_component",
       value: nil
     )
@@ -376,7 +377,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
-    send_update(LiveSelect.Component, id: id, options: options)
+    send_update(Component, id: id, options: options)
 
     {:noreply, socket}
   end
@@ -404,7 +405,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp default_value_descr(field) do
-    if default = LiveSelect.Component.default_opts()[field] do
+    if default = Component.default_opts()[field] do
       "default: #{default}"
     else
       ""
@@ -426,7 +427,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp default_class(style, class) do
-    case LiveSelect.Component.default_class(style, class) do
+    case Component.default_class(style, class) do
       nil -> nil
       list -> Enum.join(list, " ")
     end
