@@ -496,6 +496,26 @@ defmodule LiveSelectTest do
     assert_selected(live, :C, 3)
   end
 
+  test "can force selection and options simultaneously", %{conn: conn} do
+    stub_options(
+      A: 1,
+      B: 2,
+      C: 3
+    )
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, :B, 2)
+
+    send_update(live, value: 4, options: [C: 3, D: 4])
+
+    assert_selected(live, :D, 4)
+  end
+
   describe "when rendered inside a live component" do
     setup %{conn: conn} do
       {:ok, live, _html} = live(conn, "/lc")

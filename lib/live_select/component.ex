@@ -105,18 +105,6 @@ defmodule LiveSelect.Component do
     validate_assigns!(assigns)
 
     socket =
-      if socket.assigns[:selection] && Map.has_key?(assigns, :value) do
-        # not the initial selection, so we use value in the assigns to override the current selection
-        socket
-        |> assign(
-          selection: initial_selection(assigns.value, socket.assigns.options, socket.assigns.mode)
-        )
-        |> client_select(%{input_event: true})
-      else
-        socket
-      end
-
-    socket =
       socket
       |> assign(assigns)
       |> assign(:active_option, -1)
@@ -144,12 +132,20 @@ defmodule LiveSelect.Component do
       |> update(:options, &normalize_options/1)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
       |> assign_new(:selection, fn
-        %{form: form, field: field, options: options, mode: mode, value: nil} ->
-          initial_selection(input_value(form, field), options, mode)
-
-        %{options: options, mode: mode, value: value} ->
-          initial_selection(value, options, mode)
+        %{form: form, field: field, options: options, mode: mode} ->
+          set_selection(input_value(form, field), options, mode)
       end)
+
+    socket =
+      if Map.has_key?(assigns, :value) do
+        update(socket, :selection, fn
+          _, %{options: options, mode: mode, value: value} ->
+            set_selection(value, options, mode) |> IO.inspect()
+        end)
+        |> client_select(%{input_event: true})
+      else
+        socket
+      end
 
     {:ok, socket}
   end
@@ -416,7 +412,7 @@ defmodule LiveSelect.Component do
     )
   end
 
-  defp initial_selection(value, options, :single) do
+  defp set_selection(value, options, :single) do
     if option = Enum.find(options, fn %{value: val} -> value == val end) do
       [option]
     else
@@ -427,7 +423,7 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp initial_selection(value, options, _) do
+  defp set_selection(value, options, _) do
     value
     |> then(&if Enumerable.impl_for(&1), do: &1, else: List.wrap(&1))
     |> Enum.map(
