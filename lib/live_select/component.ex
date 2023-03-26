@@ -103,7 +103,6 @@ defmodule LiveSelect.Component do
   @impl true
   def update(assigns, socket) do
     validate_assigns!(assigns)
-    IO.inspect(assigns)
 
     socket =
       socket
@@ -137,7 +136,7 @@ defmodule LiveSelect.Component do
       if Map.has_key?(assigns, :value) do
         update(socket, :selection, fn
           _, %{options: options, mode: mode, value: value} ->
-            set_selection(value, options, mode) |> IO.inspect()
+            set_selection(value, options, mode)
         end)
         |> client_select(%{input_event: true})
       else
