@@ -1,6 +1,8 @@
 defmodule LiveSelect do
   use Phoenix.Component
 
+  alias LiveSelect.Component
+
   @moduledoc ~S"""
   The `LiveSelect` component is rendered by calling the `live_select/1` function and passing it a form and the name of a field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
@@ -266,7 +268,7 @@ defmodule LiveSelect do
 
   attr :mode, :atom,
     values: [:single, :tags],
-    default: :single,
+    default: Component.default_opts()[:mode],
     doc: "either `:single` (for single selection), or `:tags` (for multiple selection using tags)"
 
   attr :options, :list,
@@ -278,11 +280,11 @@ defmodule LiveSelect do
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode."
 
   attr :max_selectable, :integer,
-    default: 0,
+    default: Component.default_opts()[:max_selectable],
     doc: "limits the maximum number of selectable elements. `0` means unlimited"
 
   attr :user_defined_options, :boolean,
-    default: false,
+    default: Component.default_opts()[:user_defined_options],
     doc: "if `true`, hitting enter will always add the text entered by the user to the selection"
 
   attr :allow_clear, :boolean,
@@ -294,18 +296,18 @@ defmodule LiveSelect do
   attr :placeholder, :string, doc: "placeholder text for the input field"
 
   attr :debounce, :integer,
-    default: 100,
+    default: Component.default_opts()[:debounce],
     doc:
       ~S(number of milliseconds to wait after the last keystroke before triggering a "live_select_change" event)
 
   attr :update_min_len, :integer,
-    default: 3,
+    default: Component.default_opts()[:update_min_len],
     doc:
       "the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer"
 
   attr :style, :atom,
     values: [:tailwind, :daisyui, :none],
-    default: :tailwind,
+    default: Component.default_opts()[:style],
     doc:
       "one of `:tailwind`, `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
