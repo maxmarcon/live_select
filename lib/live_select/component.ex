@@ -103,6 +103,7 @@ defmodule LiveSelect.Component do
   @impl true
   def update(assigns, socket) do
     validate_assigns!(assigns)
+    IO.inspect(assigns)
 
     socket =
       socket
@@ -124,10 +125,6 @@ defmodule LiveSelect.Component do
       |> Enum.reduce(socket, fn {opt, default}, socket ->
         socket
         |> assign_new(opt, fn -> default end)
-      end)
-      |> update(:update_min_len, fn
-        nil -> @default_opts[:update_min_len]
-        val -> val
       end)
       |> update(:options, &normalize_options/1)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
