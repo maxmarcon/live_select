@@ -1,6 +1,6 @@
 ### Styling live_select like a Phoenix Core Component
 
-Copy and paste this in your `core_components.ex` to get live a `LiveSelect` styled like
+Copy and paste this in your `core_components.ex` to have a `LiveSelect` styled like
 a core component, with label and errors:
 
 ```elixir
