@@ -303,7 +303,7 @@ defmodule LiveSelect do
   attr :update_min_len, :integer,
     default: Component.default_opts()[:update_min_len],
     doc:
-      "the minimum length of text in the text input field that will trigger an update of the dropdown. It has to be a positive integer"
+      "the minimum length of text in the text input field that will trigger an update of the dropdown. If 0, any user input will trigger an update"
 
   attr :style, :atom,
     values: [:tailwind, :daisyui, :none],

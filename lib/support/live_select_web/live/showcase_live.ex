@@ -72,7 +72,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> validate_required([:search_delay])
       |> validate_number(:debounce, greater_than_or_equal_to: 0)
       |> validate_number(:search_delay, greater_than_or_equal_to: 0)
-      |> validate_number(:update_min_len, greater_than: 0)
+      |> validate_number(:update_min_len, greater_than_or_equal_to: 0)
       |> maybe_apply_initial_styles()
       |> validate_styles()
       |> put_change(:new, false)
