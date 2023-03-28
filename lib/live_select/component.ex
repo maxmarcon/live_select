@@ -268,9 +268,15 @@ defmodule LiveSelect.Component do
       end
     end
 
-    if mode = assigns[:mode] do
-      unless mode in @modes do
+    if Map.has_key?(assigns, :mode) do
+      unless assigns.mode in @modes do
         raise(~s(Invalid mode: "#{assigns.mode}". Mode must be one of: #{inspect(@modes)}))
+      end
+    end
+
+    if Map.has_key?(assigns, :update_min_len) do
+      unless is_integer(assigns.update_min_len) do
+        raise(~s(Invalid update_min_len: "#{assigns.update_min_len}". It must be an integer))
       end
     end
 
