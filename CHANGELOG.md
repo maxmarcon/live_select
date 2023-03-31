@@ -1,5 +1,7 @@
+## 1.0.3 (2023-03-31)
 
 * Programmatically override selection with value assign
+* Only clear options if user and text is less than update_min_len types backspace
 
 Bugfix: fix selection via mouseclick not working when rendering nested elements via the :option slot
 
