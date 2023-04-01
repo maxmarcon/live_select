@@ -110,13 +110,13 @@ defmodule LiveSelect do
   ## Controlling the selection programmatically
 
   You can always control the selection programmatically, overriding the current user-selected values,
-  by sending a `:selection` assign to `LiveSelect` via `Phoenix.LiveView.send_update/3`:
+  by sending a `:value` update to `LiveSelect` via `Phoenix.LiveView.send_update/3`:
 
   ```
-  send_update(LiveSelect.Component, id: live_select_id, value: selected_value)
+  send_update(LiveSelect.Component, id: live_select_id, value: new_selection)
   ```
 
-  `selected_value` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
+  `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
   After updating the selection, `LiveSelect` will trigger a change event in the form.  
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
@@ -264,7 +264,7 @@ defmodule LiveSelect do
 
   attr :id, :string,
     doc:
-      ~S(an id to assign to the component. If none is provided, `#{form_name}_#{field}_component` will be used)
+      ~S(an id to assign to the component. If none is provided, `#{form_name}_#{field}_live_select_component` will be used)
 
   attr :mode, :atom,
     values: [:single, :tags],
@@ -275,8 +275,7 @@ defmodule LiveSelect do
     doc:
       ~s(initial available options to select from. See the "Options" section for details on what you can pass here)
 
-  attr :value, :any,
-    doc: "used to manually set an initial selection - overrides any values from the form. 
+  attr :value, :any, doc: "used to manually set a selection - overrides any values from the form. 
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode."
 
   attr :max_selectable, :integer,
