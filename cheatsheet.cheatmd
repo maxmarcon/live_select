@@ -1,7 +1,6 @@
-### Styling live_select like a Phoenix Core Component
+### Styling live_select like a Phoenix Core Component, with label and errors
 
-Copy and paste this in your `core_components.ex` to have a `LiveSelect` styled like
-a core component, with label and errors:
+#### 1. Copy and paste this in your `core_components.ex`:
 
 ```elixir
 def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -31,10 +30,69 @@ def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
 end
 ```
 
-### Then use it like this:
+#### 2. Then use it like this:
 
 ```elixir
 <.live_select field={@form[:city]} label="City" phx-target={@myself} />
 ```
 
 You can also pass any of the other `LiveSelect` options.
+
+## Implementing a simple search functionality
+
+### 1. With no displayed options if the user doesn't enter any text
+
+#### Heex template:
+
+```elixir
+<.live_select form={f} field={:locations} update_min_len={1} />
+```
+
+#### Live view:
+
+```elixir
+@impl true
+def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
+ options =
+   retrieve_locations()
+   |> Enum.filter(&(String.downcase(&1) |> String.contains?(String.downcase(text))))
+
+ send_update(LiveSelect.Component, options: options, id: id)
+
+ {:noreply, socket}
+end
+```
+
+### 1. With a fixed set of displayed options if the user doesn't enter any text
+
+#### Heex template:
+
+```elixir
+<.live_select form={f} field={:locations} update_min_len={0} options={@default_locations} />
+```
+
+#### Live view:
+
+```elixir
+@impl true
+def mount(socket) do
+  socket = assign(socket, default_locations: default_locations())
+  
+  {:ok, socket}
+end
+
+@impl true
+def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
+  options =
+    if text == "" do 
+      socket.assigns.default_locations
+    else
+      retrieve_locations()
+      |> Enum.filter(&(String.downcase(&1) |> String.contains?(String.downcase(text))))
+    end
+    
+  send_update(LiveSelect.Component, options: options, id: id)
+    
+  {:noreply, socket}
+end
+```
