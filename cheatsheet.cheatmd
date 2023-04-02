@@ -1,6 +1,6 @@
-### Styling live_select like a Phoenix Core Component, with label and errors
+## Styled like a Phoenix Core Component, with label and errors
 
-#### 1. Copy and paste this in your `core_components.ex`:
+#### 1. Add this to `core_components.ex`:
 
 ```elixir
 def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

@@ -104,8 +104,8 @@ defmodule LiveSelect.MixProject do
       main: "readme",
       extras: [
         "README.md": [title: "Readme"],
-        "cheatsheet.cheatmd": [title: "Cheatsheet"],
         "styling.md": [],
+        "cheatsheet.cheatmd": [title: "Cheatsheet"],
         "CHANGELOG.md": []
       ],
       filter_modules: ~r/LiveSelect($|\.)/,
