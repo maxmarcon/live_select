@@ -40,7 +40,7 @@ You can also pass any of the other `LiveSelect` options.
 
 ## Implementing a simple search functionality
 
-### 1. With no displayed options if the user doesn't enter any text
+### 1. With no options displayed if the user doesn't enter any text
 
 #### Heex template:
 
@@ -63,7 +63,7 @@ def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
 end
 ```
 
-### 1. With a fixed set of displayed options if the user doesn't enter any text
+### 2. With a fixed set of default options displayed if the user doesn't enter any text
 
 #### Heex template:
 
