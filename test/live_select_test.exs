@@ -24,10 +24,11 @@ defmodule LiveSelectTest do
     assert has_element?(live, "input#my_form_city_search_text_input")
   end
 
-  test "with less than 3 keystrokes in the input field it does not show the dropdown", %{
-    conn: conn
-  } do
-    {:ok, live, _html} = live(conn, "/")
+  test "with less than update_min_len keystrokes in the input field it does not show the dropdown",
+       %{
+         conn: conn
+       } do
+    {:ok, live, _html} = live(conn, "/?update_min_len=3")
 
     type(live, "Be")
 

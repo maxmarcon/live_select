@@ -36,7 +36,7 @@ defmodule LiveSelect.Component do
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil,
-    update_min_len: 3,
+    update_min_len: 1,
     value: nil
   ]
 

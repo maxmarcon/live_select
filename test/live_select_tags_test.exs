@@ -94,7 +94,7 @@ defmodule LiveSelectTagsTest do
 
   describe "when user_defined_options = true" do
     setup %{conn: conn} do
-      {:ok, live, _html} = live(conn, "/?mode=tags&user_defined_options=true")
+      {:ok, live, _html} = live(conn, "/?mode=tags&user_defined_options=true&update_min_len=3")
       %{live: live}
     end
 
