@@ -11,8 +11,9 @@ defmodule LiveSelect do
   The message has a `text` parameter containing the current text entered by the user, as well as `id` and `field` parameters with the id of the 
   LiveSelect component and the name of the LiveSelect form field, respectively.
   Your job is to handle the event, retrieve the list of selectable options and then call `Phoenix.LiveView.send_update/3`
-  to send the list of options to LiveSelect. See the "Examples" section below for details.  
-    
+  to send the list of options to LiveSelect. See the "Examples" section below for details, and check out the 
+  [cheatsheet](https://hexdocs.pm/live_select/cheatsheet.html) for some useful tips.
+
   Selection can happen either using the keyboard, by navigating the options with the arrow keys and then pressing enter, or by
   clicking an option with the mouse.
 
@@ -302,7 +303,7 @@ defmodule LiveSelect do
   attr :update_min_len, :integer,
     default: Component.default_opts()[:update_min_len],
     doc:
-      "the minimum length of text in the text input field that will trigger an update of the dropdown. If 0, any user input will trigger an update"
+      "the minimum length of text in the text input field that will trigger an update of the dropdown."
 
   attr :style, :atom,
     values: [:tailwind, :daisyui, :none],

@@ -97,7 +97,7 @@ def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
 end
 ```
 
-## Display tags below the input field (if you're using tailwind)
+## Display tags underneath the input field (if you're using tailwind)
 
 ```elixir
 <.live_select

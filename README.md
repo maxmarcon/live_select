@@ -35,8 +35,8 @@ _Template:_
   </.form>
 ```
 
-**NOTE:** add `phx-target={@myself}` if your form is implemented in a LiveComponent:
-    
+**NOTE:** If your form is implemented in a LiveComponent, add `phx-target={@myself}`, like this:
+
 ```elixir
   <.live_select form={f} field={:city_search} phx-target={@myself} />
 ```
@@ -72,7 +72,8 @@ _In the LiveView or LiveComponent that's the target of your form events:_
   end  
   ```
 
-Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the nitty-gritty details.
+Refer to the [module documentation](https://hexdocs.pm/live_select/LiveSelect.html) for the details, and
+check out the [cheatsheet](https://hexdocs.pm/live_select/cheatsheet.html) for some useful tips.
 
 ## Installation 📦
 
@@ -197,8 +198,5 @@ Tests that require a LiveView use the showcase app as the parent LiveView.
 - [X] Add support for vanilla tailwind styles
 - [X] Enable multiple selection mode
 - [X] Expose as function component (and drop LV 0.17 support)
-- [ ] Add some kind of "no_type" mode that turns live_select into a flexible select without textual input 
-- [ ] Add cheatsheet showing how to:
-  - [ ] Style live_select like a phoenix component
-  - [ ] Use live_select as a flexible select component that can override user's selection
+- [X] Add cheatsheet showing how to:
 - [ ] Additional multiple selection mode 
