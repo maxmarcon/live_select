@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Mix.Tasks.DumpStyleTable do
   @moduledoc false
 
