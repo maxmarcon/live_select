@@ -241,10 +241,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
   @impl true
   def handle_params(params, _url, socket) do
-    params =
-      params
-      |> Map.new(fn {k, v} -> if v == "", do: {k, nil}, else: {k, v} end)
-
     socket =
       if params["reset"] do
         socket
