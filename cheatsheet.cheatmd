@@ -99,6 +99,8 @@ end
 
 ## Display tags underneath the input field (if you're using tailwind)
 
+#### Heex template:
+
 ```elixir
 <.live_select
    form={my_form}
