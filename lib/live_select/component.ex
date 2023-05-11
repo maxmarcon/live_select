@@ -288,10 +288,6 @@ defmodule LiveSelect.Component do
       end
     end
 
-    if assigns[:clear] do
-      raise "The `:clear` assign has been removed. To clear the selection (or set it to any other value programmatically), pass a `value: nil` assign"
-    end
-
     valid_assigns =
       Keyword.keys(@default_opts) ++
         @required_assigns ++ [:id, :options, :"phx-target", :option, :tag, :clear, :hide_dropdown]
