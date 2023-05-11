@@ -275,8 +275,10 @@ defmodule LiveSelect.Component do
     end
 
     if Map.has_key?(assigns, :update_min_len) do
-      unless is_integer(assigns.update_min_len) do
-        raise(~s(Invalid update_min_len: "#{assigns.update_min_len}". It must be an integer))
+      if !is_integer(assigns.update_min_len) || assigns.update_min_len < 0 do
+        raise(
+          ~s(Invalid update_min_len: "#{assigns.update_min_len}". It must be an non-negative integer)
+        )
       end
     end
 
