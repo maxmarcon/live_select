@@ -1,4 +1,4 @@
-## Styled like a Phoenix Core Component, with label and errors
+## Style `LiveSelect` like a Phoenix Core Component, with label and errors
 
 #### 1. Add this to `core_components.ex`:
 
@@ -30,7 +30,7 @@ def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
 end
 ```
 
-#### 2. Then use it like this:
+#### 2. Then call it this way:
 
 ```elixir
 <.live_select field={@form[:city]} label="City" phx-target={@myself} />
@@ -95,4 +95,16 @@ def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
     
   {:noreply, socket}
 end
+```
+
+## Display tags below the input field (if you're using tailwind)
+
+```elixir
+<.live_select
+   form={my_form}
+   field={:my_field}
+   mode={:tags}
+   container_extra_class="flex flex-col"
+   dropdown_extra_class="top-11"
+   tags_container_extra_class="order-last" />
 ```
