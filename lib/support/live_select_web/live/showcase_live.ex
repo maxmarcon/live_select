@@ -41,7 +41,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
-      field(:update_min_len, :integer, default: Component.default_opts()[:update_min_len])
+      field(:update_min_len, :integer, default: 3)
       field(:options, {:array, :string}, default: [])
       field(:selection, {:array, :string}, default: [])
 
@@ -250,15 +250,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
       end
 
-    settings =
-      get_in(socket.assigns, [Access.key(:changeset), Access.key(:data)]) ||
-        %Settings{update_min_len: 3}
-
-    changeset =
-      Settings.changeset(
-        settings,
-        params
-      )
+    changeset = Settings.changeset(params)
 
     case Ecto.Changeset.apply_action(changeset, :create) do
       {:ok, settings} ->
@@ -291,7 +283,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
         %{"settings" => params},
         socket
       ) do
-    # we can't filter out empty params here otherwise we won't be able to reset options to the default values
+    params =
+      params
+      |> Enum.reject(fn {_, v} -> v == "" end)
+      |> Map.new()
+
     socket =
       socket
       |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
