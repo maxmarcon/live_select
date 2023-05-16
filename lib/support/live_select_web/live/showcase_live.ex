@@ -252,7 +252,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     settings =
       get_in(socket.assigns, [Access.key(:changeset), Access.key(:data)]) ||
-        %Settings{}
+        %Settings{update_min_len: 3}
 
     changeset =
       Settings.changeset(
