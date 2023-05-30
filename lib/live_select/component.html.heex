@@ -1,15 +1,13 @@
 <div
   id={@id}
   class={class(@style, :container, @container_class, @container_extra_class)}
-  name="live-select"
   phx-hook="LiveSelect"
   phx-target={@myself}
 >
   <%= if @mode == :tags && Enum.any?(@selection) do %>
-    <div
-      class={class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)}
-      name="tags-container"
-    >
+    <div class={
+      class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)
+    }>
       <%= for {option, idx} <- Enum.with_index(@selection) do %>
         <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
           <%= if @tag == [] do %>
@@ -78,10 +76,7 @@
     <% end %>
   <% end %>
   <%= if Enum.any?(@options) && !@hide_dropdown do %>
-    <ul
-      class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}
-      name="live-select-dropdown"
-    >
+    <ul class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}>
       <%= for {option, idx} <- Enum.with_index(@options) do %>
         <li class={
           if already_selected?(option, @selection) ||

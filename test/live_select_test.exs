@@ -19,9 +19,9 @@ defmodule LiveSelectTest do
   test "can be rendered with a given field name", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?field_name=city_search")
 
-    assert has_element?(live, "input#my_form_city_search")
+    assert has_element?(live, selectors()[:hidden_input])
 
-    assert has_element?(live, "input#my_form_city_search_text_input")
+    assert has_element?(live, selectors()[:text_input])
   end
 
   test "with less than update_min_len keystrokes in the input field it does not show the dropdown",
@@ -585,9 +585,7 @@ defmodule LiveSelectTest do
 
     options =
       render(live)
-      |> Floki.find(
-        "#my_form_new_style_city_search_live_select_component ul[name=live-select-dropdown] > li"
-      )
+      |> Floki.find("#{@selectors[:dropdown]} > li")
 
     assert length(options) > 0
 
@@ -610,9 +608,7 @@ defmodule LiveSelectTest do
 
     options =
       render(live)
-      |> Floki.find(
-        "#my_form_new_style_city_search_live_select_component ul[name=live-select-dropdown] > li"
-      )
+      |> Floki.find("#{@selectors[:dropdown]} > li")
 
     assert length(options) > 0
 
@@ -621,7 +617,7 @@ defmodule LiveSelectTest do
 
     tag =
       render(live)
-      |> Floki.find("div[name=tags-container] > div")
+      |> Floki.find("#{selectors()[:tags_container]} > div")
       |> Floki.text()
 
     assert tag =~ "with custom slot"

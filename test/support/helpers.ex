@@ -57,13 +57,13 @@ defmodule LiveSelect.TestHelpers do
   def extend_class_option(), do: @extend_class_option
 
   @selectors [
-    container: "div[name=live-select]",
-    dropdown: "ul[name=live-select-dropdown]",
-    dropdown_entries: "ul[name=live-select-dropdown] > li > div",
+    container: "div[phx-hook=LiveSelect]",
+    dropdown: "div[phx-hook=LiveSelect] > ul",
+    dropdown_entries: "div[phx-hook=LiveSelect] > ul > li > div",
     hidden_input: "input#my_form_city_search",
-    option: "ul[name=live-select-dropdown] > li > div",
-    tag: "div[name=tags-container] > div",
-    tags_container: "div[name=tags-container]",
+    option: "div[phx-hook=LiveSelect] > ul > li > div",
+    tags_container: "div[phx-hook=LiveSelect] > div:first-child",
+    tag: "div[phx-hook=LiveSelect] > div:first-child > div",
     text_input: "input#my_form_city_search_text_input"
   ]
   def selectors(), do: @selectors
@@ -93,7 +93,7 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def unselect_nth_option(live, n) do
-    element(live, "div[name=tags-container] button[phx-value-idx=#{n - 1}][phx-click]")
+    element(live, "#{@selectors[:tags_container]} button[phx-value-idx=#{n - 1}][phx-click]")
     |> render_click()
   end
 
