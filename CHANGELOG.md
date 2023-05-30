@@ -1,3 +1,8 @@
+## 1.0.4 (2023-05-30)
+
+* Do not use name attribute on non-input elements to prevent LV from crashing
+* Change default for update_min_len to 1
+
 ## 1.0.3 (2023-03-31)
 
 * Programmatically override selection with value assign
