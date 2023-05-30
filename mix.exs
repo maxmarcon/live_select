@@ -54,7 +54,7 @@ defmodule LiveSelect.MixProject do
     [
       {:phoenix_live_view, ">= 0.18.4"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix, "~> 1.6.0", optional: true},
+      {:phoenix, ">= 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
       {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
