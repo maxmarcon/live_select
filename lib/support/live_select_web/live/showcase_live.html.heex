@@ -262,7 +262,7 @@
             <div class="flex flex-col gap-y-1">
               <%= submit("Submit",
                 class: "btn btn-primary btn-sm text-xs md:text-md",
-                disabled: !@changeset.valid?
+                disabled: !@changeset.valid? || Ecto.Changeset.get_field(@changeset, :disabled)
               ) %>
             </div>
             <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
