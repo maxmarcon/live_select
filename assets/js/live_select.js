@@ -56,9 +56,9 @@ export default {
                 if (this.el.id === id) {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
-                        this.setInputValue(label, {focus, blur})
+                        this.setInputValue(label, {focus})
                     } else {
-                        this.setInputValue(null, {focus, blur})
+                        this.setInputValue(null, {focus})
                     }
                     if (input_event) {
                         this.inputEvent(selection, mode)
