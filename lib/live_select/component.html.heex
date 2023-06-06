@@ -2,7 +2,7 @@
   id={@id}
   class={class(@style, :container, @container_class, @container_extra_class)}
   phx-hook="LiveSelect"
-  phx-target={@myself}
+  phx-target={assigns[:"phx-target"] || @myself}
 >
   <%= if @mode == :tags && Enum.any?(@selection) do %>
     <div class={

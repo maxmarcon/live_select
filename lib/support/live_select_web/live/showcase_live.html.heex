@@ -62,7 +62,7 @@
             <%= number_input(@settings_form, :max_selectable,
               min: 0,
               class: "input input-sm input-bordered",
-              disabled: to_string(@settings_form[:mode].value)  == "single"
+              disabled: to_string(@settings_form[:mode].value) == "single"
             ) %>
             <%= error_tag(@settings_form, :max_selectable) %>
           </div>
@@ -95,7 +95,9 @@
             <%= error_tag(@settings_form, :search_delay) %>
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :placeholder, "placeholder:", class: "label label-text font-semibold") %>
+            <%= label(@settings_form, :placeholder, "placeholder:",
+              class: "label label-text font-semibold"
+            ) %>
             <%= text_input(@settings_form, :placeholder,
               class: "input input-sm input-bordered",
               spellcheck: "false"
@@ -120,7 +122,9 @@
             <%= error_tag(@settings_form, :update_min_len) %>
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :debounce, "debounce:", class: "label label-text font-semibold") %>
+            <%= label(@settings_form, :debounce, "debounce:",
+              class: "label label-text font-semibold"
+            ) %>
             <%= number_input(@settings_form, :debounce,
               min: 0,
               class: "input input-sm input-bordered",
@@ -133,7 +137,9 @@
           </div>
 
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :"phx-focus", "focus event:", class: "label label-text font-semibold") %>
+            <%= label(@settings_form, :"phx-focus", "focus event:",
+              class: "label label-text font-semibold"
+            ) %>
             <%= text_input(@settings_form, :"phx-focus",
               class: "input input-sm input-bordered",
               spellcheck: "false"
@@ -145,7 +151,9 @@
           </div>
 
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :"phx-blur", "blur event:", class: "label label-text font-semibold") %>
+            <%= label(@settings_form, :"phx-blur", "blur event:",
+              class: "label label-text font-semibold"
+            ) %>
             <%= text_input(@settings_form, :"phx-blur",
               class: "input input-sm input-bordered",
               spellcheck: "false"
@@ -155,7 +163,6 @@
             </label>
             <%= error_tag(@settings_form, :"phx-blur") %>
           </div>
-          
 
           <div class="form-control max-w-sm">
             <%= label class: "label cursor-pointer" do %>
@@ -173,7 +180,10 @@
             border-base-300 bg-base-100 rounded-box"
           }
           >
-            <%= checkbox(@settings_form, :show_styles, phx_change: "toggle-styles", value: @show_styles) %>
+            <%= checkbox(@settings_form, :show_styles,
+              phx_change: "toggle-styles",
+              value: @show_styles
+            ) %>
             <div class="collapse-title text-sm font-medium">
               <%= if @show_styles, do: "Hide styling options", else: "Show styling options" %> &nbsp;
               <label
@@ -274,14 +284,14 @@
         <h4>Try out the component here:</h4>
       </div>
       <div class="md:w-3/4">
-        <.form
-          for={@live_select_form}
-          phx-change="change"
-          phx-submit="submit"
-        >
+        <.form for={@live_select_form} phx-change="change" phx-submit="submit">
           <div class="grid grid-cols-4 gap-1">
             <div class="col-span-3 form-control">
-              <.live_select form={@live_select_form} field={@field_name} {live_select_assigns(@settings_form.source)} />
+              <.live_select
+                form={@live_select_form}
+                field={@field_name}
+                {live_select_assigns(@settings_form.source)}
+              />
             </div>
             <div class="flex flex-col gap-y-1">
               <%= submit("Submit",

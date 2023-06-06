@@ -38,7 +38,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:user_defined_options, :boolean)
       field(:mode, Ecto.Enum, values: [:single, :tags], default: Component.default_opts()[:mode])
       field(:new, :boolean, default: true)
-      field(:placeholder, :string)
+      field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
       field(:update_min_len, :integer, default: 3)
@@ -344,7 +344,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
           )
 
         "live_select_change" ->
-          change_event_handler().handle(params, delay: socket.assigns.settings_form.data.search_delay)
+          change_event_handler().handle(params,
+            delay: socket.assigns.settings_form.data.search_delay
+          )
 
           socket
 
