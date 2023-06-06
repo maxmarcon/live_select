@@ -38,7 +38,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:user_defined_options, :boolean)
       field(:mode, Ecto.Enum, values: [:single, :tags], default: Component.default_opts()[:mode])
       field(:new, :boolean, default: true)
-      field(:placeholder, :string, default: "Search for a city")
+      field(:placeholder, :string)
       field(:search_delay, :integer, default: 10)
       field(:style, Ecto.Enum, values: [:daisyui, :tailwind, :none], default: :tailwind)
       field(:update_min_len, :integer, default: 3)
@@ -170,7 +170,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         assigns[:event] ->
           ~H"""
           <p>
-            def handle_event( <span class="text-success"><%= inspect(@event) %></span>, <span class="text-info"><%= inspect(
+            handle_event( <span class="text-success"><%= inspect(@event) %></span>, <span class="text-info"><%= inspect(
             @params
           ) %></span>,
             socket
@@ -244,7 +244,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       if params["reset"] do
         socket
-        |> assign(:changeset, nil)
         |> assign(:events, [])
       else
         socket
@@ -257,17 +256,17 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket =
           socket
           |> assign(
-            :form_changeset,
-            make_form_changeset(socket.assigns.field_name, settings)
+            :live_select_form,
+            make_live_select_form(socket.assigns.form_name, socket.assigns.field_name, settings)
           )
-          |> assign(:changeset, Ecto.Changeset.change(settings))
+          |> assign(:settings_form, Ecto.Changeset.change(settings) |> to_form)
 
         {:noreply, socket}
 
       {:error, changeset} ->
         socket =
           socket
-          |> assign(:changeset, changeset)
+          |> assign(:settings_form, to_form(changeset))
           |> assign(
             :show_styles,
             socket.assigns.show_styles || Settings.has_style_errors?(changeset)
@@ -331,7 +330,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         "submit" ->
           form_name = socket.assigns.form_name |> to_string
           field_name = socket.assigns.field_name |> to_string
-          mode = socket.assigns.changeset.data.mode
+          mode = socket.assigns.settings_form.data.mode
 
           selected = get_in(params, [form_name, field_name])
           selected_text = get_in(params, [form_name, field_name <> "_text_input"])
@@ -345,7 +344,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           )
 
         "live_select_change" ->
-          change_event_handler().handle(params, delay: socket.assigns.changeset.data.search_delay)
+          change_event_handler().handle(params, delay: socket.assigns.settings_form.data.search_delay)
 
           socket
 
@@ -425,7 +424,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
   end
 
-  defp make_form_changeset(field_name, settings) do
+  defp make_live_select_form(form_name, field_name, settings) do
     {Map.new([
        {field_name,
         if(settings.mode == :single, do: List.first(settings.selection), else: settings.selection)}
@@ -434,6 +433,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
        {field_name, if(settings.mode == :single, do: :string, else: {:array, :string})}
      ])}
     |> Ecto.Changeset.change(%{})
+    |> to_form(as: form_name)
   end
 
   defp change_event_handler() do
