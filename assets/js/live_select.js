@@ -13,6 +13,14 @@ export default {
                 clear_button.style.right = '5px'
             }
         },
+        pushEventToParent(event, payload) {
+            const target = this.el.getAttribute('event-target');
+            if (target) {
+                this.pushEventTo(target, event, payload)
+            } else {
+                this.pushEvent(event, payload)
+            }
+        },
         attachDomEventHandlers() {
             this.textInput().onkeydown = (event) => {
                 if (event.code === "Enter") {
