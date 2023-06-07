@@ -3,6 +3,9 @@ export default {
         textInput() {
             return this.el.querySelector("input[type=text]")
         },
+        updateMinLen() {
+            return parseInt(this.el.dataset["updateMinLen"])
+        },
         maybeStyleClearButton() {
             const clear_button = this.el.querySelector('button[phx-click=clear]')
             if (clear_button) {
@@ -14,7 +17,7 @@ export default {
             }
         },
         pushEventToParent(event, payload) {
-            const target = this.el.getAttribute('event-target');
+            const target = this.el.dataset['phxTarget'];
             if (target) {
                 this.pushEventTo(target, event, payload)
             } else {
@@ -26,7 +29,18 @@ export default {
                 if (event.code === "Enter") {
                     event.preventDefault()
                 }
+
                 this.pushEventTo(this.el, 'keydown', {key: event.code})
+            }
+            this.textInput().oninput = (event) => {
+                const text = event.target.value.trim()
+                const field = this.el.dataset['textInputField']
+                if (text.length >= this.updateMinLen()) {
+                    this.pushEventTo(this.el, "change", {text})
+                    this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
+                } else {
+                    this.pushEventTo(this.el, "options_clear", {})
+                }
             }
             const dropdown = this.el.querySelector("ul")
             if (dropdown) {
@@ -51,15 +65,6 @@ export default {
         },
         mounted() {
             this.maybeStyleClearButton()
-            this.handleEvent("change", ({payload, target}) => {
-                if (this.el.id === payload.id) {
-                    if (target) {
-                        this.pushEventTo(target, "live_select_change", payload)
-                    } else {
-                        this.pushEvent("live_select_change", payload)
-                    }
-                }
-            })
             this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {

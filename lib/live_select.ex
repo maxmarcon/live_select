@@ -143,15 +143,12 @@ defmodule LiveSelect do
     
   > #### Forms implemented in LiveComponents {: .warning}
   > 
-  > If your form is implemented in a LiveComponent and not in a LiveView, you might have to add the `phx-target` attribute
+  > If your form is implemented in a LiveComponent and not in a LiveView, you have to add the `phx-target` attribute
   > when rendering LiveSelect:
   >
   > ```elixir
   >  <.live_select form={f} field={:city_search} phx-target={@myself} />
   > ```  
-  >
-  > We say "might" because LiveSelect will look for the target in the form's options if none has been explicitly passed with the `phx-target` attribute.
-  > By passing `phx-target` explicitly however, you're always on the safe side.
     
   _LiveView or LiveComponent that is the target of the form's events:_
   ```
@@ -319,7 +316,7 @@ defmodule LiveSelect do
   slot(:tag, doc: "optional slot that renders a tag. The option's data is available via `:let`")
 
   attr :"phx-target", :any,
-    doc: "Optional target for change events. Usually the same target as the form"
+    doc: "Optional target for events. Usually the same target as the form's"
 
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 

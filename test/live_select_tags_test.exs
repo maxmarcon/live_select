@@ -16,11 +16,11 @@ defmodule LiveSelectTagsTest do
 
     type(live, "ABC")
 
-    select_nth_option(live, 2, :key)
+    select_nth_option(live, 2, method: :key)
 
     type(live, "ABC")
 
-    select_nth_option(live, 4, :click)
+    select_nth_option(live, 4, method: :click)
 
     assert_selected_multiple(live, ~w(B D))
   end
@@ -46,14 +46,15 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B C A))
   end
 
-  test "already selected options are not selectable in the dropdown using mouse", %{live: live} do
+  test "already selected options are not selectable in the dropdown using mouseclick", %{
+    live: live
+  } do
     select_and_open_dropdown(live, 2)
 
     assert_selected_multiple(live, ~w(B))
 
-    select_nth_option(live, 2, :click)
-
-    assert_selected_multiple_static(live, ~w(B))
+    assert :not_selectable =
+             select_nth_option(live, 2, method: :click, flunk_if_not_selectable: false)
   end
 
   test "hitting enter with only one option selects it", %{live: live} do
@@ -114,7 +115,7 @@ defmodule LiveSelectTagsTest do
 
       type(live, "ABC")
 
-      select_nth_option(live, 1, :key)
+      select_nth_option(live, 1, method: :key)
 
       assert_selected_multiple(live, ["ABC"])
 
@@ -184,11 +185,11 @@ defmodule LiveSelectTagsTest do
 
       type(live, "ABC")
 
-      select_nth_option(live, 1, :key)
+      select_nth_option(live, 1, method: :key)
 
       type(live, "ABC")
 
-      select_nth_option(live, 2, :click)
+      select_nth_option(live, 2, method: :click)
 
       assert_selected_multiple(live, ~w(A B))
     end
@@ -206,17 +207,17 @@ defmodule LiveSelectTagsTest do
 
       type(live, "ABC")
 
-      select_nth_option(live, 2, :key)
+      select_nth_option(live, 2, method: :key)
 
       type(live, "ABC")
 
-      select_nth_option(live, 4, :click)
+      select_nth_option(live, 4, method: :click)
 
       assert_selected_multiple(live, ~w(B D))
 
       type(live, "ABC")
 
-      select_nth_option(live, 3, :click)
+      select_nth_option(live, 3, method: :click)
 
       assert_selected_multiple_static(live, ~w(B D))
     end
@@ -298,7 +299,7 @@ defmodule LiveSelectTagsTest do
 
     type(live, "ABC")
 
-    select_nth_option(live, 2, :click)
+    select_nth_option(live, 2, method: :click)
 
     assert_selected_multiple(live, ~w(A B))
 
@@ -318,7 +319,7 @@ defmodule LiveSelectTagsTest do
 
     type(live, "ABC")
 
-    select_nth_option(live, 2, :click)
+    select_nth_option(live, 2, method: :click)
 
     assert_selected_multiple(live, ~w(A B))
 
@@ -338,7 +339,7 @@ defmodule LiveSelectTagsTest do
 
     type(live, "ABC")
 
-    select_nth_option(live, 2, :click)
+    select_nth_option(live, 2, method: :click)
 
     assert_selected_multiple(live, ~w(A B))
 

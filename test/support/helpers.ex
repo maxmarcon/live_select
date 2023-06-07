@@ -78,16 +78,36 @@ defmodule LiveSelect.TestHelpers do
     end
   end
 
-  def select_nth_option(live, n, method \\ :key) do
+  def select_nth_option(live, n, opts \\ []) do
+    opts =
+      Keyword.validate!(opts,
+        method: :key,
+        component: @selectors[:container],
+        flunk_if_not_selectable: true
+      )
+
+    component = Keyword.fetch!(opts, :component)
+    {flunk_if_not_selectable, opts} = Keyword.pop(opts, :flunk_if_not_selectable)
+    {method, opts} = Keyword.pop(opts, :method)
+
     case method do
       :key ->
-        navigate(live, n, :down)
-        keydown(live, "Enter")
+        navigate(live, n, :down, opts)
+        keydown(live, "Enter", opts)
 
       :click ->
-        if has_element?(live, "li > div[data-idx=#{n - 1}]") do
-          element(live, @selectors[:container])
-          |> render_hook("option_click", %{"idx" => to_string(n - 1)})
+        option_selector = "#{component} li > div[data-idx=#{n - 1}]"
+
+        cond do
+          has_element?(live, option_selector) ->
+            element(live, component)
+            |> render_hook("option_click", %{idx: to_string(n - 1)})
+
+          flunk_if_not_selectable ->
+            flunk("could not find element: #{option_selector}")
+
+          true ->
+            :not_selectable
         end
     end
   end
@@ -97,8 +117,12 @@ defmodule LiveSelect.TestHelpers do
     |> render_click()
   end
 
-  def keydown(live, key) do
-    element(live, @selectors[:container])
+  def keydown(live, key, opts \\ []) do
+    opts = Keyword.validate!(opts, component: @selectors[:container])
+
+    component = Keyword.fetch!(opts, :component)
+
+    element(live, component)
     |> render_hook("keydown", %{"key" => key})
   end
 
@@ -129,32 +153,44 @@ defmodule LiveSelect.TestHelpers do
            |> then(&fun.(&1))
   end
 
-  def type(live, text, update_min_len \\ 3) do
-    0..String.length(text)
-    |> Enum.each(fn pos ->
-      element(live, @selectors[:text_input])
-      |> render_keyup(%{"key" => String.at(text, pos), "value" => String.slice(text, 0..pos)})
-    end)
+  def type(live, text, opts \\ []) do
+    opts =
+      Keyword.validate!(opts, update_min_len: 3, component: @selectors[:container], parent: live)
+
+    update_min_len = Keyword.fetch!(opts, :update_min_len)
+    component = Keyword.fetch!(opts, :component)
+    parent = Keyword.fetch!(opts, :parent)
 
     text = String.trim(text)
 
     if String.length(text) >= update_min_len do
-      assert_push_event(live, "change", %{
-        payload: %{
-          text: ^text,
-          id: @component_id,
-          field: :city_search
-        },
-        target: _
+      element(live, component)
+      |> render_hook("change", %{
+        text: text
       })
 
-      render_hook(live, "live_select_change", %{
+      parent =
+        case parent do
+          %Phoenix.LiveViewTest.View{} -> parent
+          selector -> element(live, selector)
+        end
+
+      component_id =
+        element(live, component)
+        |> render()
+        |> Floki.parse_fragment!()
+        |> Floki.attribute("id")
+        |> hd()
+
+      parent
+      |> render_hook("live_select_change", %{
         text: text,
-        id: @component_id,
+        id: component_id,
         field: "city_search"
       })
     else
-      refute_push_event(live, "change")
+      element(live, component)
+      |> render_hook("options_clear", %{})
     end
   end
 
@@ -353,7 +389,7 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
-  def navigate(live, n, dir) do
+  def navigate(live, n, dir, opts \\ []) do
     key =
       case dir do
         :down -> "ArrowDown"
@@ -361,7 +397,7 @@ defmodule LiveSelect.TestHelpers do
       end
 
     for _ <- 1..n do
-      keydown(live, key)
+      keydown(live, key, opts)
     end
   end
 

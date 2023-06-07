@@ -2,7 +2,10 @@
   id={@id}
   class={class(@style, :container, @container_class, @container_extra_class)}
   phx-hook="LiveSelect"
-  phx-target={assigns[:"phx-target"] || @myself}
+  phx-target={@myself}
+  data-phx-target={assigns[:"phx-target"]}
+  data-update-min-len={@update_min_len}
+  data-text-input-field={@text_input_field}
 >
   <%= if @mode == :tags && Enum.any?(@selection) do %>
     <div class={
@@ -33,7 +36,6 @@
           ),
       placeholder: @placeholder,
       phx_debounce: @debounce,
-      phx_keyup: "keyup",
       phx_target: @myself,
       phx_change: "change",
       disabled: @disabled,

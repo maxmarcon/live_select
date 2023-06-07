@@ -1,3 +1,6 @@
+
+* send live_select_change event directly from hook to save a round-trip
+
 ## 1.0.4 (2023-05-30)
 
 * Do not use name attribute on non-input elements to prevent LV from crashing

@@ -171,30 +171,19 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keyup", %{"value" => text, "key" => key}, socket)
-      when key not in ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape", "Meta"] do
-    text = String.trim(text)
-
+  def handle_event("change", %{"text" => text}, socket) do
     socket =
-      if String.length(text) >=
-           socket.assigns.update_min_len do
-        target =
-          case socket.assigns[:"phx-target"] || target_from_form(socket.assigns.form) do
-            %Phoenix.LiveComponent.CID{cid: cid} -> cid
-            _ -> nil
-          end
+      socket
+      |> assign(hide_dropdown: false, current_text: text, awaiting_update: true)
 
-        socket
-        |> assign(hide_dropdown: false, current_text: text, awaiting_update: true)
-        |> push_event("change", %{
-          payload: %{id: socket.assigns.id, field: socket.assigns.field, text: text},
-          target: target
-        })
-      else
-        socket
-        |> assign(current_text: nil)
-        |> then(&if key == "Backspace", do: assign(&1, options: []), else: &1)
-      end
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("options_clear", _params, socket) do
+    socket =
+      socket
+      |> assign(current_text: nil, options: [])
 
     {:noreply, socket}
   end
@@ -254,10 +243,6 @@ defmodule LiveSelect.Component do
   def handle_event(_event, _params, socket) do
     {:noreply, socket}
   end
-
-  defp target_from_form(%Phoenix.HTML.Form{options: options}), do: options[:"phx-target"]
-
-  defp target_from_form(_), do: nil
 
   defp validate_assigns!(assigns) do
     if Map.has_key?(assigns, :style) do

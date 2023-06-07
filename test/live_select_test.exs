@@ -50,7 +50,7 @@ defmodule LiveSelectTest do
 
     {:ok, live, _html} = live(conn, "/?update_min_len=4")
 
-    type(live, "Ber", 4)
+    type(live, "Ber", update_min_len: 4)
 
     assert_option_size(live, 0)
 
@@ -82,7 +82,7 @@ defmodule LiveSelectTest do
 
     assert_options(live, ["A", "B", "C"])
 
-    select_nth_option(live, 2, :click)
+    select_nth_option(live, 2, method: :click)
 
     assert_selected(live, "B", 2)
   end
@@ -517,71 +517,13 @@ defmodule LiveSelectTest do
     assert_selected(live, :D, 4)
   end
 
-  describe "when rendered inside a live component" do
-    setup %{conn: conn} do
-      {:ok, live, _html} = live(conn, "/lc")
-
-      %{live: live}
-    end
-
-    test "takes the target from the form and sends it to the client (old style form using :let)",
-         %{live: live} do
-      stub_options(
-        A: 1,
-        B: 2,
-        C: 3
-      )
-
-      element(live, "#my_form_old_style_city_search_text_input")
-      |> render_keyup(%{"key" => "C", "value" => "ABC"})
-
-      assert_push_event(live, "change", %{
-        payload: %{
-          text: "ABC",
-          id: "my_form_old_style_city_search_live_select_component",
-          field: :city_search
-        },
-        target: target
-      })
-
-      assert target
-    end
-
-    test "takes the target from phx-target attr and sends it to the client (new style form using to_form/2)",
-         %{live: live} do
-      stub_options(
-        A: 1,
-        B: 2,
-        C: 3
-      )
-
-      element(live, "#my_form_new_style_city_search_text_input")
-      |> render_keyup(%{"key" => "C", "value" => "ABC"})
-
-      assert_push_event(live, "change", %{
-        payload: %{
-          text: "ABC",
-          id: "my_form_new_style_city_search_live_select_component",
-          field: :city_search
-        },
-        target: target
-      })
-
-      assert target
-    end
-  end
-
   test "renders custom :option slots", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/lc")
 
-    element(live, "#my_form_new_style_city_search_text_input")
-    |> render_keyup(%{"key" => "C", "value" => "ABC"})
-
-    render_hook(element(live, "#form_component"), "live_select_change", %{
-      text: "Ber",
-      id: "my_form_new_style_city_search_live_select_component",
-      field: "city_search"
-    })
+    type(live, "Ber",
+      component: "#my_form_new_style_city_search_live_select_component",
+      parent: "#form_component"
+    )
 
     options =
       render(live)
@@ -597,14 +539,10 @@ defmodule LiveSelectTest do
   test "renders custom :tag slots", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/lc")
 
-    element(live, "#my_form_new_style_city_search_text_input")
-    |> render_keyup(%{"key" => "C", "value" => "ABC"})
-
-    render_hook(element(live, "#form_component"), "live_select_change", %{
-      text: "Ber",
-      id: "my_form_new_style_city_search_live_select_component",
-      field: "city_search"
-    })
+    type(live, "Ber",
+      component: "#my_form_new_style_city_search_live_select_component",
+      parent: "#form_component"
+    )
 
     options =
       render(live)
@@ -612,8 +550,10 @@ defmodule LiveSelectTest do
 
     assert length(options) > 0
 
-    element(live, "#my_form_new_style_city_search_live_select_component")
-    |> render_hook("option_click", %{"idx" => "0"})
+    select_nth_option(live, 1,
+      method: :click,
+      component: "#my_form_new_style_city_search_live_select_component"
+    )
 
     tag =
       render(live)
