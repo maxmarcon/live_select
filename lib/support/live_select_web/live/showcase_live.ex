@@ -32,7 +32,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     @primary_key false
     embedded_schema do
       field(:allow_clear, :boolean)
-      field(:debounce, :integer, default: Component.default_opts()[:integer])
+      field(:debounce, :integer, default: Component.default_opts()[:debounce])
       field(:disabled, :boolean)
       field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
@@ -249,7 +249,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
       end
 
-    changeset = Settings.changeset(params)
+    changeset =
+      Settings.changeset(params)
+      |> then(
+        &if params["placeholder"] == "" do
+          Ecto.Changeset.put_change(&1, :placeholder, nil)
+        else
+          &1
+        end
+      )
 
     case Ecto.Changeset.apply_action(changeset, :create) do
       {:ok, settings} ->
@@ -284,7 +292,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ) do
     params =
       params
-      |> Enum.reject(fn {_, v} -> v == "" end)
+      |> Enum.reject(fn {k, v} -> v == "" && k != "placeholder" end)
       |> Map.new()
 
     socket =
