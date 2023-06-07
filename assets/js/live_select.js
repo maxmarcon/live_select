@@ -3,6 +3,9 @@ export default {
         textInput() {
             return this.el.querySelector("input[type=text]")
         },
+        debounceMsec() {
+            return parseInt(this.el.dataset["debounce"])
+        },
         updateMinLen() {
             return parseInt(this.el.dataset["updateMinLen"])
         },
@@ -36,8 +39,10 @@ export default {
                 const text = event.target.value.trim()
                 const field = this.el.dataset['textInputField']
                 if (text.length >= this.updateMinLen()) {
-                    this.pushEventTo(this.el, "change", {text})
-                    this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
+                    this.debounce(() => {
+                        this.pushEventTo(this.el, "change", {text})
+                        this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
+                    }, this.debounceMsec())()
                 } else {
                     this.pushEventTo(this.el, "options_clear", {})
                 }
@@ -83,6 +88,15 @@ export default {
         updated() {
             this.maybeStyleClearButton()
             this.attachDomEventHandlers()
+        },
+        debounce(func, msec) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer)
+                timer = setTimeout(() => {
+                    func.apply(this, args)
+                }, msec)
+            }
         }
     }
 }
