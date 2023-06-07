@@ -83,7 +83,7 @@ defmodule LiveSelect do
     
   ## Slots
     
-  You can have complete control on how your options and tags are rendered by using the `:option` and `:tag` slots.
+  You can control how your options and tags are rendered by using the `:option` and `:tag` slots.
   Let's say you want to show some fancy icons next to each option in the dropdown and the tags:
 
   ```elixir  
@@ -317,6 +317,14 @@ defmodule LiveSelect do
 
   attr :"phx-target", :any,
     doc: "Optional target for events. Usually the same target as the form's"
+
+  attr :"phx-blur", :any,
+    doc:
+      "Event to emit when the text input loses focus. The component id will be send in the event's params"
+
+  attr :"phx-focus", :any,
+    doc:
+      "Event to emit when the text input is receives focus. The component id will be send in the event's params"
 
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 

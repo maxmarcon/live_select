@@ -1,3 +1,13 @@
+function debounce(func, msec) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            func.apply(this, args)
+        }, msec)
+    }
+}
+
 export default {
     LiveSelect: {
         textInput() {
@@ -32,17 +42,17 @@ export default {
                 if (event.code === "Enter") {
                     event.preventDefault()
                 }
-
                 this.pushEventTo(this.el, 'keydown', {key: event.code})
             }
+            this.changeEvents = debounce((id, field, text) => {
+                this.pushEventTo(this.el, "change", {text})
+                this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
+            }, this.debounceMsec())
             this.textInput().oninput = (event) => {
                 const text = event.target.value.trim()
                 const field = this.el.dataset['textInputField']
                 if (text.length >= this.updateMinLen()) {
-                    this.debounce(() => {
-                        this.pushEventTo(this.el, "change", {text})
-                        this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
-                    }, this.debounceMsec())()
+                    this.changeEvents(this.el.id, field, text)
                 } else {
                     this.pushEventTo(this.el, "options_clear", {})
                 }
@@ -70,7 +80,12 @@ export default {
         },
         mounted() {
             this.maybeStyleClearButton()
-            this.handleEvent("select", ({id, selection, mode, focus, input_event}) => {
+            this.handleEvent("parent_event", ({id, event, payload}) => {
+                if (this.el.id === id) {
+                    this.pushEventToParent(event, payload)
+                }
+            })
+            this.handleEvent("select", ({id, selection, mode, focus, input_event, parent_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
@@ -81,6 +96,9 @@ export default {
                     if (input_event) {
                         this.inputEvent(selection, mode)
                     }
+                    if (parent_event) {
+                        this.pushEventToParent(parent_event, {id})
+                    }
                 }
             })
             this.attachDomEventHandlers()
@@ -88,15 +106,6 @@ export default {
         updated() {
             this.maybeStyleClearButton()
             this.attachDomEventHandlers()
-        },
-        debounce(func, msec) {
-            let timer;
-            return (...args) => {
-                clearTimeout(timer)
-                timer = setTimeout(() => {
-                    func.apply(this, args)
-                }, msec)
-            }
         }
     }
 }

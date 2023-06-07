@@ -336,7 +336,8 @@ defmodule LiveSelectTest do
         C: 3
       )
 
-      {:ok, live, _html} = live(conn, "/")
+      {:ok, live, _html} =
+        live(conn, "/?phx-focus=focus-event-for-parent&phx-blur=blur-event-for-parent")
 
       type(live, "ABC")
 
@@ -365,6 +366,23 @@ defmodule LiveSelectTest do
       |> render_blur()
 
       assert_selected_static(live, :B, 2)
+    end
+
+    test "a focus event is sent to the parent", %{live: live} do
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        parent_event: "focus-event-for-parent"
+      })
+    end
+
+    test "blurring the field sends a blur event to the parent", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        parent_event: "blur-event-for-parent"
+      })
     end
   end
 

@@ -361,4 +361,34 @@ defmodule LiveSelectTagsTest do
 
     :ok
   end
+
+  describe "when focus and blur events are set" do
+    setup %{conn: conn} do
+      {:ok, live, _html} =
+        live(conn, "/?phx-focus=focus-event-for-parent&phx-blur=blur-event-for-parent&mode=tags")
+
+      %{live: live}
+    end
+
+    test "focusing on the input field sends a focus event to the parent", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      assert_push_event(live, "parent_event", %{
+        id: "my_form_city_search_live_select_component",
+        event: "focus-event-for-parent",
+        payload: %{id: "my_form_city_search_live_select_component"}
+      })
+    end
+
+    test "blurring the input field sends a focus event to the parent", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        parent_event: "blur-event-for-parent"
+      })
+    end
+  end
 end

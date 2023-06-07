@@ -6,6 +6,7 @@
   data-phx-target={assigns[:"phx-target"]}
   data-update-min-len={@update_min_len}
   data-text-input-field={@text_input_field}
+  data-debounce={@debounce}
 >
   <%= if @mode == :tags && Enum.any?(@selection) do %>
     <div class={
@@ -35,7 +36,6 @@
             )
           ),
       placeholder: @placeholder,
-      phx_debounce: @debounce,
       phx_target: @myself,
       phx_change: "change",
       disabled: @disabled,

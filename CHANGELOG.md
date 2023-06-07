@@ -1,4 +1,5 @@
 
+* add `phx-focus` and `phx-blur` options to specify events to be sent to the parent upon focus and blur of the text input field
 * send live_select_change event directly from hook to save a round-trip
 
 ## 1.0.4 (2023-05-30)

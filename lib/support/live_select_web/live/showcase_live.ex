@@ -44,6 +44,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:update_min_len, :integer, default: 3)
       field(:options, {:array, :string}, default: [])
       field(:selection, {:array, :string}, default: [])
+      field(:"phx-blur", :string)
+      field(:"phx-focus", :string)
 
       for class <- @class_options do
         field(class, :string)
@@ -66,7 +68,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :placeholder,
           :search_delay,
           :style,
-          :update_min_len
+          :update_min_len,
+          :"phx-focus",
+          :"phx-blur"
         ] ++ @class_options
       )
       |> validate_required([:search_delay])
@@ -267,7 +271,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
             :live_select_form,
             make_live_select_form(socket.assigns.form_name, socket.assigns.field_name, settings)
           )
-          |> assign(:settings_form, Ecto.Changeset.change(settings) |> to_form)
+          |> assign(:settings_form, Settings.changeset(settings, %{}) |> to_form)
 
         {:noreply, socket}
 
@@ -358,7 +362,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
           socket
 
-        _ ->
+        "focus" ->
+          send_update(Component,
+            id: params["id"],
+            options: ["Default 1", "Default 2", "Default 3"]
+          )
+
+          socket
+
+        _event ->
           socket
       end
 

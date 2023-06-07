@@ -147,27 +147,30 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("blur", _params, socket) do
+  def handle_event("blur", params, socket) do
     socket =
       maybe_restore_selection(socket)
       |> assign(:hide_dropdown, true)
-      |> client_select(%{})
+      |> client_select(%{parent_event: socket.assigns[:"phx-blur"]})
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("focus", _params, socket) do
+  def handle_event("focus", params, socket) do
     socket =
       socket
       |> maybe_save_selection()
       |> then(
-        &if &1.assigns.mode == :single,
-          do: clear(&1, %{input_event: false, focus: true}),
-          else: &1
+        &if &1.assigns.mode == :single do
+          clear(&1, %{input_event: false, focus: true, parent_event: &1.assigns[:"phx-focus"]})
+        else
+          parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
+        end
       )
+      |> assign(hide_dropdown: false)
 
-    {:noreply, assign(socket, :hide_dropdown, false)}
+    {:noreply, socket}
   end
 
   @impl true
@@ -275,7 +278,18 @@ defmodule LiveSelect.Component do
 
     valid_assigns =
       Keyword.keys(@default_opts) ++
-        @required_assigns ++ [:id, :options, :"phx-target", :option, :tag, :clear, :hide_dropdown]
+        @required_assigns ++
+        [
+          :id,
+          :options,
+          :"phx-target",
+          :"phx-blur",
+          :"phx-focus",
+          :option,
+          :tag,
+          :clear,
+          :hide_dropdown
+        ]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
       unless assign in valid_assigns do
@@ -395,6 +409,17 @@ defmodule LiveSelect.Component do
       %{id: socket.assigns.id, mode: socket.assigns.mode, selection: socket.assigns.selection}
       |> Map.merge(extra_params)
     )
+  end
+
+  def parent_event(socket, nil, _payload), do: socket
+
+  def parent_event(socket, event, payload) do
+    socket
+    |> push_event("parent_event", %{
+      id: socket.assigns.id,
+      event: event,
+      payload: payload
+    })
   end
 
   defp set_selection(value, options, :single) do

@@ -38,6 +38,25 @@ defmodule LiveSelect.ComponentTest do
       render_component(&LiveSelect.live_select/1,
         id: "live_select_custom_id",
         form: :form,
+        field: :search,
+        update_min_len: 3,
+        "phx-target": "1",
+        debounce: 100
+      )
+      |> Floki.parse_fragment!()
+
+    assert Floki.attribute(component, "data-text-input-field") == ["search_text_input"]
+    assert Floki.attribute(component, "data-update-min-len") == ["3"]
+    assert Floki.attribute(component, "data-phx-target") == ["1"]
+
+    assert Floki.attribute(component, "data-debounce") == ["100"]
+  end
+
+  test "renders data attributes" do
+    component =
+      render_component(&LiveSelect.live_select/1,
+        id: "live_select_custom_id",
+        form: :form,
         field: :input
       )
 
@@ -414,17 +433,6 @@ defmodule LiveSelect.ComponentTest do
     assert Floki.attribute(component, selectors()[:text_input], "disabled") == ["disabled"]
 
     assert Floki.attribute(component, selectors()[:hidden_input], "disabled") == ["disabled"]
-  end
-
-  test "can set the debounce value" do
-    component =
-      render_component(&LiveSelect.live_select/1,
-        form: :my_form,
-        field: :city_search,
-        debounce: 500
-      )
-
-    assert Floki.attribute(component, selectors()[:text_input], "phx-debounce") == ["500"]
   end
 
   test "can set a placeholder text" do
