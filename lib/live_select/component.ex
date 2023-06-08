@@ -147,7 +147,7 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("blur", params, socket) do
+  def handle_event("blur", _params, socket) do
     socket =
       maybe_restore_selection(socket)
       |> assign(:hide_dropdown, true)
@@ -157,7 +157,7 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("focus", params, socket) do
+  def handle_event("focus", _params, socket) do
     socket =
       socket
       |> maybe_save_selection()
