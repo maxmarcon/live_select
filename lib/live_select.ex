@@ -318,11 +318,11 @@ defmodule LiveSelect do
   attr :"phx-target", :any,
     doc: "Optional target for events. Usually the same target as the form's"
 
-  attr :"phx-blur", :any,
+  attr :"phx-blur", :string,
     doc:
       "Event to emit when the text input loses focus. The component id will be send in the event's params"
 
-  attr :"phx-focus", :any,
+  attr :"phx-focus", :string,
     doc:
       "Event to emit when the text input is receives focus. The component id will be send in the event's params"
 
