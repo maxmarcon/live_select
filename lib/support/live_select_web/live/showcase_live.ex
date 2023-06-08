@@ -362,14 +362,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
           socket
 
-        "focus" ->
-          send_update(Component,
-            id: params["id"],
-            options: ["Default 1", "Default 2", "Default 3"]
-          )
-
-          socket
-
         _event ->
           socket
       end
