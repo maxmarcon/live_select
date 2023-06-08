@@ -212,7 +212,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
-    {:noreply, maybe_select(socket)}
+    {:noreply, maybe_select(socket, %{parent_event: socket.assigns[:"phx-blur"]})}
   end
 
   @impl true
@@ -303,7 +303,12 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp maybe_select(%{assigns: %{selection: selection, max_selectable: max_selectable}} = socket)
+  defp maybe_select(socket, extra_params \\ %{})
+
+  defp maybe_select(
+         %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
+         _extra_params
+       )
        when max_selectable > 0 and length(selection) >= max_selectable do
     assign(socket,
       active_option: -1,
@@ -319,7 +324,8 @@ defmodule LiveSelect.Component do
              awaiting_update: false,
              active_option: -1
            }
-         } = socket
+         } = socket,
+         extra_params
        )
        when is_binary(current_text) do
     {:ok, option} = normalize(current_text)
@@ -327,27 +333,28 @@ defmodule LiveSelect.Component do
     if already_selected?(option, socket.assigns.selection) do
       socket
     else
-      select(socket, option)
+      select(socket, option, extra_params)
     end
   end
 
   defp maybe_select(
-         %{assigns: %{options: [option], selection: selection, active_option: -1}} = socket
+         %{assigns: %{options: [option], selection: selection, active_option: -1}} = socket,
+         extra_params
        ) do
     if already_selected?(option, selection) do
       socket
     else
-      select(socket, option)
+      select(socket, option, extra_params)
     end
   end
 
-  defp maybe_select(%{assigns: %{active_option: -1}} = socket), do: socket
+  defp maybe_select(%{assigns: %{active_option: -1}} = socket, _extra_params), do: socket
 
-  defp maybe_select(socket) do
-    select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option))
+  defp maybe_select(socket, extra_params) do
+    select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option), extra_params)
   end
 
-  defp select(socket, selected) do
+  defp select(socket, selected, extra_params) do
     selection =
       case socket.assigns.mode do
         :tags ->
@@ -363,7 +370,7 @@ defmodule LiveSelect.Component do
       selection: selection,
       hide_dropdown: true
     )
-    |> client_select(%{input_event: true})
+    |> client_select(Map.merge(%{input_event: true}, extra_params))
   end
 
   defp unselect(socket, pos) do

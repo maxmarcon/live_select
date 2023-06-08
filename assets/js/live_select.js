@@ -62,7 +62,6 @@ export default {
                 dropdown.onmousedown = (event) => {
                     const option = event.target.closest('div[data-idx]')
                     if (option) {
-                        this.textInput().blur()
                         this.pushEventTo(this.el, 'option_click', {idx: option.dataset.idx})
                     }
                 }
