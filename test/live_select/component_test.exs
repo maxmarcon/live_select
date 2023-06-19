@@ -4,7 +4,44 @@ defmodule LiveSelect.ComponentTest do
   use LiveSelectWeb.ConnCase, async: true
   import LiveSelect.TestHelpers
 
-  test "can be rendered" do
+  setup tags do
+    %{form: Phoenix.Component.to_form(tags[:source] || %{}, as: :my_form)}
+  end
+
+  test "can be rendered", %{form: form} do
+    component =
+      render_component(&LiveSelect.live_select/1,
+        field: form[:live_select]
+      )
+      |> Floki.parse_document!()
+
+    assert component
+           |> Floki.find("input#my_form_live_select")
+           |> Enum.any?()
+
+    assert component
+           |> Floki.find("input#my_form_live_select_text_input")
+           |> Enum.any?()
+  end
+
+  test "can be rendered using old-style form/field assigns", %{form: form} do
+    component =
+      render_component(&LiveSelect.live_select/1,
+        form: form,
+        field: :live_select
+      )
+      |> Floki.parse_document!()
+
+    assert component
+           |> Floki.find("input#my_form_live_select")
+           |> Enum.any?()
+
+    assert component
+           |> Floki.find("input#my_form_live_select_text_input")
+           |> Enum.any?()
+  end
+
+  test "can be rendered using old-style form/field assigns and an atom form" do
     component =
       render_component(&LiveSelect.live_select/1,
         form: :my_form,
@@ -21,11 +58,10 @@ defmodule LiveSelect.ComponentTest do
            |> Enum.any?()
   end
 
-  test "can set initial options" do
+  test "can set initial options", %{form: form} do
     component =
       render_component(&LiveSelect.live_select/1,
-        form: :form,
-        field: :input,
+        field: form[:input],
         options: ["A", "B", "C"],
         hide_dropdown: false
       )
@@ -33,12 +69,11 @@ defmodule LiveSelect.ComponentTest do
     assert_options(component, ["A", "B", "C"])
   end
 
-  test "can be rendered with a custom id" do
+  test "can be rendered with a custom id", %{form: form} do
     component =
       render_component(&LiveSelect.live_select/1,
         id: "live_select_custom_id",
-        form: :form,
-        field: :search,
+        field: form[:search],
         update_min_len: 3,
         "phx-target": "1",
         debounce: 100
@@ -52,46 +87,37 @@ defmodule LiveSelect.ComponentTest do
     assert Floki.attribute(component, "data-debounce") == ["100"]
   end
 
-  test "renders data attributes" do
+  test "renders data attributes", %{form: form} do
     component =
       render_component(&LiveSelect.live_select/1,
         id: "live_select_custom_id",
-        form: :form,
-        field: :input
+        field: form[:input]
       )
 
     assert length(Floki.find(component, "#live_select_custom_id")) == 1
   end
 
   describe "in single mode" do
-    test "can set initial selection from form" do
-      changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source: Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+    test "can set initial selection from the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: ["A", "B", "C"]
         )
 
       assert_selected_static(component, "B")
     end
 
-    test "can set initial selection from form for non-string values" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: %{"x" => 1, "y" => 2}}, %{city_search: :map}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: %{"x" => 1, "y" => 2}}, %{city_search: :map}},
+             %{}
+           )
+    test "can set initial selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: [
             %{label: "A", value: %{}},
             %{label: "B", value: %{"x" => 1, "y" => 2}},
@@ -102,58 +128,45 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B", %{"x" => 1, "y" => 2})
     end
 
-    test "can set initial selection from form without options" do
-      changeset = Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source: Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+    test "can set initial selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search
+          field: form[:city_search]
         )
 
       assert_selected_static(component, "B")
     end
 
-    test "can set initial selection and label from form without options" do
-      changeset = Ecto.Changeset.change({%{city_search: {"B", 1}}, %{city_search: :integer}}, %{})
+    @tag source: Ecto.Changeset.change({%{city_search: {"B", 1}}, %{city_search: :integer}}, %{})
 
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    test "can set initial selection and label from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search
+          field: form[:city_search]
         )
 
       assert_selected_static(component, "B", 1)
     end
 
-    test "can set initial selection from form even if it can't be found in the options" do
-      changeset = Ecto.Changeset.change({%{city_search: "A"}, %{city_search: :string}}, %{})
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source: Ecto.Changeset.change({%{city_search: "A"}, %{city_search: :string}}, %{})
+    test "can set initial selection from form even if it can't be found in the options", %{
+      form: form
+    } do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: ["B"]
         )
 
       assert_selected_static(component, "A")
     end
 
-    test "can set initial selection explicitly, bypassing the form" do
-      changeset = Ecto.Changeset.change({%{city_search: 2}, %{city_search: :integer}}, %{})
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source: Ecto.Changeset.change({%{city_search: 2}, %{city_search: :integer}}, %{})
+    test "can set initial selection explicitly, bypassing the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           value: 3,
           options: [{"A", 1}, {"B", 2}, {"C", 3}]
         )
@@ -161,56 +174,45 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "C", 3)
     end
 
-    test "raises if initial selection is in the wrong format" do
-      changeset =
-        Ecto.Changeset.change({%{city_search: [{"B", 1}]}, %{city_search: :integer}}, %{})
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change({%{city_search: [{"B", 1}]}, %{city_search: :integer}}, %{})
+    test "raises if initial selection is in the wrong format", %{form: form} do
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,
-          form: form,
-          field: :city_search
+          field: form[:city_search]
         )
       end
     end
   end
 
   describe "in tags mode" do
-    test "can set initial selection from form" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
+             %{}
+           )
+    test "can set initial selection from form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: ["A", "B", "C", "D"]
         )
 
       assert_selected_multiple_static(component, ["B", "D"])
     end
 
-    test "can set initial selection from form for non-string values" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [%{"x" => 1, "y" => 2}, [1, 2]]}, %{city_search: {:array, :map}}},
-          %{}
-        )
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [%{"x" => 1, "y" => 2}, [1, 2]]}, %{city_search: {:array, :map}}},
+             %{}
+           )
 
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    test "can set initial selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: [
             %{label: "A", value: %{}},
             %{label: "B", value: %{"x" => 1, "y" => 2}},
@@ -224,39 +226,31 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    test "can set initial selection from form without options" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
+             %{}
+           )
+    test "can set initial selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search
+          field: form[:city_search]
         )
 
       assert_selected_multiple_static(component, ["B", "D"])
     end
 
-    test "can set initial selection and labels from form without options" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [{"B", 1}, {"D", 2}]}, %{city_search: {:array, :integer}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [{"B", 1}, {"D", 2}]}, %{city_search: {:array, :integer}}},
+             %{}
+           )
+    test "can set initial selection and labels from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search
+          field: form[:city_search]
         )
 
       assert_selected_multiple_static(component, [
@@ -265,20 +259,16 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    test "can set initial selection from form using labels from options" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [1, 2]}, %{city_search: {:array, :integer}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [1, 2]}, %{city_search: {:array, :integer}}},
+             %{}
+           )
+    test "can set initial selection from form using labels from options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: [{"B", 1}, {"D", 2}]
         )
 
@@ -288,20 +278,18 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    test "can set initial selection from form even it can't be found in the options" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [{"B", 1}, 2, 3]}, %{city_search: {:array, :integer}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [{"B", 1}, 2, 3]}, %{city_search: {:array, :integer}}},
+             %{}
+           )
+    test "can set initial selection from form even it can't be found in the options", %{
+      form: form
+    } do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           options: [{"D", 2}]
         )
 
@@ -312,20 +300,16 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    test "can set initial selection explicitly, bypassing the form" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [{"B", 2}, {"D", 4}]}, %{city_search: {:array, :integer}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [{"B", 2}, {"D", 4}]}, %{city_search: {:array, :integer}}},
+             %{}
+           )
+    test "can set initial selection explicitly, bypassing the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
-          form: form,
-          field: :city_search,
+          field: form[:city_search],
           value: [1, 3],
           options: [{"A", 1}, {"B", 2}, {"C", 3}, {"D", 4}]
         )
@@ -336,43 +320,37 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    test "raises if initial selection is in the wrong format" do
-      changeset =
-        Ecto.Changeset.change(
-          {%{city_search: [%{B: 1, C: 2}]}, %{city_search: {:array, :integer}}},
-          %{}
-        )
-
-      form = Phoenix.HTML.FormData.to_form(changeset, as: "my_form")
-
+    @tag source:
+           Ecto.Changeset.change(
+             {%{city_search: [%{B: 1, C: 2}]}, %{city_search: {:array, :integer}}},
+             %{}
+           )
+    test "raises if initial selection is in the wrong format", %{form: form} do
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,
-          form: form,
           mode: :tags,
-          field: :city_search
+          field: form[:city_search]
         )
       end
     end
   end
 
-  test "raises if invalid assign is passed" do
+  test "raises if invalid assign is passed", %{form: form} do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
       render_component(&LiveSelect.live_select/1,
-        form: :my_form,
-        field: :live_select,
+        field: form[:live_select],
         invalid_assign: "foo"
       )
     end)
   end
 
-  test "raises if _extra_class option is used with styles == :none" do
+  test "raises if _extra_class option is used with styles == :none", %{form: form} do
     assert_raise(
       RuntimeError,
       ~r/when using `style: :none`, please use only `container_class`/i,
       fn ->
         render_component(&LiveSelect.live_select/1,
-          form: :my_form,
-          field: :live_select,
+          field: form[:live_select],
           style: :none,
           container_extra_class: "foo"
         )
@@ -380,53 +358,49 @@ defmodule LiveSelect.ComponentTest do
     )
   end
 
-  test "raises if unknown mode is given" do
+  test "raises if unknown mode is given", %{form: form} do
     assert_raise(
       RuntimeError,
       ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          form: :form,
-          field: :input,
+          field: form[:input],
           mode: :not_a_valid_mode
         )
       end
     )
   end
 
-  test "raises if unknown style is given" do
+  test "raises if unknown style is given", %{form: form} do
     assert_raise(
       RuntimeError,
       ~s(Invalid style: :not_a_valid_style. Style must be one of: [:tailwind, :daisyui, :none]),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          form: :form,
-          field: :input,
+          field: form[:input],
           style: :not_a_valid_style
         )
       end
     )
   end
 
-  test "raises if non-enumerable options are given" do
+  test "raises if non-enumerable options are given", %{form: form} do
     assert_raise(
       RuntimeError,
       ~s(options must be enumerable),
       fn ->
         render_component(&LiveSelect.live_select/1,
-          form: :form,
-          field: :input,
+          field: form[:input],
           options: "not a list"
         )
       end
     )
   end
 
-  test "can be disabled" do
+  test "can be disabled", %{form: form} do
     component =
       render_component(&LiveSelect.live_select/1,
-        form: :my_form,
-        field: :city_search,
+        field: form[:city_search],
         disabled: true
       )
 
@@ -435,11 +409,10 @@ defmodule LiveSelect.ComponentTest do
     assert Floki.attribute(component, selectors()[:hidden_input], "disabled") == ["disabled"]
   end
 
-  test "can set a placeholder text" do
+  test "can set a placeholder text", %{form: form} do
     component =
       render_component(&LiveSelect.live_select/1,
-        form: :my_form,
-        field: :city_search,
+        field: form[:city_search],
         placeholder: "Give it a try"
       )
 
@@ -458,15 +431,14 @@ defmodule LiveSelect.ComponentTest do
     @override_class override_class
     @extend_class extend_class
 
-    test "using both #{@override_class} and #{@extend_class} options raises" do
+    test "using both #{@override_class} and #{@extend_class} options raises", %{form: form} do
       assert_raise(
         RuntimeError,
         ~r/`#{@override_class}` and `#{@extend_class}` options can't be used together/,
         fn ->
           opts =
             [
-              form: :form,
-              field: :input,
+              field: form[:input],
               options: ["A", "B", "C"],
               value: ["A", "B"],
               mode: :tags,
@@ -481,13 +453,12 @@ defmodule LiveSelect.ComponentTest do
     end
   end
 
-  test "can set class with list" do
+  test "can set class with list", %{form: form} do
     component =
       render_component(
         &LiveSelect.live_select/1,
         [
-          form: :my_form,
-          field: :city_search,
+          field: form[:city_search],
           options: ["A"],
           hide_dropdown: false
         ] ++ [{override_class_option()[:text_input], ["class_1", "class_2"]}]
@@ -510,13 +481,12 @@ defmodule LiveSelect.ComponentTest do
           ] do
         @element element
 
-        test "#{@element} has default class" do
+        test "#{@element} has default class", %{form: form} do
           component =
             render_component(
               &LiveSelect.live_select/1,
               [
-                form: :my_form,
-                field: :city_search,
+                field: form[:city_search],
                 options: ["A"],
                 hide_dropdown: false
               ] ++
@@ -529,15 +499,15 @@ defmodule LiveSelect.ComponentTest do
         end
 
         if override_class_option()[@element] do
-          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a string" do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a string",
+               %{form: form} do
             option = override_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A"],
                   hide_dropdown: false
                 ] ++
@@ -549,15 +519,15 @@ defmodule LiveSelect.ComponentTest do
                    ]
           end
 
-          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a list" do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a list",
+               %{form: form} do
             option = override_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A"],
                   hide_dropdown: false
                 ] ++
@@ -571,15 +541,15 @@ defmodule LiveSelect.ComponentTest do
         end
 
         if extend_class_option()[@element] && @style != :none do
-          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a string" do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a string",
+               %{form: form} do
             option = extend_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A"],
                   hide_dropdown: false
                 ] ++
@@ -593,15 +563,15 @@ defmodule LiveSelect.ComponentTest do
                    ]
           end
 
-          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a list" do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]} by passing a list",
+               %{form: form} do
             option = extend_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A"],
                   hide_dropdown: false
                 ] ++
@@ -615,7 +585,8 @@ defmodule LiveSelect.ComponentTest do
                    ]
           end
 
-          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}" do
+          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}",
+               %{form: form} do
             option = extend_class_option()[@element]
 
             base_classes = get_in(expected_class(), [@style || default_style(), @element])
@@ -632,8 +603,7 @@ defmodule LiveSelect.ComponentTest do
                 render_component(
                   &LiveSelect.live_select/1,
                   [
-                    form: :my_form,
-                    field: :city_search,
+                    field: form[:city_search],
                     options: ["A"],
                     hide_dropdown: false
                   ] ++
@@ -648,13 +618,12 @@ defmodule LiveSelect.ComponentTest do
         end
       end
 
-      test "additional class for text input selected is set" do
+      test "additional class for text input selected is set", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "A"
             ] ++
@@ -671,13 +640,12 @@ defmodule LiveSelect.ComponentTest do
                ]
       end
 
-      test "additional class for text input selected can be overridden" do
+      test "additional class for text input selected can be overridden", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "A",
               text_input_selected_class: "foo"
@@ -694,14 +662,13 @@ defmodule LiveSelect.ComponentTest do
                ]
       end
 
-      test "class for selected option is set" do
+      test "class for selected option is set", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
               mode: :tags,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "B"
             ] ++
@@ -715,14 +682,13 @@ defmodule LiveSelect.ComponentTest do
         )
       end
 
-      test "class for selected option can be overridden" do
+      test "class for selected option can be overridden", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
               mode: :tags,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "B",
               selected_option_class: "foo"
@@ -737,14 +703,13 @@ defmodule LiveSelect.ComponentTest do
         )
       end
 
-      test "class for available option is set" do
+      test "class for available option is set", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
               mode: :tags,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "B"
             ] ++
@@ -758,14 +723,13 @@ defmodule LiveSelect.ComponentTest do
         )
       end
 
-      test "class for available option can be overridden" do
+      test "class for available option can be overridden", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
             [
-              form: :my_form,
               mode: :tags,
-              field: :city_search,
+              field: form[:city_search],
               options: ["A", "B", "C"],
               value: "B",
               available_option_class: "foo"
@@ -786,14 +750,13 @@ defmodule LiveSelect.ComponentTest do
           ] do
         @element element
 
-        test "#{@element} has default class" do
+        test "#{@element} has default class", %{form: form} do
           component =
             render_component(
               &LiveSelect.live_select/1,
               [
-                form: :my_form,
                 mode: :tags,
-                field: :city_search,
+                field: form[:city_search],
                 options: ["A", "B", "C"],
                 value: "B"
               ] ++
@@ -806,16 +769,17 @@ defmodule LiveSelect.ComponentTest do
         end
 
         if override_class_option()[@element] do
-          test "#{@element} class can be overridden with #{override_class_option()[@element]}" do
+          test "#{@element} class can be overridden with #{override_class_option()[@element]}", %{
+            form: form
+          } do
             option = override_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
                   mode: :tags,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A", "B", "C"],
                   value: "B"
                 ] ++
@@ -829,16 +793,17 @@ defmodule LiveSelect.ComponentTest do
         end
 
         if extend_class_option()[@element] && @style != :none do
-          test "#{@element} class can be extended with #{extend_class_option()[@element]}" do
+          test "#{@element} class can be extended with #{extend_class_option()[@element]}", %{
+            form: form
+          } do
             option = extend_class_option()[@element]
 
             component =
               render_component(
                 &LiveSelect.live_select/1,
                 [
-                  form: :my_form,
                   mode: :tags,
-                  field: :city_search,
+                  field: form[:city_search],
                   options: ["A", "B", "C"],
                   value: "B"
                 ] ++
@@ -852,7 +817,8 @@ defmodule LiveSelect.ComponentTest do
                    ]
           end
 
-          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}" do
+          test "single classes of #{@element} class can be removed with !class_name in #{extend_class_option()[@element]}",
+               %{form: form} do
             option = extend_class_option()[@element]
 
             base_classes = get_in(expected_class(), [@style || default_style(), @element])
@@ -869,9 +835,8 @@ defmodule LiveSelect.ComponentTest do
                 render_component(
                   &LiveSelect.live_select/1,
                   [
-                    form: :my_form,
                     mode: :tags,
-                    field: :city_search,
+                    field: form[:city_search],
                     options: ["A", "B", "C"],
                     value: "B"
                   ] ++

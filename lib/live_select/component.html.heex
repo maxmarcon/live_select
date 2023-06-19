@@ -27,7 +27,7 @@
     </div>
   <% end %>
   <div>
-    <%= text_input(@form, @text_input_field,
+    <%= text_input(@field.form, @text_input_field,
       class:
         class(@style, :text_input, @text_input_class, @text_input_extra_class) ++
           List.wrap(
@@ -52,7 +52,7 @@
     <% end %>
   </div>
   <%= if @mode == :single do %>
-    <%= hidden_input(@form, @field,
+    <%= hidden_input(@field.form, @field.field,
       disabled: @disabled,
       class: "single-mode",
       value: value(@selection)
@@ -70,8 +70,8 @@
     <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
       <input
         type="hidden"
-        name={input_name(@form, @field) <> "[]"}
-        id={input_id(@form, @field) <> "_#{idx}"}
+        name={@field.name <> "[]"}
+        id={@field.id <> "_#{idx}"}
         disabled={@disabled}
         value={value}
       />

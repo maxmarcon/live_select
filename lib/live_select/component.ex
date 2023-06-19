@@ -4,11 +4,11 @@ defmodule LiveSelect.Component do
   use Phoenix.LiveComponent
 
   import Phoenix.HTML.Form,
-    only: [text_input: 3, input_id: 2, input_name: 2, input_value: 2, hidden_input: 3]
+    only: [text_input: 3, hidden_input: 3]
 
   import LiveSelect.ClassUtil
 
-  @required_assigns ~w(form field)a
+  @required_assigns ~w(field)a
 
   @default_opts [
     active_option_class: nil,
@@ -126,10 +126,10 @@ defmodule LiveSelect.Component do
         |> assign_new(opt, fn -> default end)
       end)
       |> update(:options, &normalize_options/1)
-      |> assign(:text_input_field, String.to_atom("#{socket.assigns.field}_text_input"))
+      |> assign(:text_input_field, String.to_atom("#{socket.assigns.field.field}_text_input"))
       |> assign_new(:selection, fn
-        %{form: form, field: field, options: options, mode: mode} ->
-          set_selection(input_value(form, field), options, mode)
+        %{field: field, options: options, mode: mode} ->
+          set_selection(field.value, options, mode)
       end)
 
     socket =
@@ -288,7 +288,9 @@ defmodule LiveSelect.Component do
           :option,
           :tag,
           :clear,
-          :hide_dropdown
+          :hide_dropdown,
+          # for backwards compatibility
+          :form
         ]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
