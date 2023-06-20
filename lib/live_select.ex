@@ -256,7 +256,9 @@ defmodule LiveSelect do
   """
   @doc type: :component
 
-  attr :field, :any, required: true, doc: "a Phoenix.HTML.FormField struct identifying the form's field"
+  attr :field, :any,
+    required: true,
+    doc: "a Phoenix.HTML.FormField struct identifying the form's field"
 
   attr :id, :string,
     doc:

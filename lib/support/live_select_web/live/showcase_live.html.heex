@@ -284,12 +284,11 @@
         <h4>Try out the component here:</h4>
       </div>
       <div class="md:w-3/4">
-        <.form for={@live_select_form} phx-change="change" phx-submit="submit">
+        <.form for={@live_select_field.form} phx-change="change" phx-submit="submit">
           <div class="grid grid-cols-4 gap-1">
             <div class="col-span-3 form-control">
               <.live_select
-                form={@live_select_form}
-                field={@field_name}
+                field={@live_select_field}
                 {live_select_assigns(@settings_form.source)}
               />
             </div>
@@ -331,11 +330,7 @@
             <.copy_to_clipboard_icon />
           </button>
         </div>
-        <Render.live_select
-          form_name={@form_name}
-          field_name={@field_name}
-          opts={Settings.live_select_opts(@settings_form.data, true)}
-        />
+        <Render.live_select opts={Settings.live_select_opts(@settings_form.data, true)} />
       </div>
     </div>
   </div>

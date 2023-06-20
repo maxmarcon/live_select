@@ -208,8 +208,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ~H"""
       <div>
         <span class="text-success">&lt;.live_select</span>
-        <br />&nbsp;&nbsp; <span class="text-success">form</span>=<span class="text-info">{<%= @form_name %>}</span>
-        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{:<%= @field_name %>}</span>
+        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{my_form[:city_search]}</span>
         <%= for {key, value} <- @opts, !is_nil(value) do %>
           <%= if value == true do %>
             <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>
@@ -227,8 +226,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
-        form_name: :my_form,
-        field_name: :city_search,
+        live_select_field: to_form(%{}, as: :my_form)[:city_search],
         events: [],
         next_event_id: 0,
         locations: nil,
@@ -267,10 +265,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket =
           socket
-          |> assign(
-            :live_select_form,
-            make_live_select_form(socket.assigns.form_name, socket.assigns.field_name, settings)
-          )
           |> assign(:settings_form, Settings.changeset(settings, %{}) |> to_form)
 
         {:noreply, socket}
@@ -340,12 +334,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       case event do
         "submit" ->
-          form_name = socket.assigns.form_name |> to_string
-          field_name = socket.assigns.field_name |> to_string
           mode = socket.assigns.settings_form.data.mode
 
-          selected = get_in(params, [form_name, field_name])
-          selected_text = get_in(params, [form_name, field_name <> "_text_input"])
+          selected = get_in(params, ["my_form", "city_search"])
+          selected_text = get_in(params, ["my_form", "city_search_text_input"])
 
           {cities, locations} = extract_cities_and_locations(mode, selected_text, selected)
 
@@ -436,18 +428,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       nil -> nil
       list -> Enum.join(list, " ")
     end
-  end
-
-  defp make_live_select_form(form_name, field_name, settings) do
-    {Map.new([
-       {field_name,
-        if(settings.mode == :single, do: List.first(settings.selection), else: settings.selection)}
-     ]),
-     Map.new([
-       {field_name, if(settings.mode == :single, do: :string, else: {:array, :string})}
-     ])}
-    |> Ecto.Changeset.change(%{})
-    |> to_form(as: form_name)
   end
 
   defp change_event_handler() do
