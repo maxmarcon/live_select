@@ -256,7 +256,7 @@ defmodule LiveSelect do
   """
   @doc type: :component
 
-  attr :field, Phoenix.HTML.FormField, doc: "the form field"
+  attr :field, :any, required: true, doc: "a Phoenix.HTML.FormField struct identifying the form's field"
 
   attr :id, :string,
     doc:
@@ -342,7 +342,7 @@ defmodule LiveSelect do
       assigns
       |> update(:field, fn
         %Phoenix.HTML.FormField{} = field, _ -> field
-        field, %{form: form} -> form[field]
+        field, %{form: form} -> to_form(form)[field]
       end)
       |> assign_new(:id, fn %{field: field} ->
         "#{field.form.name}_#{field.field}_live_select_component"
