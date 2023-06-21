@@ -31,15 +31,15 @@ interface for search-like functionalities with type-ahead. `LiveSelect`s feature
 _Template:_
 
 ```elixir
-  <.form for={@changeset} :let={f} phx-change="change">
-    <.live_select form={f} field={:city_search} /> 
+  <.form for={@form} phx-change="change">
+    <.live_select field={@form[:city_search]} /> 
   </.form>
 ```
 
 **NOTE:** If your form is implemented in a LiveComponent, add `phx-target={@myself}`, like this:
 
 ```elixir
-  <.live_select form={f} field={:city_search} phx-target={@myself} />
+  <.live_select field={@form[:city_search]} phx-target={@myself} />
 ```
 
 _In the LiveView or LiveComponent that's the target of your form events:_

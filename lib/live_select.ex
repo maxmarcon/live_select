@@ -4,7 +4,7 @@ defmodule LiveSelect do
   alias LiveSelect.Component
 
   @moduledoc ~S"""
-  The `LiveSelect` component is rendered by calling the `live_select/1` function and passing it a form and the name of a field.
+  The `LiveSelect` component is rendered by calling the `live_select/1` function and passing it a form field.
   LiveSelect creates a text input field in which the user can type text, and hidden input field(s) that will contain the value of the selected option(s).
     
   Whenever the user types something in the text input, LiveSelect triggers a `live_select_change` event for your LiveView or LiveComponent.
@@ -88,8 +88,7 @@ defmodule LiveSelect do
 
   ```elixir  
   <.live_select
-          form={@form}
-          field={:city_search}
+          field={@form[:city_search]}
           phx-target={@myself}
           mode={:tags}
         >
@@ -136,8 +135,8 @@ defmodule LiveSelect do
 
   _Template:_
   ```
-  <.form for={@changeset} :let={f} phx-change="change">
-    <.live_select form={f} field={:city_search} /> 
+  <.form for={@form} phx-change="change">
+    <.live_select field={@form[:city_search]} /> 
   </.form>
   ```
     
@@ -147,7 +146,7 @@ defmodule LiveSelect do
   > when rendering LiveSelect:
   >
   > ```elixir
-  >  <.live_select form={f} field={:city_search} phx-target={@myself} />
+  >  <.live_select field={@form[:city_search]} phx-target={@myself} />
   > ```  
     
   _LiveView or LiveComponent that is the target of the form's events:_
@@ -193,8 +192,8 @@ defmodule LiveSelect do
 
   _Template:_
   ```
-  <.form for={:my_form} :let={f} phx-change="change">
-    <.live_select form={f} field={:city_search} mode={:tags} /> 
+  <.form for={@form} phx-change="change">
+    <.live_select field={@form[:city_search]} mode={:tags} /> 
   </.form>
   ```
 
@@ -222,9 +221,9 @@ defmodule LiveSelect do
 
   _Template:_
   ```
-  <.form for={:my_form} :let={f} phx-change="change">
-    <.live_select form={f} field={:city_search} />
-    <.live_select form={f} field={:album_search} />
+  <.form for={@form} phx-change="change">
+    <.live_select field={@form[:city_search]} />
+    <.live_select field={@form[:album_search]} />
   </.form>
   ```
 
@@ -234,8 +233,8 @@ defmodule LiveSelect do
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id, "field" => live_select_field}, socket) do
     options =
       case live_select_field do
-        :city_search -> City.search(text)
-        :album_search -> Album.search(text)
+        "form_name[city_search]" -> City.search(text)
+        "form_name[album_search]" -> Album.search(text)
       end
 
     send_update(LiveSelect.Component, id: live_select_id, options: options)
