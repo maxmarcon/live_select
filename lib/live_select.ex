@@ -328,23 +328,26 @@ defmodule LiveSelect do
 
   @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 
-  #  for attr_name <- @styling_options do
-  #    Phoenix.Component.Declarative.__attr__!(
-  #      __MODULE__,
-  #      attr_name,
-  #      :any,
-  #      [doc: false],
-  #      __ENV__.line,
-  #      __ENV__.file
-  #    )
-  #  end
+  for attr_name <- @styling_options do
+    Phoenix.Component.Declarative.__attr__!(
+      __MODULE__,
+      attr_name,
+      :any,
+      [doc: false],
+      __ENV__.line,
+      __ENV__.file
+    )
+  end
 
   def live_select(assigns) do
     assigns =
       assigns
       |> update(:field, fn
-        %Phoenix.HTML.FormField{} = field, _ -> field
-        field, %{form: form} -> to_form(form)[field]
+        %Phoenix.HTML.FormField{} = field, _ ->
+          field
+
+        field, %{form: form} ->
+          to_form(form)[field]
       end)
       |> assign_new(:id, fn %{field: field} ->
         "#{field.form.name}_#{field.field}_live_select_component"
