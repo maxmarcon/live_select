@@ -5,7 +5,7 @@
   phx-target={@myself}
   data-phx-target={assigns[:"phx-target"]}
   data-update-min-len={@update_min_len}
-  data-field={@field.name}
+  data-field={@field.id}
   data-debounce={@debounce}
 >
   <%= if @mode == :tags && Enum.any?(@selection) do %>

@@ -216,7 +216,7 @@ defmodule LiveSelect do
 
   ### Multiple LiveSelect inputs in the same LiveView  
 
-  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field or id. 
+  If you have multiple LiveSelect inputs in the same LiveView, you can distinguish them based on the field id. 
   For example:
 
   _Template:_
@@ -233,8 +233,8 @@ defmodule LiveSelect do
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id, "field" => live_select_field}, socket) do
     options =
       case live_select_field do
-        "form_name[city_search]" -> City.search(text)
-        "form_name[album_search]" -> Album.search(text)
+        "form_name_city_search" -> City.search(text)
+        "form_name_album_search" -> Album.search(text)
       end
 
     send_update(LiveSelect.Component, id: live_select_id, options: options)

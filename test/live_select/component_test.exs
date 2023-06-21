@@ -80,7 +80,7 @@ defmodule LiveSelect.ComponentTest do
       )
       |> Floki.parse_fragment!()
 
-    assert Floki.attribute(component, "data-text-input-field") == ["search_text_input"]
+    assert Floki.attribute(component, "data-field") == ["my_form_search"]
     assert Floki.attribute(component, "data-update-min-len") == ["3"]
     assert Floki.attribute(component, "data-phx-target") == ["1"]
 
