@@ -12,8 +12,7 @@ def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
   <div phx-feedback-for={@field.name}>
     <.label for={@field.id}><%= @label %></.label>
     <LiveSelect.live_select
-      form={@field.form}
-      field={@field.field}
+      field={@field}
       text_input_class={[
         "mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
         "text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6",
@@ -45,7 +44,7 @@ You can also pass any of the other `LiveSelect` options.
 #### Heex template:
 
 ```elixir
-<.live_select form={f} field={:locations} update_min_len={1} />
+<.live_select field={@form[:locations]} update_min_len={1} phx-focus="clear" />
 ```
 
 #### Live view:
@@ -61,14 +60,21 @@ def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
 
  {:noreply, socket}
 end
+
+@impl true
+def handle_event("clear", %{"id" => id}, socket) do
+  send_update(LiveSelect.Component, options: [], id: id)
+
+  {:noreply, socket}
+end
 ```
 
-### 2. With a fixed set of default options displayed if the user doesn't enter any text
+### 2. With a fixed set of default options to be displayed when the text input is empty
 
 #### Heex template:
 
 ```elixir
-<.live_select form={f} field={:locations} update_min_len={0} options={@default_locations} />
+<.live_select field={@form[:locations]} update_min_len={0} phx-focus="set-default" options={@default_locations} />
 ```
 
 #### Live view:
@@ -95,6 +101,13 @@ def handle_event("live_select_change", %{"id" => id, "text" => text}, socket) do
     
   {:noreply, socket}
 end
+
+@impl true
+def handle_event("set-default", %{"id" => id}, socket) do
+  send_update(LiveSelect.Component, options: socket.assigns.default_locations, id: id)
+
+  {:noreply, socket}
+end
 ```
 
 ## Display tags underneath the input field (if you're using tailwind)
@@ -103,8 +116,7 @@ end
 
 ```elixir
 <.live_select
-   form={my_form}
-   field={:my_field}
+   field={@form[:my_field]}
    mode={:tags}
    container_extra_class="flex flex-col"
    dropdown_extra_class="top-11"
