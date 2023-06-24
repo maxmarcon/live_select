@@ -346,7 +346,14 @@ defmodule LiveSelect do
           field
 
         field, %{form: form} ->
+          IO.warn(
+            "instead of passing form and field attributes, pass a single field attribute of type Phoenix.HTML.FormField"
+          )
+
           to_form(form)[field]
+
+        _, _ ->
+          raise "if you pass field as atom or string, you also have to pass a form"
       end)
       |> assign_new(:id, fn %{field: field} ->
         "#{field.form.name}_#{field.field}_live_select_component"

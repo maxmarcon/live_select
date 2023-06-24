@@ -335,6 +335,16 @@ defmodule LiveSelect.ComponentTest do
     end
   end
 
+  test "raises if an atom field is passed without a form" do
+    assert_raise(
+      RuntimeError,
+      "if you pass field as atom or string, you also have to pass a form",
+      fn ->
+        render_component(&LiveSelect.live_select/1, field: :atom_field)
+      end
+    )
+  end
+
   test "raises if invalid assign is passed", %{form: form} do
     assert_raise(RuntimeError, ~r(Invalid assign: "invalid_assign"), fn ->
       render_component(&LiveSelect.live_select/1,
