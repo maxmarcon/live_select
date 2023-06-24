@@ -562,7 +562,7 @@ defmodule LiveSelectTest do
 
     options =
       render(live)
-      |> Floki.find("#{@selectors[:dropdown]} > li")
+      |> Floki.find("#{selectors()[:dropdown]} > li")
 
     assert length(options) > 0
 
@@ -581,7 +581,7 @@ defmodule LiveSelectTest do
 
     options =
       render(live)
-      |> Floki.find("#{@selectors[:dropdown]} > li")
+      |> Floki.find("#{selectors()[:dropdown]} > li")
 
     assert length(options) > 0
 
