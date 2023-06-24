@@ -18,18 +18,8 @@ defmodule LiveSelectWeb.LiveComponentForm do
   def render(assigns) do
     ~H"""
     <div id="form_component" phx-hook="Foo" phx-target={@myself}>
-      <div>
-        New form style
-        <a
-          class="link"
-          target="_blank"
-          href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#form/1-examples-inside-liveview"
-        >
-          (form created with to_form/2 and stored as assign)
-        </a>
-      </div>
       <.form for={@form} phx-submit="submit" phx-target={@myself}>
-        <.live_select form={@form} field={:city_search} mode={:tags} phx-target={@myself}>
+        <.live_select field={@form[:city_search]} mode={:tags} phx-target={@myself}>
           <:option :let={option}>
             with custom slot: <%= option.label %>
           </:option>
@@ -37,21 +27,6 @@ defmodule LiveSelectWeb.LiveComponentForm do
             with custom slot: <%= option.label %>
           </:tag>
         </.live_select>
-        <%= submit("Submit", class: "btn btn-primary") %>
-      </.form>
-
-      <div>
-        Old form style
-        <a
-          class="link"
-          target="_blank"
-          href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#form/1-using-the-for-attribute"
-        >
-          (form created in .form component, captured with :let)
-        </a>
-      </div>
-      <.form :let={f} for={%{}} as={:my_form_old_style} phx-submit="submit">
-        <.live_select form={f} field={:city_search} mode={:tags} phx-target={@myself} />
         <%= submit("Submit", class: "btn btn-primary") %>
       </.form>
     </div>
