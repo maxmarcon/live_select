@@ -12,9 +12,9 @@ dropdown is filled by your LiveView as the user types. This allows you to easily
 interface for search-like functionalities with type-ahead. `LiveSelect`s features include:
 
 * Single as well as multiple selection
-* Options to configure the behaviour, such as minimum number of entered characters that trigger an update or the maximum number of selectable options
-* Default styles for daisyUI and tailwindcss, which are fully customizable and can be even completely overriden if needed
-* Ability to fully customize the rendered HTML for dropdown entries and tags using slots.
+* Options to configure the behaviour, such as minimum number of characters that trigger an update or the maximum number of selectable options
+* Default styles for daisyUI and tailwindcss, which are fully customizable and can be completely overriden if needed
+* Ability to customize the rendered HTML for dropdown entries and tags using slots.
 
 ### [Try it in the showcase app](https://live-select.fly.dev/) 🔬
 
@@ -26,7 +26,7 @@ interface for search-like functionalities with type-ahead. `LiveSelect`s feature
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
-## Usage 🧭
+## Usage Example 🧭
 
 _Template:_
 
