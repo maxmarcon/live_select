@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Build and test with elixir   ${{ matrix.elixir }} otp ${{ matrix.otp }}
+    name: Build and test with elixir ${{ matrix.elixir }} otp ${{ matrix.otp }}
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -23,7 +23,8 @@ jobs:
           - elixir: '1.15.0'
             otp: '25.0'
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
