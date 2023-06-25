@@ -2,26 +2,33 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   build:
-
-    name: Build and test
+    name: Build and test with elixir   ${{ matrix.elixir }} otp ${{ matrix.otp }}
     runs-on: ubuntu-20.04
-
+    strategy:
+      matrix:
+        elixir: [ '1.14.0', '1.15.0' ]
+        otp: [ '25.0', '26.0' ]
+        exclude:
+          - elixir: '1.14.0'
+            otp: '26.0'
+          - elixir: '1.15.0'
+            otp: '25.0'
     steps:
       - uses: actions/checkout@v3
       - name: Set up Elixir
-        uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+        uses: erlef/setup-beam@b1
         with:
-          elixir-version: '1.14.0'
-          otp-version: '25.1'
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
