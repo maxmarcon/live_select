@@ -129,11 +129,11 @@ defmodule LiveSelect.TestHelpers do
   def dropdown_visible(live), do: has_element?(live, @selectors[:dropdown])
 
   def stub_options(options, opts \\ []) do
-    Mox.stub(LiveSelect.ChangeEventHandlerMock, :handle, fn change_msg, _ ->
+    Mox.stub(LiveSelect.ChangeEventHandlerMock, :handle, fn params, _ ->
       unless opts[:delay_forever] do
         send(
           self(),
-          {:update_live_select, change_msg, options}
+          {:update_live_select, params, options}
         )
       end
     end)

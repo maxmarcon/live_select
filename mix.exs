@@ -56,6 +56,7 @@ defmodule LiveSelect.MixProject do
       {:phoenix_html, "~> 3.3"},
       {:jason, "~> 1.0"},
       {:phoenix, ">= 1.6.0", optional: true},
+      {:phoenix_view, "~> 2.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
       {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
@@ -63,7 +64,7 @@ defmodule LiveSelect.MixProject do
       {:esbuild, "~> 0.4", only: [:dev, :test, :demo]},
       {:plug_cowboy, "~> 2.5", only: [:dev, :demo]},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:tailwind, "~> 0.1.6", only: [:dev, :test, :demo]},
+      {:tailwind, "~> 0.2", only: [:dev, :test, :demo]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test}
