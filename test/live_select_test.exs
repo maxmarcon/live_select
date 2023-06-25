@@ -104,6 +104,23 @@ defmodule LiveSelectTest do
     })
   end
 
+  test "selecting option with click sends blur event to parent", %{conn: conn} do
+    stub_options([{"A", 1}, {"B", 2}, {"C", 3}])
+
+    {:ok, live, _html} = live(conn, "/?phx-blur=blur-event-for-parent")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2, method: :click)
+
+    assert_push_event(live, "select", %{
+      id: "my_form_city_search_live_select_component",
+      parent_event: "blur-event-for-parent"
+    })
+  end
+
   test "hitting enter with only one option selects it", %{conn: conn} do
     stub_options([{"A", 1}])
 

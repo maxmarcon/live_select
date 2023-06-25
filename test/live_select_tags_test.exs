@@ -381,7 +381,7 @@ defmodule LiveSelectTagsTest do
       })
     end
 
-    test "blurring the input field sends a focus event to the parent", %{live: live} do
+    test "blurring the input field sends a blur event to the parent", %{live: live} do
       element(live, selectors()[:text_input])
       |> render_blur()
 
