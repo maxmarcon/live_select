@@ -98,7 +98,7 @@ defmodule LiveSelect.ComponentTest do
   end
 
   describe "in single mode" do
-    @tag source: Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+    @tag source: %{"city_search" => "B"}
     test "can set initial selection from the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -109,11 +109,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B")
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: %{"x" => 1, "y" => 2}}, %{city_search: :map}},
-             %{}
-           )
+    @tag source: %{"city_search" => %{"x" => 1, "y" => 2}}
     test "can set initial selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -128,7 +124,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B", %{"x" => 1, "y" => 2})
     end
 
-    @tag source: Ecto.Changeset.change({%{city_search: "B"}, %{city_search: :string}}, %{})
+    @tag source: %{"city_search" => "B"}
     test "can set initial selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -138,8 +134,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B")
     end
 
-    @tag source: Ecto.Changeset.change({%{city_search: {"B", 1}}, %{city_search: :integer}}, %{})
-
+    @tag source: %{"city_search" => {"B", 1}}
     test "can set initial selection and label from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -149,7 +144,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "B", 1)
     end
 
-    @tag source: Ecto.Changeset.change({%{city_search: "A"}, %{city_search: :string}}, %{})
+    @tag source: %{"city_search" => "A"}
     test "can set initial selection from form even if it can't be found in the options", %{
       form: form
     } do
@@ -162,7 +157,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "A")
     end
 
-    @tag source: Ecto.Changeset.change({%{city_search: 2}, %{city_search: :integer}}, %{})
+    @tag source: %{"city_search" => 2}
     test "can set initial selection explicitly, bypassing the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -174,8 +169,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_static(component, "C", 3)
     end
 
-    @tag source:
-           Ecto.Changeset.change({%{city_search: [{"B", 1}]}, %{city_search: :integer}}, %{})
+    @tag source: %{"city_search" => [{"B", 1}]}
     test "raises if initial selection is in the wrong format", %{form: form} do
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,
@@ -186,11 +180,7 @@ defmodule LiveSelect.ComponentTest do
   end
 
   describe "in tags mode" do
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
-             %{}
-           )
+    @tag source: %{"city_search" => ["B", "D"]}
     test "can set initial selection from form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -202,12 +192,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_multiple_static(component, ["B", "D"])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [%{"x" => 1, "y" => 2}, [1, 2]]}, %{city_search: {:array, :map}}},
-             %{}
-           )
-
+    @tag source: %{"city_search" => [%{"x" => 1, "y" => 2}, [1, 2]]}
     test "can set initial selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -226,11 +211,7 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: ["B", "D"]}, %{city_search: {:array, :string}}},
-             %{}
-           )
+    @tag source: %{"city_search" => ["B", "D"]}
     test "can set initial selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -241,11 +222,7 @@ defmodule LiveSelect.ComponentTest do
       assert_selected_multiple_static(component, ["B", "D"])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [{"B", 1}, {"D", 2}]}, %{city_search: {:array, :integer}}},
-             %{}
-           )
+    @tag source: %{"city_search" => [{"B", 1}, {"D", 2}]}
     test "can set initial selection and labels from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -259,11 +236,7 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [1, 2]}, %{city_search: {:array, :integer}}},
-             %{}
-           )
+    @tag source: %{"city_search" => [1, 2]}
     test "can set initial selection from form using labels from options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -278,11 +251,7 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [{"B", 1}, 2, 3]}, %{city_search: {:array, :integer}}},
-             %{}
-           )
+    @tag source: %{"city_search" => [{"B", 1}, 2, 3]}
     test "can set initial selection from form even it can't be found in the options", %{
       form: form
     } do
@@ -300,11 +269,7 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [{"B", 2}, {"D", 4}]}, %{city_search: {:array, :integer}}},
-             %{}
-           )
+    @tag source: %{"city_search" => [{"B", 2}, {"D", 4}]}
     test "can set initial selection explicitly, bypassing the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
@@ -320,11 +285,7 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
-    @tag source:
-           Ecto.Changeset.change(
-             {%{city_search: [%{B: 1, C: 2}]}, %{city_search: {:array, :integer}}},
-             %{}
-           )
+    @tag source: %{"city_search" => [%{B: 1, C: 2}]}
     test "raises if initial selection is in the wrong format", %{form: form} do
       assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
         render_component(&LiveSelect.live_select/1,

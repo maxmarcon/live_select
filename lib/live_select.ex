@@ -347,7 +347,7 @@ defmodule LiveSelect do
 
         field, %{form: form} ->
           IO.warn(
-            "instead of passing form and field attributes, pass a single field attribute of type Phoenix.HTML.FormField"
+            "instead of passing separate form and field attributes, pass a single field attribute of type Phoenix.HTML.FormField"
           )
 
           to_form(form)[field]
