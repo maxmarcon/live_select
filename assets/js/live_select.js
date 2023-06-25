@@ -64,15 +64,13 @@ export default {
                     const option = event.target.closest('div[data-idx]')
                     if (option) {
                         this.pushEventTo(this.el, 'option_click', {idx: option.dataset.idx})
+                        event.preventDefault()
                     }
                 }
             }
         },
-        setInputValue(value, {focus}) {
+        setInputValue(value) {
             this.textInput().value = value
-            if (focus) {
-                this.textInput().focus()
-            }
         },
         inputEvent(selection, mode) {
             const selector = mode === "single" ? "input[class=single-mode]" : (selection.length === 0 ? "input[name=live_select_empty_selection]" : "input[type=hidden]")
@@ -85,13 +83,13 @@ export default {
                     this.pushEventToParent(event, payload)
                 }
             })
-            this.handleEvent("select", ({id, selection, mode, focus, input_event, parent_event}) => {
+            this.handleEvent("select", ({id, selection, mode, input_event, parent_event}) => {
                 if (this.el.id === id) {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
-                        this.setInputValue(label, {focus})
+                        this.setInputValue(label)
                     } else {
-                        this.setInputValue(null, {focus})
+                        this.setInputValue(null)
                     }
                     if (input_event) {
                         this.inputEvent(selection, mode)
