@@ -457,9 +457,13 @@ defmodule LiveSelect.Component do
     )
   end
 
+  defp normalize_options(options) when is_map(options) do
+    normalize_options(Enum.sort(options))
+  end
+
   defp normalize_options(options) do
-    Enum.map(
-      options,
+    options
+    |> Enum.map(
       &case normalize(&1) do
         {:ok, option} -> option
         :error -> invalid_option(&1, :option)
