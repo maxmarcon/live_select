@@ -200,7 +200,9 @@ defmodule LiveSelect.TestHelpers do
            |> Floki.find(@selectors[:dropdown_entries])
            |> Floki.text()
            |> String.replace(~r/\s+/, ",")
-           |> String.trim(",") == Enum.join(elements, ",")
+           |> String.trim(",")
+           |> String.split(",")
+           |> Enum.reject(&(&1 == "")) == elements |> Enum.map(&to_string/1)
   end
 
   def assert_options(live, elements), do: assert_options(render(live), elements)
