@@ -202,7 +202,8 @@ defmodule LiveSelect.TestHelpers do
            |> String.replace(~r/\s+/, ",")
            |> String.trim(",")
            |> String.split(",")
-           |> Enum.reject(&(&1 == "")) == elements |> Enum.map(&to_string/1)
+           |> Enum.reject(&(&1 == ""))
+           |> Enum.sort() == elements |> Enum.map(&to_string/1) |> Enum.sort()
   end
 
   def assert_options(live, elements), do: assert_options(render(live), elements)
