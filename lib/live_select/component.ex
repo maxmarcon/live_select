@@ -163,7 +163,7 @@ defmodule LiveSelect.Component do
       |> maybe_save_selection()
       |> then(
         &if &1.assigns.mode == :single do
-          clear(&1, %{input_event: false, focus: true, parent_event: &1.assigns[:"phx-focus"]})
+          clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
         else
           parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
         end
@@ -212,7 +212,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "Enter"}, socket) do
-    {:noreply, maybe_select(socket, %{parent_event: socket.assigns[:"phx-blur"]})}
+    {:noreply, maybe_select(socket)}
   end
 
   @impl true
@@ -229,6 +229,7 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("option_click", %{"idx" => idx}, socket) do
     socket = assign(socket, :active_option, String.to_integer(idx))
+
     {:noreply, maybe_select(socket)}
   end
 
@@ -239,7 +240,7 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("clear", _params, socket) do
-    {:noreply, clear(socket, %{input_event: true, focus: false})}
+    {:noreply, clear(socket, %{input_event: true})}
   end
 
   @impl true
@@ -412,10 +413,17 @@ defmodule LiveSelect.Component do
   end
 
   defp client_select(socket, extra_params) do
+    parent_event = if socket.assigns.mode == :single, do: socket.assigns[:"phx-blur"]
+
     socket
     |> push_event(
       "select",
-      %{id: socket.assigns.id, mode: socket.assigns.mode, selection: socket.assigns.selection}
+      %{
+        id: socket.assigns.id,
+        mode: socket.assigns.mode,
+        selection: socket.assigns.selection,
+        parent_event: parent_event
+      }
       |> Map.merge(extra_params)
     )
   end

@@ -19,7 +19,7 @@
           <% else %>
             <%= render_slot(@tag, option) %>
           <% end %>
-          <button type="button" phx-click="option_remove" phx-value-idx={idx} phx-target={@myself}>
+          <button type="button" data-idx={idx}>
             <.x class="cursor-pointer" />
           </button>
         </div>

@@ -70,11 +70,11 @@ defmodule LiveSelect.TestHelpers do
 
   @component_id "my_form_city_search_live_select_component"
 
-  defmacrop refute_push_event(view, event, timeout \\ 100) do
+  defmacro refute_push_event(view, event, payload, timeout \\ 100) do
     quote do
       %{proxy: {ref, _topic, _}} = unquote(view)
 
-      refute_receive {^ref, {:push_event, unquote(event), _}}, unquote(timeout)
+      refute_receive {^ref, {:push_event, unquote(event), unquote(payload)}}, unquote(timeout)
     end
   end
 
@@ -113,8 +113,14 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def unselect_nth_option(live, n) do
-    element(live, "#{@selectors[:tags_container]} button[phx-value-idx=#{n - 1}][phx-click]")
-    |> render_click()
+    selector = "#{@selectors[:tags_container]} button[data-idx=#{n - 1}]"
+
+    if has_element?(live, selector) do
+      element(live, @selectors[:container])
+      |> render_hook("option_remove", %{idx: to_string(n - 1)})
+    else
+      flunk("could not find element: #{selector}")
+    end
   end
 
   def keydown(live, key, opts \\ []) do
