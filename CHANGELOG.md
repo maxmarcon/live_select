@@ -1,6 +1,8 @@
+## 1.1.0 (2023-06-26)
 
 * add `phx-focus` and `phx-blur` options to specify events to be sent to the parent upon focus and blur of the text input field
 * send live_select_change event directly from hook to save a round-trip
+* accept a single field assign of type Phoenix.Form.Field instead of separate form and field assigns
 
 ## 1.0.4 (2023-05-30)
 

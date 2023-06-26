@@ -52,7 +52,7 @@ defmodule LiveSelect.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix_live_view, ">= 0.18.4"},
+      {:phoenix_live_view, "~> 0.19"},
       {:phoenix_html, "~> 3.3"},
       {:jason, "~> 1.0"},
       {:phoenix, ">= 1.6.0", optional: true},
