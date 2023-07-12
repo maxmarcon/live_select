@@ -62,10 +62,9 @@
     <%= if Enum.empty?(@selection) do %>
       <input
         type="hidden"
-        name="live_select_empty_selection"
+        name={"live_select_empty_selection_#{@myself}"}
         id={"live_select_empty_selection_#{@myself}"}
         disabled={@disabled}
-        value={@field.id}
       />
     <% end %>
     <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
