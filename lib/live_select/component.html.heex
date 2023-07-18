@@ -19,7 +19,7 @@
           <% else %>
             <%= render_slot(@tag, option) %>
           <% end %>
-          <button type="button" data-idx={idx}>
+          <button :if={!option[:sticky]} type="button" data-idx={idx}>
             <.x class="cursor-pointer" />
           </button>
         </div>

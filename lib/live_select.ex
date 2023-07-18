@@ -40,15 +40,17 @@ defmodule LiveSelect do
   You can pass or update the list of options the user can choose from with the `options` assign.
   Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
   LiveSelect input when the option is selected.
-   
+
+  In `:tags` mode, an extra `sticky` option with a boolean value can be used to not let the option to be removed after it is selected.
+
   `options` can be any enumeration of the following elements:
 
   * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
-  * _tuples_: `{label, value}` corresponding to label and value for the option
-  * _maps_: `%{label: label, value: value}` or `%{value: value}` 
-  * _keywords_: `[label: label, value: value]` or `[value: value]`
+  * _tuples_: `{label, value}` corresponding to label and value for the option or `{label, value, sticky}` when `sticky` is a boolean value
+  * _maps_: `%{label: label, value: value}` or `%{value: value}` or `%{label: label, value: value, sticky: sticky}`
+  * _keywords_: `[label: label, value: value]` or `[value: value]` or `[label: label, value: value, sticky: sticky]`
 
-  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option. 
+  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option.
 
   Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
 
@@ -59,7 +61,7 @@ defmodule LiveSelect do
   Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
-    
+
   ## Styling 
     
   `LiveSelect` supports 3 styling modes:

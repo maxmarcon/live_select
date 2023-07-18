@@ -295,7 +295,7 @@ defmodule LiveSelect.TestHelpers do
   def normalize_selection(selection) do
     for element <- selection do
       if is_binary(element) || is_integer(element) || is_atom(element) do
-        %{value: element, label: element}
+        %{value: element, label: element, sticky: false}
       else
         element
       end
@@ -397,6 +397,14 @@ defmodule LiveSelect.TestHelpers do
       input_event: ^input_event
     })
   end
+
+  def assert_option_removeable(live, n) do
+    selector = "#{@selectors[:tags_container]} button[data-idx=#{n - 1}]"
+
+    has_element?(live, selector)
+  end
+
+  def refute_option_removeable(live, n), do: !assert_option_removeable(live, n)
 
   def navigate(live, n, dir, opts \\ []) do
     key =

@@ -485,20 +485,23 @@ defmodule LiveSelect.Component do
         {:ok, nil}
 
       %{key: key, value: _value} = option ->
-        {:ok, Map.put_new(option, :label, key)}
+        {:ok, Map.merge(%{label: key, sticky: false}, option)}
 
       %{value: value} = option ->
-        {:ok, Map.put_new(option, :label, value)}
+        {:ok, Map.merge(%{label: value, sticky: false}, option)}
 
       option when is_list(option) ->
         Map.new(option)
         |> normalize()
 
       {label, value} ->
-        {:ok, %{label: label, value: value}}
+        {:ok, %{label: label, value: value, sticky: false}}
+
+      {label, value, sticky} ->
+        {:ok, %{label: label, value: value, sticky: sticky}}
 
       option when is_binary(option) or is_atom(option) or is_number(option) ->
-        {:ok, %{label: option, value: option}}
+        {:ok, %{label: option, value: option, sticky: false}}
 
       _ ->
         :error
@@ -615,7 +618,7 @@ defmodule LiveSelect.Component do
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      class="w-5 h-5 @class"
+      class={["w-5 h-5", @class]}
     >
       <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
     </svg>
