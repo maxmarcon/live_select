@@ -485,23 +485,23 @@ defmodule LiveSelect.Component do
         {:ok, nil}
 
       %{key: key, value: _value} = option ->
-        {:ok, Map.merge(%{label: key, sticky: false}, option)}
+        {:ok, Map.put_new(option, :label, key)}
 
       %{value: value} = option ->
-        {:ok, Map.merge(%{label: value, sticky: false}, option)}
+        {:ok, Map.put_new(option, :label, value)}
 
       option when is_list(option) ->
         Map.new(option)
         |> normalize()
 
       {label, value} ->
-        {:ok, %{label: label, value: value, sticky: false}}
+        {:ok, %{label: label, value: value}}
 
       {label, value, sticky} ->
         {:ok, %{label: label, value: value, sticky: sticky}}
 
       option when is_binary(option) or is_atom(option) or is_number(option) ->
-        {:ok, %{label: option, value: option, sticky: false}}
+        {:ok, %{label: option, value: option}}
 
       _ ->
         :error

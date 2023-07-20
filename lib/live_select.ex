@@ -41,14 +41,12 @@ defmodule LiveSelect do
   Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
   LiveSelect input when the option is selected.
 
-  In `:tags` mode, an extra `sticky` option with a boolean value can be used to not let the option to be removed after it is selected.
-
   `options` can be any enumeration of the following elements:
 
   * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
-  * _tuples_: `{label, value}` corresponding to label and value for the option or `{label, value, sticky}` when `sticky` is a boolean value
-  * _maps_: `%{label: label, value: value}` or `%{value: value}` or `%{label: label, value: value, sticky: sticky}`
-  * _keywords_: `[label: label, value: value]` or `[value: value]` or `[label: label, value: value, sticky: sticky]`
+  * _tuples_: `{label, value}` corresponding to label and value for the option
+  * _maps_: `%{label: label, value: value}` or `%{value: value}` 
+  * _keywords_: `[label: label, value: value]` or `[value: value]`
 
   In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option.
 
@@ -82,7 +80,21 @@ defmodule LiveSelect do
   ```
 
   will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
-    
+
+  ## Sticky options
+
+  In some scenarios it may be desired to have unremovable options after they're selected when the user selects an option or when they are set programatically.
+
+  For such cases you can pass `sticky: true` with a map or add a third value to tuple options.
+
+  ```
+  [%{label: "New York", value: "NY", sticky: true}]
+  ```
+  or
+  ```
+  [{"New York", "NY", true}]
+  ```
+
   ## Slots
     
   You can control how your options and tags are rendered by using the `:option` and `:tag` slots.

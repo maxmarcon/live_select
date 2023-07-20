@@ -245,10 +245,29 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B A))
   end
 
-  test "can set an option as sticky so it can't be removed", %{live: live} do
+  test "can set an option as sticky so it can't be removed with map options", %{live: live} do
     stub_options([
       %{tag_label: "R", value: "Rome", sticky: true},
       %{tag_label: "NY", value: "New York"}
+    ])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    refute_option_removeable(live, 1)
+
+    assert_option_removeable(live, 2)
+  end
+
+  test "can set an option as sticky so it can't be removed with tuple options", %{live: live} do
+    stub_options([
+      {"R", "Rome", true},
+      {"NY", "New York"}
     ])
 
     type(live, "ABC")
@@ -276,8 +295,8 @@ defmodule LiveSelectTagsTest do
     select_nth_option(live, 2)
 
     assert_selected_multiple(live, [
-      %{label: "Rome", value: "Rome", tag_label: "R", sticky: false},
-      %{label: "New York", value: "New York", tag_label: "NY", sticky: false}
+      %{label: "Rome", value: "Rome", tag_label: "R"},
+      %{label: "New York", value: "New York", tag_label: "NY"}
     ])
   end
 
@@ -293,8 +312,8 @@ defmodule LiveSelectTagsTest do
     select_nth_option(live, 2)
 
     assert_selected_multiple(live, [
-      %{label: "Rome", value: "Rome", tag_label: "R", sticky: false},
-      %{label: "New York", value: "New York", tag_label: "NY", sticky: false}
+      %{label: "Rome", value: "Rome", tag_label: "R"},
+      %{label: "New York", value: "New York", tag_label: "NY"}
     ])
   end
 
@@ -365,8 +384,8 @@ defmodule LiveSelectTagsTest do
     send_update(live, value: [3, 5], options: [{"C", 3}, {"D", 4}, {"E", 5}])
 
     assert_selected_multiple(live, [
-      %{label: "C", value: 3, sticky: false},
-      %{label: "E", value: 5, sticky: false}
+      %{label: "C", value: 3},
+      %{label: "E", value: 5}
     ])
   end
 
