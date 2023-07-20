@@ -383,10 +383,7 @@ defmodule LiveSelectTagsTest do
 
     send_update(live, value: [3, 5], options: [{"C", 3}, {"D", 4}, {"E", 5}])
 
-    assert_selected_multiple(live, [
-      %{label: "C", value: 3},
-      %{label: "E", value: 5}
-    ])
+    assert_selected_multiple(live, [%{label: "C", value: 3}, %{label: "E", value: 5}])
   end
 
   defp select_and_open_dropdown(live, pos) do
