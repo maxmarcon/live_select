@@ -245,6 +245,25 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(B A))
   end
 
+  test "can set an option as sticky so it can't be removed", %{live: live} do
+    stub_options([
+      %{tag_label: "R", value: "Rome", sticky: true},
+      %{tag_label: "NY", value: "New York"}
+    ])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    refute_option_removeable(live, 1)
+
+    assert_option_removeable(live, 2)
+  end
+
   test "can specify alternative labels for tags using maps", %{live: live} do
     stub_options([%{tag_label: "R", value: "Rome"}, %{tag_label: "NY", value: "New York"}])
 

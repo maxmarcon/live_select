@@ -398,6 +398,18 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
+  def assert_option_removeable(live, n) do
+    selector = "#{@selectors[:tags_container]} button[data-idx=#{n - 1}]"
+
+    assert has_element?(live, selector)
+  end
+
+  def refute_option_removeable(live, n) do
+    selector = "#{@selectors[:tags_container]} button[data-idx=#{n - 1}]"
+
+    refute has_element?(live, selector)
+  end
+
   def navigate(live, n, dir, opts \\ []) do
     key =
       case dir do

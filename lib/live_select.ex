@@ -40,7 +40,7 @@ defmodule LiveSelect do
   You can pass or update the list of options the user can choose from with the `options` assign.
   Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
   LiveSelect input when the option is selected.
-   
+
   `options` can be any enumeration of the following elements:
 
   * _atoms, strings or numbers_: In this case, each element will be both label and value for the option
@@ -48,7 +48,7 @@ defmodule LiveSelect do
   * _maps_: `%{label: label, value: value}` or `%{value: value}` 
   * _keywords_: `[label: label, value: value]` or `[value: value]`
 
-  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option. 
+  In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option.
 
   Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
 
@@ -59,7 +59,7 @@ defmodule LiveSelect do
   Will result in 3 options with labels `:Red`, `:Yellow`, `:Green` and values 1, 2, and 3.
 
   Note that the option values, if they are not strings, will be JSON-encoded. Your LiveView will receive this JSON-encoded version in the `phx-change` and `phx-submit` events.
-    
+
   ## Styling 
     
   `LiveSelect` supports 3 styling modes:
@@ -80,7 +80,17 @@ defmodule LiveSelect do
   ```
 
   will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
-    
+
+  ## Sticky options
+
+  In some scenarios it may be desired to have unremovable options after they're selected when the user selects an option or when they are set programatically.
+
+  For such cases you can add `sticky: true` to the options.
+
+  ```
+  [%{label: "New York", value: "NY", sticky: true}]
+  ```
+
   ## Slots
     
   You can control how your options and tags are rendered by using the `:option` and `:tag` slots.
