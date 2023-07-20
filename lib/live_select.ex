@@ -85,14 +85,10 @@ defmodule LiveSelect do
 
   In some scenarios it may be desired to have unremovable options after they're selected when the user selects an option or when they are set programatically.
 
-  For such cases you can pass `sticky: true` with a map or add a third value to tuple options.
+  For such cases you can add `sticky: true` to the options.
 
   ```
   [%{label: "New York", value: "NY", sticky: true}]
-  ```
-  or
-  ```
-  [{"New York", "NY", true}]
   ```
 
   ## Slots

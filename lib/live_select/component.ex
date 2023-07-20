@@ -497,9 +497,6 @@ defmodule LiveSelect.Component do
       {label, value} ->
         {:ok, %{label: label, value: value}}
 
-      {label, value, sticky} ->
-        {:ok, %{label: label, value: value, sticky: sticky}}
-
       option when is_binary(option) or is_atom(option) or is_number(option) ->
         {:ok, %{label: option, value: option}}
 
