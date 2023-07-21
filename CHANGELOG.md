@@ -1,3 +1,10 @@
+## 1.1.1 (2023-07-21)
+
+* accept `sticky` flag in an option to prevent it from being removed (https://github.com/maxmarcon/live_select/pull/33)
+* when selection becomes empty, an update is triggered with a hidden field named after `live_select`'s field's name
+
+(thanks to https://github.com/shamanime for both changes)
+
 ## 1.1.0 (2023-06-26)
 
 * add `phx-focus` and `phx-blur` options to specify events to be sent to the parent upon focus and blur of the text input field
