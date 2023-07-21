@@ -76,20 +76,20 @@ defmodule LiveSelect do
   in order to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
 
   ```
-  [%{label: "New York", tag_label: "NY"}, %{label: "Barcelona", tag_label: "BCN"}]  
+  [%{label: "New York", value "NY", tag_label: "NY"}, %{label: "Barcelona", value: "BCN", tag_label: "BCN"}]  
   ```
 
-  will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags.
+  will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags (and the values).
 
   ## Sticky options
 
-  In some scenarios it may be desired to have unremovable options after they're selected when the user selects an option or when they are set programatically.
-
-  For such cases you can add `sticky: true` to the options.
+  Add  the `sticky: true` flag to an option to prevent it from being removed from the selection:
 
   ```
   [%{label: "New York", value: "NY", sticky: true}]
   ```
+
+  Now, whenever the selection contains "New York", the option will stick and the user won't be able to remove it.
 
   ## Slots
     
