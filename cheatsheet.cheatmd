@@ -7,7 +7,7 @@ def live_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
   assigns =
     assigns
     |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
-    |> assign(:live_select_opts, assigns_to_attributes(assigns, [:errors, :label, :size]))
+    |> assign(:live_select_opts, assigns_to_attributes(assigns, [:errors, :label]))
   
   ~H"""
   <div phx-feedback-for={@field.name}>
