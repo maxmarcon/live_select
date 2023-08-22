@@ -69,7 +69,7 @@ export default {
                 }
             }
             this.el.querySelectorAll("button[data-idx]").forEach(button => {
-                button.onmousedown = (event) => {
+                button.onclick = (event) => {
                     this.pushEventTo(this.el, 'option_remove', {idx: button.dataset.idx})
                 }
             })
