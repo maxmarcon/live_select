@@ -78,7 +78,7 @@ export default {
             this.textInput().value = value
         },
         inputEvent(selection, mode) {
-            const selector = mode === "single" ? "input[class=single-mode]" : (selection.length === 0 ? "input[data-live-select-empty]" : "input[type=hidden]")
+            const selector = mode === "single" ? "input.single-mode" : (selection.length === 0 ? "input[data-live-select-empty]" : "input[type=hidden]")
             this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
         },
         mounted() {
