@@ -395,7 +395,12 @@ defmodule LiveSelect.ComponentTest do
   for {override_class, extend_class} <-
         Enum.zip(
           Keyword.values(
-            Keyword.drop(override_class_option(), [:available_option, :selected_option])
+            Keyword.drop(override_class_option(), [
+              :available_option,
+              :selected_option,
+              :clear_button,
+              :clear_tag_button
+            ])
           ),
           Keyword.values(extend_class_option())
         ) do
@@ -715,9 +720,32 @@ defmodule LiveSelect.ComponentTest do
         )
       end
 
+      test "class for clear button can be set", %{form: form} do
+        component =
+          render_component(
+            &LiveSelect.live_select/1,
+            [
+              mode: :single,
+              field: form[:city_search],
+              options: ["A", "B", "C"],
+              value: "B",
+              allow_clear: true,
+              clear_button_class: "foo"
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        assert Floki.attribute(component, selectors()[:clear_button], "class") == [
+                 ((get_in(expected_class(), [@style || default_style(), :clear_button]) || "") <>
+                    " foo")
+                 |> String.trim()
+               ]
+      end
+
       for element <- [
             :tags_container,
-            :tag
+            :tag,
+            :clear_tag_button
           ] do
         @element element
 

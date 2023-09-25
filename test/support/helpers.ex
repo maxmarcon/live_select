@@ -10,6 +10,7 @@ defmodule LiveSelect.TestHelpers do
     daisyui: [
       active_option: ~S(active),
       available_option: ~S(cursor-pointer),
+      clear_button: ~S(hidden),
       container: ~S(dropdown dropdown-open),
       dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       selected_option: ~S(disabled),
@@ -21,6 +22,7 @@ defmodule LiveSelect.TestHelpers do
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
       available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
+      clear_button: ~S(hidden),
       container: ~S(h-full text-black),
       dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 w-full),
       option: ~S(rounded px-4 py-1),
@@ -36,6 +38,8 @@ defmodule LiveSelect.TestHelpers do
 
   @override_class_option [
     available_option: :available_option_class,
+    clear_button: :clear_button_class,
+    clear_tag_button: :clear_button_class,
     container: :container_class,
     dropdown: :dropdown_class,
     option: :option_class,
@@ -58,6 +62,8 @@ defmodule LiveSelect.TestHelpers do
 
   @selectors [
     container: "div[phx-hook=LiveSelect]",
+    clear_button: "button[phx-click=clear]",
+    clear_tag_button: "div[phx-hook=LiveSelect] > div:first-child > div > button",
     dropdown: "div[phx-hook=LiveSelect] > ul",
     dropdown_entries: "div[phx-hook=LiveSelect] > ul > li > div",
     hidden_input: "input#my_form_city_search",

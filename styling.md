@@ -32,6 +32,7 @@ You can control the style of the following elements:
 4. The **dropdown** that contains the selectable options
 5. The single selectable **option**(s)
 6. The currently **active option**
+7. The **clear button** for the selection (if `allow_clear` is set)
 
 Here's a visual representation of the elements:
 
@@ -41,8 +42,9 @@ In `tags` mode there are 4 additional stylable elements:
 
 7. The **tag** showing the selected options
 8. The **tags_container** that contains the tags
-9. **selected_option**. This is an option in the dropdown that has already been selected. It's still visible, but can't be selected again
-10. **available_option**. This is an option in the dropdown that has not been selected and is available for selection 
+9. The **selected_option**. This is an option in the dropdown that has already been selected. It's still visible, but can't be selected again
+10. The **available_option**. This is an option in the dropdown that has not been selected and is available for selection 
+11. The **clear buttons** to remove the tags
 
 ![styled elements_tags](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements_tags.png)
 
@@ -58,6 +60,7 @@ The following table shows the default styles for each element and the options yo
 | Element | Default daisyui classes | Default tailwind classes | Class override option | Class extend option |
 |----|----|----|----|----|
 | *tag* | badge badge-primary p-1.5 text-sm | bg-blue-400 flex p-1 rounded-lg text-sm | tag_class | tag_extra_class |
+| *clear_button* |  |  | clear_button_class |  |
 | *active_option* | active | bg-gray-600 text-white | active_option_class |  |
 | *container* | dropdown dropdown-open | h-full text-black | container_class | container_extra_class |
 | *text_input* | input input-bordered pr-6 w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6 rounded-md w-full | text_input_class | text_input_extra_class |
@@ -67,6 +70,7 @@ The following table shows the default styles for each element and the options yo
 | *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded | available_option_class |  |
 | *selected_option* | disabled | text-gray-400 | selected_option_class |  |
 | *tags_container* | flex flex-wrap gap-1 p-1 | flex flex-wrap gap-1 p-1 | tags_container_class | tags_container_extra_class |
+
 
 For example, if you want to remove rounded borders from the options, have the active option use white text on a red background,
 and use green as a background color for tags instead of blue, render [live_select/1](`LiveSelect.live_select/1`)

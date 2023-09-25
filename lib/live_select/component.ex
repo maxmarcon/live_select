@@ -14,6 +14,7 @@ defmodule LiveSelect.Component do
     active_option_class: nil,
     allow_clear: false,
     available_option_class: nil,
+    clear_button_class: nil,
     user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,
@@ -44,6 +45,7 @@ defmodule LiveSelect.Component do
     tailwind: [
       active_option: ~W(text-white bg-gray-600),
       available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
+      clear_button: ~W(hidden),
       container: ~W(h-full text-black),
       dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 w-full),
       option: ~W(rounded px-4 py-1),
@@ -57,6 +59,7 @@ defmodule LiveSelect.Component do
     daisyui: [
       active_option: ~W(active),
       available_option: ~W(cursor-pointer),
+      clear_button: ~W(hidden),
       container: ~W(dropdown dropdown-open),
       dropdown: ~W(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
@@ -542,7 +545,8 @@ defmodule LiveSelect.Component do
     String.split(class_override)
   end
 
-  defp class(:none, element, nil, _class_extend) do
+  defp class(:none, element, nil, _class_extend)
+       when element not in [:clear_button, :clear_tag_button] do
     raise """
     When using `style: :none`, please use only `#{element}_class` and not `#{element}_extra_class`
     """

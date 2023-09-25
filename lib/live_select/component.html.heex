@@ -19,7 +19,12 @@
           <% else %>
             <%= render_slot(@tag, option) %>
           <% end %>
-          <button :if={!option[:sticky]} type="button" data-idx={idx}>
+          <button
+            :if={!option[:sticky]}
+            type="button"
+            data-idx={idx}
+            class={class(@style, :clear_tag_button, nil, @clear_button_class)}
+          >
             <.x class="cursor-pointer" />
           </button>
         </div>
@@ -46,7 +51,12 @@
       value: label(@mode, @selection)
     ) %>
     <%= if @mode == :single && @allow_clear && Enum.any?(@selection) do %>
-      <button type="button" phx-click="clear" phx-target={@myself} class="hidden">
+      <button
+        type="button"
+        phx-click="clear"
+        phx-target={@myself}
+        class={class(@style, :clear_button, nil, @clear_button_class)}
+      >
         <.x class="cursor-pointer" />
       </button>
     <% end %>
