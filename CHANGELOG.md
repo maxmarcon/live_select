@@ -1,3 +1,8 @@
+## 1.2.0 (2023-09-25)
+
+* add `clear_button_class` option to style clear buttons for tags and selection
+* various bugfixes and improvements
+
 ## 1.1.1 (2023-07-21)
 
 * accept `sticky` flag in an option to prevent it from being removed (https://github.com/maxmarcon/live_select/pull/33)
