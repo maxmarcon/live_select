@@ -44,7 +44,7 @@ defmodule LiveSelect.Component do
     tailwind: [
       active_option: ~W(text-white bg-gray-600),
       available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
-      container: ~W(relative h-full text-black),
+      container: ~W(h-full text-black),
       dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 w-full),
       option: ~W(rounded px-4 py-1),
       selected_option: ~W(text-gray-400),

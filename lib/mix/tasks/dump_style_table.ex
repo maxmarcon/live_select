@@ -1,6 +1,6 @@
 # credo:disable-for-this-file
 defmodule Mix.Tasks.DumpStyleTable do
-  @moduledoc false
+  @shortdoc "dump the table with the default styles used in the docs"
 
   use Mix.Task
 

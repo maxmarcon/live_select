@@ -105,7 +105,7 @@ defmodule LiveSelect.MixProject do
       main: "readme",
       extras: [
         "README.md": [title: "Readme"],
-        "styling.md": [],
+        "styling.md": [title: "Styling Guide"],
         "cheatsheet.cheatmd": [title: "Cheatsheet"],
         "CHANGELOG.md": []
       ],
