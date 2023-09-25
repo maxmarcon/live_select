@@ -21,7 +21,7 @@ defmodule LiveSelect.TestHelpers do
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
       available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
-      container: ~S(relative h-full text-black),
+      container: ~S(h-full text-black),
       dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 w-full),
       option: ~S(rounded px-4 py-1),
       selected_option: ~S(text-gray-400),
