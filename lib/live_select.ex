@@ -335,7 +335,7 @@ defmodule LiveSelect do
     doc:
       "Event to emit when the text input receives focus. The component id will be sent in the event's params"
 
-  @styling_options ~w(active_option_class available_option_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
+  @styling_options ~w(active_option_class available_option_class clear_button_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 
   for attr_name <- @styling_options do
     Phoenix.Component.Declarative.__attr__!(
