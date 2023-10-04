@@ -1,3 +1,13 @@
+# WARNING 
+
+### There is currently a bug introduced by version 1.2.0 that causes the dropdown menu to overflow [the live select container](https://github.com/maxmarcon/live_select/issues/43). I won't be able to release a bugfix until the end of October. Until then, you can either downgrade to 1.1.1 or set the position of the live select container to "relative". If using tailwind, this can be done like this:
+
+```
+<.live_select
+   field={my_form[:city_search]}
+   container_extra_class="relative" />
+```
+
 # LiveSelect
 
 [![Hex](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
