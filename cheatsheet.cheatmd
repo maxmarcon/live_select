@@ -111,6 +111,31 @@ def handle_event("set-default", %{"id" => id}, socket) do
 end
 ```
 
+## Dropdown that opens above the input field
+{: .col-2}
+
+### Tailwind
+
+#### Heex template
+
+```elixir
+<.live_select
+   field={@form[:my_field]}
+   dropdown_extra_class="!top-full bottom-full" />
+```
+
+### DaisyUI
+
+#### Heex template
+
+```elixir
+<.live_select
+   field={@form[:my_field]}
+   style={:daisyui}
+   container_extra_class="dropdown-top" />
+```
+
+
 ## Display tags underneath the input field (if you're using tailwind)
 
 #### Heex template:
@@ -123,3 +148,5 @@ end
    dropdown_extra_class="top-11"
    tags_container_extra_class="order-last" />
 ```
+
+
