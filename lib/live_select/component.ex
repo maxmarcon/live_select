@@ -46,8 +46,8 @@ defmodule LiveSelect.Component do
       active_option: ~W(text-white bg-gray-600),
       available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
       clear_button: ~W(hidden),
-      container: ~W(h-full text-black),
-      dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 w-full),
+      container: ~W(h-full text-black relative),
+      dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 inset-x-0 top-full),
       option: ~W(rounded px-4 py-1),
       selected_option: ~W(text-gray-400),
       text_input:

@@ -1,3 +1,7 @@
+## 1.2.1 (2023-10-17)
+
+* fix bug that was causing dropdown to overflow container (https://github.com/maxmarcon/live_select/issues/43)
+
 ## 1.2.0 (2023-09-25)
 
 * add `clear_button_class` option to style clear buttons for tags and selection
