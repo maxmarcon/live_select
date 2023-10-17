@@ -82,7 +82,7 @@ defmodule LiveSelect.MixProject do
       setup: ["deps.get", "cmd --cd assets yarn"],
       "assets.package": ["esbuild package"],
       "assets.deploy": [
-        "cmd --cd assets yarnpkg",
+        "cmd --cd assets yarn",
         "tailwind default --minify",
         "esbuild default --minify",
         "phx.digest"

@@ -182,6 +182,7 @@
           >
             <%= checkbox(@settings_form, :show_styles,
               phx_change: "toggle-styles",
+              class: "w-full",
               value: @show_styles
             ) %>
             <div class="collapse-title text-sm font-medium">

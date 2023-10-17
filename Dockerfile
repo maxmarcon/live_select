@@ -21,9 +21,19 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 
 FROM ${BUILDER_IMAGE} as builder
 
+ARG NODE_VERSION=18.16.0
+
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git yarnpkg\
+RUN apt-get update -y && apt-get install -y build-essential git curl xz-utils\
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# install nodejs and yarn
+RUN mkdir node \
+    && curl https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz | tar -Jx --strip-components 1 -C node \
+    && ln -s /node/bin/node /usr/local/bin/node \
+    && ln -s /node/bin/npm /usr/local/bin/npm
+
+RUN npm install -g yarn && ln -s /node/bin/yarn /usr/local/bin/yarn
 
 # prepare build dir
 WORKDIR /app

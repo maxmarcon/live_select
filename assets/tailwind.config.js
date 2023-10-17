@@ -10,8 +10,7 @@ module.exports = {
     ],
     safelist: [
         {
-            pattern: /./,
-            variants: ["hover", "focus", "disabled"]
+            pattern: /./
         }
     ],
     theme: {
