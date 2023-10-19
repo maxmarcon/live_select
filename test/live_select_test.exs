@@ -427,16 +427,40 @@ defmodule LiveSelectTest do
 
     type(live, "ABC")
 
-    navigate(live, 4, :down)
+    navigate(live, 3, :down)
     navigate(live, 1, :up)
 
     assert_option_active(live, 2)
   end
 
+  test "navigating up selects the last option", %{conn: conn} do
+    stub_options([%{label: "A", value: 1}, %{label: "B", value: 2}, [label: "C", value: 3]])
+
+    {:ok, live, _html} = live(conn, "/?style=daisyui")
+
+    type(live, "ABC")
+
+    navigate(live, 1, :up)
+
+    assert_option_active(live, 3)
+  end
+
+  test "navigating down selects the first option", %{conn: conn} do
+    stub_options([%{label: "A", value: 1}, %{label: "B", value: 2}, [label: "C", value: 3]])
+
+    {:ok, live, _html} = live(conn, "/?style=daisyui")
+
+    type(live, "ABC")
+
+    navigate(live, 1, :down)
+
+    assert_option_active(live, 1)
+  end
+
   test "dropdown becomes visible when typing", %{conn: conn} do
     stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
 
-    {:ok, live, _html} = live(conn, "/?style=daisyui")
+    {:ok, live, _html} = live(conn, "/")
 
     type(live, "ABC")
 
@@ -447,7 +471,7 @@ defmodule LiveSelectTest do
     setup %{conn: conn} do
       stub_options([[label: "A", value: 1], [label: "B", value: 2], [label: "C", value: 3]])
 
-      {:ok, live, _html} = live(conn, "/?style=daisyui")
+      {:ok, live, _html} = live(conn, "/")
 
       type(live, "ABC")
 

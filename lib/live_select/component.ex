@@ -610,7 +610,7 @@ defmodule LiveSelect.Component do
     |> Enum.reverse()
     |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
     |> Enum.map(fn {_, idx} -> idx end)
-    |> Enum.find(active_option, &(&1 < active_option))
+    |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
   end
 
   defp x(assigns) do

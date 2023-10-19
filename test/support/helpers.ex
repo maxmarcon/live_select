@@ -233,7 +233,7 @@ defmodule LiveSelect.TestHelpers do
       |> Floki.attribute(@selectors[:dropdown_entries], "class")
       |> Enum.map(&String.trim/1)
 
-    assert length(element_classes) > pos
+    assert length(element_classes) >= pos
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == pos do

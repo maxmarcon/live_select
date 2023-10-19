@@ -1,3 +1,5 @@
+* ArrowUp when there is no active option navigates to the last option
+
 ## 1.2.1 (2023-10-17)
 
 * fix bug that was causing dropdown to overflow container (https://github.com/maxmarcon/live_select/issues/43)
