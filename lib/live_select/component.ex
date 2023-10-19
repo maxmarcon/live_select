@@ -196,21 +196,30 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
-    {:noreply,
-     assign(
-       socket,
-       active_option: next_selectable(socket.assigns),
-       hide_dropdown: false
-     )}
+    active_option = next_selectable(socket.assigns)
+
+    socket =
+      assign(socket,
+        active_option: active_option,
+        hide_dropdown: false
+      )
+      |> push_event("active", %{id: socket.assigns.id, idx: active_option})
+
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
-    {:noreply,
-     assign(socket,
-       active_option: prev_selectable(socket.assigns),
-       hide_dropdown: false
-     )}
+    active_option = prev_selectable(socket.assigns)
+
+    socket =
+      assign(socket,
+        active_option: active_option,
+        hide_dropdown: false
+      )
+      |> push_event("active", %{id: socket.assigns.id, idx: active_option})
+
+    {:noreply, socket}
   end
 
   @impl true

@@ -104,6 +104,14 @@ export default {
                     }
                 }
             })
+            this.handleEvent("active", ({id, idx}) => {
+                if (this.el.id === id) {
+                    const option = this.el.querySelector(`div[data-idx="${idx}"]`)
+                    if (option) {
+                        option.scrollIntoView(false)
+                    }
+                }
+            })
             this.attachDomEventHandlers()
         },
         updated() {

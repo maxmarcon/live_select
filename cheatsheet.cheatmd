@@ -135,8 +135,7 @@ end
    container_extra_class="dropdown-top" />
 ```
 
-
-## Display tags underneath the input field (if you're using tailwind)
+## Display tags underneath the input field (Tailwind)
 
 #### Heex template:
 
@@ -149,4 +148,13 @@ end
    tags_container_extra_class="order-last" />
 ```
 
+## Limit the height of the dropdown and make it scrollable (Tailwind)
+
+#### Heex template:
+
+```
+<.live_select
+   field={@form[:my_field]}
+   dropdown_extra_class="max-h-60 overflow-y-scroll" />
+```
 
