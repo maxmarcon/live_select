@@ -108,7 +108,7 @@ export default {
                 if (this.el.id === id) {
                     const option = this.el.querySelector(`div[data-idx="${idx}"]`)
                     if (option) {
-                        option.scrollIntoView(false)
+                        option.scrollIntoView({block: "nearest"})
                     }
                 }
             })
