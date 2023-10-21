@@ -66,7 +66,7 @@ The following table shows the default styles for each element and the options yo
 | *text_input* | input input-bordered pr-6 w-full | disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6 rounded-md w-full | text_input_class | text_input_extra_class |
 | *text_input_selected* | input-primary | border-gray-600 text-gray-600 | text_input_selected_class |  |
 | *option* |  | px-4 py-1 rounded | option_class | option_extra_class |
-| *dropdown* | bg-base-200 dropdown-content menu menu-compact p-1 rounded-box shadow w-full | absolute bg-gray-100 inset-x-0 rounded-md shadow top-full z-50 | dropdown_class | dropdown_extra_class |
+| *dropdown* | bg-base-200 dropdown-content menu menu-compact p-1 rounded-box shadow w-full z-[1] | absolute bg-gray-100 inset-x-0 rounded-md shadow top-full z-50 | dropdown_class | dropdown_extra_class |
 | *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded | available_option_class |  |
 | *selected_option* | disabled | text-gray-400 | selected_option_class |  |
 | *tags_container* | flex flex-wrap gap-1 p-1 | flex flex-wrap gap-1 p-1 | tags_container_class | tags_container_extra_class |
