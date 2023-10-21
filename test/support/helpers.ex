@@ -12,7 +12,8 @@ defmodule LiveSelect.TestHelpers do
       available_option: ~S(cursor-pointer),
       clear_button: ~S(hidden),
       container: ~S(dropdown dropdown-open),
-      dropdown: ~S(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
+      dropdown:
+        ~S(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       selected_option: ~S(disabled),
       tag: ~S(p-1.5 text-sm badge badge-primary),
       tags_container: ~S(flex flex-wrap gap-1 p-1),

@@ -61,7 +61,8 @@ defmodule LiveSelect.Component do
       available_option: ~W(cursor-pointer),
       clear_button: ~W(hidden),
       container: ~W(dropdown dropdown-open),
-      dropdown: ~W(dropdown-content menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
+      dropdown:
+        ~W(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
       selected_option: ~W(disabled),
       text_input: ~W(input input-bordered w-full pr-6),
