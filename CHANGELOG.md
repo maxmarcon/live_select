@@ -1,3 +1,5 @@
+## 1.2.2 (2023-10-21)
+
 * arrowUp when there is no active option navigates to the last option
 * scroll options into view when they become active
 
