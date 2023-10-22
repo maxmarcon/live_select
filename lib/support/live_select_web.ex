@@ -26,27 +26,12 @@ defmodule LiveSelectWeb do
     end
   end
 
-  def view do
-    quote do
-      use Phoenix.View,
-        root: "lib/support/live_select_web/templates",
-        namespace: LiveSelectWeb
-
-      # Import convenience functions from controllers
-      import Phoenix.Controller,
-        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
-
-      # Include shared imports and aliases for views
-      unquote(view_helpers())
-    end
-  end
-
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {LiveSelectWeb.LayoutView, :app}
+        layout: {LiveSelectWeb.Layouts, :app}
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -54,15 +39,20 @@ defmodule LiveSelectWeb do
     quote do
       use Phoenix.LiveComponent
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
-  def component do
+  def html do
     quote do
       use Phoenix.Component
 
-      unquote(view_helpers())
+      # Import convenience functions from controllers
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+
+      # Include general helpers for rendering HTML
+      unquote(html_helpers())
     end
   end
 
@@ -82,7 +72,7 @@ defmodule LiveSelectWeb do
     end
   end
 
-  defp view_helpers do
+  defp html_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
