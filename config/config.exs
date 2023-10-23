@@ -14,7 +14,10 @@ config :live_select, :change_event_handler, LiveSelect.ChangeEventHandler
 # Configures the endpoint
 config :live_select, LiveSelectWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: LiveSelectWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: LiveSelectWeb.ErrorHTML, json: LiveSelectWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: LiveSelect.PubSub,
   live_view: [signing_salt: "yxyt7t35"]
 

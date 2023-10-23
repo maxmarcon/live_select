@@ -3,16 +3,8 @@
     <div class="p-5 navbar bg-base-100 gap-5">
       <h1 class="text-2xl font-bold flex-1">LiveSelect Showcase App</h1>
       <a class="link text-xl" href="https://github.com/maxmarcon/live_select" target="_blank">
-        <img
-          class="hidden dark:block"
-          width="50"
-          src={Routes.static_path(@socket, "/images/github-mark-white.png")}
-        />
-        <img
-          class="dark:hidden"
-          width="50"
-          src={Routes.static_path(@socket, "/images/github-mark.png")}
-        />
+        <img class="hidden dark:block" width="50" src={~p"/images/github-mark-white.png"} />
+        <img class="dark:hidden" width="50" src={~p"/images/github-mark.png"} />
       </a>
     </div>
   </header>
@@ -36,10 +28,7 @@
           </label>
         </div>
         <div class="form-control">
-          <.link
-            patch={Routes.live_path(@socket, __MODULE__, reset: true)}
-            class="btn btn-warning btn-sm mt-1"
-          >
+          <.link patch={~p(/?reset=true)} class="btn btn-warning btn-sm mt-1">
             Reset
           </.link>
         </div>

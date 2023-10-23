@@ -2,7 +2,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
   import LiveSelect
-  alias Phoenix.LiveView.JS
   alias LiveSelect.Component
 
   defmodule Settings do
@@ -296,7 +295,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     socket =
       socket
-      |> push_patch(to: Routes.live_path(socket, __MODULE__, params))
+      |> push_patch(to: ~p(/?#{params}))
 
     {:noreply, socket}
   end

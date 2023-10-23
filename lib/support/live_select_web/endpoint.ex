@@ -20,7 +20,7 @@ defmodule LiveSelectWeb.Endpoint do
     at: "/",
     from: :live_select,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: LiveSelectWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

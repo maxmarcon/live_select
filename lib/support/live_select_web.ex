@@ -17,12 +17,17 @@ defmodule LiveSelectWeb do
   and import those modules here.
   """
 
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
+
   def controller do
     quote do
-      use Phoenix.Controller, namespace: LiveSelectWeb
+      use Phoenix.Controller,
+        formats: [:html, :json],
+        layouts: [html: LiveSelectWeb.Layouts]
 
       import Plug.Conn
-      alias LiveSelectWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -74,17 +79,25 @@ defmodule LiveSelectWeb do
 
   defp html_helpers do
     quote do
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-
-      # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.LiveView.Helpers
-
-      # Import basic rendering functionality (render, render_layout, etc)
-      import Phoenix.View
-
+      # HTML escaping functionality
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
       import LiveSelectWeb.ErrorHelpers
-      alias LiveSelectWeb.Router.Helpers, as: Routes
+
+      # Shortcut for generating JS commands
+      alias Phoenix.LiveView.JS
+
+      # Routes generation with the ~p sigil
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: LiveSelectWeb.Endpoint,
+        router: LiveSelectWeb.Router,
+        statics: LiveSelectWeb.static_paths()
     end
   end
 
