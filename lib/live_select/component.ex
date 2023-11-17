@@ -83,7 +83,8 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        saved_selection: nil
+        saved_selection: nil,
+        previous_options: nil
       )
 
     {:ok, socket}
@@ -106,6 +107,17 @@ defmodule LiveSelect.Component do
 
   @impl true
   def update(assigns, socket) do
+    %{previous_options: previous_options} = socket.assigns
+    is_rendering_from_scratch = Map.has_key?(assigns, :field)
+
+    assigns = if previous_options && is_rendering_from_scratch do
+      Map.put(assigns, :options, previous_options)
+    else
+      assigns
+    end
+
+    assigns = Map.put(assigns, :previous_options, assigns.options)
+
     validate_assigns!(assigns)
 
     socket =
@@ -303,6 +315,7 @@ defmodule LiveSelect.Component do
           :tag,
           :clear,
           :hide_dropdown,
+          :previous_options,
           # for backwards compatibility
           :form
         ]
