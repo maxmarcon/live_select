@@ -274,7 +274,12 @@
         <h4>Try out the component here:</h4>
       </div>
       <div class="md:w-3/4">
-        <.form for={@live_select_field.form} phx-change="change" phx-submit="submit" id="live-select-form">
+        <.form
+          for={@live_select_field.form}
+          phx-change="change"
+          phx-submit="submit"
+          id="live-select-form"
+        >
           <div class="grid grid-cols-4 gap-1">
             <div class="col-span-3 form-control">
               <.live_select
