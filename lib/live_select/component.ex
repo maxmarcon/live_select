@@ -83,7 +83,8 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        saved_selection: nil
+        saved_selection: nil,
+        selection: nil
       )
 
     {:ok, socket}
@@ -131,8 +132,8 @@ defmodule LiveSelect.Component do
       end)
       |> update(:options, &normalize_options/1)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field.field}_text_input"))
-      |> assign_new(:selection, fn
-        %{field: field, options: options, mode: mode} ->
+      |> update(:selection, fn
+        _, %{field: field, options: options, mode: mode} ->
           set_selection(field.value, options, mode)
       end)
 
