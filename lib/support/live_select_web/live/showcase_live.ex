@@ -226,7 +226,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
-        live_select_field: to_form(%{}, as: :my_form)[:city_search],
+        live_select_form: to_form(%{}, as: :my_form),
         events: [],
         next_event_id: 0,
         locations: nil,
@@ -353,6 +353,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
           )
 
           socket
+
+        "change" ->
+          assign(socket, :live_select_form, to_form(params["my_form"], as: :my_form))
 
         _event ->
           socket
