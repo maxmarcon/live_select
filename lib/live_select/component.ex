@@ -108,6 +108,17 @@ defmodule LiveSelect.Component do
   def update(assigns, socket) do
     validate_assigns!(assigns)
 
+    initial_render = !socket.assigns[:field]
+
+    assigns =
+      if !initial_render && Map.has_key?(assigns, :field) do
+        # do not reset option when rerendering
+        # TODO: missing test
+        Map.delete(assigns, :options)
+      else
+        assigns
+      end
+
     socket =
       socket
       |> assign(assigns)
@@ -131,10 +142,21 @@ defmodule LiveSelect.Component do
       end)
       |> update(:options, &normalize_options/1)
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field.field}_text_input"))
-      |> assign_new(:selection, fn
-        %{field: field, options: options, mode: mode} ->
-          set_selection(field.value, options, mode)
-      end)
+
+    socket =
+      if assigns[:field] do
+        assign(
+          socket,
+          :selection,
+          set_selection(
+            decode(socket.assigns.field.value, socket.assigns.mode),
+            socket.assigns.options,
+            socket.assigns.mode
+          )
+        )
+      else
+        socket
+      end
 
     socket =
       if Map.has_key?(assigns, :value) do
@@ -585,6 +607,23 @@ defmodule LiveSelect.Component do
   defp encode(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
 
   defp encode(value), do: Jason.encode!(value)
+
+  defp decode(nil, _), do: nil
+
+  defp decode(value, :tags) do
+    value
+    |> List.wrap()
+    |> Enum.map(&decode(&1, :single))
+  end
+
+  defp decode(value, :single) when is_binary(value) do
+    case Jason.decode(value) do
+      {:ok, decoded} -> decoded
+      {:error, _} -> value
+    end
+  end
+
+  defp decode(value, :single), do: value
 
   defp already_selected?(option, selection) do
     option.label in Enum.map(selection, & &1.label)

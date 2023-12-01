@@ -444,4 +444,30 @@ defmodule LiveSelectTagsTest do
       })
     end
   end
+
+  test "selection can be updated from the form", %{conn: conn} do
+    stub_options([
+      %{value: 1, label: "A"},
+      %{value: 2, label: "B"},
+      %{value: 3, label: "C"}
+    ])
+
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2, method: :click)
+
+    assert_selected_multiple(live, [%{value: 1, label: "A"}, %{value: 2, label: "B"}])
+
+    send_update(live,
+      field: Phoenix.Component.to_form(%{"city_search" => [2, 3]}, as: :my_form)[:city_search]
+    )
+
+    assert_selected_multiple_static(live, [%{value: 2, label: "B"}, %{value: 3, label: "C"}])
+  end
 end

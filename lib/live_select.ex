@@ -37,7 +37,8 @@ defmodule LiveSelect do
 
   ## Options
 
-  You can pass or update the list of options the user can choose from with the `options` assign.
+  You can set the initial list of options the user can choose from with the `options` assign.
+  Afterwards, you can update the options at any time using `Phoenix.LiveView.send_update/3`.
   Each option will be assigned a label, which will be shown in the dropdown, and a value, which will be the value of the
   LiveSelect input when the option is selected.
 
@@ -280,7 +281,7 @@ defmodule LiveSelect do
 
   attr :options, :list,
     doc:
-      ~s(initial available options to select from. See the "Options" section for details on what you can pass here)
+      ~s(initial available options to select from. Note that, after the initial rendering of the component, options can only be updated using `Phoenix.LiveView.send_update/3` - See the "Options" section for details)
 
   attr :value, :any, doc: "used to manually set a selection - overrides any values from the form. 
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode."
