@@ -285,7 +285,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   @impl true
   def handle_event(
         "update-settings",
-        %{"settings" => params},
+        %{"settings" => params, "_target" => target},
         socket
       ) do
     params =
@@ -295,6 +295,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     socket =
       socket
+      |> update(:live_select_form, fn form ->
+        if target == ["settings", "mode"] do
+          to_form(%{}, as: :my_form)
+        else
+          form
+        end
+      end)
       |> push_patch(to: ~p(/?#{params}))
 
     {:noreply, socket}
