@@ -355,6 +355,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
           socket
 
         "change" ->
+          params =
+            update_in(params, ~w(my_form city_search), fn
+              nil -> nil
+              selection when is_list(selection) -> Enum.map(selection, &Jason.decode!/1)
+              selection -> Jason.decode!(selection)
+            end)
+
           assign(socket, :live_select_form, to_form(params["my_form"], as: :my_form))
 
         _event ->

@@ -654,9 +654,7 @@ defmodule LiveSelectTest do
 
     assert_selected(live, :B, 2)
 
-    send_update(live,
-      field: Phoenix.Component.to_form(%{"city_search" => 1}, as: :my_form)[:city_search]
-    )
+    render_change(live, "change", %{"my_form" => %{"city_search" => 1}})
 
     assert_selected_static(live, :A, 1)
   end

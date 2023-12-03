@@ -462,12 +462,21 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2, method: :click)
 
-    assert_selected_multiple(live, [%{value: 1, label: "A"}, %{value: 2, label: "B"}])
+    stub_options([
+      %{value: 4, label: "D"},
+      %{value: 5, label: "E"}
+    ])
 
-    send_update(live,
-      field: Phoenix.Component.to_form(%{"city_search" => [2, 3]}, as: :my_form)[:city_search]
-    )
+    type(live, "DEE")
 
-    assert_selected_multiple_static(live, [%{value: 2, label: "B"}, %{value: 3, label: "C"}])
+    select_nth_option(live, 1)
+
+    render_change(live, "change", %{"my_form" => %{"city_search" => [1, 2, 4]}})
+
+    assert_selected_multiple(live, [
+      %{value: 1, label: "A"},
+      %{value: 2, label: "B"},
+      %{value: 4, label: "D"}
+    ])
   end
 end
