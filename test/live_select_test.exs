@@ -640,11 +640,11 @@ defmodule LiveSelectTest do
   end
 
   test "selection can be updated from the form", %{conn: conn} do
-    stub_options(
-      A: 1,
-      B: 2,
-      C: 3
-    )
+    stub_options(%{
+      "A" => 1,
+      "B" => 2,
+      "C" => 3
+    })
 
     {:ok, live, _html} = live(conn, "/")
 
@@ -652,11 +652,11 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 2)
 
-    assert_selected(live, :B, 2)
+    assert_selected(live, "B", 2)
 
     render_change(live, "change", %{"my_form" => %{"city_search" => 1}})
 
-    assert_selected_static(live, :A, 1)
+    assert_selected_static(live, "A", 1)
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do

@@ -446,11 +446,11 @@ defmodule LiveSelectTagsTest do
   end
 
   test "selection can be updated from the form", %{conn: conn} do
-    stub_options([
-      %{value: 1, label: "A"},
-      %{value: 2, label: "B"},
-      %{value: 3, label: "C"}
-    ])
+    stub_options(%{
+      "A" => 1,
+      "B" => 2,
+      "C" => 3
+    })
 
     {:ok, live, _html} = live(conn, "/?mode=tags")
 
@@ -462,10 +462,7 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2, method: :click)
 
-    stub_options([
-      %{value: 4, label: "D"},
-      %{value: 5, label: "E"}
-    ])
+    stub_options(%{"D" => 4, "E" => 5})
 
     type(live, "DEE")
 

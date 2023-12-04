@@ -296,7 +296,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       socket
       |> update(:live_select_form, fn form ->
-        if target == ["settings", "mode"] do
+        if target == ~w(settings mode) do
           to_form(%{}, as: :my_form)
         else
           form
@@ -343,8 +343,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
         "submit" ->
           mode = socket.assigns.settings_form.data.mode
 
-          selected = get_in(params, ["my_form", "city_search"])
-          selected_text = get_in(params, ["my_form", "city_search_text_input"])
+          selected = get_in(params,~w(my_form city_search))
+          selected_text = get_in(params, ~w(my_form city_search_text_input))
 
           {cities, locations} = extract_cities_and_locations(mode, selected_text, selected)
 
