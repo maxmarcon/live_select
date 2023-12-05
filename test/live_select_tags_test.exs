@@ -476,4 +476,24 @@ defmodule LiveSelectTagsTest do
       %{value: 4, label: "D"}
     ])
   end
+
+  test "form recovery", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    values = [value1 = [10, 20], value2 = %{"x" => 10, "y" => 20}, value3 = "C"]
+
+    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(values)}})
+
+    render_hook(element(live, selectors()[:container]), "options_recovery", [
+      %{label: "A", value: value1},
+      %{label: "B", value: value2},
+      %{label: "C", value: value3}
+    ])
+
+    assert_selected_multiple_static(live, [
+      %{label: "A", value: value1},
+      %{label: "B", value: value2},
+      %{label: "C", value: value3}
+    ])
+  end
 end

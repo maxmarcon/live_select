@@ -385,6 +385,16 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_clear(live, input_event \\ true) do
+    assert_clear_static(live)
+
+    assert_push_event(live, "select", %{
+      id: @component_id,
+      selection: [],
+      input_event: ^input_event
+    })
+  end
+
+  def assert_clear_static(live) do
     assert live
            |> element(@selectors[:text_input])
            |> render()
@@ -397,12 +407,6 @@ defmodule LiveSelect.TestHelpers do
            |> render()
            |> Floki.parse_fragment!()
            |> Floki.attribute("value") == []
-
-    assert_push_event(live, "select", %{
-      id: @component_id,
-      selection: [],
-      input_event: ^input_event
-    })
   end
 
   def assert_option_removeable(live, n) do

@@ -162,7 +162,7 @@ defmodule LiveSelect.Component do
     socket =
       if Map.has_key?(assigns, :value) do
         update(socket, :selection, fn
-          selection, %{options: options, mode: mode, value: value} ->
+          selection, %{options: options, value: value, mode: mode} ->
             update_selection(value, selection, options, mode)
         end)
         |> client_select(%{input_event: true})
@@ -207,6 +207,24 @@ defmodule LiveSelect.Component do
       |> assign(hide_dropdown: false, current_text: text, awaiting_update: true)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("options_recovery", options, socket) do
+    options =
+      for %{"label" => label, "value" => value} <- options do
+        %{label: label, value: value}
+      end
+
+    {:noreply,
+     assign(socket,
+       options: options,
+       selection:
+         Enum.map(socket.assigns.selection, fn %{value: value} ->
+           Enum.find(options, fn %{value: option_value} -> option_value == value end)
+         end)
+         |> Enum.filter(& &1)
+     )}
   end
 
   @impl true
@@ -367,7 +385,7 @@ defmodule LiveSelect.Component do
          extra_params
        )
        when is_binary(current_text) do
-    {:ok, option} = normalize(current_text)
+    {:ok, option} = normalize_option(current_text)
 
     if already_selected?(option, socket.assigns.selection) do
       socket
@@ -478,30 +496,24 @@ defmodule LiveSelect.Component do
   defp update_selection(nil, _current_selection, _options, _mode), do: []
 
   defp update_selection(value, current_selection, options, :single) do
-    if option = Enum.find(options ++ current_selection, fn %{value: val} -> value == val end) do
-      [option]
-    else
-      case normalize(value) do
-        {:ok, option} -> List.wrap(option)
-        :error -> invalid_option(value, :selection)
-      end
-    end
+    List.wrap(normalize_selection_value(value, options ++ current_selection))
   end
 
   defp update_selection(value, current_selection, options, :tags) do
     value = if Enumerable.impl_for(value), do: value, else: [value]
 
-    value
-    |> Enum.map(
-      &if option = Enum.find(options ++ current_selection, fn %{value: value} -> value == &1 end) do
-        option
-      else
-        case normalize(&1) do
-          {:ok, option} -> option
-          :error -> invalid_option(&1, :selection)
-        end
+    Enum.map(value, &normalize_selection_value(&1, options ++ current_selection))
+  end
+
+  defp normalize_selection_value(selection_value, options) do
+    if option = Enum.find(options, fn %{value: value} -> selection_value == value end) do
+      option
+    else
+      case normalize_option(selection_value) do
+        {:ok, option} -> option
+        :error -> %{label: "", value: selection_value}
       end
-    )
+    end
   end
 
   defp normalize_options(options) when is_map(options) do
@@ -511,16 +523,19 @@ defmodule LiveSelect.Component do
   defp normalize_options(options) do
     options
     |> Enum.map(
-      &case normalize(&1) do
+      &case normalize_option(&1) do
         {:ok, option} -> option
-        :error -> invalid_option(&1, :option)
+        :error -> invalid_option(&1)
       end
     )
   end
 
-  defp normalize(option_or_selection) do
-    case option_or_selection do
+  defp normalize_option(option) do
+    case option do
       nil ->
+        {:ok, nil}
+
+      "" ->
         {:ok, nil}
 
       %{key: key, value: _value} = option ->
@@ -530,8 +545,12 @@ defmodule LiveSelect.Component do
         {:ok, Map.put_new(option, :label, value)}
 
       option when is_list(option) ->
-        Map.new(option)
-        |> normalize()
+        if Keyword.keyword?(option) do
+          Map.new(option)
+          |> normalize_option()
+        else
+          :error
+        end
 
       {label, value} ->
         {:ok, %{label: label, value: value}}
@@ -544,10 +563,10 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp invalid_option(option, what) do
+  defp invalid_option(option) do
     raise """
-    invalid #{if what == :selection, do: "element in selection", else: "element in options"}: #{inspect(option)}
-    elements of #{what} can be:
+    invalid element in options: #{inspect(option)}
+    elements can be:
 
     atoms, strings or numbers
     maps or keywords with keys: (:label, :value) or (:key, :value) and an optional key :tag_label

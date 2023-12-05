@@ -343,7 +343,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         "submit" ->
           mode = socket.assigns.settings_form.data.mode
 
-          selected = get_in(params,~w(my_form city_search))
+          selected = get_in(params, ~w(my_form city_search))
           selected_text = get_in(params, ~w(my_form city_search_text_input))
 
           {cities, locations} = extract_cities_and_locations(mode, selected_text, selected)
@@ -364,6 +364,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
         "change" ->
           params =
             update_in(params, ~w(my_form city_search), fn
+              nil -> nil
               selection when is_list(selection) -> Enum.map(selection, &decode/1)
               selection -> decode(selection)
             end)

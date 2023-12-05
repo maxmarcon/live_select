@@ -168,15 +168,6 @@ defmodule LiveSelect.ComponentTest do
 
       assert_selected_static(component, "C", 3)
     end
-
-    @tag source: %{"city_search" => [{"B", 1}]}
-    test "raises if initial selection is in the wrong format", %{form: form} do
-      assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
-        render_component(&LiveSelect.live_select/1,
-          field: form[:city_search]
-        )
-      end
-    end
   end
 
   describe "in tags mode" do
@@ -284,15 +275,23 @@ defmodule LiveSelect.ComponentTest do
         %{label: "C", value: 3}
       ])
     end
+  end
 
-    @tag source: %{"city_search" => [%{B: 1, C: 2}]}
-    test "raises if initial selection is in the wrong format", %{form: form} do
-      assert_raise RuntimeError, ~r/invalid element in selection/, fn ->
-        render_component(&LiveSelect.live_select/1,
-          mode: :tags,
-          field: form[:city_search]
-        )
-      end
+  test "raises if options are passed in the wrong format (1)", %{form: form} do
+    assert_raise RuntimeError, ~r/invalid element in option/, fn ->
+      render_component(&LiveSelect.live_select/1,
+        field: form[:city_search],
+        options: [[10, 20]]
+      )
+    end
+  end
+
+  test "raises if options are passed in the wrong format (2)", %{form: form} do
+    assert_raise RuntimeError, ~r/invalid element in option/, fn ->
+      render_component(&LiveSelect.live_select/1,
+        field: form[:city_search],
+        options: [%{x: 10, y: 20}]
+      )
     end
   end
 

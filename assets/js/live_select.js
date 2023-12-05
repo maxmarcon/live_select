@@ -89,6 +89,8 @@ export default {
                 }
             })
             this.handleEvent("select", ({id, selection, mode, input_event, parent_event}) => {
+                this.selection = selection
+                console.log("selection: ", this.selection)
                 if (this.el.id === id) {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
@@ -117,6 +119,11 @@ export default {
         updated() {
             this.maybeStyleClearButton()
             this.attachDomEventHandlers()
+        },
+        reconnected() {
+            if (this.selection && this.selection.length > 0) {
+                this.pushEventTo(this.el, "options_recovery", this.selection)
+            }
         }
     }
 }

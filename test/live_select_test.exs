@@ -639,24 +639,51 @@ defmodule LiveSelectTest do
     assert tag =~ "with custom slot"
   end
 
-  test "selection can be updated from the form", %{conn: conn} do
-    stub_options(%{
-      "A" => 1,
-      "B" => 2,
-      "C" => 3
-    })
-
+  test "selection can be cleared from the form", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    type(live, "ABC")
+    render_change(live, "change", %{"my_form" => %{"city_search" => ""}})
 
-    select_nth_option(live, 2)
+    assert_clear_static(live)
+  end
 
-    assert_selected(live, "B", 2)
+  test "form recovery (1)", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/")
 
-    render_change(live, "change", %{"my_form" => %{"city_search" => 1}})
+    value = [10, 20]
+    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
 
-    assert_selected_static(live, "A", 1)
+    render_hook(element(live, selectors()[:container]), "options_recovery", [
+      %{label: "A", value: value}
+    ])
+
+    assert_selected_static(live, "A", value)
+  end
+
+  test "form recovery (2)", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/")
+
+    value = %{"x" => 10, "y" => 20}
+    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
+
+    render_hook(element(live, selectors()[:container]), "options_recovery", [
+      %{label: "A", value: value}
+    ])
+
+    assert_selected_static(live, "A", value)
+  end
+
+  test "form recovery (3)", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/")
+
+    value = "A"
+    render_change(live, "change", %{"my_form" => %{"city_search" => value}})
+
+    render_hook(element(live, selectors()[:container]), "options_recovery", [
+      %{label: "A", value: value}
+    ])
+
+    assert_selected_static(live, "A", value)
   end
 
   for style <- [:daisyui, :tailwind, :none, nil] do
