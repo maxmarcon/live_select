@@ -1,3 +1,4 @@
+## 1.3.1 (2023-12-06)
 
 * bugfix: only set selection in client if event was sent to this component
 
