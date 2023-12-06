@@ -1,3 +1,6 @@
+
+* bugfix: only set selection in client if event was sent to this component
+
 ## 1.3.0 (2023-12-05)
 
 * added support for form recovery. Upon reconnection, the client sends an event (`options_recovery`) that contains the latest selection. This allows recovery of the options that were active before the view disconnected.

@@ -89,8 +89,8 @@ export default {
                 }
             })
             this.handleEvent("select", ({id, selection, mode, input_event, parent_event}) => {
-                this.selection = selection
                 if (this.el.id === id) {
+                    this.selection = selection
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : null
                         this.setInputValue(label)
