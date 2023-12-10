@@ -184,6 +184,13 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
+  def handle_event("click", _params, socket) do
+    socket = assign(socket, hide_dropdown: false)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("focus", _params, socket) do
     socket =
       socket
