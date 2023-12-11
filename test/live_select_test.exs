@@ -514,6 +514,12 @@ defmodule LiveSelectTest do
       assert dropdown_visible(live)
     end
 
+    test "click on text input shows it", %{live: live} do
+      render_click(element(live, selectors()[:text_input]))
+
+      assert dropdown_visible(live)
+    end
+
     test "pressing a key shows it", %{live: live} do
       keydown(live, "ArrowDown")
 
