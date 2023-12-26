@@ -317,7 +317,7 @@ defmodule LiveSelect.TestHelpers do
       |> Enum.map(&{&1.value, &1[:tag_label] || &1.label})
       |> Enum.unzip()
 
-    assert Floki.attribute(html, "#{@selectors[:container]} input[type=hidden]", "value") ==
+    assert Floki.attribute(html, "#{@selectors[:container]} input[class=hidden]", "value") ==
              encode_values(values)
 
     assert html

@@ -63,16 +63,17 @@
     <% end %>
   </div>
   <%= if @mode == :single do %>
-    <%= hidden_input(@field.form, @field.field,
+    <%= text_input(@field.form, @field.field,
       disabled: @disabled,
-      class: "single-mode",
+      class: "single-mode hidden",
       value: value(@selection)
     ) %>
   <% else %>
     <!-- TODO: the stuff below could be replaced with a single hidden, readonly multiselect, but updates don't quite work. So we resort to hidden inputs for now -->
     <%= if Enum.empty?(@selection) do %>
       <input
-        type="hidden"
+        type="text"
+        class="hidden"
         name={"#{@field.form.name}[#{@field.field}_empty_selection]"}
         id={"#{@field.id}_empty_selection"}
         disabled={@disabled}
@@ -81,7 +82,8 @@
     <% end %>
     <%= for {value, idx} <- values(@selection) |> Enum.with_index() do %>
       <input
-        type="hidden"
+        type="text"
+        class="hidden"
         name={@field.name <> "[]"}
         id={@field.id <> "_#{idx}"}
         disabled={@disabled}
