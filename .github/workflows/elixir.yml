@@ -20,6 +20,8 @@ jobs:
             otp: '25.0'
           - elixir: '1.15.0'
             otp: '26.0'
+          - elixir: '1.16.0'
+            otp: '26.0'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
