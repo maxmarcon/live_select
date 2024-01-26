@@ -3,7 +3,7 @@ defmodule LiveSelect.Component do
 
   use Phoenix.LiveComponent
 
-  import Phoenix.HTML.Form,
+  import PhoenixHTMLHelpers.Form,
     only: [text_input: 3, hidden_input: 3]
 
   import LiveSelect.ClassUtil

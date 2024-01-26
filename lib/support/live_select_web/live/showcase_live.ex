@@ -4,6 +4,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
   import LiveSelect
   alias LiveSelect.Component
 
+  use PhoenixHTMLHelpers
+
   defmodule Settings do
     use Ecto.Schema
 

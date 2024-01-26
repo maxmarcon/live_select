@@ -5,7 +5,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   alias LiveSelect.CityFinder
 
   import LiveSelect
-  import Phoenix.HTML.Form
+  use PhoenixHTMLHelpers
 
   @impl true
   def mount(socket) do
@@ -18,7 +18,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   def render(assigns) do
     ~H"""
     <div id="form_component" phx-hook="Foo" phx-target={@myself}>
-      <.form for={@form} phx-submit="submit" phx-target={@myself}>
+      <.form for={@form} phx-submit="submit" phx-change="change" phx-target={@myself}>
         <.live_select field={@form[:city_search]} mode={:tags} phx-target={@myself}>
           <:option :let={option}>
             with custom slot: <%= option.label %>
@@ -43,12 +43,14 @@ defmodule LiveSelectWeb.LiveComponentForm do
   end
 
   @impl true
-  def handle_event("submit", %{"my_form_old_style" => %{"city_search" => _live_select}}, socket) do
+  def handle_event("submit", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
+    IO.inspect(live_select, label: "submit")
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("submit", %{"my_form_new_style" => %{"city_search" => _live_select}}, socket) do
+  def handle_event("change", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
+    IO.inspect(live_select, label: "change")
     {:noreply, socket}
   end
 end
