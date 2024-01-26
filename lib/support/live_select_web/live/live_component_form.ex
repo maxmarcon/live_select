@@ -43,12 +43,12 @@ defmodule LiveSelectWeb.LiveComponentForm do
   end
 
   @impl true
-  def handle_event("submit", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
+  def handle_event("submit", %{"my_form_new_style" => %{"city_search" => _live_select}}, socket) do
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("change", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
+  def handle_event("change", %{"my_form_new_style" => %{"city_search" => _live_select}}, socket) do
     {:noreply, socket}
   end
 end
