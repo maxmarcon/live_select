@@ -44,13 +44,11 @@ defmodule LiveSelectWeb.LiveComponentForm do
 
   @impl true
   def handle_event("submit", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
-    IO.inspect(live_select, label: "submit")
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("change", %{"my_form_new_style" => %{"city_search" => live_select}}, socket) do
-    IO.inspect(live_select, label: "change")
     {:noreply, socket}
   end
 end
