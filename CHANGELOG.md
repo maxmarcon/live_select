@@ -1,3 +1,7 @@
+## 1.3.2 (2024-01-26)
+
+* updated dependencies, including updating `phoenix_html` to `4.0.0`
+
 ## 1.3.1 (2023-12-06)
 
 * bugfix: only set selection in client if event was sent to this component
