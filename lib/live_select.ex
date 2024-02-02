@@ -325,6 +325,8 @@ defmodule LiveSelect do
 
   slot(:tag, doc: "optional slot that renders a tag. The option's data is available via `:let`")
 
+  slot(:clear_button, doc: "optional slot to render a custom clear button")
+
   attr :"phx-target", :any,
     doc: "Optional target for events. Usually the same target as the form's"
 

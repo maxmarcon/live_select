@@ -214,6 +214,26 @@ defmodule LiveSelectTest do
     end
   end
 
+  test "can render custom clear button", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/live_component_test")
+
+    type(live, "Ber",
+      component: "#my_form_city_search_custom_clear_single_live_select_component",
+      parent: "#form_component"
+    )
+
+    select_nth_option(live, 1,
+      component: "#my_form_city_search_custom_clear_single_live_select_component"
+    )
+
+    assert element(
+             live,
+             "#my_form_city_search_custom_clear_single_live_select_component button[phx-click=clear]",
+             "custom clear button"
+           )
+           |> has_element?
+  end
+
   test "supports dropdown filled with strings", %{conn: conn} do
     stub_options(["A", "B", "C"])
 
@@ -600,10 +620,10 @@ defmodule LiveSelectTest do
   end
 
   test "renders custom :option slots", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/lc")
+    {:ok, live, _html} = live(conn, "/live_component_test")
 
     type(live, "Ber",
-      component: "#my_form_new_style_city_search_live_select_component",
+      component: "#my_form_city_search_live_select_component",
       parent: "#form_component"
     )
 
@@ -619,10 +639,10 @@ defmodule LiveSelectTest do
   end
 
   test "renders custom :tag slots", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/lc")
+    {:ok, live, _html} = live(conn, "/live_component_test")
 
     type(live, "Ber",
-      component: "#my_form_new_style_city_search_live_select_component",
+      component: "#my_form_city_search_live_select_component",
       parent: "#form_component"
     )
 
@@ -634,7 +654,7 @@ defmodule LiveSelectTest do
 
     select_nth_option(live, 1,
       method: :click,
-      component: "#my_form_new_style_city_search_live_select_component"
+      component: "#my_form_city_search_live_select_component"
     )
 
     tag =

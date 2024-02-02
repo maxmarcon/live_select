@@ -1,3 +1,5 @@
+* add slot to render custom clear button
+
 ## 1.3.2 (2024-01-26)
 
 * updated dependencies, including updating `phoenix_html` to `4.0.0`

@@ -367,6 +367,26 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, [%{label: "C", value: 3}, %{label: "E", value: 5}])
   end
 
+  test "can render custom clear button", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/live_component_test")
+
+    type(live, "Ber",
+      component: "#my_form_city_search_custom_clear_tags_live_select_component",
+      parent: "#form_component"
+    )
+
+    select_nth_option(live, 1,
+      component: "#my_form_city_search_custom_clear_tags_live_select_component"
+    )
+
+    assert element(
+             live,
+             "#my_form_city_search_custom_clear_tags_live_select_component button[data-idx=0]",
+             "custom clear button"
+           )
+           |> has_element?
+  end
+
   defp select_and_open_dropdown(live, pos) do
     if pos < 1 || pos > 4, do: raise("pos must be between 1 and 4")
 

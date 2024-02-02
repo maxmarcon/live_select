@@ -25,7 +25,11 @@
             data-idx={idx}
             class={class(@style, :clear_tag_button, nil, @clear_button_class)}
           >
-            <.x class="cursor-pointer" />
+            <%= if @clear_button == [] do %>
+              <.x class="cursor-pointer" />
+            <% else %>
+              <%= render_slot(@clear_button) %>
+            <% end %>
           </button>
         </div>
       <% end %>
@@ -58,7 +62,11 @@
         phx-target={@myself}
         class={class(@style, :clear_button, nil, @clear_button_class)}
       >
-        <.x class="cursor-pointer" />
+        <%= if @clear_button == [] do %>
+          <.x class="cursor-pointer" />
+        <% else %>
+          <%= render_slot(@clear_button) %>
+        <% end %>
       </button>
     <% end %>
   </div>

@@ -9,7 +9,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
 
   @impl true
   def mount(socket) do
-    socket = assign(socket, :form, to_form(%{}, as: "my_form_new_style"))
+    socket = assign(socket, :form, to_form(%{}, as: "my_form"))
 
     {:ok, socket}
   end
@@ -27,6 +27,21 @@ defmodule LiveSelectWeb.LiveComponentForm do
             with custom slot: <%= option.label %>
           </:tag>
         </.live_select>
+        <.live_select field={@form[:city_search_custom_clear_single]} phx-target={@myself} allow_clear>
+          <:clear_button>
+            custom clear button
+          </:clear_button>
+        </.live_select>
+        <.live_select
+          field={@form[:city_search_custom_clear_tags]}
+          phx-target={@myself}
+          allow_clear
+          mode={:tags}
+        >
+          <:clear_button>
+            custom clear button
+          </:clear_button>
+        </.live_select>
         <%= submit("Submit", class: "btn btn-primary") %>
       </.form>
     </div>
@@ -43,12 +58,12 @@ defmodule LiveSelectWeb.LiveComponentForm do
   end
 
   @impl true
-  def handle_event("submit", %{"my_form_new_style" => %{"city_search" => _live_select}}, socket) do
+  def handle_event("submit", %{"my_form" => %{"city_search" => _live_select}}, socket) do
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("change", %{"my_form_new_style" => %{"city_search" => _live_select}}, socket) do
+  def handle_event("change", %{"my_form" => %{"city_search" => _live_select}}, socket) do
     {:noreply, socket}
   end
 end

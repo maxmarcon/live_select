@@ -349,7 +349,7 @@ defmodule LiveSelect.Component do
           :"phx-focus",
           :option,
           :tag,
-          :clear,
+          :clear_button,
           :hide_dropdown,
           # for backwards compatibility
           :form
