@@ -10,7 +10,8 @@ defmodule LiveSelect.TestHelpers do
     daisyui: [
       active_option: ~S(active),
       available_option: ~S(cursor-pointer),
-      clear_button: ~S(hidden),
+      clear_button: ~S(hidden cursor-pointer),
+      clear_tag_button: ~S(cursor-pointer),
       container: ~S(dropdown dropdown-open),
       dropdown:
         ~S(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
@@ -23,7 +24,8 @@ defmodule LiveSelect.TestHelpers do
     tailwind: [
       active_option: ~S(text-white bg-gray-600),
       available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
-      clear_button: ~S(hidden),
+      clear_button: ~S(hidden cursor-pointer),
+      clear_tag_button: ~S(cursor-pointer),
       container: ~S(h-full text-black relative),
       dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 inset-x-0 top-full),
       option: ~S(rounded px-4 py-1),

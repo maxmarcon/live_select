@@ -23,10 +23,12 @@
             :if={!option[:sticky]}
             type="button"
             data-idx={idx}
-            class={class(@style, :clear_tag_button, nil, @clear_button_class)}
+            class={
+              class(@style, :clear_tag_button, @clear_button_class, @clear_button_extra_class)
+            }
           >
             <%= if @clear_button == [] do %>
-              <.x class="cursor-pointer" />
+              <.x />
             <% else %>
               <%= render_slot(@clear_button) %>
             <% end %>
@@ -60,10 +62,10 @@
         type="button"
         phx-click="clear"
         phx-target={@myself}
-        class={class(@style, :clear_button, nil, @clear_button_class)}
+        class={class(@style, :clear_button, @clear_button_class, @clear_button_extra_class)}
       >
         <%= if @clear_button == [] do %>
-          <.x class="cursor-pointer" />
+          <.x />
         <% else %>
           <%= render_slot(@clear_button) %>
         <% end %>

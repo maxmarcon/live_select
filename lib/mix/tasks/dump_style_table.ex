@@ -12,7 +12,8 @@ defmodule Mix.Tasks.DumpStyleTable do
     end)
     |> List.flatten()
     |> Enum.group_by(&elem(&1, 0))
-    |> Map.new(fn {el, list} -> {el, Enum.map(list, &Tuple.delete_at(&1, 0)) |> Enum.sort()} end)
+    |> Enum.map(fn {el, list} -> {el, Enum.map(list, &Tuple.delete_at(&1, 0)) |> Enum.sort()} end)
+    |> Enum.sort_by(&elem(&1, 0))
     |> Enum.with_index()
     |> Enum.map(fn {{el, styles}, idx} ->
       header =
@@ -34,10 +35,14 @@ defmodule Mix.Tasks.DumpStyleTable do
     |> IO.write()
   end
 
+  defp class_override_option(:clear_tag_button), do: class_override_option(:clear_button)
+
   defp class_override_option(el) do
     option_name = to_string(el) <> "_class"
     if option_name in class_options(), do: option_name, else: ""
   end
+
+  defp class_extend_option(:clear_tag_button), do: class_extend_option(:clear_button)
 
   defp class_extend_option(el) do
     option_name = to_string(el) <> "_extra_class"

@@ -719,7 +719,7 @@ defmodule LiveSelect.ComponentTest do
         )
       end
 
-      test "class for clear button can be set", %{form: form} do
+      test "class for clear button can be overridden", %{form: form} do
         component =
           render_component(
             &LiveSelect.live_select/1,
@@ -734,11 +734,31 @@ defmodule LiveSelect.ComponentTest do
               if(@style, do: [style: @style], else: [])
           )
 
-        assert Floki.attribute(component, selectors()[:clear_button], "class") == [
-                 ((get_in(expected_class(), [@style || default_style(), :clear_button]) || "") <>
-                    " foo")
-                 |> String.trim()
-               ]
+        assert Floki.attribute(component, selectors()[:clear_button], "class") == ["foo"]
+      end
+
+      if @style != :none do
+        test "class for clear button can be extended", %{form: form} do
+          component =
+            render_component(
+              &LiveSelect.live_select/1,
+              [
+                mode: :single,
+                field: form[:city_search],
+                options: ["A", "B", "C"],
+                value: "B",
+                allow_clear: true,
+                clear_button_extra_class: "foo"
+              ] ++
+                if(@style, do: [style: @style], else: [])
+            )
+
+          assert Floki.attribute(component, selectors()[:clear_button], "class") == [
+                   ((get_in(expected_class(), [@style || default_style(), :clear_button]) || "") <>
+                      " foo")
+                   |> String.trim()
+                 ]
+        end
       end
 
       for element <- [
