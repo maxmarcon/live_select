@@ -1,3 +1,5 @@
+## 1.3.3 (2024-02-06)
+
 * add slot to render custom clear button
 * add option to extend clear button style
 
