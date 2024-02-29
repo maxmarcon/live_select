@@ -38,7 +38,8 @@ defmodule LiveSelect.Component do
     text_input_extra_class: nil,
     text_input_selected_class: nil,
     update_min_len: 1,
-    value: nil
+    value: nil,
+    on_option_update: nil
   ]
 
   @styles [
@@ -282,14 +283,24 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("option_click", %{"idx" => idx}, socket) do
-    socket = assign(socket, :active_option, String.to_integer(idx))
+    idx = String.to_integer(idx)
+
+    if socket.assigns.on_option_update,
+      do: socket.assigns.on_option_update.(%{option_click: Enum.at(socket.assigns.options, idx)})
+
+    socket = assign(socket, :active_option, idx)
 
     {:noreply, maybe_select(socket)}
   end
 
   @impl true
   def handle_event("option_remove", %{"idx" => idx}, socket) do
-    {:noreply, unselect(socket, String.to_integer(idx))}
+    idx = String.to_integer(idx)
+
+    if socket.assigns.on_option_update,
+      do: socket.assigns.on_option_update.(%{option_remove: Enum.at(socket.assigns.selection, idx)})
+
+    {:noreply, unselect(socket, idx)}
   end
 
   @impl true
