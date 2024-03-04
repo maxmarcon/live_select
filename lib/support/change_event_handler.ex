@@ -3,13 +3,9 @@ defmodule LiveSelect.ChangeEventHandler do
 
   alias LiveSelect.CityFinder
 
-  defmodule Behaviour do
-    @moduledoc false
+  @callback handle(params :: %{String.t() => String.t()}, opts :: Keyword.t()) :: any()
 
-    @callback handle(params :: %{String.t() => String.t()}, opts :: Keyword.t()) :: any()
-  end
-
-  @behaviour Behaviour
+  @behaviour __MODULE__
 
   @impl true
   def handle(%{"text" => text} = params, opts) do
