@@ -3,6 +3,8 @@ defmodule LiveSelect.CityFinder do
 
   use GenServer
 
+  alias LiveSelect.City
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -28,8 +30,9 @@ defmodule LiveSelect.CityFinder do
         String.contains?(String.downcase(name), String.downcase(term))
       end)
       |> Enum.map(fn %{"name" => name, "loc" => %{"coordinates" => coord}} ->
-        %{label: name, value: coord}
+        %{name: name, pos: coord}
       end)
+      |> Enum.map(&struct!(City, &1))
 
     {:reply, result, cities}
   end

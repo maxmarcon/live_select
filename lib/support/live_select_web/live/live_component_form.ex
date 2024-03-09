@@ -50,7 +50,15 @@ defmodule LiveSelectWeb.LiveComponentForm do
 
   @impl true
   def handle_event("live_select_change", %{"id" => live_select_id, "text" => text}, socket) do
-    result = GenServer.call(CityFinder, {:find, text})
+    result =
+      GenServer.call(CityFinder, {:find, text})
+      |> Enum.map(fn
+        %{"name" => name, "loc" => %{"coordinates" => coord}} ->
+          %{label: name, value: %{name: name, pos: coord}}
+
+        value ->
+          value
+      end)
 
     send_update(LiveSelect.Component, id: live_select_id, options: result)
 

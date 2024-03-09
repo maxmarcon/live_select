@@ -87,7 +87,8 @@ defmodule LiveSelect.Component do
         hide_dropdown: true,
         awaiting_update: true,
         saved_selection: nil,
-        selection: []
+        selection: [],
+        value_mapper: & &1
       )
 
     {:ok, socket}
@@ -149,12 +150,13 @@ defmodule LiveSelect.Component do
         update(
           socket,
           :selection,
-          fn selection, %{options: options, mode: mode} ->
+          fn selection, %{options: options, mode: mode, value_mapper: value_mapper} ->
             update_selection(
               field.value,
               selection,
               options,
-              mode
+              mode,
+              value_mapper
             )
           end
         )
@@ -165,8 +167,8 @@ defmodule LiveSelect.Component do
     socket =
       if Map.has_key?(assigns, :value) do
         update(socket, :selection, fn
-          selection, %{options: options, value: value, mode: mode} ->
-            update_selection(value, selection, options, mode)
+          selection, %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
+            update_selection(value, selection, options, mode, value_mapper)
         end)
         |> client_select(%{input_event: true})
       else
@@ -225,6 +227,9 @@ defmodule LiveSelect.Component do
       for %{"label" => label, "value" => value} <- options do
         %{label: label, value: value}
       end
+
+    IO.inspect(options, label: "options")
+    IO.inspect(socket.assigns.selection, label: "selection")
 
     {:noreply,
      assign(socket,
@@ -354,6 +359,7 @@ defmodule LiveSelect.Component do
           :tag,
           :clear_button,
           :hide_dropdown,
+          :value_mapper,
           # for backwards compatibility
           :form
         ]
@@ -503,19 +509,31 @@ defmodule LiveSelect.Component do
     })
   end
 
-  defp update_selection(nil, _current_selection, _options, _mode), do: []
+  defp update_selection(nil, _current_selection, _options, _mode, _value_mapper), do: []
 
-  defp update_selection(value, current_selection, options, :single) do
-    List.wrap(normalize_selection_value(value, options ++ current_selection))
+  defp update_selection(value, current_selection, options, :single, value_mapper) do
+    List.wrap(normalize_selection_value(value, options ++ current_selection, value_mapper))
   end
 
-  defp update_selection(value, current_selection, options, :tags) do
+  defp update_selection(value, current_selection, options, :tags, value_mapper) do
     value = if Enumerable.impl_for(value), do: value, else: [value]
 
-    Enum.map(value, &normalize_selection_value(&1, options ++ current_selection))
+    Enum.map(value, &normalize_selection_value(&1, options ++ current_selection, value_mapper))
+    |> Enum.reject(&is_nil/1)
   end
 
-  defp normalize_selection_value(selection_value, options) do
+  defp normalize_selection_value(%Ecto.Changeset{action: :replace}, _options, _value_mapper),
+    do: nil
+
+  defp normalize_selection_value(%Ecto.Changeset{} = changeset, options, value_mapper) do
+    changeset
+    |> Ecto.Changeset.apply_changes()
+    |> normalize_selection_value(options, value_mapper)
+  end
+
+  defp normalize_selection_value(selection_value, options, value_mapper) do
+    selection_value = value_mapper.(selection_value)
+
     if option = Enum.find(options, fn %{value: value} -> selection_value == value end) do
       option
     else

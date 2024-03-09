@@ -284,6 +284,7 @@
             <div class="col-span-3 form-control">
               <.live_select
                 field={@live_select_form[:city_search]}
+                value_mapper={&value_mapper/1}
                 {live_select_assigns(@settings_form.source)}
               />
             </div>
@@ -297,8 +298,8 @@
               !! This should not move when the dropdown opens !!
             </div>
             <div :if={@submitted} class="col-span-4 text-info text-center my-5 w-full">
-              <span :if={@cities not in ["", nil]}>
-                ✅ You selected <%= @cities %> located at <%= @locations %>
+              <span :if={@cities}>
+                ✅ You selected: <%= @cities %>
               </span>
               <span :if={@cities in ["", nil]}>
                 ❌ Nothing selected

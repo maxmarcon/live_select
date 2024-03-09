@@ -2,9 +2,39 @@ defmodule LiveSelectWeb.ShowcaseLive do
   use LiveSelectWeb, :live_view
 
   import LiveSelect
-  alias LiveSelect.Component
+  alias LiveSelect.{Component, City}
 
   use PhoenixHTMLHelpers
+
+  defmodule CitySearchMany do
+    use Ecto.Schema
+
+    import Ecto.Changeset
+
+    embedded_schema do
+      embeds_many(:city_search, City, on_replace: :delete)
+    end
+
+    def changeset(schema \\ %__MODULE__{}, params) do
+      cast(schema, params, [])
+      |> cast_embed(:city_search)
+    end
+  end
+
+  defmodule CitySearchSingle do
+    use Ecto.Schema
+
+    import Ecto.Changeset
+
+    embedded_schema do
+      embeds_one(:city_search, City, on_replace: :update)
+    end
+
+    def changeset(schema \\ %__MODULE__{}, params) do
+      cast(schema, params, [])
+      |> cast_embed(:city_search)
+    end
+  end
 
   defmodule Settings do
     use Ecto.Schema
@@ -229,7 +259,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
-        live_select_form: to_form(%{}, as: :my_form),
+        live_select_form: to_form(CitySearchSingle.changeset(%{}), as: "my_form"),
+        schema_module: CitySearchSingle,
         events: [],
         next_event_id: 0,
         locations: nil,
@@ -266,9 +297,14 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     case Ecto.Changeset.apply_action(changeset, :create) do
       {:ok, settings} ->
+        socket.assigns
+
         socket =
           socket
           |> assign(:settings_form, Settings.changeset(settings, %{}) |> to_form)
+          |> update(:schema_module, fn _, %{settings_form: settings_form} ->
+            if settings_form[:mode].value == :single, do: CitySearchSingle, else: CitySearchMany
+          end)
 
         {:noreply, socket}
 
@@ -297,15 +333,20 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> Map.new()
 
     socket =
-      socket
-      |> update(:live_select_form, fn form ->
-        if target == ~w(settings mode) do
-          to_form(%{}, as: :my_form)
-        else
-          form
-        end
-      end)
-      |> push_patch(to: ~p(/?#{params}))
+      if target == ~w(settings mode) do
+        assign(
+          socket,
+          :schema_module,
+          if(params["mode"] == "single", do: CitySearchSingle, else: CitySearchMany)
+        )
+        |> update(:live_select_form, fn _, %{schema_module: schema_module} ->
+          to_form(schema_module.changeset(%{}), as: "my_form")
+        end)
+      else
+        socket
+      end
+
+    socket = push_patch(socket, to: ~p(/?#{params}))
 
     {:noreply, socket}
   end
@@ -344,16 +385,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
     socket =
       case event do
         "submit" ->
-          mode = socket.assigns.settings_form.data.mode
-
           selected = get_in(params, ~w(my_form city_search))
-          selected_text = get_in(params, ~w(my_form city_search_text_input))
-
-          {cities, locations} = extract_cities_and_locations(mode, selected_text, selected)
 
           assign(socket,
-            cities: cities,
-            locations: locations,
+            cities: selected,
             submitted: true
           )
 
@@ -372,7 +407,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
               selection -> decode(selection)
             end)
 
-          assign(socket, :live_select_form, to_form(params["my_form"], as: :my_form))
+          update(
+            socket,
+            :live_select_form,
+            fn _, %{schema_module: schema_module} ->
+              to_form(schema_module.changeset(params["my_form"]), as: "my_form")
+            end
+          )
 
         _event ->
           socket
@@ -394,6 +435,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
+    options =
+      options
+      |> Enum.map(&value_mapper/1)
+
     send_update(Component, id: id, options: options)
 
     {:noreply, socket}
@@ -412,6 +457,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
     {:noreply, socket}
   end
+
+  defp value_mapper(%{name: name} = value), do: %{label: name, value: Map.from_struct(value)}
+
+  defp value_mapper(value), do: value
 
   defp decode(value) do
     case Jason.decode(value) do
@@ -433,20 +482,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
       "default: #{default}"
     else
       ""
-    end
-  end
-
-  defp extract_cities_and_locations(mode, selected_text, selected) do
-    cond do
-      mode == :single && selected != "" && selected_text != "" ->
-        {"city #{selected_text}", selected}
-
-      mode == :tags && selected ->
-        {"#{Enum.count(selected)} #{if Enum.count(selected) > 1, do: "cities", else: "city"}",
-         Enum.join(selected, ", ")}
-
-      true ->
-        {nil, nil}
     end
   end
 

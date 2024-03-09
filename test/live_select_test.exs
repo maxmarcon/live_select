@@ -214,7 +214,7 @@ defmodule LiveSelectTest do
     end
   end
 
-  test "can render custom clear button", %{conn: conn} do
+    test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 
     type(live, "Ber",

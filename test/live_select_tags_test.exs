@@ -500,7 +500,11 @@ defmodule LiveSelectTagsTest do
   test "form recovery", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?mode=tags")
 
-    values = [value1 = [10, 20], value2 = %{"x" => 10, "y" => 20}, value3 = "C"]
+    values = [
+      value1 = %{"name" => "A", "pos" => [10, 20]},
+      value2 = %{"name" => "B", "pos" => [30, 40]},
+      value3 = %{"name" => "C", "pos" => [50, 60]}
+    ]
 
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(values)}})
 

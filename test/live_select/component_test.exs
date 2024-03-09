@@ -4,6 +4,8 @@ defmodule LiveSelect.ComponentTest do
   use LiveSelectWeb.ConnCase, async: true
   import LiveSelect.TestHelpers
 
+  alias LiveSelect.City
+
   setup tags do
     %{form: Phoenix.Component.to_form(tags[:source] || %{}, as: :my_form)}
   end
@@ -99,7 +101,7 @@ defmodule LiveSelect.ComponentTest do
 
   describe "in single mode" do
     @tag source: %{"city_search" => "B"}
-    test "can set initial selection from the form", %{form: form} do
+    test "can set selection from the form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           field: form[:city_search],
@@ -110,7 +112,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => %{"x" => 1, "y" => 2}}
-    test "can set initial selection from form for non-string values", %{form: form} do
+    test "can set selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           field: form[:city_search],
@@ -125,7 +127,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => "B"}
-    test "can set initial selection from form without options", %{form: form} do
+    test "can set selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           field: form[:city_search]
@@ -135,7 +137,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => {"B", 1}}
-    test "can set initial selection and label from form without options", %{form: form} do
+    test "can set selection and label from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           field: form[:city_search]
@@ -145,7 +147,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => "A"}
-    test "can set initial selection from form even if it can't be found in the options", %{
+    test "can set selection from form even if it can't be found in the options", %{
       form: form
     } do
       component =
@@ -155,6 +157,23 @@ defmodule LiveSelect.ComponentTest do
         )
 
       assert_selected_static(component, "A")
+    end
+
+    @tag source: %{
+           "city_search" => Ecto.Changeset.change(%City{}, %{name: "Berlin", pos: [10, 20]})
+         }
+    test "can set selection from form with changeset", %{
+      form: form
+    } do
+      component =
+        render_component(&LiveSelect.live_select/1,
+          field: form[:city_search],
+          value_mapper: fn %{name: name, pos: pos} ->
+            %{label: name, value: %{name: name, pos: pos}}
+          end
+        )
+
+      assert_selected_static(component, "Berlin", %{name: "Berlin", pos: [10, 20]})
     end
 
     @tag source: %{"city_search" => 2}
@@ -172,7 +191,7 @@ defmodule LiveSelect.ComponentTest do
 
   describe "in tags mode" do
     @tag source: %{"city_search" => ["B", "D"]}
-    test "can set initial selection from form", %{form: form} do
+    test "can set selection from form", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
@@ -184,7 +203,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => [%{"x" => 1, "y" => 2}, [1, 2]]}
-    test "can set initial selection from form for non-string values", %{form: form} do
+    test "can set selection from form for non-string values", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
@@ -203,7 +222,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => ["B", "D"]}
-    test "can set initial selection from form without options", %{form: form} do
+    test "can set selection from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
@@ -214,7 +233,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => [{"B", 1}, {"D", 2}]}
-    test "can set initial selection and labels from form without options", %{form: form} do
+    test "can set selection and labels from form without options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
@@ -228,7 +247,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => [1, 2]}
-    test "can set initial selection from form using labels from options", %{form: form} do
+    test "can set selection from form using labels from options", %{form: form} do
       component =
         render_component(&LiveSelect.live_select/1,
           mode: :tags,
@@ -243,7 +262,7 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{"city_search" => [{"B", 1}, 2, 3]}
-    test "can set initial selection from form even it can't be found in the options", %{
+    test "can set selection from form even it can't be found in the options", %{
       form: form
     } do
       component =
@@ -257,6 +276,56 @@ defmodule LiveSelect.ComponentTest do
         %{label: "B", value: "1"},
         %{label: "D", value: "2"},
         "3"
+      ])
+    end
+
+    @tag source: %{
+           "city_search" => [
+             Ecto.Changeset.change(%City{}, %{name: "Berlin", pos: [10, 20]}),
+             Ecto.Changeset.change(%City{}, %{name: "Rome", pos: [30, 40]})
+           ]
+         }
+    test "can set selection from form with changeset", %{
+      form: form
+    } do
+      component =
+        render_component(&LiveSelect.live_select/1,
+          mode: :tags,
+          field: form[:city_search],
+          value_mapper: fn %{name: name, pos: pos} ->
+            %{label: name, value: %{name: name, pos: pos}}
+          end
+        )
+
+      assert_selected_multiple_static(component, [
+        %{label: "Berlin", value: %{name: "Berlin", pos: [10, 20]}},
+        %{label: "Rome", value: %{name: "Rome", pos: [30, 40]}}
+      ])
+    end
+
+    @tag source: %{
+           "city_search" => [
+             Ecto.Changeset.change(%City{}, %{name: "New York", pos: [5, 2]})
+             |> then(&%{&1 | action: :replace}),
+             Ecto.Changeset.change(%City{}, %{name: "Berlin", pos: [10, 20]}),
+             Ecto.Changeset.change(%City{}, %{name: "Rome", pos: [30, 40]})
+           ]
+         }
+    test "can set selection from form with changeset ignoring replace changesets", %{
+      form: form
+    } do
+      component =
+        render_component(&LiveSelect.live_select/1,
+          mode: :tags,
+          field: form[:city_search],
+          value_mapper: fn %{name: name, pos: pos} ->
+            %{label: name, value: %{name: name, pos: pos}}
+          end
+        )
+
+      assert_selected_multiple_static(component, [
+        %{label: "Berlin", value: %{name: "Berlin", pos: [10, 20]}},
+        %{label: "Rome", value: %{name: "Rome", pos: [30, 40]}}
       ])
     end
 
