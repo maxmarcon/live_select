@@ -52,13 +52,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
   def handle_event("live_select_change", %{"id" => live_select_id, "text" => text}, socket) do
     result =
       GenServer.call(CityFinder, {:find, text})
-      |> Enum.map(fn
-        %{"name" => name, "loc" => %{"coordinates" => coord}} ->
-          %{label: name, value: %{name: name, pos: coord}}
-
-        value ->
-          value
-      end)
+      |> Enum.map(&value_mapper/1)
 
     send_update(LiveSelect.Component, id: live_select_id, options: result)
 
@@ -74,4 +68,8 @@ defmodule LiveSelectWeb.LiveComponentForm do
   def handle_event("change", %{"my_form" => %{"city_search" => _live_select}}, socket) do
     {:noreply, socket}
   end
+
+  defp value_mapper(%{name: name} = value), do: %{label: name, value: Map.from_struct(value)}
+
+  defp value_mapper(value), do: value
 end
