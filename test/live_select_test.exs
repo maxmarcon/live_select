@@ -689,7 +689,7 @@ defmodule LiveSelectTest do
   test "selection recovery (2)", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    value = %{"name" => "A", "pos" => [10.0, 20.0], id: nil}
+    value = %{"name" => "A", "pos" => [10.0, 20.0]}
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [

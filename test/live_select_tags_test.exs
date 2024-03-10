@@ -501,9 +501,9 @@ defmodule LiveSelectTagsTest do
     {:ok, live, _html} = live(conn, "/?mode=tags")
 
     values = [
-      value1 = %{"name" => "A", "pos" => [10.0, 20.0], id: nil},
-      value2 = %{"name" => "B", "pos" => [30.0, 40.0], id: nil},
-      value3 = %{"name" => "C", "pos" => [50.0, 60.0], id: nil}
+      value1 = %{"name" => "A", "pos" => [10.0, 20.0]},
+      value2 = %{"name" => "B", "pos" => [30.0, 40.0]},
+      value3 = %{"name" => "C", "pos" => [50.0, 60.0]}
     ]
 
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(values)}})
