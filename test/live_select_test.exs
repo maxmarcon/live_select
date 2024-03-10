@@ -214,7 +214,7 @@ defmodule LiveSelectTest do
     end
   end
 
-    test "can render custom clear button", %{conn: conn} do
+  test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 
     type(live, "Ber",
@@ -673,39 +673,39 @@ defmodule LiveSelectTest do
     assert_clear_static(live)
   end
 
-  test "form recovery (1)", %{conn: conn} do
+  test "selection recovery (1)", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
     value = [10, 20]
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
 
-    render_hook(element(live, selectors()[:container]), "options_recovery", [
+    render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}
     ])
 
     assert_selected_static(live, "A", value)
   end
 
-  test "form recovery (2)", %{conn: conn} do
+  test "selection recovery (2)", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
-    value = %{"x" => 10, "y" => 20}
+    value = %{"name" => "A", "pos" => [10.0, 20.0], id: nil}
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
 
-    render_hook(element(live, selectors()[:container]), "options_recovery", [
+    render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}
     ])
 
     assert_selected_static(live, "A", value)
   end
 
-  test "form recovery (3)", %{conn: conn} do
+  test "selection recovery (3)", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
     value = "A"
     render_change(live, "change", %{"my_form" => %{"city_search" => value}})
 
-    render_hook(element(live, selectors()[:container]), "options_recovery", [
+    render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}
     ])
 

@@ -497,18 +497,18 @@ defmodule LiveSelectTagsTest do
     ])
   end
 
-  test "form recovery", %{conn: conn} do
+  test "selection recovery", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/?mode=tags")
 
     values = [
-      value1 = %{"name" => "A", "pos" => [10, 20]},
-      value2 = %{"name" => "B", "pos" => [30, 40]},
-      value3 = %{"name" => "C", "pos" => [50, 60]}
+      value1 = %{"name" => "A", "pos" => [10.0, 20.0], id: nil},
+      value2 = %{"name" => "B", "pos" => [30.0, 40.0], id: nil},
+      value3 = %{"name" => "C", "pos" => [50.0, 60.0], id: nil}
     ]
 
     render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(values)}})
 
-    render_hook(element(live, selectors()[:container]), "options_recovery", [
+    render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value1},
       %{label: "B", value: value2},
       %{label: "C", value: value3}

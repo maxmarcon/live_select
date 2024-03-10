@@ -121,7 +121,7 @@ export default {
         },
         reconnected() {
             if (this.selection && this.selection.length > 0) {
-                this.pushEventTo(this.el, "options_recovery", this.selection)
+                this.pushEventTo(this.el, "selection_recovery", this.selection)
             }
         }
     }

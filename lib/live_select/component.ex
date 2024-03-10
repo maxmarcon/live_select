@@ -222,21 +222,26 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("options_recovery", options, socket) do
+  def handle_event("selection_recovery", selection_from_client, socket) do
+    # selection recovery. If we are here, it means that the view has crashed
+    # The values have been sent to the form by LV selection recovery and are now in the selection assigns
+    # However, the label have been lost because selection recovery only sends the values.
+    # Therefore, the component sends this event with the selection stored on the client, which contains the labels
+    # Using this selection, we can restore the options and augment the current selection with the labels
+
     options =
-      for %{"label" => label, "value" => value} <- options do
+      for %{"label" => label, "value" => value} <- selection_from_client do
         %{label: label, value: value}
       end
-
-    IO.inspect(options, label: "options")
-    IO.inspect(socket.assigns.selection, label: "selection")
 
     {:noreply,
      assign(socket,
        options: options,
        selection:
          Enum.map(socket.assigns.selection, fn %{value: value} ->
-           Enum.find(options, fn %{value: option_value} -> option_value == value end)
+           Enum.find(options, fn %{value: option_value} ->
+             Jason.encode(option_value) == Jason.encode(value)
+           end)
          end)
          |> Enum.filter(& &1)
      )}
