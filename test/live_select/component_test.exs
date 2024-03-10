@@ -160,7 +160,8 @@ defmodule LiveSelect.ComponentTest do
     end
 
     @tag source: %{
-           "city_search" => Ecto.Changeset.change(%City{}, %{name: "Berlin", pos: [10, 20]})
+           "city_search" =>
+             Ecto.Changeset.change(%City{name: "New York"}, %{name: "Berlin", pos: [10, 20]})
          }
     test "can set selection from form with changeset", %{
       form: form
@@ -174,6 +175,17 @@ defmodule LiveSelect.ComponentTest do
         )
 
       assert_selected_static(component, "Berlin", %{name: "Berlin", pos: [10, 20]})
+    end
+
+    @tag source: %{"city_search" => %{name: "Max", age: 40}}
+    test "applies value_mapper to the selection in the form", %{form: form} do
+      component =
+        render_component(&LiveSelect.live_select/1,
+          field: form[:city_search],
+          value_mapper: fn %{name: name, age: age} -> %{label: name, value: age} end
+        )
+
+      assert_selected_static(component, "Max", 40)
     end
 
     @tag source: %{"city_search" => 2}
@@ -303,11 +315,26 @@ defmodule LiveSelect.ComponentTest do
       ])
     end
 
+    @tag source: %{"city_search" => [%{name: "Max", age: 40}, %{name: "Julia", age: 30}]}
+    test "applies value_mapper to the selection in the form", %{form: form} do
+      component =
+        render_component(&LiveSelect.live_select/1,
+          mode: :tags,
+          field: form[:city_search],
+          value_mapper: fn %{name: name, age: age} -> %{label: name, value: age} end
+        )
+
+      assert_selected_multiple_static(component, [
+        %{label: "Max", value: 40},
+        %{label: "Julia", value: 30}
+      ])
+    end
+
     @tag source: %{
            "city_search" => [
              Ecto.Changeset.change(%City{}, %{name: "New York", pos: [5, 2]})
              |> then(&%{&1 | action: :replace}),
-             Ecto.Changeset.change(%City{}, %{name: "Berlin", pos: [10, 20]}),
+             Ecto.Changeset.change(%City{name: "Venice"}, %{name: "Berlin", pos: [10, 20]}),
              Ecto.Changeset.change(%City{}, %{name: "Rome", pos: [30, 40]})
            ]
          }
