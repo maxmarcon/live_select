@@ -437,6 +437,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
     options =
       options
+      |> Enum.sort()
       |> Enum.map(&value_mapper/1)
 
     send_update(Component, id: id, options: options)
