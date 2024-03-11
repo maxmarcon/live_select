@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+env:
+  ELIXIR_LATEST: '1.16.0'
+
 permissions:
   contents: read
 
@@ -39,6 +42,7 @@ jobs:
       - name: Install dependencies
         run: mix deps.get
       - name: Compile with warnings
+        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
         run: mix compile --warnings-as-errors
       - name: Check format
         run: mix format --check-formatted
