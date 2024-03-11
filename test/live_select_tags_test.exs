@@ -246,10 +246,17 @@ defmodule LiveSelectTagsTest do
   end
 
   test "can set an option as sticky so it can't be removed", %{live: live} do
-    stub_options([
-      %{tag_label: "R", value: "Rome", sticky: true},
-      %{tag_label: "NY", value: "New York"}
-    ])
+    options =
+      [
+        %{tag_label: "R", value: "Rome", sticky: true},
+        %{tag_label: "NY", value: "New York"}
+      ]
+      |> Enum.sort()
+
+    sticky_pos =
+      Enum.find_index(options, & &1[:sticky]) + 1
+
+    stub_options(options)
 
     type(live, "ABC")
 
@@ -259,13 +266,16 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    refute_option_removeable(live, 1)
+    refute_option_removeable(live, sticky_pos)
 
-    assert_option_removeable(live, 2)
+    assert_option_removeable(live, 3 - sticky_pos)
   end
 
   test "can specify alternative labels for tags using maps", %{live: live} do
-    stub_options([%{tag_label: "R", value: "Rome"}, %{tag_label: "NY", value: "New York"}])
+    options =
+      [%{tag_label: "R", value: "Rome"}, %{tag_label: "NY", value: "New York"}] |> Enum.sort()
+
+    stub_options(options)
 
     type(live, "ABC")
 
@@ -275,14 +285,14 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, [
-      %{label: "Rome", value: "Rome", tag_label: "R"},
-      %{label: "New York", value: "New York", tag_label: "NY"}
-    ])
+    assert_selected_multiple(live, options |> Enum.map(&Map.put(&1, :label, &1.value)))
   end
 
   test "can specify alternative labels for tags using keywords", %{live: live} do
-    stub_options([[tag_label: "R", value: "Rome"], [tag_label: "NY", value: "New York"]])
+    options =
+      [[tag_label: "R", value: "Rome"], [tag_label: "NY", value: "New York"]] |> Enum.sort()
+
+    stub_options(options)
 
     type(live, "ABC")
 
@@ -292,10 +302,12 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    assert_selected_multiple(live, [
-      %{label: "Rome", value: "Rome", tag_label: "R"},
-      %{label: "New York", value: "New York", tag_label: "NY"}
-    ])
+    selection =
+      options
+      |> Enum.map(&Map.new/1)
+      |> Enum.map(&Map.put(&1, :label, &1[:value]))
+
+    assert_selected_multiple(live, selection)
   end
 
   test "can be disabled", %{conn: conn} do
