@@ -59,7 +59,7 @@ defmodule LiveSelect.MixProject do
       {:phoenix, ">= 1.6.0", optional: true},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0", only: [:dev, :test, :demo]},
-      {:ecto, "~> 3.8", only: [:dev, :test, :demo]},
+      {:ecto, "~> 3.8"},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.4", only: [:dev, :test, :demo]},
       {:plug_cowboy, "~> 2.5", only: [:dev, :demo]},
