@@ -44,9 +44,14 @@ jobs:
       - name: Compile with warnings
         if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
         run: mix compile --warnings-as-errors
+      - name: Compile without warnings
+        if: ${{ matrix.elixir != env.ELIXIR_LATEST}}
+        run: mix compile
       - name: Check format
         run: mix format --check-formatted
+        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
       - name: Credo
         run: mix credo
+        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
       - name: Run tests
         run: mix test
