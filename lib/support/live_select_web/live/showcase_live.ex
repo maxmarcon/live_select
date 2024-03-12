@@ -384,14 +384,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
   def handle_event(event, params, socket) do
     socket =
       case event do
-        "submit" ->
-          selected = get_in(params, ~w(my_form city_search))
-
-          assign(socket,
-            cities: selected,
-            submitted: true
-          )
-
         "live_select_change" ->
           change_event_handler().handle(params,
             delay: socket.assigns.settings_form.data.search_delay
@@ -399,21 +391,49 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
           socket
 
-        "change" ->
+        event when event in ~w(change submit) ->
           params =
             update_in(params, ~w(my_form city_search), fn
-              nil -> nil
+              nil -> %{}
+              "" -> nil
               selection when is_list(selection) -> Enum.map(selection, &decode/1)
               selection -> decode(selection)
             end)
 
-          update(
-            socket,
-            :live_select_form,
-            fn _, %{schema_module: schema_module} ->
-              to_form(schema_module.changeset(params["my_form"]), as: "my_form")
-            end
-          )
+          changeset = socket.assigns.schema_module.changeset(params["my_form"])
+
+          socket =
+            assign(
+              socket,
+              :live_select_form,
+              to_form(changeset, as: "my_form")
+            )
+
+          if event == "submit" do
+            selection =
+              Ecto.Changeset.apply_changes(changeset).city_search
+              |> then(fn
+                city_search when is_list(city_search) ->
+                  Enum.map(city_search, &Map.from_struct(&1))
+
+                nil ->
+                  nil
+
+                city_search ->
+                  Map.from_struct(city_search)
+              end)
+              |> then(fn
+                [] -> nil
+                selection -> selection
+              end)
+
+            assign(socket,
+              cities: selection && Jason.encode!(selection),
+              submitted: true
+            )
+          else
+            socket
+          end
 
         _event ->
           socket

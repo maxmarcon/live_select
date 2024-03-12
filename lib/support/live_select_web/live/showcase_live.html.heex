@@ -301,7 +301,7 @@
               <span :if={@cities}>
                 ✅ You selected: <%= @cities %>
               </span>
-              <span :if={@cities in ["", nil]}>
+              <span :if={!@cities}>
                 ❌ Nothing selected
               </span>
             </div>
