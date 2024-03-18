@@ -405,7 +405,8 @@ defmodule LiveSelect do
       ~S(number of milliseconds to wait after the last keystroke before triggering a "live_select_change" event)
 
   attr :value_mapper, :any,
-    doc: ~s(function used to map the values from a form to LiveSelect options)
+    doc:
+      ~s(function used to map the values from a form to LiveSelect options. Important: the output of this function should be JSON-encodable)
 
   attr :update_min_len, :integer,
     default: Component.default_opts()[:update_min_len],
