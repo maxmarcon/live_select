@@ -343,7 +343,7 @@ defmodule LiveSelect do
     params = update_in(params, ~w(city_search_form city_search), &LiveSelect.decode/1)
     
     # now we can cast the params:
-    changeset = CitySearch.changeset(params)
+    changeset = CitySearchForm.changeset(params)
     
     {:noreply, assign(socket, changeset: changeset)}
   end
