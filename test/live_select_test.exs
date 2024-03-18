@@ -703,7 +703,7 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/")
 
     value = "A"
-    render_change(live, "change", %{"my_form" => %{"city_search" => value}})
+    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}

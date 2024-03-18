@@ -132,6 +132,7 @@ defmodule LiveSelect do
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
+
   ## Examples
 
   These examples describe all the moving parts in detail. You can see these examples in action, see which messages and events are being sent, and play around
@@ -253,6 +254,102 @@ defmodule LiveSelect do
     {:noreply, socket}
   end
   ```
+
+  ## Using LiveSelect with associations and embeds
+
+  LiveSelect can also be used to display and select associations or embeds without too much effort. 
+  Let's say you have the following schema:  
+    
+  ```  
+  defmodule City do
+    @moduledoc false
+
+    use Ecto.Schema
+
+    import Ecto.Changeset
+
+    @primary_key false
+    embedded_schema do
+      field(:name)
+      field(:pos, {:array, :float})
+    end
+
+    def changeset(%__MODULE__{} = schema \\ %__MODULE__{}, params) do
+      cast(schema, params, [:name, :pos])
+    end
+  end
+
+  defmodule CitySearchForm do
+    use Ecto.Schema
+
+    import Ecto.Changeset
+
+    embedded_schema do
+      embeds_many(:city_search, City, on_replace: :delete)
+    end
+
+    def changeset(schema \\ %__MODULE__{}, params) do
+      cast(schema, params, [])
+      |> cast_embed(:city_search)
+    end
+  end
+  ```
+    
+  Each city has a name and an array with coordinates - we want `LiveSelect` to display the name as label in the dropdown and in the tags, but we want
+  the entire data structure (name + coordinates) to be sent to the server when the user selects.
+
+  In order for this to work, we need to:
+
+  1. Map `City` structs to the options expected by `LiveSelect`
+  2. Decode `City` JSON objects sent by the client
+
+  We do (1) by passing a `value_mapper` assign to `LiveSelect`. This is a 1-arity function that expects the struct and maps it to the option that `LiveSelect` should use:
+
+  ```
+  <.live_select field={@my_form[:city_search]} value_mapper={&value_mapper/1} />
+  ```
+
+  ```
+  defp value_mapper(%City{name: name} = value) do
+    %{label: name, value: value}
+  end
+  ```
+
+  As you can see, the label is the name of the city whereas the value is the entire struct. This is because we want to be able to recreate the struct from the value, so we need everything. `LiveSelect`
+  uses this function to map values set in the form to the options.
+
+  You can also use the `value_mapper/1` function to map the values to the options when updating the list of options while handling `live_select_change`:
+
+  ```
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do
+    options =
+      retrieve_options()
+      |> Enum.map(&value_mapper/1)
+
+    send_update(Component, id: id, options: options)
+
+    {:noreply, socket}
+  end
+  ```
+    
+  > #### IMPORTANT: the output of the `value_mapper/1` function should be JSON-encodable {: .warning}
+
+  Finally, in order to take care of (2) you need to decode the JSON-encoded list of options that's coming from the client before you can 
+  cast them to create a changeset. To do so, `LiveSelect` offers a convenience function called `LiveSelect.decode/1`:
+  ```
+  def handle_event("change", params, socket) do
+    # decode will JSON-decode the value in city_search, handling the type of selection 
+    # and taking care of special values such as "" and nil
+    params = update_in(params, ~w(city_search_form city_search), &LiveSelect.decode/1)
+    
+    # now we can cast the params:
+    changeset = CitySearch.changeset(params)
+    
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+  ```
+
+  That's it! Now Your form with embeds selected and displayed with `LiveSelect` should work
   """
 
   @doc ~S"""
@@ -379,5 +476,24 @@ defmodule LiveSelect do
     ~H"""
     <.live_component {assigns} />
     """
+  end
+
+  @doc ~S"""
+  Decodes the selection from the client. This has to be used when the values in the selection aren't simple integers or strings.
+    
+  Let's say you receive your params in the variable `params`, and your `LiveSelect` field is called `my_field` and belongs to the form `my_form`. Then you should  
+  decode like this:
+
+  ```
+  params = update_in(params, ~w(my_form my_field), &LiveSelect.decode/1)
+  ```
+  """
+  def decode(selection) do
+    case selection do
+      nil -> []
+      "" -> nil
+      selection when is_list(selection) -> Enum.map(selection, &Jason.decode!/1)
+      selection -> Jason.decode!(selection)
+    end
   end
 end

@@ -479,16 +479,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
     {:noreply, socket}
   end
 
-  defp value_mapper(%{name: name} = value), do: %{label: name, value: Map.from_struct(value)}
+  defp value_mapper(%City{name: name} = value), do: %{label: name, value: Map.from_struct(value)}
 
   defp value_mapper(value), do: value
-
-  defp decode(value) do
-    case Jason.decode(value) do
-      {:ok, value} -> value
-      {:error, _} -> value
-    end
-  end
 
   defp live_select_assigns(changeset) do
     Settings.live_select_opts(changeset.data)
