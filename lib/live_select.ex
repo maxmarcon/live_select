@@ -258,7 +258,7 @@ defmodule LiveSelect do
   ## Using LiveSelect with associations and embeds
 
   LiveSelect can also be used to display and select associations or embeds without too much effort. 
-  Let's say you have the following schema:  
+  Let's say you have the following schemas:  
     
   ```  
   defmodule City do
