@@ -1,3 +1,8 @@
+## 1.4.0 (2024-03-18)
+
+* support for assocations and embeds
+* add `value_mapper` assign and `decode/1` function
+
 ## 1.3.3 (2024-02-06)
 
 * add slot to render custom clear button
