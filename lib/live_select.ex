@@ -326,7 +326,7 @@ defmodule LiveSelect do
       retrieve_options()
       |> Enum.map(&value_mapper/1)
 
-    send_update(Component, id: id, options: options)
+    send_update(Component, id: live_select_id, options: options)
 
     {:noreply, socket}
   end
