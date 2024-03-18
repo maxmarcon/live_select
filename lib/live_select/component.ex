@@ -492,9 +492,9 @@ defmodule LiveSelect.Component do
     )
   end
 
-  def parent_event(socket, nil, _payload), do: socket
+  defp parent_event(socket, nil, _payload), do: socket
 
-  def parent_event(socket, event, payload) do
+  defp parent_event(socket, event, payload) do
     socket
     |> push_event("parent_event", %{
       id: socket.assigns.id,
