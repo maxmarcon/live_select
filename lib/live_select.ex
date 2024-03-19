@@ -306,7 +306,7 @@ defmodule LiveSelect do
   We do (1) by passing a `value_mapper` assign to `LiveSelect`. This is a 1-arity function that expects the struct and maps it to the option that `LiveSelect` should use:
 
   ```
-  <.live_select field={@my_form[:city_search]} value_mapper={&value_mapper/1} mode={:tags} />
+  <.live_select field={@form[:city_search]} value_mapper={&value_mapper/1} mode={:tags} />
   ```
 
   ```
@@ -345,7 +345,7 @@ defmodule LiveSelect do
     # now we can cast the params:
     changeset = CitySearchForm.changeset(params)
     
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply, assign(socket, form: to_form(changeset))}
   end
   ```
 
