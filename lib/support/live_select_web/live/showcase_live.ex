@@ -393,11 +393,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
 
         event when event in ~w(change submit) ->
           params =
-            update_in(params, ~w(my_form city_search), fn
-              nil -> %{}
-              "" -> nil
-              selection when is_list(selection) -> Enum.map(selection, &decode/1)
-              selection -> decode(selection)
+            update_in(params, ~w(my_form city_search), fn value ->
+              case value do
+                nil -> []
+                "" -> nil
+                value when is_list(value) -> Enum.map(value, &safe_decode/1)
+                value -> safe_decode(value)
+              end
             end)
 
           changeset = socket.assigns.schema_module.changeset(params["my_form"])
@@ -452,6 +454,13 @@ defmodule LiveSelectWeb.ShowcaseLive do
       )
 
     {:noreply, socket}
+  end
+
+  defp safe_decode(value) do
+    case Jason.decode(value) do
+      {:ok, decoded} -> decoded
+      {:error, _} -> %{name: value, pos: []}
+    end
   end
 
   def handle_info({:update_live_select, %{"id" => id}, options}, socket) do
