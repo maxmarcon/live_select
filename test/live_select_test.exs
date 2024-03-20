@@ -6,6 +6,8 @@ defmodule LiveSelectTest do
   import LiveSelect.TestHelpers
   import Mox
 
+  doctest LiveSelect, import: true
+
   setup :verify_on_exit!
 
   test "can be rendered", %{conn: conn} do

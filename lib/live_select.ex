@@ -488,6 +488,18 @@ defmodule LiveSelect do
   ```
   params = update_in(params, ~w(my_form my_field), &LiveSelect.decode/1)
   ```
+    
+  iex> decode(nil)
+  []
+      
+  iex> decode("")
+  nil
+    
+  iex> decode("{\"name\":\"Berlin\",\"pos\":[13.41053,52.52437]}")
+  %{"name" => "Berlin","pos" => [13.41053,52.52437]}
+    
+  iex> decode(["{\"name\":\"New York City\",\"pos\":[-74.00597,40.71427]}","{\"name\":\"Stockholm\",\"pos\":[18.06871,59.32938]}"])
+  [%{"name" => "New York City","pos" => [-74.00597,40.71427]}, %{"name" => "Stockholm","pos" => [18.06871,59.32938]}] 
   """
   def decode(selection) do
     case selection do
