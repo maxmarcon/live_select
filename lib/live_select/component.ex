@@ -298,7 +298,8 @@ defmodule LiveSelect.Component do
     idx = String.to_integer(idx)
 
     if socket.assigns.on_option_update,
-      do: socket.assigns.on_option_update.(%{option_remove: Enum.at(socket.assigns.selection, idx)})
+      do:
+        socket.assigns.on_option_update.(%{option_remove: Enum.at(socket.assigns.selection, idx)})
 
     {:noreply, unselect(socket, idx)}
   end
