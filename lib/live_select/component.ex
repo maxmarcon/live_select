@@ -164,12 +164,12 @@ defmodule LiveSelect.Component do
         socket
       end
 
-
     socket =
       cond do
         Map.has_key?(assigns, :value) ->
           update(socket, :selection, fn
-            selection, %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
+            selection,
+            %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
               update_selection(value, selection, options, mode, value_mapper)
           end)
           |> client_select(%{input_event: true})
@@ -549,9 +549,10 @@ defmodule LiveSelect.Component do
   defp append_selection(value, current_selection, :tags, value_mapper) do
     value = if Enumerable.impl_for(value), do: value, else: [value]
 
-    normalized_value = Enum.map(value, &normalize_selection_value(&1, current_selection, value_mapper))
+    normalized_value =
+      Enum.map(value, &normalize_selection_value(&1, current_selection, value_mapper))
 
-    current_selection ++ normalized_value
+    (current_selection ++ normalized_value)
     |> Enum.reject(&is_nil/1)
     |> Enum.uniq()
   end
