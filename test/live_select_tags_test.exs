@@ -379,6 +379,58 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, [%{label: "C", value: 3}, %{label: "E", value: 5}])
   end
 
+  test "can append values to the selection", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(A))
+
+    send_update(live, append: ["B"])
+
+    assert_selected_multiple(live, ~w(A B))
+
+    send_update(live, append: "C")
+
+    assert_selected_multiple(live, ~w(A B C))
+  end
+
+  test "does not duplicate selection when appending values", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(A))
+
+    send_update(live, append: ~w(A))
+
+    assert_selected_multiple(live, ~w(A))
+  end
+
+  test "does not change the selection when appending nil values", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(A))
+
+    send_update(live, append: nil)
+
+    assert_selected_multiple(live, ~w(A))
+  end
+
   test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 

@@ -164,15 +164,25 @@ defmodule LiveSelect.Component do
         socket
       end
 
+
     socket =
-      if Map.has_key?(assigns, :value) do
-        update(socket, :selection, fn
-          selection, %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
-            update_selection(value, selection, options, mode, value_mapper)
-        end)
-        |> client_select(%{input_event: true})
-      else
-        socket
+      cond do
+        Map.has_key?(assigns, :value) ->
+          update(socket, :selection, fn
+            selection, %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
+              update_selection(value, selection, options, mode, value_mapper)
+          end)
+          |> client_select(%{input_event: true})
+
+        Map.has_key?(assigns, :append) ->
+          update(socket, :selection, fn
+            selection, %{append: value, mode: mode, value_mapper: value_mapper} ->
+              append_selection(value, selection, mode, value_mapper)
+          end)
+          |> client_select(%{input_event: true})
+
+        true ->
+          socket
       end
 
     {:ok, socket}
@@ -365,6 +375,7 @@ defmodule LiveSelect.Component do
           :clear_button,
           :hide_dropdown,
           :value_mapper,
+          :append,
           # for backwards compatibility
           :form
         ]
@@ -376,7 +387,7 @@ defmodule LiveSelect.Component do
           |> Enum.sort_by(&String.jaro_distance(to_string(&1), to_string(assign)))
           |> List.last()
 
-        raise ~s(Invalid assign: "#{assign}". Did you mean "#{most_similar}" ?)
+        raise ~s(Invalid assign: "#{assign}". Did you mean "#{most_similar}"?)
       end
     end
   end
@@ -525,6 +536,24 @@ defmodule LiveSelect.Component do
 
     Enum.map(value, &normalize_selection_value(&1, options ++ current_selection, value_mapper))
     |> Enum.reject(&is_nil/1)
+  end
+
+  defp append_selection(_value, _current_selection, :single, _value_mapper) do
+    raise """
+    Appending values only works in `:tags` mode
+    """
+  end
+
+  defp append_selection(nil, current_selection, _mode, _value_mapper), do: current_selection
+
+  defp append_selection(value, current_selection, :tags, value_mapper) do
+    value = if Enumerable.impl_for(value), do: value, else: [value]
+
+    normalized_value = Enum.map(value, &normalize_selection_value(&1, current_selection, value_mapper))
+
+    current_selection ++ normalized_value
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq()
   end
 
   defp normalize_selection_value(%Ecto.Changeset{action: :replace}, _options, _value_mapper),

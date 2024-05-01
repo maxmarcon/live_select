@@ -129,9 +129,22 @@ defmodule LiveSelect do
 
   `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
   After updating the selection, `LiveSelect` will trigger a change event in the form.  
+  `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.
+  After updating the selection, `LiveSelect` will trigger a change event in the form.
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
+  ### Appending to the selection in `:tags` mode
+
+  When you want to append to the current selection, you can use the `:append` key in the `send_update` call:
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, append: values_to_append)
+  ```
+
+  `values_to_append` can be a single element or a list to append to the current selection. If the value to append already exists in the selection, it will be ignored.
+
+  Note: This does not work in `:single` mode. Use `:value` instead to replace the selection.
 
   ## Examples
 
