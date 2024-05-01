@@ -185,6 +185,16 @@ defmodule LiveSelect.Component do
           socket
       end
 
+    socket =
+      if Map.has_key?(assigns, :filter_values) do
+        update(socket, :selection, fn selection, %{filter_values: filter} ->
+          filter_selection(filter, selection)
+        end)
+        |> client_select(%{input_event: true})
+      else
+        socket
+      end
+
     {:ok, socket}
   end
 
@@ -376,6 +386,7 @@ defmodule LiveSelect.Component do
           :hide_dropdown,
           :value_mapper,
           :append,
+          :filter_values,
           # for backwards compatibility
           :form
         ]
@@ -555,6 +566,16 @@ defmodule LiveSelect.Component do
     (current_selection ++ normalized_value)
     |> Enum.reject(&is_nil/1)
     |> Enum.uniq()
+  end
+
+  defp filter_selection(filter, selection) when is_function(filter, 1) do
+    Enum.filter(selection, filter)
+  end
+
+  defp filter_selection(_filter, _value) do
+    raise """
+    Option for `:filter_values` must be a function with arity 1
+    """
   end
 
   defp normalize_selection_value(%Ecto.Changeset{action: :replace}, _options, _value_mapper),

@@ -132,6 +132,16 @@ defmodule LiveSelect do
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
+  ### Dynamically filtering the selection
+
+  You can conditionally filter the selection to remove or keep items matching a criteria by passing an 1 arity function to `:filter_values`:
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, filter_values: fn value -> String.length(value.label) > 3 end)
+  ```
+
+  In this case, only the values with a label longer than 3 characters will be kept in the selection.
+
   ### Appending to the selection in `:tags` mode
 
   When you want to append to the current selection, you can use the `:append` key in the `send_update` call:

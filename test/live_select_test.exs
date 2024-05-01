@@ -621,6 +621,24 @@ defmodule LiveSelectTest do
     assert_selected(live, :D, 4)
   end
 
+  test "can filter selection values", %{conn: conn} do
+    stub_options(A: 1)
+
+    {:ok, live, _html} = live(conn, "/")
+
+    send_update(live, value: 1, options: [A: 1])
+
+    assert_selected(live, :A, 1)
+
+    send_update(live, filter_values: fn opt -> opt.value == 1 end)
+
+    assert_selected(live, :A, 1)
+
+    send_update(live, filter_values: fn opt -> opt.value == 2 end)
+
+    refute_selected(live)
+  end
+
   test "renders custom :option slots", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 

@@ -431,6 +431,18 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, ~w(A))
   end
 
+  test "can filter selection values", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    send_update(live, value: ~w(A B))
+
+    assert_selected_multiple(live, ~w(A B))
+
+    send_update(live, filter_values: fn value -> value.label == "A" end)
+
+    assert_selected_multiple(live, ~w(A))
+  end
+
   test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 
