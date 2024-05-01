@@ -127,8 +127,6 @@ defmodule LiveSelect do
   send_update(LiveSelect.Component, id: live_select_id, value: new_selection)
   ```
 
-  `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
-  After updating the selection, `LiveSelect` will trigger a change event in the form.  
   `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.
   After updating the selection, `LiveSelect` will trigger a change event in the form.
 
