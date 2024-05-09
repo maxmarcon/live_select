@@ -146,22 +146,26 @@ defmodule LiveSelect.Component do
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field.field}_text_input"))
 
     socket =
-      if (field = assigns[:field]) && !assigns[:skip_field] do
-        update(
-          socket,
-          :selection,
-          fn selection, %{options: options, mode: mode, value_mapper: value_mapper} ->
-            update_selection(
-              field.value,
-              selection,
-              options,
-              mode,
-              value_mapper
-            )
-          end
-        )
-      else
+      if assigns[:skip_field] do
         socket
+      else
+        if field = assigns[:field] do
+          update(
+            socket,
+            :selection,
+            fn selection, %{options: options, mode: mode, value_mapper: value_mapper} ->
+              update_selection(
+                field.value,
+                selection,
+                options,
+                mode,
+                value_mapper
+              )
+            end
+          )
+        else
+          socket
+        end
       end
 
     socket =
