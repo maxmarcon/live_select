@@ -146,7 +146,7 @@ defmodule LiveSelect.Component do
       |> assign(:text_input_field, String.to_atom("#{socket.assigns.field.field}_text_input"))
 
     socket =
-      if field = assigns[:field] do
+      if (field = assigns[:field]) && !assigns[:skip_field] do
         update(
           socket,
           :selection,
@@ -366,7 +366,8 @@ defmodule LiveSelect.Component do
           :hide_dropdown,
           :value_mapper,
           # for backwards compatibility
-          :form
+          :form,
+          :skip_field
         ]
 
     for {assign, _} <- assigns_to_attributes(assigns) do
