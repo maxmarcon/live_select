@@ -177,8 +177,9 @@ of the callback that your LiveView needs to implement in order to handle the eve
 
 ## Contribute 🤝
 
-Contributions are very welcome! If you add some new feature, please also add a test that covers it if possible. If you don't know how to write the test,
-I'm happy to help. At the very least, please make sure that your code changes don't break any existing tests.
+Contributions are very welcome! However, if you want do add a new feature please discuss it first by creating an issue so we can all agree that it's needed. 
+Also, it's important to add a test that covers it. If you don't know how to write the test or need guidance,
+I'm happy to help.
 
 Use `mix test` to run the entire test suite, which is subdivided into 3 main files:
 
