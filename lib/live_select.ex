@@ -314,9 +314,9 @@ defmodule LiveSelect do
   ```
 
   As you can see, the label is the name of the city whereas the value is the entire struct. This is because we want to be able to recreate the struct from the value, so we need everything. `LiveSelect`
-  uses this function to map values set in the form to the options.
+  uses `value_mapper/1` to map the values set in the form to the options expected by `LiveSelect`.
 
-  You can also use the `value_mapper/1` function to map the values to the options when updating the list of options while handling `live_select_change`:
+  You can also use the `value_mapper/1` function to map values to options when updating the list of options while handling `live_select_change`:
 
   ```
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do
