@@ -44,8 +44,6 @@ _Template:_
 _In the LiveView or LiveComponent that's the target of your form events:_
 
   ```elixir
-  import LiveSelect
-
   @impl true
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do 
     cities = City.search(text)
