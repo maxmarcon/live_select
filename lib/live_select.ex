@@ -163,8 +163,6 @@ defmodule LiveSelect do
     
   _LiveView or LiveComponent that is the target of the form's events:_
   ```
-  import LiveSelect
-
   @impl true
   def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do 
       cities = City.search(text)
@@ -326,7 +324,7 @@ defmodule LiveSelect do
       retrieve_options()
       |> Enum.map(&value_mapper/1)
 
-    send_update(Component, id: live_select_id, options: options)
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
 
     {:noreply, socket}
   end
