@@ -448,6 +448,7 @@ defmodule LiveSelect.Component do
       selection: selection,
       hide_dropdown: true
     )
+    |> maybe_save_selection()
     |> client_select(Map.merge(%{input_event: true}, extra_params))
   end
 
