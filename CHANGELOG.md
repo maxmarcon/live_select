@@ -1,3 +1,7 @@
+## 1.4.1 (2024-06-18)
+
+* fix bug introduced by LV-1.0's new focus behavior (https://github.com/maxmarcon/live_select/issues/72)
+
 ## 1.4.0 (2024-03-18)
 
 * support for assocations and embeds
