@@ -199,7 +199,6 @@ defmodule LiveSelect.Component do
   def handle_event("focus", _params, socket) do
     socket =
       socket
-      |> maybe_save_selection()
       |> then(
         &if &1.assigns.mode == :single do
           clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
