@@ -384,7 +384,78 @@ defmodule LiveSelectTest do
     assert_selected(live, "B", 2)
   end
 
-  describe "after focusing on the text input field" do
+  describe "after clicking on the text input field" do
+    setup %{conn: conn} do
+      stub_options(
+        A: 1,
+        B: 2,
+        C: 3
+      )
+
+      {:ok, live, _html} =
+        live(conn, "/?phx-focus=focus-event-for-parent&phx-blur=blur-event-for-parent")
+
+      type(live, "ABC")
+
+      select_nth_option(live, 2)
+
+      assert_selected(live, :B, 2)
+
+      element(live, selectors()[:text_input])
+      |> render_click()
+
+      %{live: live}
+    end
+
+    test "the text input field is cleared", %{live: live} do
+      assert_clear(live, false)
+    end
+
+    test "hitting Escape restores the selection", %{live: live} do
+      keydown(live, "Escape")
+
+      assert_selected_static(live, :B, 2)
+    end
+
+    test "blurring the field restores the selection", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :B, 2)
+    end
+
+    test "blurring, then clicking, then blurring again restores the selection", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      element(live, selectors()[:text_input])
+      |> render_click()
+
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :B, 2)
+    end
+
+    test "a focus event is sent to the parent", %{live: live} do
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        parent_event: "focus-event-for-parent"
+      })
+    end
+
+    test "blurring the field sends a blur event to the parent", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        parent_event: "blur-event-for-parent"
+      })
+    end
+  end
+
+  describe "after focusing the text input field" do
     setup %{conn: conn} do
       stub_options(
         A: 1,
