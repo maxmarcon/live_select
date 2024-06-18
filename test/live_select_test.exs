@@ -424,6 +424,19 @@ defmodule LiveSelectTest do
       assert_selected_static(live, :B, 2)
     end
 
+    test "blurring, then focusing, then blurring again restores the selection", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :B, 2)
+    end
+
     test "a focus event is sent to the parent", %{live: live} do
       assert_push_event(live, "select", %{
         id: "my_form_city_search_live_select_component",

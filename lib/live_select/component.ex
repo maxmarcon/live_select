@@ -86,7 +86,7 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        saved_selection: nil,
+        last_selection: nil,
         selection: [],
         value_mapper: & &1
       )
@@ -464,21 +464,20 @@ defmodule LiveSelect.Component do
 
   defp maybe_save_selection(socket) do
     socket
-    |> update(:saved_selection, fn
+    |> update(:last_selection, fn
       _, %{selection: selection, mode: :single} when selection != [] -> selection
-      saved_selection, _ -> saved_selection
+      last_selection, _ -> last_selection
     end)
   end
 
   defp maybe_restore_selection(socket) do
     update(socket, :selection, fn
-      _, %{saved_selection: saved_selection, mode: :single} when saved_selection != nil ->
-        saved_selection
+      _, %{last_selection: last_selection, mode: :single} when last_selection != nil ->
+        last_selection
 
       selection, _ ->
         selection
     end)
-    |> assign(:saved_selection, nil)
   end
 
   defp clear(socket, params) do
