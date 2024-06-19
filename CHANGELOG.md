@@ -1,3 +1,7 @@
+## 1.4.2 (2024-06-19)
+
+do not restore selection after blur it it was cleard by hitting the clear button
+
 ## 1.4.1 (2024-06-18)
 
 * fix bug introduced by LV-1.0's new focus behavior (https://github.com/maxmarcon/live_select/issues/72)
