@@ -306,7 +306,12 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("clear", _params, socket) do
-    {:noreply, clear(socket, %{input_event: true})}
+    socket =
+      socket
+      |> assign(last_selection: nil)
+      |> clear(%{input_event: true})
+
+    {:noreply, socket}
   end
 
   @impl true
