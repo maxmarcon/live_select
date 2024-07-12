@@ -42,7 +42,7 @@ defmodule LiveSelect.TestHelpers do
   @override_class_option [
     available_option: :available_option_class,
     clear_button: :clear_button_class,
-    clear_tag_button: :clear_button_class,
+    clear_tag_button: :clear_tag_button_class,
     container: :container_class,
     dropdown: :dropdown_class,
     option: :option_class,

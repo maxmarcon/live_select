@@ -62,7 +62,7 @@ The following table shows the default styles for each element and the options yo
 | *active_option* | active | bg-gray-600 text-white | active_option_class |  |
 | *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded | available_option_class |  |
 | *clear_button* | cursor-pointer hidden | cursor-pointer hidden | clear_button_class | clear_button_extra_class |
-| *clear_tag_button* | cursor-pointer | cursor-pointer | clear_button_class | clear_button_extra_class |
+| *clear_tag_button* | cursor-pointer | cursor-pointer | clear_tag_button_class | clear_tag_button_extra_class |
 | *container* | dropdown dropdown-open | h-full relative text-black | container_class | container_extra_class |
 | *dropdown* | bg-base-200 dropdown-content menu menu-compact p-1 rounded-box shadow w-full z-[1] | absolute bg-gray-100 inset-x-0 rounded-md shadow top-full z-50 | dropdown_class | dropdown_extra_class |
 | *option* |  | px-4 py-1 rounded | option_class | option_extra_class |
