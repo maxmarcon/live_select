@@ -492,9 +492,7 @@ defmodule LiveSelect.ComponentTest do
           Keyword.values(
             Keyword.drop(override_class_option(), [
               :available_option,
-              :selected_option,
-              :clear_button,
-              :clear_tag_button
+              :selected_option
             ])
           ),
           Keyword.values(extend_class_option())

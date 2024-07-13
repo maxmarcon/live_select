@@ -54,6 +54,8 @@ defmodule LiveSelect.TestHelpers do
   def override_class_option, do: @override_class_option
 
   @extend_class_option [
+    clear_button: :clear_button_extra_class,
+    clear_tag_button: :clear_tag_button_extra_class,
     container: :container_extra_class,
     dropdown: :dropdown_extra_class,
     option: :option_extra_class,
