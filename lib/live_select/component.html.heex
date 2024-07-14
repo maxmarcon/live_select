@@ -24,7 +24,12 @@
             type="button"
             data-idx={idx}
             class={
-              class(@style, :clear_tag_button, @clear_button_class, @clear_button_extra_class)
+              class(
+                @style,
+                :clear_tag_button,
+                @clear_tag_button_class,
+                @clear_tag_button_extra_class
+              )
             }
           >
             <%= if @clear_button == [] do %>

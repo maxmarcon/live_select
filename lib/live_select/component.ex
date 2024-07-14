@@ -16,6 +16,8 @@ defmodule LiveSelect.Component do
     available_option_class: nil,
     clear_button_class: nil,
     clear_button_extra_class: nil,
+    clear_tag_button_class: nil,
+    clear_tag_button_extra_class: nil,
     user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,

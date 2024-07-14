@@ -35,14 +35,10 @@ defmodule Mix.Tasks.DumpStyleTable do
     |> IO.write()
   end
 
-  defp class_override_option(:clear_tag_button), do: class_override_option(:clear_button)
-
   defp class_override_option(el) do
     option_name = to_string(el) <> "_class"
     if option_name in class_options(), do: option_name, else: ""
   end
-
-  defp class_extend_option(:clear_tag_button), do: class_extend_option(:clear_button)
 
   defp class_extend_option(el) do
     option_name = to_string(el) <> "_extra_class"
