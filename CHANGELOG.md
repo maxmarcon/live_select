@@ -1,3 +1,5 @@
+* add options clear_tag_button_class and clear_tag_button_extra_class to style button to clear tags
+
 ## 1.4.2 (2024-06-19)
 
 do not restore selection after blur it it was cleard by hitting the clear button
