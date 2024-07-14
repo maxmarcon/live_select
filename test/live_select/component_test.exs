@@ -510,7 +510,8 @@ defmodule LiveSelect.ComponentTest do
               field: form[:input],
               options: ["A", "B", "C"],
               value: ["A", "B"],
-              mode: :tags,
+              allow_clear: @override_class == :clear_button_class,
+              mode: if(@override_class == :clear_button_class, do: :single, else: :tags),
               hide_dropdown: false
             ]
             |> Keyword.put(@override_class, "foo")
