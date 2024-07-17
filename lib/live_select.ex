@@ -127,11 +127,27 @@ defmodule LiveSelect do
   send_update(LiveSelect.Component, id: live_select_id, value: new_selection)
   ```
 
-  `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.  
-  After updating the selection, `LiveSelect` will trigger a change event in the form.  
+  `new_selection` must be a single element in `:single` mode, a list in `:tags` mode. If it's `nil`, the selection will be cleared.
+  After updating the selection, `LiveSelect` will trigger a change event in the form.
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
+  ## Dynamically updating the selection
+
+  You can also update the selection dynamically by passing an 1 arity function that receives the current selection to `:update_selection`:
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, update_selection: fn current_selection -> Enum.filter(current_selection, &String.length(&1.label) > 3))
+  ```
+
+  In this case, only the values with a label longer than 3 characters will be kept in the selection.
+
+  Another example that appends values to the current selection:
+
+  ```
+  values_to_append = [1, 2, 3]
+  send_update(LiveSelect.Component, id: live_select_id, update_selection: fn current_selection -> current_selection ++ values_to_append end)
+  ```
 
   ## Examples
 
