@@ -70,6 +70,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
       field(:mode, Ecto.Enum, values: [:single, :tags], default: Component.default_opts()[:mode])
+      field(:tags_mode, Ecto.Enum, values: [:default, :multiple_select], default: Component.default_opts()[:tags_mode])
       field(:new, :boolean, default: true)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
@@ -96,6 +97,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :max_selectable,
           :user_defined_options,
           :mode,
+          :tags_mode,
           :options,
           :selection,
           :placeholder,
@@ -134,6 +136,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
           (settings.mode != :single && option == :allow_clear)
       end)
       |> Keyword.new()
+      |> then(&maybe_set_classes_for_multiselect/1)
+    end
+
+    defp maybe_set_classes_for_multiselect(opts) do
+      if LiveSelectWeb.ShowcaseLive.multiple_select?(opts) |> dbg do
+        Keyword.put(opts, :selected_option_class, "cursor-pointer font-bold hover:bg-gray-400 rounded")
+      else
+        opts
+      end
     end
 
     def has_style_errors?(%Ecto.Changeset{errors: errors}) do
@@ -300,9 +311,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket.assigns
 
+        attrs = if settings.tags_mode == :multiple_select do
+          %{selected_option_class: "cursor-pointer font-bold hover:bg-gray-400 rounded"}
+        else
+          %{}
+        end
+
         socket =
           socket
-          |> assign(:settings_form, Settings.changeset(settings, %{}) |> to_form)
+          |> assign(:settings_form, Settings.changeset(settings, attrs) |> to_form)
           |> update(:schema_module, fn _, %{settings_form: settings_form} ->
             if settings_form[:mode].value == :single, do: CitySearchSingle, else: CitySearchMany
           end)
@@ -487,6 +504,11 @@ defmodule LiveSelectWeb.ShowcaseLive do
       )
 
     {:noreply, socket}
+  end
+
+  def multiple_select?(assigns) do
+    assigns[:mode] == :tags && Keyword.has_key?(assigns, :tags_mode) &&
+      assigns[:tags_mode] == :multiple_select
   end
 
   defp value_mapper(%City{name: name} = value), do: %{label: name, value: Map.from_struct(value)}

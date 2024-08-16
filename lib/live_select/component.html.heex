@@ -122,12 +122,12 @@
                   )
                 )
             }
-            data-idx={unless already_selected?(option, @selection), do: idx}
+            data-idx={idx}
           >
             <%= if @option == [] do %>
               <%= option.label %>
             <% else %>
-              <%= render_slot(@option, option) %>
+              <%= render_slot(@option, {option, already_selected?(option, @selection)}) %>
             <% end %>
           </div>
         </li>

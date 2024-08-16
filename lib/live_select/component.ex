@@ -41,7 +41,8 @@ defmodule LiveSelect.Component do
     text_input_extra_class: nil,
     text_input_selected_class: nil,
     update_min_len: 1,
-    value: nil
+    value: nil,
+    tags_mode: :default
   ]
 
   @styles [
@@ -429,6 +430,26 @@ defmodule LiveSelect.Component do
 
   defp maybe_select(%{assigns: %{active_option: -1}} = socket, _extra_params), do: socket
 
+  defp maybe_select(
+         %{assigns: %{active_option: active_option, options: options, selection: selection}} =
+           socket,
+         extra_params
+       )
+       when active_option >= 0 do
+    option = Enum.at(socket.assigns.options, active_option)
+
+    if already_selected?(option, selection) do
+      pos = selection_index(option, selection)
+      unselect(socket, pos)
+    else
+      select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option), extra_params)
+    end
+  end
+
+  defp selection_index(option, selection) do
+    Enum.find_index(selection, fn %{label: label} -> label == option.label end)
+  end
+
   defp maybe_select(socket, extra_params) do
     select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option), extra_params)
   end
@@ -445,9 +466,10 @@ defmodule LiveSelect.Component do
 
     socket
     |> assign(
-      active_option: -1,
+      active_option:
+        if(multi_select_mode?(socket), do: socket.assigns.active_option, else: -1),
       selection: selection,
-      hide_dropdown: true
+      hide_dropdown: not multi_select_mode?(socket)
     )
     |> maybe_save_selection()
     |> client_select(Map.merge(%{input_event: true}, extra_params))
@@ -664,8 +686,16 @@ defmodule LiveSelect.Component do
 
   defp encode(value), do: Jason.encode!(value)
 
-  defp already_selected?(option, selection) do
+  def already_selected?(idx, selection) when is_integer(idx) do
+    Enum.at(selection, idx) != nil
+  end
+
+  def already_selected?(option, selection) do
     option.label in Enum.map(selection, & &1.label)
+  end
+
+  defp multi_select_mode?(socket) do
+    socket.assigns.mode == :tags && socket.assigns.tags_mode == :multiple_select
   end
 
   defp next_selectable(%{
@@ -675,6 +705,19 @@ defmodule LiveSelect.Component do
        })
        when max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
+
+  defp next_selectable(%{
+         options: options,
+         active_option: active_option,
+         selection: selection,
+         tags_mode: :multiple_select
+       }) do
+    options
+    |> Enum.with_index()
+    |> Enum.reject(fn {opt, _} -> active_option == opt end)
+    |> Enum.map(fn {_, idx} -> idx end)
+    |> Enum.find(active_option, &(&1 > active_option))
+  end
 
   defp next_selectable(%{options: options, active_option: active_option, selection: selection}) do
     options
@@ -691,6 +734,20 @@ defmodule LiveSelect.Component do
        })
        when max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
+
+  defp prev_selectable(%{
+         options: options,
+         active_option: active_option,
+         selection: selection,
+         tags_mode: :multiple_select
+       }) do
+    options
+    |> Enum.with_index()
+    |> Enum.reverse()
+    |> Enum.reject(fn {opt, _} -> active_option == opt end)
+    |> Enum.map(fn {_, idx} -> idx end)
+    |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
+  end
 
   defp prev_selectable(%{options: options, active_option: active_option, selection: selection}) do
     options

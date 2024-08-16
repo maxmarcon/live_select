@@ -44,6 +44,12 @@
               class: "select select-sm select-bordered text-xs"
             )}
           </div>
+          <div :if={@settings_form[:mode].value == :tags} class="form-control max-w-sm">
+            <%= label(@settings_form, :tags_mode, "Tags mode:", class: "label label-text font-semibold") %>
+            <%= select(@settings_form, :tags_mode, [:default, :multiple_select],
+              class: "select select-sm select-bordered text-xs"
+            ) %>
+          </div>
           <div class="form-control max-w-sm">
             {label(@settings_form, :max_selectable, "Max selectable:",
               class: "label label-text font-semibold"

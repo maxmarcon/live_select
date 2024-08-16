@@ -374,6 +374,11 @@ defmodule LiveSelect do
     default: Component.default_opts()[:mode],
     doc: "either `:single` (for single selection), or `:tags` (for multiple selection using tags)"
 
+  attr :tags_mode, :atom,
+    values: [:default, :multiple_select],
+    default: Component.default_opts()[:tags_mode],
+    doc: "whether to use default tags mode or multi-select tags mode. Multi-select mode enables selecting multiple options without the options dropdown being hidden"
+
   attr :options, :list,
     doc:
       ~s(initial available options to select from. Note that, after the initial rendering of the component, options can only be updated using `Phoenix.LiveView.send_update/3` - See the "Options" section for details)
