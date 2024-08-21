@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **LiveSelect and LiveView versions**
-have you tried LiveSelect latest version? Pleas try it and see if the bug still occur there
+have you tried LiveSelect's and LiveView's latest versions? Please try them and see if the bug still occur
 which LiveSelect version are you on? (`mix deps | grep live_selct`)
 which LiveView version are you on? (`mix deps | grep phoenix_live_view`)
 
