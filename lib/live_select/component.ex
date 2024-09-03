@@ -201,7 +201,11 @@ defmodule LiveSelect.Component do
         &if &1.assigns.mode == :single do
           clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
         else
-          parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
+          if &1.assigns.tags_mode == :multiple_select do
+            &1
+          else
+            parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
+          end
         end
       )
       |> assign(hide_dropdown: false)
@@ -466,8 +470,7 @@ defmodule LiveSelect.Component do
 
     socket
     |> assign(
-      active_option:
-        if(multi_select_mode?(socket), do: socket.assigns.active_option, else: -1),
+      active_option: if(multi_select_mode?(socket), do: socket.assigns.active_option, else: -1),
       selection: selection,
       hide_dropdown: not multi_select_mode?(socket)
     )
@@ -691,7 +694,7 @@ defmodule LiveSelect.Component do
   end
 
   def already_selected?(option, selection) do
-    option.label in Enum.map(selection, & &1.label)
+    Enum.any?(selection, fn item -> item.label == option.label end)
   end
 
   defp multi_select_mode?(socket) do
