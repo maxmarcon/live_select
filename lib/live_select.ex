@@ -77,7 +77,7 @@ defmodule LiveSelect do
   in order to save space. You can do this by specifying an additional `tag_label` key when passing options as map or keywords. For example, passing these options:
 
   ```
-  [%{label: "New York", value "NY", tag_label: "NY"}, %{label: "Barcelona", value: "BCN", tag_label: "BCN"}]  
+  [%{label: "New York", value: "NY", tag_label: "NY"}, %{label: "Barcelona", value: "BCN", tag_label: "BCN"}]  
   ```
 
   will result in "New York" and "Barcelona" being used for the options in the dropdown, while "NY" and "BCN" will be used for the tags (and the values).
