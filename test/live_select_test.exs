@@ -453,6 +453,21 @@ defmodule LiveSelectTest do
         parent_event: "blur-event-for-parent"
       })
     end
+
+    test "when value forced, clicking & blurring restores the selection", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      send_update(live, value: 3)
+
+      element(live, selectors()[:text_input])
+      |> render_click()
+
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :C, 3)
+    end
   end
 
   describe "after focusing the text input field" do

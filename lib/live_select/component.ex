@@ -177,6 +177,8 @@ defmodule LiveSelect.Component do
         socket
       end
 
+    socket = maybe_save_selection(socket)
+
     {:ok, socket}
   end
 
