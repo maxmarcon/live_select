@@ -40,15 +40,9 @@
         <div class="flex flex-wrap p-5 gap-2">
           <div class="form-control max-w-sm">
             {label(@settings_form, :mode, "Mode:", class: "label label-text font-semibold")}
-            {select(@settings_form, :mode, [:single, :tags],
+            {select(@settings_form, :mode, [:single, :tags, :quick_tags],
               class: "select select-sm select-bordered text-xs"
             )}
-          </div>
-          <div :if={@settings_form[:mode].value == :tags} class="form-control max-w-sm">
-            <%= label(@settings_form, :tags_mode, "Tags mode:", class: "label label-text font-semibold") %>
-            <%= select(@settings_form, :tags_mode, [:default, :multiple_select],
-              class: "select select-sm select-bordered text-xs"
-            ) %>
           </div>
           <div class="form-control max-w-sm">
             {label(@settings_form, :max_selectable, "Max selectable:",
@@ -76,6 +70,10 @@
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
               {checkbox(@settings_form, :disabled, class: "toggle")}
+            <% end %>
+            <%= label class: "label cursor-pointer" do %>
+              <span class="label-text mr-1">Custom option HTML:&nbsp;</span>
+              <%= checkbox(@settings_form, :custom_option_html, class: "toggle") %>
             <% end %>
           </div>
           <div class="form-control max-w-sm">
@@ -292,7 +290,22 @@
                 field={@live_select_form[:city_search]}
                 value_mapper={&value_mapper/1}
                 {live_select_assigns(@settings_form.source)}
-              />
+              >
+              <:option :let={%{label: label, value: value, selected: selected}}>
+                <%= if @settings_form[:custom_option_html].value do %>
+                  <div class="flex justify-content items-center">
+                    <input
+                      class="rounded w-4 h-4 mr-3 border border-border"
+                      type="checkbox"
+                      checked={selected}
+                    />
+                    <span class="text-sm"><%= label %></span>
+                  </div>
+                <% else %>
+                  <%= label %>
+                <% end %>
+              </:option>
+            </.live_select>
             </div>
             <div class="flex flex-col gap-y-1">
               {submit("Submit",
@@ -316,7 +329,7 @@
       </div>
 
       <div
-        class="w-full md:w-2/3 mt-5 relative border-info border rounded-lg p-2"
+        class="w-full md:w-2/3 mt-5 mb-5 relative border-info border rounded-lg p-2"
         id="live-select-code"
       >
         <div
@@ -332,7 +345,7 @@
             <.copy_to_clipboard_icon />
           </button>
         </div>
-        <Render.live_select opts={Settings.live_select_opts(@settings_form.data, true)} />
+        <Render.live_select custom_option_html={@settings_form[:custom_option_html].value} opts={Settings.live_select_opts(@settings_form.data, true)} />
       </div>
     </div>
   </div>

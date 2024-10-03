@@ -67,10 +67,15 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:allow_clear, :boolean)
       field(:debounce, :integer, default: Component.default_opts()[:debounce])
       field(:disabled, :boolean)
+      field(:custom_option_html, :boolean)
       field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
-      field(:mode, Ecto.Enum, values: [:single, :tags], default: Component.default_opts()[:mode])
-      field(:tags_mode, Ecto.Enum, values: [:default, :multiple_select], default: Component.default_opts()[:tags_mode])
+
+      field(:mode, Ecto.Enum,
+        values: [:single, :tags, :quick_tags],
+        default: Component.default_opts()[:mode]
+      )
+
       field(:new, :boolean, default: true)
       field(:placeholder, :string, default: "Search for a city")
       field(:search_delay, :integer, default: 10)
@@ -94,10 +99,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :allow_clear,
           :debounce,
           :disabled,
+          :custom_option_html,
           :max_selectable,
           :user_defined_options,
           :mode,
-          :tags_mode,
           :options,
           :selection,
           :placeholder,
@@ -121,7 +126,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       default_opts = Component.default_opts()
 
       settings
-      |> Map.drop([:search_delay, :new, :selection])
+      |> Map.drop([:search_delay, :new, :selection, :custom_option_html])
       |> Map.from_struct()
       |> then(
         &if is_nil(&1.style) do
@@ -140,8 +145,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
     end
 
     defp maybe_set_classes_for_multiselect(opts) do
-      if LiveSelectWeb.ShowcaseLive.multiple_select?(opts) |> dbg do
-        Keyword.put(opts, :selected_option_class, "cursor-pointer font-bold hover:bg-gray-400 rounded")
+      if LiveSelectWeb.ShowcaseLive.quick_tags?(opts[:mode]) do
+        Keyword.put(
+          opts,
+          :selected_option_class,
+          "cursor-pointer font-bold hover:bg-gray-400 rounded"
+        )
       else
         opts
       end
@@ -251,19 +260,54 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assigns = assign(assigns, opts: opts, format_value: format_value)
 
       ~H"""
-      <div>
-        <span class="text-success">&lt;.live_select</span>
-        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&#123;my_form[:city_search]&#125;</span>
-        <%= for {key, value} <- @opts, !is_nil(value) do %>
-          <%= if value == true do %>
-            <br />&nbsp;&nbsp; <span class="text-success">{key}</span>
-          <% else %>
-            <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
+      <%= if @custom_option_html do %>
+        <div>
+          <span class="text-success">&lt;.live_select</span>
+          <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&#123;my_form[:city_search]&#125;</span>
+          <%= for {key, value} <- @opts, !is_nil(value) do %>
+            <%= if value == true do %>
+              <br />&nbsp;&nbsp; <span class="text-success">{key}</span>
+            <% else %>
+              <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
+            <% end %>
           <% end %>
-        <% end %>
-        <span class="text-success">/&gt;</span>
-      </div>
+          <br /><span class="text-success">&gt;</span>
+
+          <br />&nbsp;&nbsp; <span class="text-success">
+            &lt;:option :let</span>=<span class="text-info">&#123;%&#123;label: label, value: value, selected: selected&#125;&#125;</span>
+          <span class="text-success">
+            &gt;
+          </span>
+          <br /><%= indent(2) %> <span class="text-success">&lt;div class</span>=<span class="text-info">"flex justify-content items-center"&gt;</span>
+          <br /><%= indent(3) %> <span class="text-success">&lt;input</span>
+          <br /><%= indent(4) %> <span class="text-success">class</span>=<span class="text-info">"rounded w-4 h-4 mr-3 border border-border"</span>
+          <br /><%= indent(4) %> <span class="text-success">type</span>=<span class="text-info">"checkbox"</span>
+          <br /><%= indent(4) %> <span class="text-success">checked</span>=<span class="text-info">&#123;selected&#125;</span>
+          <br /><%= indent(3) %> <span class="text-success">/&gt;</span>
+          <br /><%= indent(4) %> <span class="text-success">&lt;span class</span>=<span class="text-info">"text-sm"&gt;&lt;&#37;= label &#37;&gt;</span>
+          <br /><%= indent(2) %> <span class="text-success">&lt;/div&gt;</span>
+          <br /><%= indent(1) %> <span class="text-success">&lt;/:option&gt;</span>
+          <br /><span class="text-success">&lt;.live_select/&gt;</span>
+        </div>
+      <% else %>
+        <div>
+          <span class="text-success">&lt;.live_select</span>
+          <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&#123;my_form[:city_search]&#125;</span>
+          <%= for {key, value} <- @opts, !is_nil(value) do %>
+            <%= if value == true do %>
+              <br />&nbsp;&nbsp; <span class="text-success">{key}</span>
+            <% else %>
+              <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
+            <% end %>
+          <% end %>
+          <span class="text-success">/&gt;</span>
+        </div>
+      <% end %>
       """
+    end
+
+    defp indent(amount) do
+      raw(for _ <- 1..amount, do: "&nbsp;&nbsp;&nbsp;")
     end
   end
 
@@ -311,11 +355,12 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket.assigns
 
-        attrs = if settings.tags_mode == :multiple_select do
-          %{selected_option_class: "cursor-pointer font-bold hover:bg-gray-400 rounded"}
-        else
-          %{}
-        end
+        attrs =
+          if settings.mode == :quick_select do
+            %{selected_option_class: "cursor-pointer font-bold hover:bg-gray-400 rounded"}
+          else
+            %{}
+          end
 
         socket =
           socket
@@ -506,9 +551,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
     {:noreply, socket}
   end
 
-  def multiple_select?(assigns) do
-    assigns[:mode] == :tags && Keyword.has_key?(assigns, :tags_mode) &&
-      assigns[:tags_mode] == :multiple_select
+  def quick_tags?(mode) do
+    mode == :quick_tags
   end
 
   defp value_mapper(%City{name: name} = value), do: %{label: name, value: Map.from_struct(value)}

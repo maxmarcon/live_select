@@ -8,10 +8,11 @@
   data-field={@field.id}
   data-debounce={@debounce}
 >
-  <%= if @mode == :tags && Enum.any?(@selection) do %>
+
     <div class={
       class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)
     }>
+    <%= if (@mode == :tags || @mode == :quick_tags) && Enum.any?(@selection) do %>
       <%= for {option, idx} <- Enum.with_index(@selection) do %>
         <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
           <%= if @tag == [] do %>
@@ -40,8 +41,9 @@
           </button>
         </div>
       <% end %>
+      <% end %>
     </div>
-  <% end %>
+
   <div>
     <%= text_input(@field.form, @text_input_field,
       class:
@@ -127,7 +129,7 @@
             <%= if @option == [] do %>
               <%= option.label %>
             <% else %>
-              <%= render_slot(@option, {option, already_selected?(option, @selection)}) %>
+              <%= render_slot(@option, Map.merge(option, %{selected: already_selected?(option, @selection)})) %>
             <% end %>
           </div>
         </li>
