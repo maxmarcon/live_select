@@ -1,3 +1,5 @@
+## 1.4.3 (2024-10-28)
+
 * add options clear_tag_button_class and clear_tag_button_extra_class to style button to clear tags
 * fix [bug](https://github.com/maxmarcon/live_select/issues/81) where selection was not restored after focus+blur when value is pre-selected or forced 
   
