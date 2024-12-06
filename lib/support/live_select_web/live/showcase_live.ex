@@ -241,10 +241,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ~H"""
       <div>
         <span class="text-success">&lt;.live_select</span>
-        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{my_form[:city_search]}</span>
+        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&lbrace;@my_form[:city_search]&rbrace;</span>
         <%= for {key, value} <- @opts, !is_nil(value) do %>
           <%= if value == true do %>
-            <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>
+            <br />&nbsp;&nbsp; <span class="text-success">{key}</span>
           <% else %>
             <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
           <% end %>
