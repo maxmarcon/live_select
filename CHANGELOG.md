@@ -1,3 +1,7 @@
+## 1.4.4 (2024-12-07)
+
+* support for LiveView 1.0.0
+
 ## 1.4.3 (2024-10-28)
 
 * add options clear_tag_button_class and clear_tag_button_extra_class to style button to clear tags
