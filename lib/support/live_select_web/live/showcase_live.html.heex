@@ -39,126 +39,126 @@
       <.form for={@settings_form} phx-change="update-settings" id="settings-form">
         <div class="flex flex-wrap p-5 gap-2">
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :mode, "Mode:", class: "label label-text font-semibold") %>
-            <%= select(@settings_form, :mode, [:single, :tags],
+            {label(@settings_form, :mode, "Mode:", class: "label label-text font-semibold")}
+            {select(@settings_form, :mode, [:single, :tags],
               class: "select select-sm select-bordered text-xs"
-            ) %>
+            )}
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :max_selectable, "Max selectable:",
+            {label(@settings_form, :max_selectable, "Max selectable:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= number_input(@settings_form, :max_selectable,
+            )}
+            {number_input(@settings_form, :max_selectable,
               min: 0,
               class: "input input-sm input-bordered",
               disabled: to_string(@settings_form[:mode].value) == "single"
-            ) %>
-            <%= error_tag(@settings_form, :max_selectable) %>
+            )}
+            {error_tag(@settings_form, :max_selectable)}
           </div>
           <div class="form-control max-w-sm">
             <label class="label cursor-pointer">
               <span class="label-text mr-1">User-defined options:</span>
-              <%= checkbox(@settings_form, :user_defined_options, class: "toggle") %>
+              {checkbox(@settings_form, :user_defined_options, class: "toggle")}
             </label>
             <label class="label cursor-pointer">
               <span class="label-text mr-1">Allow clear:</span>
-              <%= checkbox(@settings_form, :allow_clear,
+              {checkbox(@settings_form, :allow_clear,
                 class: "toggle",
                 disabled: to_string(@settings_form[:mode].value) != "single"
-              ) %>
+              )}
             </label>
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
-              <%= checkbox(@settings_form, :disabled, class: "toggle") %>
+              {checkbox(@settings_form, :disabled, class: "toggle")}
             <% end %>
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :search_delay, "Search delay in ms:",
+            {label(@settings_form, :search_delay, "Search delay in ms:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= number_input(@settings_form, :search_delay,
+            )}
+            {number_input(@settings_form, :search_delay,
               min: 0,
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
-            <%= error_tag(@settings_form, :search_delay) %>
+            )}
+            {error_tag(@settings_form, :search_delay)}
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :placeholder, "placeholder:",
+            {label(@settings_form, :placeholder, "placeholder:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= text_input(@settings_form, :placeholder,
+            )}
+            {text_input(@settings_form, :placeholder,
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
-            <%= label(@settings_form, :placeholder, default_value_descr(:placeholder),
+            )}
+            {label(@settings_form, :placeholder, default_value_descr(:placeholder),
               class: "label label-text"
-            ) %>
-            <%= error_tag(@settings_form, :placeholder) %>
+            )}
+            {error_tag(@settings_form, :placeholder)}
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :update_min_len, "update_min_len:",
+            {label(@settings_form, :update_min_len, "update_min_len:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= number_input(@settings_form, :update_min_len,
+            )}
+            {number_input(@settings_form, :update_min_len,
               min: 0,
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
+            )}
             <label class="label label-text-alt">
-              Min text length to trigger update<br /><%= default_value_descr(:update_min_len) %>
+              Min text length to trigger update<br />{default_value_descr(:update_min_len)}
             </label>
-            <%= error_tag(@settings_form, :update_min_len) %>
+            {error_tag(@settings_form, :update_min_len)}
           </div>
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :debounce, "debounce:",
+            {label(@settings_form, :debounce, "debounce:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= number_input(@settings_form, :debounce,
+            )}
+            {number_input(@settings_form, :debounce,
               min: 0,
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
+            )}
             <label class="label label-text-alt">
-              delay in ms before update<br /><%= default_value_descr(:debounce) %>
+              delay in ms before update<br />{default_value_descr(:debounce)}
             </label>
-            <%= error_tag(@settings_form, :debounce) %>
+            {error_tag(@settings_form, :debounce)}
           </div>
 
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :"phx-focus", "focus event:",
+            {label(@settings_form, :"phx-focus", "focus event:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= text_input(@settings_form, :"phx-focus",
+            )}
+            {text_input(@settings_form, :"phx-focus",
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
+            )}
             <label class="label label-text-alt">
               Event to send on focus
             </label>
-            <%= error_tag(@settings_form, :"phx-focus") %>
+            {error_tag(@settings_form, :"phx-focus")}
           </div>
 
           <div class="form-control max-w-sm">
-            <%= label(@settings_form, :"phx-blur", "blur event:",
+            {label(@settings_form, :"phx-blur", "blur event:",
               class: "label label-text font-semibold"
-            ) %>
-            <%= text_input(@settings_form, :"phx-blur",
+            )}
+            {text_input(@settings_form, :"phx-blur",
               class: "input input-sm input-bordered",
               spellcheck: "false"
-            ) %>
+            )}
             <label class="label label-text-alt">
               Event to send on blur
             </label>
-            <%= error_tag(@settings_form, :"phx-blur") %>
+            {error_tag(@settings_form, :"phx-blur")}
           </div>
 
           <div class="form-control max-w-sm">
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text font-semibold">style:&nbsp;</span>
-              <%= select(@settings_form, :style, [:tailwind, :daisyui, :none],
+              {select(@settings_form, :style, [:tailwind, :daisyui, :none],
                 class: "select select-sm select-bordered text-xs"
-              ) %>
+              )}
             <% end %>
           </div>
 
@@ -169,13 +169,13 @@
             border-base-300 bg-base-100 rounded-box"
           }
           >
-            <%= checkbox(@settings_form, :show_styles,
+            {checkbox(@settings_form, :show_styles,
               phx_change: "toggle-styles",
               class: "w-full",
               value: @show_styles
-            ) %>
+            )}
             <div class="collapse-title text-sm font-medium">
-              <%= if @show_styles, do: "Hide styling options", else: "Show styling options" %> &nbsp;
+              {if @show_styles, do: "Hide styling options", else: "Show styling options"} &nbsp;
               <label
                 :if={!@show_styles && Settings.has_style_options?(@settings_form.source)}
                 class="text-warning"
@@ -192,11 +192,11 @@
               <div class="form-control mt-2">
                 <label class="label label-text">Filter styling options by name:</label>
                 <div class="input-group w-full">
-                  <%= text_input(@settings_form, :style_filter,
+                  {text_input(@settings_form, :style_filter,
                     value: @style_filter,
                     class: "input input-bordered input-sm flex-1",
                     phx_change: "filter-styles"
-                  ) %>
+                  )}
                   <button
                     type="button"
                     class="btn btn-square btn-sm"
@@ -218,23 +218,23 @@
               <%= for class <- @class_options do %>
                 <%= if valid_class(@settings_form.source, class) do %>
                   <div class={"form-control w-full #{unless String.contains?(to_string(class), @style_filter), do: "hidden"}"}>
-                    <%= label(@settings_form, class, "#{class}:",
+                    {label(@settings_form, class, "#{class}:",
                       class:
                         "label label-text font-semibold #{if Ecto.Changeset.get_field(@settings_form.source, class), do: "text-info"}"
-                    ) %>
-                    <%= text_input(@settings_form, class,
+                    )}
+                    {text_input(@settings_form, class,
                       class: "input input-sm input-bordered",
                       spellcheck: "false"
-                    ) %>
+                    )}
                     <%= if default_class(Ecto.Changeset.get_field(@settings_form.source, :style), class) do %>
                       <label class="label label-text italic">
-                        default from <%= Ecto.Changeset.get_field(@settings_form.source, :style) %> style: &ldquo;<%= default_class(
+                        default from {Ecto.Changeset.get_field(@settings_form.source, :style)} style: &ldquo;{default_class(
                           Ecto.Changeset.get_field(@settings_form.source, :style),
                           class
-                        ) %>&rdquo;
+                        )}&rdquo;
                       </label>
                     <% end %>
-                    <%= error_tag(@settings_form, class) %>
+                    {error_tag(@settings_form, class)}
                   </div>
                 <% end %>
               <% end %>
@@ -289,17 +289,17 @@
               />
             </div>
             <div class="flex flex-col gap-y-1">
-              <%= submit("Submit",
+              {submit("Submit",
                 class: "btn btn-primary btn-sm text-xs md:text-md",
                 disabled: !@settings_form.source.valid? || @settings_form[:disabled].value
-              ) %>
+              )}
             </div>
             <div class="mt-2 bg-neutral text-center text-neutral-content rounded rounded-md m-1 p-1 text-xs col-span-3">
               !! This should not move when the dropdown opens !!
             </div>
             <div :if={@submitted} class="col-span-4 text-info text-center my-5 w-full">
               <span :if={@cities}>
-                ✅ You selected: <%= @cities %>
+                ✅ You selected: {@cities}
               </span>
               <span :if={!@cities}>
                 ❌ Nothing selected

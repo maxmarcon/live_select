@@ -21,10 +21,10 @@ defmodule LiveSelectWeb.LiveComponentForm do
       <.form for={@form} phx-submit="submit" phx-change="change" phx-target={@myself}>
         <.live_select field={@form[:city_search]} mode={:tags} phx-target={@myself}>
           <:option :let={option}>
-            with custom slot: <%= option.label %>
+            with custom slot: {option.label}
           </:option>
           <:tag :let={option}>
-            with custom slot: <%= option.label %>
+            with custom slot: {option.label}
           </:tag>
         </.live_select>
         <.live_select field={@form[:city_search_custom_clear_single]} phx-target={@myself} allow_clear>
@@ -42,7 +42,7 @@ defmodule LiveSelectWeb.LiveComponentForm do
             custom clear button
           </:clear_button>
         </.live_select>
-        <%= submit("Submit", class: "btn btn-primary") %>
+        {submit("Submit", class: "btn btn-primary")}
       </.form>
     </div>
     """

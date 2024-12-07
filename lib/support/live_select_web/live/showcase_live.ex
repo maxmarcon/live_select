@@ -226,6 +226,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       end
     end
 
+    @spec live_select(nil | maybe_improper_list() | map()) :: Phoenix.LiveView.Rendered.t()
     def live_select(assigns) do
       opts =
         assigns[:opts]
@@ -241,10 +242,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       ~H"""
       <div>
         <span class="text-success">&lt;.live_select</span>
-        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">{my_form[:city_search]}</span>
+        <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&#123;my_form[:city_search]&#125;</span>
         <%= for {key, value} <- @opts, !is_nil(value) do %>
           <%= if value == true do %>
-            <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>
+            <br />&nbsp;&nbsp; <span class="text-success">{key}</span>
           <% else %>
             <br />&nbsp;&nbsp; <span class="text-success"><%= key %></span>=<span class="text-info"><%= @format_value.(value) %></span>
           <% end %>
