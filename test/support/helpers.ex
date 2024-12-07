@@ -81,16 +81,6 @@ defmodule LiveSelect.TestHelpers do
 
   @component_id "my_form_city_search_live_select_component"
 
-  unless macro_exported?(Phoenix.LiveViewTest, :refute_push_event, 4) do
-    defmacro refute_push_event(view, event, payload, timeout \\ 100) do
-      quote do
-        %{proxy: {ref, _topic, _}} = unquote(view)
-
-        refute_receive {^ref, {:push_event, unquote(event), unquote(payload)}}, unquote(timeout)
-      end
-    end
-  end
-
   def select_nth_option(live, n, opts \\ []) do
     opts =
       Keyword.validate!(opts,
