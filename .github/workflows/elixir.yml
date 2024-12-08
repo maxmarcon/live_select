@@ -2,56 +2,59 @@ name: Elixir CI
 
 on:
   push:
-  pull_request:
     branches:
       - main
-
-env:
-  ELIXIR_LATEST: '1.16.0'
+  pull_request:
 
 permissions:
   contents: read
 
 jobs:
   build:
-    name: Build and test with elixir ${{ matrix.elixir }} otp ${{ matrix.otp }}
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         include:
-          - elixir: '1.14.1'
-            otp: '25.0'
-          - elixir: '1.15.0'
-            otp: '26.0'
-          - elixir: '1.16.0'
-            otp: '26.0'
+          - elixir: '1.14'
+            otp: '25'
+          - elixir: '1.17'
+            otp: '27'
+            lint: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
+
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
+
       - name: Install dependencies
         run: mix deps.get
+
       - name: Compile with warnings
-        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
         run: mix compile --warnings-as-errors
+        if: ${{ matrix.lint }}
+
       - name: Compile without warnings
-        if: ${{ matrix.elixir != env.ELIXIR_LATEST}}
         run: mix compile
+        if: ${{ matrix.lint }}
+
       - name: Check format
         run: mix format --check-formatted
-        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
+        if: ${{ matrix.lint }}
+
       - name: Credo
         run: mix credo
-        if: ${{ matrix.elixir == env.ELIXIR_LATEST}}
+        if: ${{ matrix.lint }}
+
       - name: Run tests
         run: mix test
