@@ -266,9 +266,9 @@ defmodule LiveSelectTagsTest do
 
     select_nth_option(live, 2)
 
-    refute_option_removeable(live, sticky_pos)
+    refute_option_removable(live, sticky_pos)
 
-    assert_option_removeable(live, 3 - sticky_pos)
+    assert_option_removable(live, 3 - sticky_pos)
   end
 
   test "can specify alternative labels for tags using maps", %{live: live} do

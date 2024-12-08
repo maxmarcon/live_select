@@ -12,7 +12,7 @@ interface for search-like functionalities with type-ahead. `LiveSelect`s feature
 
 * Single as well as multiple selection
 * Options to configure the behaviour, such as minimum number of characters that trigger an update or the maximum number of selectable options
-* Default styles for daisyUI and tailwindcss, which are fully customizable and can be completely overriden if needed
+* Default styles for daisyUI and tailwindcss, which are fully customizable and can be completely overridden if needed
 * Ability to customize the rendered HTML for dropdown entries and tags using slots.
 
 ### [Try it in the showcase app](https://live-select.fly.dev/) 🔬

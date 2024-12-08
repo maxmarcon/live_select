@@ -17,7 +17,7 @@ do not restore selection after blur it it was cleard by hitting the clear button
 
 ## 1.4.0 (2024-03-18)
 
-* support for assocations and embeds
+* support for associations and embeds
 * add `value_mapper` assign and `decode/1` function
 
 ## 1.3.3 (2024-02-06)
