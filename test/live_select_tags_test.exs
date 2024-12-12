@@ -379,6 +379,45 @@ defmodule LiveSelectTagsTest do
     assert_selected_multiple(live, [%{label: "C", value: 3}, %{label: "E", value: 5}])
   end
 
+  test "can dynamically change the selection - append example", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    stub_options(~w(A B C))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple(live, ~w(A))
+
+    send_update(live, update_selection: fn selection -> selection ++ ["B"] end)
+
+    assert_selected_multiple(live, ~w(A B))
+
+    send_update(live, update_selection: fn selection -> selection ++ ["C"] end)
+
+    assert_selected_multiple(live, ~w(A B C))
+
+    # Avoids duplicates
+    send_update(live, update_selection: fn selection -> selection ++ ["C"] end)
+
+    assert_selected_multiple(live, ~w(A B C))
+  end
+
+  test "can dynamically change the selection - filter example", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?mode=tags")
+
+    send_update(live, value: ~w(A B))
+
+    assert_selected_multiple(live, ~w(A B))
+
+    send_update(live,
+      update_selection: fn selection -> Enum.filter(selection, &(&1.label == "A")) end
+    )
+
+    assert_selected_multiple(live, ~w(A))
+  end
+
   test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 
