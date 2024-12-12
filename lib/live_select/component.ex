@@ -435,13 +435,13 @@ defmodule LiveSelect.Component do
          extra_params
        )
        when active_option >= 0 do
-    option = Enum.at(socket.assigns.options, active_option)
+    option = Enum.at(options, active_option)
 
     if already_selected?(option, selection) do
       pos = get_selection_index(option, selection)
       unselect(socket, pos)
     else
-      select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option), extra_params)
+      select(socket, Enum.at(options, active_option), extra_params)
     end
   end
 
@@ -710,7 +710,6 @@ defmodule LiveSelect.Component do
   defp next_selectable(%{
          options: options,
          active_option: active_option,
-         selection: selection,
          mode: :quick_tags
        }) do
     options
@@ -739,7 +738,6 @@ defmodule LiveSelect.Component do
   defp prev_selectable(%{
          options: options,
          active_option: active_option,
-         selection: selection,
          mode: :quick_tags
        }) do
     options
