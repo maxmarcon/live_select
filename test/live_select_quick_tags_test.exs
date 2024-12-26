@@ -25,26 +25,23 @@ defmodule LiveSelectQuickTagsTest do
     assert_selected_multiple(live, ~w(B D))
   end
 
-  test "already selected options are selectable in the dropdown using keyboard", %{live: live} do
+  test "already selected options can be deselected in the dropdown using keyboard", %{live: live} do
     stub_options(~w(A B C D))
 
     type(live, "ABC")
 
     select_nth_option(live, 2)
+    assert_selected_multiple(live, ~w(B))
 
     type(live, "ABC")
-    navigate(live, 2, :down)
-    keydown(live, "Enter")
+    navigate(live, 3, :down)
+    navigate(live, 1, :up)
 
+    keydown(live, "Enter")
     assert_selected_multiple(live, ~w())
-
-    type(live, "ABC")
-    navigate(live, 10, :down)
-    navigate(live, 10, :up)
-    keydown(live, "Enter")
   end
 
-  test "already selected options are selectable in the dropdown using mouseclick", %{
+  test "already selected options can be deselected in the dropdown using mouseclick", %{
     live: live
   } do
     select_and_open_dropdown(live, 2)
