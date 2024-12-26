@@ -95,6 +95,9 @@ defmodule LiveSelect do
   ## Slots
 
   You can control how your options and tags are rendered by using the `:option` and `:tag` slots.
+  Both slots will be passed an option as argument. In the case of the `:option` slot, the option will have an
+  extra boolean field `:selected`, which will be set to `true` if the option has been selected by the user.
+
   Let's say you want to show some fancy icons next to each option in the dropdown and the tags:
 
   ```elixir
