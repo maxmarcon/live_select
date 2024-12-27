@@ -67,7 +67,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:allow_clear, :boolean)
       field(:debounce, :integer, default: Component.default_opts()[:debounce])
       field(:disabled, :boolean)
-      field(:custom_option_html, :boolean)
+      field(:options_styled_as_checkboxes, :boolean)
       field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
 
@@ -99,7 +99,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :allow_clear,
           :debounce,
           :disabled,
-          :custom_option_html,
+          :options_styled_as_checkboxes,
           :max_selectable,
           :user_defined_options,
           :mode,
@@ -126,7 +126,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       default_opts = Component.default_opts()
 
       settings
-      |> Map.drop([:search_delay, :new, :selection, :custom_option_html])
+      |> Map.drop([:search_delay, :new, :selection, :options_styled_as_checkboxes])
       |> Map.from_struct()
       |> then(
         &if is_nil(&1.style) do
@@ -141,19 +141,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
           (settings.mode != :single && option == :allow_clear)
       end)
       |> Keyword.new()
-      |> then(&maybe_set_classes_for_multiselect/1)
-    end
-
-    defp maybe_set_classes_for_multiselect(opts) do
-      if LiveSelectWeb.ShowcaseLive.quick_tags?(opts[:mode]) do
-        Keyword.put(
-          opts,
-          :selected_option_class,
-          "cursor-pointer font-bold hover:bg-gray-400 rounded"
-        )
-      else
-        opts
-      end
     end
 
     def has_style_errors?(%Ecto.Changeset{errors: errors}) do
@@ -260,7 +247,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
       assigns = assign(assigns, opts: opts, format_value: format_value)
 
       ~H"""
-      <%= if @custom_option_html do %>
+      <%= if @options_styled_as_checkboxes do %>
         <div>
           <span class="text-success">&lt;.live_select</span>
           <br />&nbsp;&nbsp; <span class="text-success">field</span>=<span class="text-info">&#123;my_form[:city_search]&#125;</span>
@@ -341,6 +328,17 @@ defmodule LiveSelectWeb.ShowcaseLive do
         socket
       end
 
+    params =
+      if params["mode"] == "quick_tags" do
+        Map.put_new(
+          params,
+          "selected_option_class",
+          "cursor-pointer font-bold hover:bg-gray-400 rounded"
+        )
+      else
+        params
+      end
+
     changeset =
       Settings.changeset(params)
       |> then(
@@ -355,16 +353,9 @@ defmodule LiveSelectWeb.ShowcaseLive do
       {:ok, settings} ->
         socket.assigns
 
-        attrs =
-          if settings.mode == :quick_select do
-            %{selected_option_class: "cursor-pointer font-bold hover:bg-gray-400 rounded"}
-          else
-            %{}
-          end
-
         socket =
           socket
-          |> assign(:settings_form, Settings.changeset(settings, attrs) |> to_form)
+          |> assign(:settings_form, Settings.changeset(settings, %{}) |> to_form)
           |> update(:schema_module, fn _, %{settings_form: settings_form} ->
             if settings_form[:mode].value == :single, do: CitySearchSingle, else: CitySearchMany
           end)

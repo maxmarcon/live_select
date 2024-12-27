@@ -539,11 +539,6 @@ defmodule LiveSelect.ComponentTest do
            ]
   end
 
-  describe "in quick_tags mode" do
-    test "" do
-    end
-  end
-
   for style <- [:daisyui, :tailwind, :none, nil] do
     @style style
 

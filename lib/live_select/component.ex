@@ -441,7 +441,7 @@ defmodule LiveSelect.Component do
       pos = get_selection_index(option, selection)
       unselect(socket, pos)
     else
-      select(socket, Enum.at(options, active_option), extra_params)
+      select(socket, option, extra_params)
     end
   end
 
@@ -455,15 +455,10 @@ defmodule LiveSelect.Component do
 
   defp select(socket, selected, extra_params) do
     selection =
-      case socket.assigns.mode do
-        :tags ->
-          socket.assigns.selection ++ [selected]
-
-        :quick_tags ->
-          socket.assigns.selection ++ [selected]
-
-        _ ->
-          [selected]
+      if socket.assigns.mode in [:tags, :quick_tags] do
+        socket.assigns.selection ++ [selected]
+      else
+        [selected]
       end
 
     socket
@@ -687,11 +682,7 @@ defmodule LiveSelect.Component do
 
   defp encode(value), do: Jason.encode!(value)
 
-  def already_selected?(idx, selection) when is_integer(idx) do
-    Enum.at(selection, idx) != nil
-  end
-
-  def already_selected?(option, selection) do
+  defp already_selected?(option, selection) do
     Enum.any?(selection, fn item -> item.label == option.label end)
   end
 
@@ -710,19 +701,14 @@ defmodule LiveSelect.Component do
   defp next_selectable(%{
          options: options,
          active_option: active_option,
-         mode: :quick_tags
+         selection: selection,
+         mode: mode
        }) do
     options
     |> Enum.with_index()
-    |> Enum.reject(fn {opt, _} -> active_option == opt end)
-    |> Enum.map(fn {_, idx} -> idx end)
-    |> Enum.find(active_option, &(&1 > active_option))
-  end
-
-  defp next_selectable(%{options: options, active_option: active_option, selection: selection}) do
-    options
-    |> Enum.with_index()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
+    |> Enum.reject(fn {opt, _} ->
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+    end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 > active_option))
   end
@@ -738,21 +724,15 @@ defmodule LiveSelect.Component do
   defp prev_selectable(%{
          options: options,
          active_option: active_option,
-         mode: :quick_tags
+         selection: selection,
+         mode: mode
        }) do
     options
     |> Enum.with_index()
     |> Enum.reverse()
-    |> Enum.reject(fn {opt, _} -> active_option == opt end)
-    |> Enum.map(fn {_, idx} -> idx end)
-    |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
-  end
-
-  defp prev_selectable(%{options: options, active_option: active_option, selection: selection}) do
-    options
-    |> Enum.with_index()
-    |> Enum.reverse()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
+    |> Enum.reject(fn {opt, _} ->
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+    end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
   end

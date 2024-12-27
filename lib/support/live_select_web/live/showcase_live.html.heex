@@ -72,8 +72,8 @@
               {checkbox(@settings_form, :disabled, class: "toggle")}
             <% end %>
             <%= label class: "label cursor-pointer" do %>
-              <span class="label-text mr-1">Custom option HTML:&nbsp;</span>
-              <%= checkbox(@settings_form, :custom_option_html, class: "toggle") %>
+              <span class="label-text mr-1">Options styles as checkboxes:&nbsp;</span>
+              <%= checkbox(@settings_form, :options_styled_as_checkboxes, class: "toggle") %>
             <% end %>
           </div>
           <div class="form-control max-w-sm">
@@ -292,7 +292,7 @@
                 {live_select_assigns(@settings_form.source)}
               >
                 <:option :let={%{label: label, value: _value, selected: selected}}>
-                  <%= if @settings_form[:custom_option_html].value do %>
+                  <%= if @settings_form[:options_styled_as_checkboxes].value do %>
                     <div class="flex justify-content items-center">
                       <input
                         class="rounded w-4 h-4 mr-3 border border-border"
@@ -346,7 +346,7 @@
           </button>
         </div>
         <Render.live_select
-          custom_option_html={@settings_form[:custom_option_html].value}
+          options_styled_as_checkboxes={@settings_form[:options_styled_as_checkboxes].value}
           opts={Settings.live_select_opts(@settings_form.data, true)}
         />
       </div>

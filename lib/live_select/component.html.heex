@@ -9,7 +9,7 @@
   data-debounce={@debounce}
 >
   <div class={class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)}>
-    <%= if (@mode == :tags || @mode == :quick_tags) && Enum.any?(@selection) do %>
+    <%= if (@mode in [:tags, :quick_tags]) && Enum.any?(@selection) do %>
       <%= for {option, idx} <- Enum.with_index(@selection) do %>
         <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
           <%= if @tag == [] do %>
