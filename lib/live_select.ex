@@ -381,7 +381,7 @@ defmodule LiveSelect do
     values: [:single, :tags, :quick_tags],
     default: Component.default_opts()[:mode],
     doc:
-      "either `:single` (for single selection), `:tags` (for multiple selection using tags), or :quick_tags (multiple selection but tags can be selected/deselected in quick succession)"
+      "either `:single` (for single selection), `:tags` (for multiple selection using tags), or `:quick_tags` (multiple selection but tags can be selected/deselected in quick succession)"
 
   attr :options, :list,
     doc:
