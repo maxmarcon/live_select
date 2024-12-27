@@ -78,7 +78,7 @@ defmodule LiveSelect.Component do
     none: []
   ]
 
-  @modes ~w(single tags)a
+  @modes ~w(single tags quick_tags)a
 
   @impl true
   def mount(socket) do
@@ -429,25 +429,43 @@ defmodule LiveSelect.Component do
 
   defp maybe_select(%{assigns: %{active_option: -1}} = socket, _extra_params), do: socket
 
+  defp maybe_select(
+         %{assigns: %{active_option: active_option, options: options, selection: selection}} =
+           socket,
+         extra_params
+       )
+       when active_option >= 0 do
+    option = Enum.at(options, active_option)
+
+    if already_selected?(option, selection) do
+      pos = get_selection_index(option, selection)
+      unselect(socket, pos)
+    else
+      select(socket, option, extra_params)
+    end
+  end
+
   defp maybe_select(socket, extra_params) do
     select(socket, Enum.at(socket.assigns.options, socket.assigns.active_option), extra_params)
   end
 
+  defp get_selection_index(option, selection) do
+    Enum.find_index(selection, fn %{label: label} -> label == option.label end)
+  end
+
   defp select(socket, selected, extra_params) do
     selection =
-      case socket.assigns.mode do
-        :tags ->
-          socket.assigns.selection ++ [selected]
-
-        _ ->
-          [selected]
+      if socket.assigns.mode in [:tags, :quick_tags] do
+        socket.assigns.selection ++ [selected]
+      else
+        [selected]
       end
 
     socket
     |> assign(
-      active_option: -1,
+      active_option: if(quick_tags_mode?(socket), do: socket.assigns.active_option, else: -1),
       selection: selection,
-      hide_dropdown: true
+      hide_dropdown: not quick_tags_mode?(socket)
     )
     |> maybe_save_selection()
     |> client_select(Map.merge(%{input_event: true}, extra_params))
@@ -521,7 +539,7 @@ defmodule LiveSelect.Component do
     List.wrap(normalize_selection_value(value, options ++ current_selection, value_mapper))
   end
 
-  defp update_selection(value, current_selection, options, :tags, value_mapper) do
+  defp update_selection(value, current_selection, options, _mode, value_mapper) do
     value = if Enumerable.impl_for(value), do: value, else: [value]
 
     Enum.map(value, &normalize_selection_value(&1, options ++ current_selection, value_mapper))
@@ -665,7 +683,11 @@ defmodule LiveSelect.Component do
   defp encode(value), do: Jason.encode!(value)
 
   defp already_selected?(option, selection) do
-    option.label in Enum.map(selection, & &1.label)
+    Enum.any?(selection, fn item -> item.label == option.label end)
+  end
+
+  defp quick_tags_mode?(socket) do
+    socket.assigns.mode == :quick_tags
   end
 
   defp next_selectable(%{
@@ -676,10 +698,17 @@ defmodule LiveSelect.Component do
        when max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
 
-  defp next_selectable(%{options: options, active_option: active_option, selection: selection}) do
+  defp next_selectable(%{
+         options: options,
+         active_option: active_option,
+         selection: selection,
+         mode: mode
+       }) do
     options
     |> Enum.with_index()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
+    |> Enum.reject(fn {opt, _} ->
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+    end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 > active_option))
   end
@@ -692,11 +721,18 @@ defmodule LiveSelect.Component do
        when max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
 
-  defp prev_selectable(%{options: options, active_option: active_option, selection: selection}) do
+  defp prev_selectable(%{
+         options: options,
+         active_option: active_option,
+         selection: selection,
+         mode: mode
+       }) do
     options
     |> Enum.with_index()
     |> Enum.reverse()
-    |> Enum.reject(fn {opt, _} -> active_option == opt || already_selected?(opt, selection) end)
+    |> Enum.reject(fn {opt, _} ->
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+    end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
   end

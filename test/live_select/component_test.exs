@@ -427,7 +427,7 @@ defmodule LiveSelect.ComponentTest do
   test "raises if unknown mode is given", %{form: form} do
     assert_raise(
       RuntimeError,
-      ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags]),
+      ~s(Invalid mode: "not_a_valid_mode". Mode must be one of: [:single, :tags, :quick_tags]),
       fn ->
         render_component(&LiveSelect.live_select/1,
           field: form[:input],
