@@ -1,3 +1,8 @@
+## 1.5.0 (2024-12-27)
+
+* new quick_tags mode 
+* showcase app: add toggle to style options as checkboxes
+
 ## 1.4.4 (2024-12-07)
 
 * support for LiveView 1.0.0
