@@ -110,7 +110,7 @@ defmodule LiveSelect.MixProject do
         "CHANGELOG.md": []
       ],
       filter_modules: ~r/LiveSelect($|\.)/,
-      groups_for_functions: [
+      groups_for_docs: [
         Components: &(&1[:type] == :component)
       ]
     ]

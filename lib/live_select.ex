@@ -35,6 +35,14 @@ defmodule LiveSelect do
 
   The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
+  ## Quick tags mode
+
+  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_quick_tags.gif" width="300" />
+
+  When `:quick_tags` mode is enabled, the user can select multiple entries, but the dropdown stays open after selection.
+  This allows the user to select additional entries in quick succession. Also, the entries can be deselected via the dropdown (as well as by clicking on the removable tags).
+  The dropdown closes when the `LiveSelect` element loses focus.
+
   ## Options
 
   You can set the initial list of options the user can choose from with the `options` assign.
@@ -226,11 +234,6 @@ defmodule LiveSelect do
     {:noreply, socket}
   end
   ```
-  ### Quick tags mode
-
-  Quick tags work like tags except that the dropdown stays open after selection. This allows the user to add elements to the selection
-  in quick succession. Also, the user can deselect already selected options via the dropdown. The dropdown closes when the LiveSelect component
-  loses focus.
 
   ### Multiple LiveSelect inputs in the same LiveView
 
