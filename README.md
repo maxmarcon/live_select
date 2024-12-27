@@ -25,6 +25,10 @@ interface for search-like functionalities with type-ahead. `LiveSelect`s feature
 
 ![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_tags.gif)
 
+### Multiple selection (quick_tags mode)
+
+![DEMO](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_quick_tags.gif)
+
 ## Usage Example 🧭
 
 _Template:_
@@ -199,5 +203,5 @@ Tests that require a LiveView use the showcase app as the parent LiveView.
 - [X] Enable multiple selection mode
 - [X] Expose as function component (and drop LV 0.17 support)
 - [X] Add cheatsheet
+- [x] Additional multiple selection mode 
 - [ ] Add section to document testing strategies
-- [ ] Additional multiple selection mode 

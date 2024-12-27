@@ -226,6 +226,11 @@ defmodule LiveSelect do
     {:noreply, socket}
   end
   ```
+  ### Quick tags mode
+
+  Quick tags work like tags except that the dropdown stays open after selection. This allows the user to add elements to the selection
+  in quick succession. Also, the user can deselect already selected options via the dropdown. The dropdown closes when the LiveSelect component
+  loses focus.
 
   ### Multiple LiveSelect inputs in the same LiveView
 
