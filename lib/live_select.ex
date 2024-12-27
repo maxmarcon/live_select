@@ -429,6 +429,10 @@ defmodule LiveSelect do
     doc:
       "one of `:tailwind`, `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
+  slot(:caret, doc: "optional slot for rendering a caret when no option has been selected.") do
+    attr :class, :list
+  end
+
   slot(:option,
     doc:
       "optional slot that renders an option in the dropdown. The option's data is available via `:let`"

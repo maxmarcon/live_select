@@ -75,6 +75,9 @@
         <% end %>
       </button>
     <% end %>
+    <%= if @mode == :single && @caret != [] && @selection == [] do %>
+      <div :for={caret <- @caret} class={caret[:class]}><%= render_slot(caret) %></div>
+    <% end %>
   </div>
   <%= if @mode == :single do %>
     <%= hidden_input(@field.form, @field.field,
