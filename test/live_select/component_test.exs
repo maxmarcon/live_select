@@ -606,7 +606,7 @@ defmodule LiveSelect.ComponentTest do
               )
 
             assert Floki.attribute(component, selectors()[@element], "class") ==
-                     ~W(foo goo)
+                     ["foo goo"]
           end
         end
 
