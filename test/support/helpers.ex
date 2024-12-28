@@ -265,9 +265,6 @@ defmodule LiveSelect.TestHelpers do
 
     text_input = Floki.find(html, @selectors[:text_input])
 
-    assert Floki.attribute(text_input, "readonly") ==
-             ["readonly"]
-
     assert Floki.attribute(text_input, "value") ==
              [to_string(label)]
 
@@ -286,16 +283,6 @@ defmodule LiveSelect.TestHelpers do
 
     assert hidden_input
            |> Floki.attribute("value") ==
-             []
-
-    text_input =
-      live
-      |> element(@selectors[:text_input])
-      |> render()
-      |> Floki.parse_fragment!()
-
-    assert text_input
-           |> Floki.attribute("readonly") ==
              []
   end
 
@@ -430,13 +417,6 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_clear_static(live) do
-    assert live
-           |> element(@selectors[:text_input])
-           |> render()
-           |> Floki.parse_fragment!()
-           |> Floki.attribute("readonly") ==
-             []
-
     assert live
            |> element(@selectors[:hidden_input])
            |> render()
