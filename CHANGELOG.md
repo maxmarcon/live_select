@@ -1,3 +1,7 @@
+## 1.5.2 (2024-12-28)
+
+* Fix [bug](https://github.com/maxmarcon/live_select/issues/70) where the keyboard doesn't show on some mobile browsers if an element is already selected in single mode
+
 ## 1.5.1 (2024-12-28)
 
 * Add unavailable_option_class to style options that cannot be selected because of max_selectable > 0
