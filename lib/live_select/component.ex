@@ -385,17 +385,6 @@ defmodule LiveSelect.Component do
   defp maybe_select(socket, extra_params \\ %{})
 
   defp maybe_select(
-         %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
-         _extra_params
-       )
-       when max_selectable > 0 and length(selection) >= max_selectable do
-    assign(socket,
-      active_option: -1,
-      hide_dropdown: true
-    )
-  end
-
-  defp maybe_select(
          %{
            assigns: %{
              current_text: current_text,
@@ -451,6 +440,15 @@ defmodule LiveSelect.Component do
 
   defp get_selection_index(option, selection) do
     Enum.find_index(selection, fn %{label: label} -> label == option.label end)
+  end
+
+  defp select(
+         %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
+         _selected,
+         _extra_params
+       )
+       when max_selectable > 0 and length(selection) >= max_selectable do
+    assign(socket, hide_dropdown: not quick_tags_mode?(socket))
   end
 
   defp select(socket, selected, extra_params) do
@@ -693,9 +691,10 @@ defmodule LiveSelect.Component do
   defp next_selectable(%{
          selection: selection,
          active_option: active_option,
-         max_selectable: max_selectable
+         max_selectable: max_selectable,
+         mode: mode
        })
-       when max_selectable > 0 and length(selection) >= max_selectable,
+       when mode != :quick_tags and max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
 
   defp next_selectable(%{
@@ -716,9 +715,10 @@ defmodule LiveSelect.Component do
   defp prev_selectable(%{
          selection: selection,
          active_option: active_option,
-         max_selectable: max_selectable
+         max_selectable: max_selectable,
+         mode: mode
        })
-       when max_selectable > 0 and length(selection) >= max_selectable,
+       when mode != :quick_tags and max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
 
   defp prev_selectable(%{

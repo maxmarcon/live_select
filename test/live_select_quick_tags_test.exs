@@ -193,7 +193,7 @@ defmodule LiveSelectQuickTagsTest do
 
   describe "when max_selectable option is set" do
     setup %{conn: conn} do
-      {:ok, live, _html} = live(conn, "/?mode=tags&max_selectable=2")
+      {:ok, live, _html} = live(conn, "/?mode=quick_tags&max_selectable=2")
 
       %{live: live}
     end
@@ -205,17 +205,45 @@ defmodule LiveSelectQuickTagsTest do
 
       select_nth_option(live, 2, method: :key)
 
+      select_nth_option(live, 4, method: :click)
+
+      assert_selected_multiple(live, ~w(B D))
+
+      select_nth_option(live, 3, method: :click)
+
+      assert_selected_multiple_static(live, ~w(B D))
+    end
+
+    test "can deselect option by clicking on option in dropdown", %{live: live} do
+      stub_options(~w(A B C D))
+
       type(live, "ABC")
+
+      select_nth_option(live, 2, method: :key)
 
       select_nth_option(live, 4, method: :click)
 
       assert_selected_multiple(live, ~w(B D))
 
+      select_nth_option(live, 4, method: :click)
+
+      assert_selected_multiple(live, ~w(B))
+    end
+
+    test "can deselect option by navigating to it and hitting enter", %{live: live} do
+      stub_options(~w(A B C D))
+
       type(live, "ABC")
 
-      select_nth_option(live, 3, method: :click)
+      select_nth_option(live, 2, method: :key)
 
-      assert_selected_multiple_static(live, ~w(B D))
+      select_nth_option(live, 4, method: :click)
+
+      assert_selected_multiple(live, ~w(B D))
+
+      select_nth_option(live, 4, method: :key)
+
+      assert_selected_multiple(live, ~w(B))
     end
   end
 

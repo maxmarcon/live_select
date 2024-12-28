@@ -203,5 +203,5 @@ Tests that require a LiveView use the showcase app as the parent LiveView.
 - [X] Enable multiple selection mode
 - [X] Expose as function component (and drop LV 0.17 support)
 - [X] Add cheatsheet
-- [x] Additional multiple selection mode 
+- [X] Additional multiple selection mode 
 - [ ] Add section to document testing strategies
