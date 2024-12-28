@@ -1,3 +1,5 @@
+* Fix can't remove items in quick_tags mode via dropdown with max_selectable
+
 ## 1.5.0 (2024-12-27)
 
 * new quick_tags mode 
