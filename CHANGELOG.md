@@ -1,3 +1,6 @@
+## 1.5.1 (2024-12-28)
+
+* Add unavailable_option_class to style options that cannot be selected because of max_selectable > 0
 * Fix can't remove items in quick_tags mode via dropdown with max_selectable
 
 ## 1.5.0 (2024-12-27)

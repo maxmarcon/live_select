@@ -8,39 +8,43 @@ defmodule LiveSelect.TestHelpers do
 
   @expected_class [
     daisyui: [
-      active_option: ~S(active),
-      available_option: ~S(cursor-pointer),
-      clear_button: ~S(hidden cursor-pointer),
-      clear_tag_button: ~S(cursor-pointer),
-      container: ~S(dropdown dropdown-open),
+      active_option: ~W(active),
+      available_option: ~W(cursor-pointer),
+      unavailable_option: ~W(disabled),
+      clear_button: ~W(hidden cursor-pointer),
+      clear_tag_button: ~W(cursor-pointer),
+      container: ~W(dropdown dropdown-open),
       dropdown:
-        ~S(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
-      selected_option: ~S(disabled),
-      tag: ~S(p-1.5 text-sm badge badge-primary),
-      tags_container: ~S(flex flex-wrap gap-1 p-1),
-      text_input: ~S(input input-bordered w-full pr-6),
-      text_input_selected: ~S(input-primary)
+        ~W(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
+      option: nil,
+      selected_option: ~W(cursor-pointer font-bold),
+      text_input: ~W(input input-bordered w-full pr-6),
+      text_input_selected: ~W(input-primary),
+      tags_container: ~W(flex flex-wrap gap-1 p-1),
+      tag: ~W(p-1.5 text-sm badge badge-primary)
     ],
     tailwind: [
-      active_option: ~S(text-white bg-gray-600),
-      available_option: ~S(cursor-pointer hover:bg-gray-400 rounded),
-      clear_button: ~S(hidden cursor-pointer),
-      clear_tag_button: ~S(cursor-pointer),
-      container: ~S(h-full text-black relative),
-      dropdown: ~S(absolute rounded-md shadow z-50 bg-gray-100 inset-x-0 top-full),
-      option: ~S(rounded px-4 py-1),
-      selected_option: ~S(text-gray-400),
-      tag: ~S(p-1 text-sm rounded-lg bg-blue-400 flex),
-      tags_container: ~S(flex flex-wrap gap-1 p-1),
+      active_option: ~W(text-white bg-gray-600),
+      available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
+      unavailable_option: ~W(text-gray-400),
+      clear_button: ~W(hidden cursor-pointer),
+      clear_tag_button: ~W(cursor-pointer),
+      container: ~W(h-full text-black relative),
+      dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 inset-x-0 top-full),
+      option: ~W(rounded px-4 py-1),
+      selected_option: ~W(cursor-pointer font-bold hover:bg-gray-400 rounded),
       text_input:
-        ~S(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
-      text_input_selected: ~S(border-gray-600 text-gray-600)
+        ~W(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
+      text_input_selected: ~W(border-gray-600 text-gray-600),
+      tags_container: ~W(flex flex-wrap gap-1 p-1),
+      tag: ~W(p-1 text-sm rounded-lg bg-blue-400 flex)
     ]
   ]
   def expected_class(), do: @expected_class
 
   @override_class_option [
     available_option: :available_option_class,
+    unavailable_option: :unavailable_option_class,
     clear_button: :clear_button_class,
     clear_tag_button: :clear_tag_button_class,
     container: :container_class,
@@ -340,45 +344,80 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
-  def assert_selected_option_class(_live, _selected_pos, ""), do: true
+  def assert_selected_option_class(_html, _selected_pos, []), do: true
 
-  def assert_selected_option_class(html, selected_pos, selected_class) when is_binary(html) do
+  def assert_selected_option_class(html, selected_pos, selected_class)
+      when is_binary(html) and is_list(selected_class) do
     element_classes =
       html
-      |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
+      |> Floki.attribute("ul > li", "class")
       |> Enum.map(&String.trim/1)
 
     # ensure we're checking both selected and unselected elements
-    assert length(element_classes) > selected_pos || selected_pos > 1
+    assert length(element_classes) > selected_pos
+    selected_class = Enum.join(selected_class, " ")
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do
-        assert String.contains?(element_class, selected_class)
+        assert element_class == selected_class
       else
-        refute String.contains?(element_class, selected_class)
+        assert element_class != selected_class
       end
     end
   end
 
-  def assert_available_option_class(_live, _selected_pos, ""), do: true
+  def assert_selected_option_class(live, selected_pos, selected_class),
+    do: assert_selected_option_class(render(live), selected_pos, selected_class)
 
-  def assert_available_option_class(html, selected_pos, available_class) when is_binary(html) do
+  def assert_available_option_class(_html, _selected_pos, []), do: true
+
+  def assert_available_option_class(html, selected_pos, available_class)
+      when is_binary(html) and is_list(available_class) do
     element_classes =
       html
-      |> Floki.attribute("ul[name=live-select-dropdown] > li", "class")
+      |> Floki.attribute("ul > li", "class")
       |> Enum.map(&String.trim/1)
 
     # ensure we're checking both selected and unselected elements
-    assert length(element_classes) > selected_pos || selected_pos > 1
+    assert length(element_classes) > selected_pos
+    available_class = Enum.join(available_class, " ")
 
     for {element_class, idx} <- Enum.with_index(element_classes, 1) do
       if idx == selected_pos do
-        refute String.contains?(element_class, available_class)
+        assert element_class != available_class
       else
-        assert String.contains?(element_class, available_class)
+        assert element_class == available_class
       end
     end
   end
+
+  def assert_available_option_class(live, selected_pos, available_class),
+    do: assert_available_option_class(render(live), selected_pos, available_class)
+
+  def assert_unavailable_option_class(_html, _selected_pos, []), do: true
+
+  def assert_unavailable_option_class(html, selected_pos, unavailable_class)
+      when is_binary(html) and is_list(unavailable_class) do
+    element_classes =
+      html
+      |> Floki.attribute("ul > li", "class")
+      |> Enum.map(&String.trim/1)
+
+    # ensure we're checking both selected and unselected elements
+    assert length(element_classes) > selected_pos
+    unavailable_class = Enum.join(unavailable_class, " ")
+
+    for {element_class, idx} <- Enum.with_index(element_classes, 1) do
+      if idx == selected_pos do
+        assert element_class != unavailable_class
+      else
+        assert element_class == unavailable_class
+      end
+    end
+  end
+
+  def assert_unavailable_option_class(live, selected_pos, unavailable_class),
+    do: assert_unavailable_option_class(render(live), selected_pos, unavailable_class)
 
   def assert_clear(live, input_event \\ true) do
     assert_clear_static(live)

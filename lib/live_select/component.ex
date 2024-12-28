@@ -14,6 +14,7 @@ defmodule LiveSelect.Component do
     active_option_class: nil,
     allow_clear: false,
     available_option_class: nil,
+    unavailable_option_class: nil,
     clear_button_class: nil,
     clear_button_extra_class: nil,
     clear_tag_button_class: nil,
@@ -48,12 +49,13 @@ defmodule LiveSelect.Component do
     tailwind: [
       active_option: ~W(text-white bg-gray-600),
       available_option: ~W(cursor-pointer hover:bg-gray-400 rounded),
+      unavailable_option: ~W(text-gray-400),
       clear_button: ~W(hidden cursor-pointer),
       clear_tag_button: ~W(cursor-pointer),
       container: ~W(h-full text-black relative),
       dropdown: ~W(absolute rounded-md shadow z-50 bg-gray-100 inset-x-0 top-full),
       option: ~W(rounded px-4 py-1),
-      selected_option: ~W(text-gray-400),
+      selected_option: ~W(cursor-pointer font-bold hover:bg-gray-400 rounded),
       text_input:
         ~W(rounded-md w-full disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:text-gray-400 pr-6),
       text_input_selected: ~W(border-gray-600 text-gray-600),
@@ -63,13 +65,14 @@ defmodule LiveSelect.Component do
     daisyui: [
       active_option: ~W(active),
       available_option: ~W(cursor-pointer),
+      unavailable_option: ~W(disabled),
       clear_button: ~W(hidden cursor-pointer),
       clear_tag_button: ~W(cursor-pointer),
       container: ~W(dropdown dropdown-open),
       dropdown:
         ~W(dropdown-content z-[1] menu menu-compact shadow rounded-box bg-base-200 p-1 w-full),
       option: nil,
-      selected_option: ~W(disabled),
+      selected_option: ~W(cursor-pointer font-bold),
       text_input: ~W(input input-bordered w-full pr-6),
       text_input_selected: ~W(input-primary),
       tags_container: ~W(flex flex-wrap gap-1 p-1),

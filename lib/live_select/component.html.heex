@@ -107,9 +107,16 @@
     <ul class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}>
       <%= for {option, idx} <- Enum.with_index(@options) do %>
         <li class={
-          if already_selected?(option, @selection),
-            do: class(@style, :selected_option, @selected_option_class),
-            else: class(@style, :available_option, @available_option_class)
+          cond do
+            already_selected?(option, @selection) ->
+              class(@style, :selected_option, @selected_option_class)
+
+            @max_selectable > 0 && length(@selection) >= @max_selectable ->
+              class(@style, :unavailable_option, @unavailable_option_class)
+
+            true ->
+              class(@style, :available_option, @available_option_class)
+          end
         }>
           <div
             class={

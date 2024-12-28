@@ -44,6 +44,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
     @class_options [
       :active_option_class,
       :available_option_class,
+      :unavailable_option_class,
       :clear_button_class,
       :clear_button_extra_class,
       :container_class,
@@ -326,17 +327,6 @@ defmodule LiveSelectWeb.ShowcaseLive do
         |> assign(:events, [])
       else
         socket
-      end
-
-    params =
-      if params["mode"] == "quick_tags" do
-        Map.put_new(
-          params,
-          "selected_option_class",
-          "cursor-pointer font-bold hover:bg-gray-400 rounded"
-        )
-      else
-        params
       end
 
     changeset =

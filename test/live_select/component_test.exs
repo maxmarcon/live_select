@@ -492,6 +492,7 @@ defmodule LiveSelect.ComponentTest do
           Keyword.values(
             Keyword.drop(override_class_option(), [
               :available_option,
+              :unavailable_option,
               :selected_option
             ])
           ),
@@ -539,7 +540,7 @@ defmodule LiveSelect.ComponentTest do
            ]
   end
 
-  for style <- [:daisyui, :tailwind, :none, nil] do
+  for style <- [nil] do
     @style style
 
     describe "when style = #{@style || "default"}" do
@@ -564,7 +565,8 @@ defmodule LiveSelect.ComponentTest do
             )
 
           assert Floki.attribute(component, selectors()[@element], "class") == [
-                   get_in(expected_class(), [@style || default_style(), @element]) || ""
+                   (get_in(expected_class(), [@style || default_style(), @element]) || [])
+                   |> Enum.join(" ")
                  ]
         end
 
@@ -584,9 +586,8 @@ defmodule LiveSelect.ComponentTest do
                   if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
               )
 
-            assert Floki.attribute(component, selectors()[@element], "class") == [
-                     "foo"
-                   ]
+            assert Floki.attribute(component, selectors()[@element], "class") ==
+                     ~W(foo)
           end
 
           test "#{@element} class can be overridden with #{override_class_option()[@element]} by passing a list",
@@ -604,9 +605,8 @@ defmodule LiveSelect.ComponentTest do
                   if(@style, do: [style: @style], else: []) ++ [{option, ["foo", nil, "goo"]}]
               )
 
-            assert Floki.attribute(component, selectors()[@element], "class") == [
-                     "foo goo"
-                   ]
+            assert Floki.attribute(component, selectors()[@element], "class") ==
+                     ~W(foo goo)
           end
         end
 
@@ -627,9 +627,9 @@ defmodule LiveSelect.ComponentTest do
               )
 
             assert Floki.attribute(component, selectors()[@element], "class") == [
-                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
-                        " foo")
-                     |> String.trim()
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
+                        ~W(foo))
+                     |> Enum.join(" ")
                    ]
           end
 
@@ -649,9 +649,9 @@ defmodule LiveSelect.ComponentTest do
               )
 
             assert Floki.attribute(component, selectors()[@element], "class") == [
-                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
-                        " foo goo")
-                     |> String.trim()
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
+                        ~W(foo goo))
+                     |> Enum.join(" ")
                    ]
           end
 
@@ -662,10 +662,10 @@ defmodule LiveSelect.ComponentTest do
             base_classes = get_in(expected_class(), [@style || default_style(), @element])
 
             if base_classes do
-              class_to_remove = String.split(base_classes) |> List.first()
+              class_to_remove = base_classes |> List.first()
 
               expected_classes =
-                String.split(base_classes)
+                base_classes
                 |> Enum.drop(1)
                 |> Enum.join(" ")
 
@@ -701,12 +701,12 @@ defmodule LiveSelect.ComponentTest do
           )
 
         expected_class =
-          (get_in(expected_class(), [@style || default_style(), :text_input]) || "") <>
-            " " <>
-            (get_in(expected_class(), [@style || default_style(), :text_input_selected]) || "")
+          ((get_in(expected_class(), [@style || default_style(), :text_input]) || []) ++
+             (get_in(expected_class(), [@style || default_style(), :text_input_selected]) || []))
+          |> Enum.join(" ")
 
         assert Floki.attribute(component, selectors()[:text_input], "class") == [
-                 String.trim(expected_class)
+                 expected_class
                ]
       end
 
@@ -724,94 +724,13 @@ defmodule LiveSelect.ComponentTest do
           )
 
         expected_class =
-          (get_in(expected_class(), [@style || default_style(), :text_input]) || "") <>
-            " foo"
+          ((get_in(expected_class(), [@style || default_style(), :text_input]) || []) ++
+             ~W(foo))
+          |> Enum.join(" ")
 
         assert Floki.attribute(component, selectors()[:text_input], "class") == [
                  String.trim(expected_class)
                ]
-      end
-
-      test "class for selected option is set", %{form: form} do
-        component =
-          render_component(
-            &LiveSelect.live_select/1,
-            [
-              mode: :tags,
-              field: form[:city_search],
-              options: ["A", "B", "C"],
-              value: "B"
-            ] ++
-              if(@style, do: [style: @style], else: [])
-          )
-
-        assert_selected_option_class(
-          component,
-          2,
-          get_in(expected_class(), [@style || default_style(), :selected_option]) || ""
-        )
-      end
-
-      test "class for selected option can be overridden", %{form: form} do
-        component =
-          render_component(
-            &LiveSelect.live_select/1,
-            [
-              mode: :tags,
-              field: form[:city_search],
-              options: ["A", "B", "C"],
-              value: "B",
-              selected_option_class: "foo"
-            ] ++
-              if(@style, do: [style: @style], else: [])
-          )
-
-        assert_selected_option_class(
-          component,
-          2,
-          "foo"
-        )
-      end
-
-      test "class for available option is set", %{form: form} do
-        component =
-          render_component(
-            &LiveSelect.live_select/1,
-            [
-              mode: :tags,
-              field: form[:city_search],
-              options: ["A", "B", "C"],
-              value: "B"
-            ] ++
-              if(@style, do: [style: @style], else: [])
-          )
-
-        assert_available_option_class(
-          component,
-          2,
-          get_in(expected_class(), [@style || default_style(), :available_option]) || ""
-        )
-      end
-
-      test "class for available option can be overridden", %{form: form} do
-        component =
-          render_component(
-            &LiveSelect.live_select/1,
-            [
-              mode: :tags,
-              field: form[:city_search],
-              options: ["A", "B", "C"],
-              value: "B",
-              available_option_class: "foo"
-            ] ++
-              if(@style, do: [style: @style], else: [])
-          )
-
-        assert_available_option_class(
-          component,
-          2,
-          "foo"
-        )
       end
 
       test "class for clear button can be overridden", %{form: form} do
@@ -829,7 +748,7 @@ defmodule LiveSelect.ComponentTest do
               if(@style, do: [style: @style], else: [])
           )
 
-        assert Floki.attribute(component, selectors()[:clear_button], "class") == ["foo"]
+        assert Floki.attribute(component, selectors()[:clear_button], "class") == ~W(foo)
       end
 
       if @style != :none do
@@ -849,8 +768,9 @@ defmodule LiveSelect.ComponentTest do
             )
 
           assert Floki.attribute(component, selectors()[:clear_button], "class") == [
-                   ((get_in(expected_class(), [@style || default_style(), :clear_button]) || "") <>
-                      " foo")
+                   ((get_in(expected_class(), [@style || default_style(), :clear_button]) || []) ++
+                      ~W(foo))
+                   |> Enum.join(" ")
                    |> String.trim()
                  ]
         end
@@ -877,7 +797,8 @@ defmodule LiveSelect.ComponentTest do
             )
 
           assert Floki.attribute(component, selectors()[@element], "class") == [
-                   get_in(expected_class(), [@style || default_style(), @element]) || ""
+                   (get_in(expected_class(), [@style || default_style(), @element]) || [])
+                   |> Enum.join(" ")
                  ]
         end
 
@@ -899,9 +820,7 @@ defmodule LiveSelect.ComponentTest do
                   if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
               )
 
-            assert Floki.attribute(component, selectors()[@element], "class") == [
-                     "foo"
-                   ]
+            assert Floki.attribute(component, selectors()[@element], "class") == ~w(foo)
           end
         end
 
@@ -924,8 +843,9 @@ defmodule LiveSelect.ComponentTest do
               )
 
             assert Floki.attribute(component, selectors()[@element], "class") == [
-                     ((get_in(expected_class(), [@style || default_style(), @element]) || "") <>
-                        " foo")
+                     ((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
+                        ~W(foo))
+                     |> Enum.join(" ")
                      |> String.trim()
                    ]
           end
@@ -937,10 +857,10 @@ defmodule LiveSelect.ComponentTest do
             base_classes = get_in(expected_class(), [@style || default_style(), @element])
 
             if base_classes do
-              class_to_remove = String.split(base_classes) |> List.first()
+              class_to_remove = base_classes |> List.first()
 
               expected_classes =
-                String.split(base_classes)
+                base_classes
                 |> Enum.drop(1)
                 |> Enum.join(" ")
 

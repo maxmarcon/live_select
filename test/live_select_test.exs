@@ -848,6 +848,115 @@ defmodule LiveSelectTest do
           "foo"
         )
       end
+
+      test "class for selected option is set", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_selected_option_class(
+          live,
+          2,
+          get_in(expected_class(), [@style || default_style(), :selected_option]) || []
+        )
+      end
+
+      test "class for selected option can be overridden", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}&selected_option_class=foo")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_selected_option_class(
+          live,
+          2,
+          ~W(foo)
+        )
+      end
+
+      test "class for available option is set", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_available_option_class(
+          live,
+          2,
+          get_in(expected_class(), [@style || default_style(), :available_option]) || []
+        )
+      end
+
+      test "class for available option can be overridden", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}&available_option_class=foo")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_available_option_class(
+          live,
+          2,
+          ~W(foo)
+        )
+      end
+
+      test "class for unavailable option is set", %{conn: conn} do
+        {:ok, live, _html} = live(conn, "/?style=#{@style}&mode=tags&max_selectable=1")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_unavailable_option_class(
+          live,
+          2,
+          get_in(expected_class(), [@style || default_style(), :unavailable_option]) || []
+        )
+      end
+
+      test "class for unavailable option can be overridden", %{conn: conn} do
+        {:ok, live, _html} =
+          live(conn, "/?style=#{@style}&mode=tags&max_selectable=1&unavailable_option_class=foo")
+
+        stub_options(["A", "B", "C"])
+
+        type(live, "ABC")
+
+        select_nth_option(live, 2)
+
+        type(live, "ABC")
+
+        assert_unavailable_option_class(
+          live,
+          2,
+          ~W(foo)
+        )
+      end
     end
   end
 end
