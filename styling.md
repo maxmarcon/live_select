@@ -27,25 +27,25 @@ to [live_select/1](`LiveSelect.live_select/1`).
 You can control the style of the following elements:
 
 1. The outer **container** of the live_select component
-2. The **text input** field
-3. The **text input** field when an option has been selected
+2. The **text_input** field
+3. The **text_input_selected** text field when an option has been selected
 4. The **dropdown** that contains the selectable options
 5. The single selectable **option**(s)
-6. The currently **active option**
-7. The **clear button** for the selection (if `allow_clear` is set)
+6. The currently **active_option**
+7. The **clear_button** to clear the selection (only if `allow_clear` is set)
+8. **selected_option**. This is an option in the dropdown that has already been selected. It's still visible, but can't be selected again
+9. **available_option**. This is an option in the dropdown that has not been selected and is available for selection 
+10. **unavailable_option**. This is an option in the dropdown that has not been selected but is not available for selection. This happens when there is a specified maximum number of selectable elements and that number has been reached.
 
 Here's a visual representation of the elements:
 
 ![styled elements](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements.png)
 
-In `tags` and `quick_tags` mode there are 6 additional stylable elements:
+In `tags` and `quick_tags` mode there are 3 additional stylable elements:
 
-7. **tag** showing the selected options
-8. **tags_container** that contains the tags
-9. **selected_option**. This is an option in the dropdown that has already been selected. It's still visible, but can't be selected again
-11. **available_option**. This is an option in the dropdown that has not been selected and is available for selection 
-10. **unavailable_option**. This is an option in the dropdown that has not been selected but is not available for selection. This happens when there is a specified maximum number of selectable elements and that number has been reached 
-12. **clear buttons** to remove the tags
+11. **tag** showing the selected options
+12. **tags_container** that contains the tags
+13. **clear_tag_button** button to remove the tags
 
 ![styled elements_tags](https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/styled_elements_tags.png)
 
