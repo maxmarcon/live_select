@@ -1,3 +1,5 @@
+* remove dependency from Jason library
+
 ## 1.5.2 (2024-12-28)
 
 * Fix [bug](https://github.com/maxmarcon/live_select/issues/70) where the keyboard doesn't show on some mobile browsers if an element is already selected in single mode
