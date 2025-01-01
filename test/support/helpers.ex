@@ -464,5 +464,5 @@ defmodule LiveSelect.TestHelpers do
 
   defp encode_value(value) when is_number(value) or is_atom(value), do: to_string(value)
 
-  defp encode_value(value), do: Jason.encode!(value)
+  defp encode_value(value), do: Phoenix.json_library().encode!(value)
 end

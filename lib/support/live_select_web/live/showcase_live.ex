@@ -474,7 +474,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
               end)
 
             assign(socket,
-              cities: selection && Jason.encode!(selection),
+              cities: selection && Phoenix.json_library().encode!(selection),
               submitted: true
             )
           else
@@ -501,7 +501,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
   end
 
   defp safe_decode(value) do
-    case Jason.decode(value) do
+    case Phoenix.json_library().decode(value) do
       {:ok, decoded} -> decoded
       {:error, _} -> %{name: value, pos: []}
     end
