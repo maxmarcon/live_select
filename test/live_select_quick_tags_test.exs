@@ -542,7 +542,9 @@ defmodule LiveSelectQuickTagsTest do
       value3 = %{"name" => "C", "pos" => [50.0, 60.0]}
     ]
 
-    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(values)}})
+    render_change(live, "change", %{
+      "my_form" => %{"city_search" => Phoenix.json_library().encode!(values)}
+    })
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value1},

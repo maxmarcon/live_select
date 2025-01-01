@@ -514,11 +514,13 @@ defmodule LiveSelect do
     [%{"name" => "New York City","pos" => [-74.00597,40.71427]}, %{"name" => "Stockholm","pos" => [18.06871,59.32938]}]
   """
   def decode(selection) do
+    json = Phoenix.json_library()
+
     case selection do
       nil -> []
       "" -> nil
-      selection when is_list(selection) -> Enum.map(selection, &Jason.decode!/1)
-      selection -> Jason.decode!(selection)
+      selection when is_list(selection) -> Enum.map(selection, &json.decode!/1)
+      selection -> json.decode!(selection)
     end
   end
 end

@@ -14,7 +14,7 @@ defmodule LiveSelect.CityFinder do
     cities =
       Application.app_dir(:live_select, Path.join("priv", "cities.json"))
       |> File.read!()
-      |> Jason.decode!()
+      |> Phoenix.json_library().decode!()
 
     {:ok, cities}
   end

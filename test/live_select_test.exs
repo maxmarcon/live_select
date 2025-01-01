@@ -778,7 +778,10 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/")
 
     value = [10, 20]
-    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
+
+    render_change(live, "change", %{
+      "my_form" => %{"city_search" => Phoenix.json_library().encode!(value)}
+    })
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}
@@ -791,7 +794,10 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/")
 
     value = %{"name" => "A", "pos" => [10.0, 20.0]}
-    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
+
+    render_change(live, "change", %{
+      "my_form" => %{"city_search" => Phoenix.json_library().encode!(value)}
+    })
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}
@@ -804,7 +810,10 @@ defmodule LiveSelectTest do
     {:ok, live, _html} = live(conn, "/")
 
     value = "A"
-    render_change(live, "change", %{"my_form" => %{"city_search" => Jason.encode!(value)}})
+
+    render_change(live, "change", %{
+      "my_form" => %{"city_search" => Phoenix.json_library().encode!(value)}
+    })
 
     render_hook(element(live, selectors()[:container]), "selection_recovery", [
       %{label: "A", value: value}

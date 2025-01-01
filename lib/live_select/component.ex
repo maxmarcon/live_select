@@ -233,13 +233,15 @@ defmodule LiveSelect.Component do
         %{label: label, value: value}
       end
 
+    json = Phoenix.json_library()
+
     {:noreply,
      assign(socket,
        options: options,
        selection:
          Enum.map(socket.assigns.selection, fn %{value: value} ->
            Enum.find(options, fn %{value: option_value} ->
-             Jason.encode(option_value) == Jason.encode(value)
+             json.encode(option_value) == json.encode(value)
            end)
          end)
          |> Enum.filter(& &1)
@@ -681,7 +683,7 @@ defmodule LiveSelect.Component do
 
   defp encode(value) when is_atom(value) or is_binary(value) or is_number(value), do: value
 
-  defp encode(value), do: Jason.encode!(value)
+  defp encode(value), do: Phoenix.json_library().encode!(value)
 
   defp already_selected?(option, selection) do
     Enum.any?(selection, fn item -> item.label == option.label end)
