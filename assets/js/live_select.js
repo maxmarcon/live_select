@@ -43,11 +43,11 @@ export default {
                 if (event.code === "Enter") {
                     event.preventDefault()
                 }
-                this.pushEventTo(this.el, 'keydown', {key: event.code})
+                this.pushEventTo(this.el, 'keydown', { key: event.code })
             }
             this.changeEvents = debounce((id, field, text) => {
-                this.pushEventTo(this.el, "change", {text})
-                this.pushEventToParent("live_select_change", {id: this.el.id, field, text})
+                this.pushEventTo(this.el, "change", { text })
+                this.pushEventToParent("live_select_change", { id: this.el.id, field, text })
             }, this.debounceMsec())
             this.textInput().oninput = (event) => {
                 const text = event.target.value.trim()
@@ -63,14 +63,14 @@ export default {
                 dropdown.onmousedown = (event) => {
                     const option = event.target.closest('div[data-idx]')
                     if (option) {
-                        this.pushEventTo(this.el, 'option_click', {idx: option.dataset.idx})
+                        this.pushEventTo(this.el, 'option_click', { idx: option.dataset.idx })
                         event.preventDefault()
                     }
                 }
             }
             this.el.querySelectorAll("button[data-idx]").forEach(button => {
                 button.onclick = (event) => {
-                    this.pushEventTo(this.el, 'option_remove', {idx: button.dataset.idx})
+                    this.pushEventTo(this.el, 'option_remove', { idx: button.dataset.idx })
                 }
             })
         },
@@ -79,16 +79,16 @@ export default {
         },
         inputEvent(selection, mode) {
             const selector = mode === "single" ? "input.single-mode" : (selection.length === 0 ? "input[data-live-select-empty]" : "input[type=hidden]")
-            this.el.querySelector(selector).dispatchEvent(new Event('input', {bubbles: true}))
+            this.el.querySelector(selector).dispatchEvent(new Event('input', { bubbles: true }))
         },
         mounted() {
             this.maybeStyleClearButton()
-            this.handleEvent("parent_event", ({id, event, payload}) => {
+            this.handleEvent("parent_event", ({ id, event, payload }) => {
                 if (this.el.id === id) {
                     this.pushEventToParent(event, payload)
                 }
             })
-            this.handleEvent("select", ({id, selection, mode, input_event, parent_event}) => {
+            this.handleEvent("select", ({ id, selection, mode, input_event, parent_event }) => {
                 if (this.el.id === id) {
                     this.selection = selection
                     if (mode === "single") {
@@ -101,15 +101,15 @@ export default {
                         this.inputEvent(selection, mode)
                     }
                     if (parent_event) {
-                        this.pushEventToParent(parent_event, {id})
+                        this.pushEventToParent(parent_event, { id })
                     }
                 }
             })
-            this.handleEvent("active", ({id, idx}) => {
+            this.handleEvent("active", ({ id, idx }) => {
                 if (this.el.id === id) {
                     const option = this.el.querySelector(`div[data-idx="${idx}"]`)
                     if (option) {
-                        option.scrollIntoView({block: "nearest"})
+                        option.scrollIntoView({ block: "nearest" })
                     }
                 }
             })
@@ -121,7 +121,7 @@ export default {
         },
         reconnected() {
             if (this.selection && this.selection.length > 0) {
-                this.pushEventTo(this.el, "selection_recovery", this.selection)
+                this.pushEventTo(this.el.id, "selection_recovery", this.selection)
             }
         }
     }
