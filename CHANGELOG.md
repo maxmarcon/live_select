@@ -1,4 +1,7 @@
-* remove dependency from Jason library
+## 1.5.3 (2025-01-27)
+
+* Fix [bug](https://github.com/maxmarcon/live_select/issues/96) that causes selection recovery to fail when `input_for` is used to render the component
+* Remove dependency from `Jason` library
 
 ## 1.5.2 (2024-12-28)
 
