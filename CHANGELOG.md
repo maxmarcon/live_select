@@ -1,3 +1,7 @@
+## 1.5.4 (2025-01-29)
+
+* Fix [bug](https://github.com/maxmarcon/live_select/issues/98) causing selection recovery to fail if Phoenix uses the built-in JSON module from Elixir 1.18
+
 ## 1.5.3 (2025-01-27)
 
 * Fix [bug](https://github.com/maxmarcon/live_select/issues/96) that causes selection recovery to fail when `input_for` is used to render the component
