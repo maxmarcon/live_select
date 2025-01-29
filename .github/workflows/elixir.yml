@@ -25,6 +25,9 @@ jobs:
           - elixir: '1.17'
             otp: '27'
             lint: true
+          - elixir: '1.18'
+            otp: '27'
+            lint: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4

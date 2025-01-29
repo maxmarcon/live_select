@@ -241,7 +241,7 @@ defmodule LiveSelect.Component do
        selection:
          Enum.map(socket.assigns.selection, fn %{value: value} ->
            Enum.find(options, fn %{value: option_value} ->
-             json.encode(option_value) == json.encode(value)
+             json.encode!(option_value) == json.encode!(value)
            end)
          end)
          |> Enum.filter(& &1)
