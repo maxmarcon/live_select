@@ -23,6 +23,17 @@ end
 port = String.to_integer(System.get_env("PORT") || "4000")
 config :live_select, LiveSelectWeb.Endpoint, http: [port: port]
 
+current_semver = Version.parse!(System.version())
+min_semver = %Version{major: 1, minor: 18, patch: 0}
+
+if Version.compare(current_semver, min_semver) == :lt do
+  # Use Jason for JSON parsing in Phoenix
+  config :phoenix, :json_library, Jason
+else
+  # Use built-in JSON module for JSON parsing in Phoenix
+  config :phoenix, :json_library, JSON
+end
+
 if config_env() == :demo do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
