@@ -15,7 +15,7 @@
           <%= if @tag == [] do %>
             <%= option[:tag_label] || option[:label] %>
           <% else %>
-            <%= render_slot(@tag, Map.put(option, :field, @field)) %>
+            <%= render_slot(@tag, option) %>
           <% end %>
           <button
             :if={!option[:sticky] && !@disable_tag_removal}
