@@ -18,7 +18,7 @@
             <%= render_slot(@tag, option) %>
           <% end %>
           <button
-            :if={!option[:sticky]}
+            :if={!option[:sticky] && !@disable_tag_removal}
             type="button"
             data-idx={idx}
             class={
