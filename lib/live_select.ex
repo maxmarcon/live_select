@@ -407,6 +407,8 @@ defmodule LiveSelect do
 
   attr :disabled, :boolean, doc: "set this to `true` to disable the input field"
 
+  attr :disable_tag_removal, :boolean, doc: "set this to `true` to disable the ability to remove tags"
+
   attr :placeholder, :string, doc: "placeholder text for the input field"
 
   attr :debounce, :integer,

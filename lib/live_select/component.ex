@@ -24,6 +24,7 @@ defmodule LiveSelect.Component do
     container_extra_class: nil,
     debounce: 100,
     disabled: false,
+    disable_tag_removal: false,
     dropdown_class: nil,
     dropdown_extra_class: nil,
     max_selectable: 0,
@@ -310,11 +311,13 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event("option_remove", %{"idx" => idx}, socket) do
+    if socket.assigns.disable_tag_removal, do: raise "Forbidden"
     {:noreply, unselect(socket, String.to_integer(idx))}
   end
 
   @impl true
   def handle_event("clear", _params, socket) do
+    if socket.assigns.disable_tag_removal, do: raise "Forbidden"
     socket =
       socket
       |> assign(last_selection: nil)
