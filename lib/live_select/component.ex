@@ -318,6 +318,7 @@ defmodule LiveSelect.Component do
   @impl true
   def handle_event("clear", _params, socket) do
     if socket.assigns.disable_tag_removal, do: raise("Forbidden")
+
     socket =
       socket
       |> assign(last_selection: nil)
