@@ -75,7 +75,7 @@ defmodule LiveSelect.TestHelpers do
     clear_tag_button: "div[phx-hook=LiveSelect] > div:first-child > div > button",
     dropdown: "div[phx-hook=LiveSelect] > ul",
     dropdown_entries: "div[phx-hook=LiveSelect] > ul > li > div",
-    hidden_input: "input#my_form_city_search",
+    hidden_input: "div[phx-hook=LiveSelect] input[type=hidden]",
     option: "div[phx-hook=LiveSelect] > ul > li > div",
     tags_container: "div[phx-hook=LiveSelect] > div:first-child",
     tag: "div[phx-hook=LiveSelect] > div:first-child > div",

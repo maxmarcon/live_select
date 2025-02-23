@@ -216,6 +216,31 @@ defmodule LiveSelectTest do
     end
   end
 
+  test "the clear button can be disabled", %{conn: conn} do
+    {:ok, live, _html} = live(conn, "/?allow_clear=true&disabled=true")
+
+    stub_options([{"A", 1}, {"B", 1}])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
+
+    assert element(live, selectors()[:text_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
+
+    assert element(live, selectors()[:hidden_input])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
+
+    assert element(live, selectors()[:clear_button])
+           |> render()
+           |> Floki.parse_fragment!()
+           |> Floki.attribute("disabled") == ["disabled"]
+  end
+
   test "can render custom clear button", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/live_component_test")
 

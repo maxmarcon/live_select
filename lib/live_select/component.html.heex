@@ -21,6 +21,7 @@
             :if={!option[:sticky]}
             type="button"
             data-idx={idx}
+            disabled={@disabled}
             class={
               class(
                 @style,
@@ -65,6 +66,7 @@
         type="button"
         phx-click="clear"
         phx-target={@myself}
+        disabled={@disabled}
         class={class(@style, :clear_button, @clear_button_class, @clear_button_extra_class)}
       >
         <%= if @clear_button == [] do %>

@@ -335,12 +335,26 @@ defmodule LiveSelectQuickTagsTest do
   end
 
   test "can be disabled", %{conn: conn} do
-    {:ok, live, _html} = live(conn, "/?disabled=true&mode=tags")
+    {:ok, live, _html} = live(conn, "/?disabled=true&mode=quick_tags")
+
+    stub_options(~w(A B C D))
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1)
 
     assert element(live, selectors()[:text_input])
            |> render()
            |> Floki.parse_fragment!()
            |> Floki.attribute("disabled") == ["disabled"]
+
+    assert render(live)
+           |> Floki.parse_fragment!()
+           |> Floki.attribute(selectors()[:hidden_input], "disabled") == ["disabled"]
+
+    assert render(live)
+           |> Floki.parse_fragment!()
+           |> Floki.attribute(selectors()[:clear_tag_button], "disabled") == ["disabled"]
   end
 
   test "can clear the selection", %{conn: conn} do

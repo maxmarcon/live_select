@@ -405,7 +405,7 @@ defmodule LiveSelect do
     doc:
       ~s(if `true`, when in single mode, display a "x" button in the input field to clear the selection)
 
-  attr :disabled, :boolean, doc: "set this to `true` to disable the input field"
+  attr :disabled, :boolean, doc: "set this to `true` to disable the component"
 
   attr :placeholder, :string, doc: "placeholder text for the input field"
 

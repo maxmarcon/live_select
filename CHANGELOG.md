@@ -1,3 +1,5 @@
+* make also clear buttons honor the disabled attribute
+
 ## 1.5.4 (2025-01-29)
 
 * Fix [bug](https://github.com/maxmarcon/live_select/issues/98) causing selection recovery to fail if Phoenix uses the built-in JSON module from Elixir 1.18
