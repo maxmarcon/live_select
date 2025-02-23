@@ -18,10 +18,9 @@
             <%= render_slot(@tag, option) %>
           <% end %>
           <button
-            :if={!option[:sticky]}
+            :if={!option[:sticky] && !@disabled}
             type="button"
             data-idx={idx}
-            disabled={@disabled}
             class={
               class(
                 @style,
@@ -61,12 +60,11 @@
       phx_blur: "blur",
       value: label(@mode, @selection)
     ) %>
-    <%= if @mode == :single && @allow_clear && Enum.any?(@selection) do %>
+    <%= if @mode == :single && @allow_clear && !@disabled && Enum.any?(@selection) do %>
       <button
         type="button"
         phx-click="clear"
         phx-target={@myself}
-        disabled={@disabled}
         class={class(@style, :clear_button, @clear_button_class, @clear_button_extra_class)}
       >
         <%= if @clear_button == [] do %>

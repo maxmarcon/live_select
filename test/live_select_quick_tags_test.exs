@@ -354,7 +354,7 @@ defmodule LiveSelectQuickTagsTest do
 
     assert render(live)
            |> Floki.parse_fragment!()
-           |> Floki.attribute(selectors()[:clear_tag_button], "disabled") == ["disabled"]
+           |> Floki.find(selectors()[:clear_tag_button]) == []
   end
 
   test "can clear the selection", %{conn: conn} do

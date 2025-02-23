@@ -235,10 +235,7 @@ defmodule LiveSelectTest do
            |> Floki.parse_fragment!()
            |> Floki.attribute("disabled") == ["disabled"]
 
-    assert element(live, selectors()[:clear_button])
-           |> render()
-           |> Floki.parse_fragment!()
-           |> Floki.attribute("disabled") == ["disabled"]
+    refute has_element?(live, selectors()[:clear_button])
   end
 
   test "can render custom clear button", %{conn: conn} do
