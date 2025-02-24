@@ -19,6 +19,7 @@ defmodule LiveSelect.Component do
     clear_button_extra_class: nil,
     clear_tag_button_class: nil,
     clear_tag_button_extra_class: nil,
+    current_text: nil,
     user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,
@@ -518,6 +519,7 @@ defmodule LiveSelect.Component do
       %{
         id: socket.assigns.id,
         mode: socket.assigns.mode,
+        current_text: socket.assigns.current_text,
         selection: socket.assigns.selection,
         parent_event: parent_event
       }
