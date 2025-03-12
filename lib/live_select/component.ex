@@ -448,6 +448,14 @@ defmodule LiveSelect.Component do
   end
 
   defp select(
+         socket,
+         %{disabled: true} = _selected,
+         _extra_params
+       ) do
+    assign(socket, hide_dropdown: not quick_tags_mode?(socket))
+  end
+
+  defp select(
          %{assigns: %{selection: selection, max_selectable: max_selectable}} = socket,
          _selected,
          _extra_params
@@ -594,10 +602,10 @@ defmodule LiveSelect.Component do
         {:ok, nil}
 
       %{key: key, value: _value} = option ->
-        {:ok, Map.put_new(option, :label, key)}
+        {:ok, Map.put_new(option, :label, key) |> Map.put_new(:disabled, false)}
 
       %{value: value} = option ->
-        {:ok, Map.put_new(option, :label, value)}
+        {:ok, Map.put_new(option, :label, value) |> Map.put_new(:disabled, false)}
 
       option when is_list(option) ->
         if Keyword.keyword?(option) do
@@ -607,11 +615,8 @@ defmodule LiveSelect.Component do
           :error
         end
 
-      {label, value} ->
-        {:ok, %{label: label, value: value}}
-
       option when is_binary(option) or is_atom(option) or is_number(option) ->
-        {:ok, %{label: option, value: option}}
+        {:ok, %{label: option, value: option, disabled: false}}
 
       _ ->
         :error
