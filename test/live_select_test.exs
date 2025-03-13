@@ -65,7 +65,6 @@ defmodule LiveSelectTest do
     stub_options([{"A", 1}, {"B", 2}, {"C", 3}])
 
     {:ok, live, _html} = live(conn, "/")
-
     type(live, "ABC")
 
     assert_options(live, ["A", "B", "C"])
@@ -988,6 +987,77 @@ defmodule LiveSelectTest do
           ~W(foo)
         )
       end
+    end
+  end
+
+  describe "Disabled option tests" do
+    test "tuples options can be disabled", %{conn: conn} do
+      stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
+
+      {:ok, live, _html} = live(conn, "/")
+      type(live, "ABC")
+
+      assert_options(live, ["A", "B", "C"])
+
+      # Select an enabled option
+      select_nth_option(live, 1)
+      assert_selected(live, "A", 1)
+
+      # Key down skips the disabled Options
+      type(live, "ABC")
+      select_nth_option(live, 2)
+      assert_selected(live, "C", 3)
+    end
+
+    test "Supports disabling options filled from an enumerable of maps", %{conn: conn} do
+      stub_options([
+        %{label: "A", value: 1, disabled: false},
+        %{label: "B", value: 2, disabled: true},
+        %{label: "C", value: 3, disabled: false}
+      ])
+
+      {:ok, live, _html} = live(conn, "/")
+
+      type(live, "ABC")
+      assert_options(live, ["A", "B", "C"])
+
+      select_nth_option(live, 1)
+      assert_selected(live, "A", 1)
+
+      type(live, "ABC")
+      assert_options(live, ["A", "B", "C"])
+      # The maps are sorted on their key value pairings on the showcase page
+      # before being sent to the LiveSelect component. This results in the
+      # disabled option "B" being sorted last.
+      select_nth_option(live, 3, method: :click)
+      assert_selected_static(live, "A", 1)
+    end
+
+    test "Disabled options can't be selected with mouseclick", %{conn: conn} do
+      stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
+
+      {:ok, live, _html} = live(conn, "/")
+      type(live, "ABC")
+
+      assert_options(live, ["A", "B", "C"])
+      select_nth_option(live, 1)
+      assert_selected(live, "A", 1)
+
+      # Mouse clicks won't change the selected option
+      type(live, "ABC")
+      select_nth_option(live, 2, method: :click)
+      assert_selected_static(live, "A", 1)
+    end
+
+    test "If everything is disabled, nothing is saved", %{conn: conn} do
+      stub_options([{"A", 1, true}, {"B", 2, true}])
+
+      {:ok, live, _html} = live(conn, "/")
+      type(live, "ABC")
+
+      assert_options(live, ["A", "B"])
+      select_nth_option(live, 1)
+      refute_selected(live)
     end
   end
 end
