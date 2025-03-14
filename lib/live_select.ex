@@ -57,6 +57,9 @@ defmodule LiveSelect do
   * _maps_: `%{label: label, value: value}` or `%{value: value}`
   * _keywords_: `[label: label, value: value]` or `[value: value]`
 
+  Options can also be disabled when passing in tuples, maps or keywords. Disabled options are displayed, but can't be selected.
+  Maps and keywords need a `:disabled` key with a boolean value, and tuples should be a 3 element tuple of `{label, value, is_disabled}`
+
   In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option.
 
   Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
