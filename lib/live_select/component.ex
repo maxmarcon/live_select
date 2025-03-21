@@ -593,6 +593,41 @@ defmodule LiveSelect.Component do
     )
   end
 
+  defp normalize_option(option) when is_list(option) do
+    if Keyword.keyword?(option) do
+      Map.new(option)
+      |> normalize_option()
+    else
+      :error
+    end
+  end
+
+  defp normalize_option(option) when is_map(option) do
+    case option do
+      %{key: key, value: _value} = option ->
+        {:ok, Enum.into(option, %{label: key, disabled: false})}
+
+      %{value: value} = option ->
+        {:ok, Enum.into(option, %{label: value, disabled: false})}
+
+      _ ->
+        :error
+    end
+  end
+
+  defp normalize_option(option) when is_tuple(option) do
+    case option do
+      {label, value} ->
+        {:ok, %{label: label, value: value, disabled: false}}
+
+      {label, value, disabled} ->
+        {:ok, %{label: label, value: value, disabled: disabled}}
+
+      _ ->
+        :error
+    end
+  end
+
   defp normalize_option(option) do
     case option do
       nil ->
@@ -600,20 +635,6 @@ defmodule LiveSelect.Component do
 
       "" ->
         {:ok, nil}
-
-      %{key: key, value: _value} = option ->
-        {:ok, Map.put_new(option, :label, key) |> Map.put_new(:disabled, false)}
-
-      %{value: value} = option ->
-        {:ok, Map.put_new(option, :label, value) |> Map.put_new(:disabled, false)}
-
-      option when is_list(option) ->
-        if Keyword.keyword?(option) do
-          Map.new(option)
-          |> normalize_option()
-        else
-          :error
-        end
 
       option when is_binary(option) or is_atom(option) or is_number(option) ->
         {:ok, %{label: option, value: option, disabled: false}}
