@@ -452,7 +452,7 @@ defmodule LiveSelect.Component do
          %{disabled: true} = _selected,
          _extra_params
        ) do
-    assign(socket, hide_dropdown: not quick_tags_mode?(socket))
+    socket
   end
 
   defp select(
@@ -461,7 +461,7 @@ defmodule LiveSelect.Component do
          _extra_params
        )
        when max_selectable > 0 and length(selection) >= max_selectable do
-    assign(socket, hide_dropdown: not quick_tags_mode?(socket))
+    socket
   end
 
   defp select(socket, selected, extra_params) do
