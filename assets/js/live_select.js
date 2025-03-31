@@ -91,7 +91,10 @@ export default {
             this.handleEvent("select", ({id, selection, mode, current_text, input_event, parent_event}) => {
                 if (this.el.id === id) {
                     this.selection = selection
-                    if (mode === "single" || mode === "tags") {
+                    if (mode === "single") {
+                        const label = selection.length > 0 ? selection[0].label : current_text
+                        this.setInputValue(label)
+                    } else if (mode === "tags") {
                         this.setInputValue(current_text)
                     } else {
                         this.setInputValue(null)
