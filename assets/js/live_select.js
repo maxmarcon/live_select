@@ -94,10 +94,8 @@ export default {
                     if (mode === "single") {
                         const label = selection.length > 0 ? selection[0].label : current_text
                         this.setInputValue(label)
-                    } else if (mode === "tags") {
-                        this.setInputValue(current_text)
                     } else {
-                        this.setInputValue(null)
+                        this.setInputValue(current_text)
                     }
                     if (input_event) {
                         this.inputEvent(selection, mode)

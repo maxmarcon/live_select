@@ -1,4 +1,5 @@
-* make also clear buttons honor the disabled attribute
+* make clear buttons also honor the disabled attribute
+* remember entered text when blurring away from the element
 
 ## 1.5.4 (2025-01-29)
 
