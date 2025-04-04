@@ -221,6 +221,24 @@ defmodule LiveSelectTagsTest do
 
       assert_selected_multiple_static(live, ~w(B D))
     end
+
+    test "Disabled Items stay disabled", %{live: live} do
+      stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}, {"D", 4, false}])
+
+      type(live, "ABC")
+      select_nth_option(live, 2, method: :click)
+
+      type(live, "ABC")
+      select_nth_option(live, 3, method: :click)
+      assert_selected_multiple(live, [%{value: 2, label: "B"}, %{value: 3, label: "C"}])
+
+      unselect_nth_option(live, 2)
+      assert_selected_multiple(live, [%{value: 2, label: "B"}])
+
+      type(live, "ABC")
+      select_nth_option(live, 1, method: :click)
+      assert_selected_multiple(live, [%{value: 2, label: "B"}])
+    end
   end
 
   test "can remove selected options by clicking on tag", %{live: live} do
@@ -547,5 +565,17 @@ defmodule LiveSelectTagsTest do
       %{label: "B", value: value2},
       %{label: "C", value: value3}
     ])
+  end
+
+  test "Can't select disabled options as tags", %{live: live} do
+    stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}])
+
+    type(live, "ABC")
+    select_nth_option(live, 1, method: :click)
+    refute_selected(live)
+
+    type(live, "ABC")
+    select_nth_option(live, 2, method: :click)
+    assert_selected_multiple(live, [%{label: "B", value: 2}])
   end
 end

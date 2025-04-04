@@ -572,4 +572,16 @@ defmodule LiveSelectQuickTagsTest do
       %{label: "C", value: value3}
     ])
   end
+
+  test "Disabled options can't be selected", %{live: live} do
+    stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}])
+
+    type(live, "ABC")
+
+    select_nth_option(live, 1, method: :click)
+    refute_selected(live)
+
+    select_nth_option(live, 2, method: :click)
+    assert_selected_multiple(live, [%{value: 2, label: "B"}])
+  end
 end

@@ -289,9 +289,9 @@ defmodule LiveSelect.TestHelpers do
   def normalize_selection(selection) do
     for element <- selection do
       if is_binary(element) || is_integer(element) || is_atom(element) do
-        %{value: element, label: element}
+        %{value: element, label: element, disabled: false}
       else
-        element
+        element |> Map.put_new(:disabled, false)
       end
     end
   end
