@@ -991,22 +991,35 @@ defmodule LiveSelectTest do
   end
 
   describe "Disabled option tests" do
-    test "tuples options can be disabled", %{conn: conn} do
+    test "Disabled Options are skipped by keydown events", %{conn: conn} do
       stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
 
       {:ok, live, _html} = live(conn, "/")
-      type(live, "ABC")
 
+      type(live, "ABC")
       assert_options(live, ["A", "B", "C"])
 
-      # Select an enabled option
-      select_nth_option(live, 1)
-      assert_selected(live, "A", 1)
-
-      # Key down skips the disabled Options
-      type(live, "ABC")
       select_nth_option(live, 2)
       assert_selected(live, "C", 3)
+    end
+
+    test "Disabled Options are skipped by key up events", %{conn: conn} do
+      stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
+
+      {:ok, live, _html} = live(conn, "/")
+
+      type(live, "ABC")
+      assert_options(live, ["A", "B", "C"])
+
+      # Navigate to C by going two down
+      navigate(live, 2, :down, [])
+
+      # Navigate back to A by going 1 up as we skip B because it's disabled.
+      # Then select the item we're on. It should be "A"
+      navigate(live, 1, :up, [])
+      keydown(live, "Enter", [])
+
+      assert_selected(live, "A", 1)
     end
 
     test "Supports disabling options filled from an enumerable of maps", %{conn: conn} do

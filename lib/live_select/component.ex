@@ -737,7 +737,8 @@ defmodule LiveSelect.Component do
     options
     |> Enum.with_index()
     |> Enum.reject(fn {opt, _} ->
-      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection)) ||
+        Map.get(opt, :disabled)
     end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 > active_option))
@@ -762,7 +763,8 @@ defmodule LiveSelect.Component do
     |> Enum.with_index()
     |> Enum.reverse()
     |> Enum.reject(fn {opt, _} ->
-      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection))
+      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection)) ||
+        Map.get(opt, :disabled)
     end)
     |> Enum.map(fn {_, idx} -> idx end)
     |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
