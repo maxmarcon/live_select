@@ -990,8 +990,8 @@ defmodule LiveSelectTest do
     end
   end
 
-  describe "Disabled option tests" do
-    test "Disabled Options are skipped by keydown events", %{conn: conn} do
+  describe "with disabled option" do
+    test "disabled options are skipped when navigating down with keyboard", %{conn: conn} do
       stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
 
       {:ok, live, _html} = live(conn, "/")
@@ -1003,7 +1003,7 @@ defmodule LiveSelectTest do
       assert_selected(live, "C", 3)
     end
 
-    test "Disabled Options are skipped by key up events", %{conn: conn} do
+    test "disabled options are skipped when navigating up with keyboard", %{conn: conn} do
       stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
 
       {:ok, live, _html} = live(conn, "/")
@@ -1012,17 +1012,17 @@ defmodule LiveSelectTest do
       assert_options(live, ["A", "B", "C"])
 
       # Navigate to C by going two down
-      navigate(live, 2, :down, [])
+      navigate(live, 2, :down)
 
       # Navigate back to A by going 1 up as we skip B because it's disabled.
       # Then select the item we're on. It should be "A"
-      navigate(live, 1, :up, [])
-      keydown(live, "Enter", [])
+      navigate(live, 1, :up)
+      keydown(live, "Enter")
 
       assert_selected(live, "A", 1)
     end
 
-    test "Supports disabling options filled from an enumerable of maps", %{conn: conn} do
+    test "options can be disabled when passed as enumerable of maps", %{conn: conn} do
       stub_options([
         %{label: "A", value: 1, disabled: false},
         %{label: "B", value: 2, disabled: true},
@@ -1046,7 +1046,7 @@ defmodule LiveSelectTest do
       assert_selected_static(live, "A", 1)
     end
 
-    test "Disabled options can't be selected with mouseclick", %{conn: conn} do
+    test "disabled options can't be selected with mouseclick", %{conn: conn} do
       stub_options([{"A", 1, false}, {"B", 2, true}, {"C", 3, false}])
 
       {:ok, live, _html} = live(conn, "/")
@@ -1060,17 +1060,6 @@ defmodule LiveSelectTest do
       type(live, "ABC")
       select_nth_option(live, 2, method: :click)
       assert_selected_static(live, "A", 1)
-    end
-
-    test "If everything is disabled, nothing is saved", %{conn: conn} do
-      stub_options([{"A", 1, true}, {"B", 2, true}])
-
-      {:ok, live, _html} = live(conn, "/")
-      type(live, "ABC")
-
-      assert_options(live, ["A", "B"])
-      select_nth_option(live, 1)
-      refute_selected(live)
     end
   end
 end

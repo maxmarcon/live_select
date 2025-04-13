@@ -222,7 +222,7 @@ defmodule LiveSelectTagsTest do
       assert_selected_multiple_static(live, ~w(B D))
     end
 
-    test "Disabled Items stay disabled", %{live: live} do
+    test "disabled options stay disabled", %{live: live} do
       stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}, {"D", 4, false}])
 
       type(live, "ABC")
@@ -567,7 +567,7 @@ defmodule LiveSelectTagsTest do
     ])
   end
 
-  test "Can't select disabled options as tags", %{live: live} do
+  test "disabled options can't be selected", %{live: live} do
     stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}])
 
     type(live, "ABC")

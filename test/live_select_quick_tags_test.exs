@@ -573,7 +573,7 @@ defmodule LiveSelectQuickTagsTest do
     ])
   end
 
-  test "Disabled options can't be selected", %{live: live} do
+  test "disabled options can't be selected", %{live: live} do
     stub_options([{"A", 1, true}, {"B", 2, false}, {"C", 3, false}])
 
     type(live, "ABC")
