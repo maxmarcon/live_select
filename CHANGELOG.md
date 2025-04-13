@@ -1,3 +1,5 @@
+## 1.6.0 (2025-04-13)
+
 * add ability to disable options
 
 ## 1.5.5 (2025-03-31)
