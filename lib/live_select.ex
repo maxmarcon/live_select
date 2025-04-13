@@ -57,6 +57,9 @@ defmodule LiveSelect do
   * _maps_: `%{label: label, value: value}` or `%{value: value}`
   * _keywords_: `[label: label, value: value]` or `[value: value]`
 
+  Options can also be disabled when passing in tuples, maps or keywords. Disabled options are displayed, but can't be selected.
+  Maps and keywords need a `:disabled` key with a boolean value, and tuples should be a 3 element tuple of `{label, value, is_disabled}`
+
   In the case of maps and keywords, if only `value` is specified, it will be used as both value and label for the option.
 
   Because you can pass a list of tuples, you can use maps and keyword lists to pass the list of options, for example:
@@ -449,7 +452,7 @@ defmodule LiveSelect do
     doc:
       "Event to emit when the text input receives focus. The component id will be sent in the event's params"
 
-  @styling_options ~w(active_option_class available_option_class clear_button_class clear_button_extra_class clear_tag_button_class clear_tag_button_extra_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
+  @styling_options ~w(active_option_class available_option_class unavailable_option_class clear_button_class clear_button_extra_class clear_tag_button_class clear_tag_button_extra_class container_class container_extra_class dropdown_class dropdown_extra_class option_class option_extra_class text_input_class text_input_extra_class text_input_selected_class selected_option_class tag_class tag_extra_class tags_container_class tags_container_extra_class)a
 
   for attr_name <- @styling_options do
     Phoenix.Component.Declarative.__attr__!(
