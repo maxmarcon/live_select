@@ -141,6 +141,14 @@ The choice of style is controlled by the `style` option
 in [live_select/1](https://hexdocs.pm/live_select/LiveSelect.html#live_select/1).
 `tailwind` and `daisyui` styles come with sensible defaults which can be selectively extended or completely overridden.
 
+Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
+
+> ⚠️ **Attention**
+> 
+> Please note the different paths for a standalone or umbrella app.
+
+### tailwind v3
+
 If you're using `tailwind` or `daisyui` styles, you need to add one of the following lines to the `content` section in
 your `tailwind.config.js`:
 
@@ -155,9 +163,17 @@ module.exports = {
 }
 ```
 
-Notice the different paths for a standalone or umbrella app.
+### tailwind v4
 
-Refer to the [Styling section](https://hexdocs.pm/live_select/styling.html) for further details.
+If you are using `tailwind v4+` and are not using a `tailwind.config.js` file you instead need to add the relevant `@source` directive to your `app.css` file:
+
+```css
+@source "../../deps/live_select/lib/live_select/component.*ex" /* for a standalone app */
+@source "../../../../deps/live_select/lib/live_select/component.*ex" /* for an umbrella app */
+```
+
+
+
 
 ## Showcase app 🎪
 
