@@ -64,7 +64,7 @@ defmodule LiveSelect.Component do
       tag: ~W(p-1 text-sm rounded-lg bg-blue-400 flex)
     ],
     daisyui: [
-      active_option: ~W(active),
+      active_option: ~W(active menu-active),
       available_option: ~W(cursor-pointer),
       unavailable_option: ~W(disabled),
       clear_button: ~W(hidden cursor-pointer),
