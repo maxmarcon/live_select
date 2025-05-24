@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+* DaisyUI 5 compatibility - active options now include both `active` and `menu-active` classes for compatibility with DaisyUI 3, 4, and 5.
+
 ## 1.6.0 (2025-04-13)
 
 * add ability to disable options

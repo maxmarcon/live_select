@@ -883,6 +883,31 @@ defmodule LiveSelect.ComponentTest do
           end
         end
       end
+
+      test "daisyui style includes both active and menu-active classes for compatibility", %{
+        form: form
+      } do
+        # Render the component with daisyui style
+        component =
+          render_component(&LiveSelect.live_select/1,
+            field: form[:city_search],
+            options: ["A", "B", "C"],
+            style: :daisyui,
+            hide_dropdown: false
+          )
+          |> Floki.parse_document!()
+
+        # Find the first option div
+        option_divs = Floki.find(component, "div[data-idx]")
+        assert length(option_divs) > 0
+
+        # Get the default active option classes for daisyui
+        active_classes = LiveSelect.Component.default_class(:daisyui, :active_option)
+
+        # Verify both classes are in the defaults
+        assert "active" in active_classes
+        assert "menu-active" in active_classes
+      end
     end
   end
 end
