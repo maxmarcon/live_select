@@ -60,7 +60,7 @@ The following table shows the default styles for each element and the options yo
 
 | Element | Default daisyui classes | Default tailwind classes | Class override option | Class extend option |
 |----|----|----|----|----|
-| *active_option* | active | bg-gray-600 text-white | active_option_class |  |
+| *active_option* | active menu-active | bg-gray-600 text-white | active_option_class |  |
 | *available_option* | cursor-pointer | cursor-pointer hover:bg-gray-400 rounded | available_option_class |  |
 | *clear_button* | cursor-pointer hidden | cursor-pointer hidden | clear_button_class | clear_button_extra_class |
 | *clear_tag_button* | cursor-pointer | cursor-pointer | clear_tag_button_class | clear_tag_button_extra_class |
