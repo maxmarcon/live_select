@@ -23,9 +23,11 @@ export default {
             const clear_button = this.el.querySelector('button[phx-click=clear]')
             if (clear_button) {
                 this.textInput().parentElement.style.position = 'relative'
+                this.textInput().parentElement.style.display = 'flex'
+                this.textInput().parentElement.style.alignItems = 'center'
+                clear_button.style.height = '20px'
+                clear_button.style.width = '20px'
                 clear_button.style.position = 'absolute'
-                clear_button.style.top = '0px'
-                clear_button.style.bottom = '0px'
                 clear_button.style.right = '5px'
                 clear_button.style.display = 'block'
             }
