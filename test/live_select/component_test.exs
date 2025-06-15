@@ -782,6 +782,7 @@ defmodule LiveSelect.ComponentTest do
             :clear_tag_button
           ] do
         @element element
+        @static_classes if @element == :clear_tag_button, do: ["ls-clear-tag-button"], else: []
 
         test "#{@element} has default class", %{form: form} do
           component =
@@ -797,7 +798,8 @@ defmodule LiveSelect.ComponentTest do
             )
 
           assert Floki.attribute(component, selectors()[@element], "class") == [
-                   (get_in(expected_class(), [@style || default_style(), @element]) || [])
+                   ((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
+                      @static_classes)
                    |> Enum.join(" ")
                  ]
         end
@@ -820,7 +822,9 @@ defmodule LiveSelect.ComponentTest do
                   if(@style, do: [style: @style], else: []) ++ [{option, "foo"}]
               )
 
-            assert Floki.attribute(component, selectors()[@element], "class") == ~w(foo)
+            assert Floki.attribute(component, selectors()[@element], "class") == [
+                     Enum.join(~w(foo) ++ @static_classes, " ")
+                   ]
           end
         end
 
@@ -843,8 +847,8 @@ defmodule LiveSelect.ComponentTest do
               )
 
             assert Floki.attribute(component, selectors()[@element], "class") == [
-                     ((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
-                        ~W(foo))
+                     (((get_in(expected_class(), [@style || default_style(), @element]) || []) ++
+                         ~W(foo)) ++ @static_classes)
                      |> Enum.join(" ")
                      |> String.trim()
                    ]
@@ -854,7 +858,8 @@ defmodule LiveSelect.ComponentTest do
                %{form: form} do
             option = extend_class_option()[@element]
 
-            base_classes = get_in(expected_class(), [@style || default_style(), @element])
+            base_classes =
+              get_in(expected_class(), [@style || default_style(), @element]) ++ @static_classes
 
             if base_classes do
               class_to_remove = base_classes |> List.first()

@@ -19,7 +19,7 @@ export default {
         updateMinLen() {
             return parseInt(this.el.dataset["updateMinLen"])
         },
-        maybeStyleClearButton() {
+        maybeStyleClearButtons() {
             const clear_button = this.el.querySelector('button[phx-click=clear]')
             if (clear_button) {
                 this.textInput().parentElement.style.position = 'relative'
@@ -31,6 +31,10 @@ export default {
                 clear_button.style.right = '5px'
                 clear_button.style.display = 'block'
             }
+            this.el.querySelectorAll('button.tag-clear-button').forEach(clear_button => {
+                clear_button.style.minHeight = '20px'
+                clear_button.style.minWidth = '20px'
+            })
         },
         pushEventToParent(event, payload) {
             const target = this.el.dataset['phxTarget'];
@@ -118,7 +122,7 @@ export default {
             this.attachDomEventHandlers()
         },
         updated() {
-            this.maybeStyleClearButton()
+            this.maybeStyleClearButtons()
             this.attachDomEventHandlers()
         },
         reconnected() {
