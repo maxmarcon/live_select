@@ -479,6 +479,8 @@ defmodule LiveSelectTest do
       element(live, selectors()[:text_input])
       |> render_blur()
 
+      type(live, "ABC")
+
       send_update(live, value: 3)
 
       element(live, selectors()[:text_input])
@@ -715,6 +717,8 @@ defmodule LiveSelectTest do
     select_nth_option(live, 2)
 
     assert_selected(live, :B, 2)
+
+    type(live, "ABC")
 
     send_update(live, value: 3)
 

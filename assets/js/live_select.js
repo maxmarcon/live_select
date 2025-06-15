@@ -88,19 +88,11 @@ export default {
             this.el.querySelector(selector).dispatchEvent(new Event('input', { bubbles: true }))
         },
         mounted() {
-            this.maybeStyleClearButton()
-            this.handleEvent("parent_event", ({ id, event, payload }) => {
-                if (this.el.id === id) {
-                    this.pushEventToParent(event, payload)
-                }
-            })
+            this.maybeStyleClearButtons()
             this.handleEvent("select", ({ id, selection, mode, current_text, input_event, parent_event }) => {
                 if (this.el.id === id) {
                     this.selection = selection
-                    if (mode === "single") {
-                        const label = selection.length > 0 ? selection[0].label : current_text
-                        this.setInputValue(label)
-                    } else {
+                    if (current_text !== null) {
                         this.setInputValue(current_text)
                     }
                     if (input_event) {

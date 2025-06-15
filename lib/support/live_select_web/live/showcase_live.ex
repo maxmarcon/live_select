@@ -72,6 +72,10 @@ defmodule LiveSelectWeb.ShowcaseLive do
       field(:max_selectable, :integer, default: Component.default_opts()[:max_selectable])
       field(:user_defined_options, :boolean)
 
+      field(:keep_options_on_select, :boolean,
+        default: Component.default_opts()[:keep_options_on_select]
+      )
+
       field(:mode, Ecto.Enum,
         values: [:single, :tags, :quick_tags],
         default: Component.default_opts()[:mode]
@@ -101,6 +105,7 @@ defmodule LiveSelectWeb.ShowcaseLive do
           :debounce,
           :disabled,
           :options_styled_as_checkboxes,
+          :keep_options_on_select,
           :max_selectable,
           :user_defined_options,
           :mode,

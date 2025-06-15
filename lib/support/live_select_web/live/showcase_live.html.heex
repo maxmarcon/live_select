@@ -67,6 +67,10 @@
                 disabled: to_string(@settings_form[:mode].value) != "single"
               )}
             </label>
+            <label class="label cursor-pointer">
+              <span class="label-text mr-1">Keep options on select:</span>
+              {checkbox(@settings_form, :keep_options_on_select, class: "toggle")}
+            </label>
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
               {checkbox(@settings_form, :disabled, class: "toggle")}

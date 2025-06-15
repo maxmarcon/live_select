@@ -407,13 +407,23 @@ defmodule LiveSelect.TestHelpers do
     do: assert_unavailable_option_class(render(live), selected_pos, unavailable_class)
 
   def assert_clear(live, input_event \\ true) do
-    assert_clear_static(live)
+    if input_event do
+      assert_clear_static(live)
+    end
 
-    assert_push_event(live, "select", %{
-      id: @component_id,
-      selection: [],
-      input_event: ^input_event
-    })
+    if input_event do
+      assert_push_event(live, "select", %{
+        id: @component_id,
+        selection: [],
+        input_event: true
+      })
+    else
+      assert_push_event(live, "select", %{
+        id: @component_id,
+        current_text: "",
+        input_event: false
+      })
+    end
   end
 
   def assert_clear_static(live) do

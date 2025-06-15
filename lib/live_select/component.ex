@@ -19,7 +19,8 @@ defmodule LiveSelect.Component do
     clear_button_extra_class: nil,
     clear_tag_button_class: nil,
     clear_tag_button_extra_class: nil,
-    current_text: nil,
+    keep_options_on_select: false,
+    current_text: "",
     user_defined_options: false,
     container_class: nil,
     container_extra_class: nil,
@@ -92,7 +93,6 @@ defmodule LiveSelect.Component do
         active_option: -1,
         hide_dropdown: true,
         awaiting_update: true,
-        last_selection: nil,
         selection: [],
         value_mapper: & &1
       )
@@ -181,17 +181,28 @@ defmodule LiveSelect.Component do
         socket
       end
 
-    socket = maybe_save_selection(socket)
-
     {:ok, socket}
   end
 
   @impl true
   def handle_event("blur", _params, socket) do
     socket =
-      maybe_restore_selection(socket)
+      socket
       |> assign(:hide_dropdown, true)
-      |> client_select(%{parent_event: socket.assigns[:"phx-blur"]})
+      |> client_select(%{
+        parent_event: socket.assigns[:"phx-blur"],
+        current_text:
+          cond do
+            socket.assigns.mode == :single && socket.assigns.selection != [] ->
+              List.first(socket.assigns.selection).label
+
+            socket.assigns.mode == :single && socket.assigns.selection == [] ->
+              ""
+
+            true ->
+              socket.assigns.current_text
+          end
+      })
 
     {:noreply, socket}
   end
@@ -200,13 +211,11 @@ defmodule LiveSelect.Component do
   def handle_event(event, _params, socket) when event in ~w(focus click) do
     socket =
       socket
-      |> then(
-        &if &1.assigns.mode == :single do
-          clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
-        else
-          parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
-        end
-      )
+      |> client_select(%{
+        input_event: false,
+        parent_event: socket.assigns[:"phx-focus"],
+        current_text: socket.assigns.current_text
+      })
       |> assign(hide_dropdown: false)
 
     {:noreply, socket}
@@ -253,7 +262,7 @@ defmodule LiveSelect.Component do
   def handle_event("options_clear", _params, socket) do
     socket =
       socket
-      |> assign(current_text: nil, options: [])
+      |> assign(current_text: "", options: [])
 
     {:noreply, socket}
   end
@@ -295,9 +304,8 @@ defmodule LiveSelect.Component do
   def handle_event("keydown", %{"key" => "Escape"}, socket) do
     socket =
       socket
-      |> maybe_restore_selection
       |> assign(:hide_dropdown, true)
-      |> client_select(%{})
+      |> client_select()
 
     {:noreply, socket}
   end
@@ -318,7 +326,6 @@ defmodule LiveSelect.Component do
   def handle_event("clear", _params, socket) do
     socket =
       socket
-      |> assign(last_selection: nil)
       |> clear(%{input_event: true})
 
     {:noreply, socket}
@@ -479,8 +486,33 @@ defmodule LiveSelect.Component do
       selection: selection,
       hide_dropdown: not quick_tags_mode?(socket)
     )
-    |> maybe_save_selection()
-    |> client_select(Map.merge(%{input_event: true}, extra_params))
+    |> then(
+      &unless &1.assigns.keep_options_on_select do
+        assign(&1, %{options: [], current_text: ""})
+      else
+        &1
+      end
+    )
+    |> client_select(
+      Map.merge(
+        %{
+          input_event: true,
+          parent_event: socket.assigns[:"phx-blur"],
+          current_text:
+            cond do
+              socket.assigns.mode == :single && selection != [] ->
+                List.first(selection).label
+
+              socket.assigns.keep_options_on_select ->
+                socket.assigns.current_text
+
+              true ->
+                ""
+            end
+        },
+        extra_params
+      )
+    )
   end
 
   defp unselect(socket, pos) do
@@ -494,56 +526,23 @@ defmodule LiveSelect.Component do
     client_select(socket, %{input_event: true})
   end
 
-  defp maybe_save_selection(socket) do
-    socket
-    |> update(:last_selection, fn
-      _, %{selection: selection, mode: :single} when selection != [] -> selection
-      last_selection, _ -> last_selection
-    end)
-  end
-
-  defp maybe_restore_selection(socket) do
-    update(socket, :selection, fn
-      _, %{last_selection: last_selection, mode: :single} when last_selection != nil ->
-        last_selection
-
-      selection, _ ->
-        selection
-    end)
-  end
-
   defp clear(socket, params) do
     socket
     |> assign(selection: [])
     |> client_select(params)
   end
 
-  defp client_select(socket, extra_params) do
-    parent_event = if socket.assigns.mode == :single, do: socket.assigns[:"phx-blur"]
-
+  defp client_select(socket, extra_params \\ %{}) do
     socket
     |> push_event(
       "select",
       %{
         id: socket.assigns.id,
         mode: socket.assigns.mode,
-        current_text: socket.assigns.current_text,
-        selection: socket.assigns.selection,
-        parent_event: parent_event
+        selection: socket.assigns.selection
       }
       |> Map.merge(extra_params)
     )
-  end
-
-  defp parent_event(socket, nil, _payload), do: socket
-
-  defp parent_event(socket, event, payload) do
-    socket
-    |> push_event("parent_event", %{
-      id: socket.assigns.id,
-      event: event,
-      payload: payload
-    })
   end
 
   defp update_selection(nil, _current_selection, _options, _mode, _value_mapper), do: []
