@@ -105,6 +105,8 @@ defmodule LiveSelect do
 
   ## Slots
 
+  ### Options and tags
+
   You can control how your options and tags are rendered by using the `:option` and `:tag` slots.
   Both slots will be passed an option as argument. In the case of the `:option` slot, the option will have an
   extra boolean field `:selected`, which will be set to `true` if the option has been selected by the user.
@@ -131,6 +133,24 @@ defmodule LiveSelect do
   Here's the result:
 
   <img alt="slots" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/slots.png" width="200" />
+
+  ### Clear button
+
+  You can use the `:clear_button` slot to directly specify the inner HTML
+  of the button that clears the tags or the single selection (if `allow_clear` is set).
+
+  Example:
+
+  ```elixir
+  <.live_select
+      field={@form[:city_search]}
+      phx-target={@myself}
+    >
+      <:clear_button>
+        This my fancy clear button
+      </:clear_button>
+  </.live_select>
+  ```
 
   ## Controlling the selection programmatically
 
