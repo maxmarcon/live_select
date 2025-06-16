@@ -413,6 +413,10 @@ defmodule LiveSelect do
     doc:
       ~s(initial available options to select from. Note that, after the initial rendering of the component, options can only be updated using `Phoenix.LiveView.send_update/3` - See the "Options" section for details)
 
+  attr :keep_options_on_select, :boolean,
+    doc:
+      ~s(if `true`, when in single or tags mode, the current set of options and the input text is preserved upon selection)
+
   attr :value, :any, doc: "used to manually set a selection - overrides any values from the form.
   Must be a single element in `:single` mode, or a list of elements in `:tags` mode."
 
