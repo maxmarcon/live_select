@@ -186,7 +186,7 @@ defmodule LiveSelect.Component do
               socket.assigns.mode == :single && socket.assigns.selection != [] ->
                 List.first(socket.assigns.selection).label
 
-              socket.assigns.keep_options_on_select ->
+              keep_options_on_select?(socket) ->
                 socket.assigns.current_text
 
               true ->
@@ -508,7 +508,7 @@ defmodule LiveSelect.Component do
       hide_dropdown: not quick_tags_mode?(socket)
     )
     |> then(
-      &unless &1.assigns.keep_options_on_select do
+      &unless keep_options_on_select?(&1) do
         assign(&1, %{options: [], current_text: ""})
       else
         &1
@@ -518,13 +518,13 @@ defmodule LiveSelect.Component do
       Map.merge(
         %{
           input_event: true,
-          parent_event: socket.assigns[:"phx-blur"],
+          parent_event: if(socket.assigns.mode == :single, do: socket.assigns[:"phx-blur"]),
           current_text:
             cond do
               socket.assigns.mode == :single && selection != [] ->
                 List.first(selection).label
 
-              socket.assigns.keep_options_on_select ->
+              keep_options_on_select?(socket) ->
                 socket.assigns.current_text
 
               true ->
@@ -739,6 +739,10 @@ defmodule LiveSelect.Component do
 
   defp quick_tags_mode?(socket) do
     socket.assigns.mode == :quick_tags
+  end
+
+  defp keep_options_on_select?(socket) do
+    socket.assigns.keep_options_on_select || quick_tags_mode?(socket)
   end
 
   defp next_selectable(%{

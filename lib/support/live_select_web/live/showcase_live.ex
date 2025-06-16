@@ -144,7 +144,8 @@ defmodule LiveSelectWeb.ShowcaseLive do
       |> Map.reject(fn {option, value} ->
         (remove_defaults && value == Keyword.get(default_opts, option)) ||
           (settings.mode == :single && option == :max_selectable) ||
-          (settings.mode != :single && option == :allow_clear)
+          (settings.mode != :single && option == :allow_clear) ||
+          (settings.mode == :quick_tags && option == :keep_options_on_select)
       end)
       |> Keyword.new()
     end

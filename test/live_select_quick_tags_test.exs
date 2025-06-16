@@ -463,10 +463,9 @@ defmodule LiveSelectQuickTagsTest do
       element(live, selectors()[:text_input])
       |> render_focus()
 
-      assert_push_event(live, "parent_event", %{
+      assert_push_event(live, "select", %{
         id: "my_form_city_search_live_select_component",
-        event: "focus-event-for-parent",
-        payload: %{id: "my_form_city_search_live_select_component"}
+        parent_event: "focus-event-for-parent"
       })
     end
 
