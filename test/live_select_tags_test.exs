@@ -577,4 +577,48 @@ defmodule LiveSelectTagsTest do
     select_nth_option(live, 2, method: :click)
     assert_selected_multiple(live, [%{label: "B", value: 2}])
   end
+
+  test "selecting clears the options and current input text", %{live: live} do
+    stub_options(%{
+      "A" => 1,
+      "B" => 2,
+      "C" => 3
+    })
+
+    type(live, "ABC")
+
+    select_nth_option(live, 2)
+
+    assert_selected_multiple(live, [%{label: "B", value: 2}], "")
+
+    select_nth_option(live, 1)
+
+    assert_selected_multiple_static(live, [%{label: "B", value: 2}])
+  end
+
+  describe "when keep_options_on_select = true" do
+    setup %{conn: conn} do
+      {:ok, live, _html} = live(conn, "/?mode=tags&keep_options_on_select=true")
+
+      %{live: live}
+    end
+
+    test "selecting does not clear the options or the current input text", %{live: live} do
+      stub_options(%{
+        "A" => 1,
+        "B" => 2,
+        "C" => 3
+      })
+
+      type(live, "ABC")
+
+      select_nth_option(live, 2)
+
+      assert_selected_multiple(live, [%{label: "B", value: 2}], "ABC")
+
+      select_nth_option(live, 1)
+
+      assert_selected_multiple(live, [%{label: "B", value: 2}, %{label: "A", value: 1}], "ABC")
+    end
+  end
 end

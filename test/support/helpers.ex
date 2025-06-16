@@ -332,6 +332,16 @@ defmodule LiveSelect.TestHelpers do
     })
   end
 
+  def assert_selected_multiple(live, selection, current_text) do
+    normalized_selection = assert_selected_multiple_static(live, selection)
+
+    assert_push_event(live, "select", %{
+      id: @component_id,
+      selection: ^normalized_selection,
+      current_text: ^current_text
+    })
+  end
+
   def assert_selected_option_class(_html, _selected_pos, []), do: true
 
   def assert_selected_option_class(html, selected_pos, selected_class)

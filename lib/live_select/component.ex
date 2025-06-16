@@ -181,17 +181,7 @@ defmodule LiveSelect.Component do
 
         client_select(socket, %{
           input_event: true,
-          current_text:
-            cond do
-              socket.assigns.mode == :single && socket.assigns.selection != [] ->
-                List.first(socket.assigns.selection).label
-
-              keep_options_on_select?(socket) ->
-                socket.assigns.current_text
-
-              true ->
-                ""
-            end
+          current_text: new_current_text_after_selection(socket)
         })
       else
         socket
@@ -501,35 +491,28 @@ defmodule LiveSelect.Component do
         [selected]
       end
 
-    socket
-    |> assign(
-      active_option: if(quick_tags_mode?(socket), do: socket.assigns.active_option, else: -1),
-      selection: selection,
-      hide_dropdown: not quick_tags_mode?(socket)
-    )
-    |> then(
-      &unless keep_options_on_select?(&1) do
-        assign(&1, %{options: [], current_text: ""})
-      else
-        &1
-      end
-    )
-    |> client_select(
+    socket =
+      socket
+      |> assign(
+        active_option: if(quick_tags_mode?(socket), do: socket.assigns.active_option, else: -1),
+        selection: selection,
+        hide_dropdown: not quick_tags_mode?(socket)
+      )
+      |> then(
+        &unless keep_options_on_select?(&1) do
+          assign(&1, %{options: [], current_text: ""})
+        else
+          &1
+        end
+      )
+
+    client_select(
+      socket,
       Map.merge(
         %{
           input_event: true,
           parent_event: if(socket.assigns.mode == :single, do: socket.assigns[:"phx-blur"]),
-          current_text:
-            cond do
-              socket.assigns.mode == :single && selection != [] ->
-                List.first(selection).label
-
-              keep_options_on_select?(socket) ->
-                socket.assigns.current_text
-
-              true ->
-                ""
-            end
+          current_text: new_current_text_after_selection(socket)
         },
         extra_params
       )
@@ -743,6 +726,19 @@ defmodule LiveSelect.Component do
 
   defp keep_options_on_select?(socket) do
     socket.assigns.keep_options_on_select || quick_tags_mode?(socket)
+  end
+
+  defp new_current_text_after_selection(socket) do
+    cond do
+      socket.assigns.mode == :single && socket.assigns.selection != [] ->
+        List.first(socket.assigns.selection).label
+
+      keep_options_on_select?(socket) ->
+        socket.assigns.current_text
+
+      true ->
+        ""
+    end
   end
 
   defp next_selectable(%{

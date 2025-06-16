@@ -1067,7 +1067,7 @@ defmodule LiveSelectTest do
     end
   end
 
-  test "selecting clear the options", %{conn: conn} do
+  test "selecting clears the options", %{conn: conn} do
     {:ok, live, _html} = live(conn, "/")
 
     stub_options(["A", "B", "C"])
