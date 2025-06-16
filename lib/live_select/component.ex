@@ -499,10 +499,10 @@ defmodule LiveSelect.Component do
         hide_dropdown: not quick_tags_mode?(socket)
       )
       |> then(
-        &unless keep_options_on_select?(&1) do
-          assign(&1, %{options: [], current_text: ""})
-        else
+        &if keep_options_on_select?(&1) do
           &1
+        else
+          assign(&1, %{options: [], current_text: ""})
         end
       )
 
