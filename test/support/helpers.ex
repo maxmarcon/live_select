@@ -252,7 +252,8 @@ defmodule LiveSelect.TestHelpers do
       id: @component_id,
       selection: [%{label: ^label, value: ^value}],
       input_event: true,
-      mode: :single
+      mode: :single,
+      current_text: ^label
     })
   end
 
@@ -406,27 +407,24 @@ defmodule LiveSelect.TestHelpers do
   def assert_unavailable_option_class(live, selected_pos, unavailable_class),
     do: assert_unavailable_option_class(render(live), selected_pos, unavailable_class)
 
-  def assert_clear(live, input_event \\ true) do
-    if input_event do
-      assert_clear_static(live)
-    end
+  def assert_clear_selection(live) do
+    assert_clear_selection_static(live)
 
-    if input_event do
-      assert_push_event(live, "select", %{
-        id: @component_id,
-        selection: [],
-        input_event: true
-      })
-    else
-      assert_push_event(live, "select", %{
-        id: @component_id,
-        current_text: "",
-        input_event: false
-      })
-    end
+    assert_push_event(live, "select", %{
+      id: @component_id,
+      selection: [],
+      input_event: true
+    })
   end
 
-  def assert_clear_static(live) do
+  def assert_set_text_field(live, text) do
+    assert_push_event(live, "select", %{
+      id: @component_id,
+      current_text: ^text
+    })
+  end
+
+  def assert_clear_selection_static(live) do
     assert live
            |> element(@selectors[:hidden_input])
            |> render()

@@ -31,7 +31,7 @@ export default {
                 clear_button.style.right = '5px'
                 clear_button.style.display = 'block'
             }
-            this.el.querySelectorAll('button.tag-clear-button').forEach(clear_button => {
+            this.el.querySelectorAll('button.ls-clear-tag-button').forEach(clear_button => {
                 clear_button.style.minHeight = '20px'
                 clear_button.style.minWidth = '20px'
             })

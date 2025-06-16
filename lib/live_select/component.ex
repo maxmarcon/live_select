@@ -172,11 +172,27 @@ defmodule LiveSelect.Component do
 
     socket =
       if Map.has_key?(assigns, :value) do
-        update(socket, :selection, fn
-          selection, %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
-            update_selection(value, selection, options, mode, value_mapper)
-        end)
-        |> client_select(%{input_event: true})
+        socket =
+          update(socket, :selection, fn
+            selection,
+            %{options: options, value: value, mode: mode, value_mapper: value_mapper} ->
+              update_selection(value, selection, options, mode, value_mapper)
+          end)
+
+        client_select(socket, %{
+          input_event: true,
+          current_text:
+            cond do
+              socket.assigns.mode == :single && socket.assigns.selection != [] ->
+                List.first(socket.assigns.selection).label
+
+              socket.assigns.keep_options_on_select ->
+                socket.assigns.current_text
+
+              true ->
+                ""
+            end
+        })
       else
         socket
       end
@@ -305,7 +321,12 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(:hide_dropdown, true)
-      |> client_select()
+      |> client_select(%{
+        current_text:
+          if(socket.assigns.mode == :single && socket.assigns.selection != [],
+            do: List.first(socket.assigns.selection).label
+          )
+      })
 
     {:noreply, socket}
   end
@@ -408,7 +429,7 @@ defmodule LiveSelect.Component do
          } = socket,
          extra_params
        )
-       when is_binary(current_text) do
+       when current_text != "" do
     {:ok, option} = normalize_option(current_text)
 
     if already_selected?(option, socket.assigns.selection) do
@@ -532,7 +553,7 @@ defmodule LiveSelect.Component do
     |> client_select(params)
   end
 
-  defp client_select(socket, extra_params \\ %{}) do
+  defp client_select(socket, extra_params) do
     socket
     |> push_event(
       "select",
