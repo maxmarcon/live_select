@@ -18,7 +18,8 @@ defmodule LiveSelect do
   clicking an option with the mouse.
 
   Whenever an option is selected, `LiveSelect` will trigger a standard `phx-change` event in the form. See the "Examples" section
-  below for details on how to handle the event.
+  below for details on how to handle the event. In `single` and `tags` mode, the input text and the list of selectable options is cleared after selection.
+  To preserve both, use the `keep_options_on_select` flag in the assigns.
 
   In single mode, if the configuration option `allow_clear` is set, the user can manually clear the selection by clicking on the `x` button on the input field.
   In tags mode, single tags can be removed by clicking on them.
