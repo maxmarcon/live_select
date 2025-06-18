@@ -30,6 +30,7 @@ defmodule LiveSelect.Component do
     dropdown_extra_class: nil,
     max_selectable: 0,
     mode: :single,
+    no_basic_styles_for_clear_buttons: false,
     option_class: nil,
     option_extra_class: nil,
     options: [],

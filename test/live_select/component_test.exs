@@ -540,7 +540,7 @@ defmodule LiveSelect.ComponentTest do
            ]
   end
 
-  for style <- [nil] do
+  for style <- [nil, :daisyui, :tailwind, :none] do
     @style style
 
     describe "when style = #{@style || "default"}" do
@@ -748,7 +748,31 @@ defmodule LiveSelect.ComponentTest do
               if(@style, do: [style: @style], else: [])
           )
 
-        assert Floki.attribute(component, selectors()[:clear_button], "class") == ~W(foo)
+        assert Floki.attribute(component, selectors()[:clear_button], "class") == [
+                 "foo ls-clear-button"
+               ]
+      end
+
+      test "no basic styles for clear button", %{form: form} do
+        component =
+          render_component(
+            &LiveSelect.live_select/1,
+            [
+              mode: :single,
+              field: form[:city_search],
+              options: ["A", "B", "C"],
+              value: "B",
+              allow_clear: true,
+              no_basic_styles_for_clear_buttons: true
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        assert Floki.attribute(component, selectors()[:clear_button], "class") == [
+                 (get_in(expected_class(), [@style || default_style(), :clear_button]) || [])
+                 |> Enum.join(" ")
+                 |> String.trim()
+               ]
       end
 
       if @style != :none do
@@ -769,7 +793,7 @@ defmodule LiveSelect.ComponentTest do
 
           assert Floki.attribute(component, selectors()[:clear_button], "class") == [
                    ((get_in(expected_class(), [@style || default_style(), :clear_button]) || []) ++
-                      ~W(foo))
+                      ~W(foo ls-clear-button))
                    |> Enum.join(" ")
                    |> String.trim()
                  ]
@@ -887,6 +911,26 @@ defmodule LiveSelect.ComponentTest do
             end
           end
         end
+      end
+
+      test "no basic styles for clear tag buttons", %{form: form} do
+        component =
+          render_component(
+            &LiveSelect.live_select/1,
+            [
+              mode: :tags,
+              field: form[:city_search],
+              options: ["A", "B", "C"],
+              value: "B",
+              no_basic_styles_for_clear_buttons: true
+            ] ++
+              if(@style, do: [style: @style], else: [])
+          )
+
+        assert Floki.attribute(component, selectors()[@element], "class") == [
+                 (get_in(expected_class(), [@style || default_style(), @element]) || [])
+                 |> Enum.join(" ")
+               ]
       end
 
       test "daisyui style includes both active and menu-active classes for compatibility", %{

@@ -20,7 +20,7 @@ export default {
             return parseInt(this.el.dataset["updateMinLen"])
         },
         maybeStyleClearButtons() {
-            const clear_button = this.el.querySelector('button[phx-click=clear]')
+            const clear_button = this.el.querySelector('button.ls-clear-button')
             if (clear_button) {
                 this.textInput().parentElement.style.position = 'relative'
                 this.textInput().parentElement.style.display = 'flex'

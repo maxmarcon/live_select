@@ -28,7 +28,7 @@
                 @clear_tag_button_class,
                 @clear_tag_button_extra_class
               ) ++
-                ["ls-clear-tag-button"]
+                if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-tag-button)
             }
           >
             <%= if @clear_button == [] do %>
@@ -66,7 +66,10 @@
         type="button"
         phx-click="clear"
         phx-target={@myself}
-        class={class(@style, :clear_button, @clear_button_class, @clear_button_extra_class)}
+        class={
+          class(@style, :clear_button, @clear_button_class, @clear_button_extra_class) ++
+            if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-button)
+        }
       >
         <%= if @clear_button == [] do %>
           <.x />
