@@ -454,6 +454,15 @@ defmodule LiveSelect.TestHelpers do
     refute has_element?(live, selector)
   end
 
+  def assert_active_event(live, active_option_idx) do
+    actual_idx = active_option_idx - 1
+
+    assert_push_event(live, "active", %{
+      id: @component_id,
+      idx: ^actual_idx
+    })
+  end
+
   def navigate(live, n, dir, opts \\ []) do
     key =
       case dir do
