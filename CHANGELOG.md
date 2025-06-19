@@ -1,9 +1,9 @@
-## [Unreleased]
+## 1.7.0 (2025-06-19)
 
-### Added
 * DaisyUI 5 compatibility - active options now include both `active` and `menu-active` classes for compatibility with DaisyUI 3, 4, and 5
 * Add `keep_options_on_select` flag. By default, when not in `quick_tags` mode, input text field and list of selectable options are now cleared after selection. This flag suppresses this behavior   
-* Styling clear buttons entirely using JS
+* Positioning and sizing clear buttons entirely using JS
+* `no_basic_styles_for_clear_buttons` flat to suppress prevent basic positioning and styling of clear buttons
 
 ## 1.6.0 (2025-04-13)
 
