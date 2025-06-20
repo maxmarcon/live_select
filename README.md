@@ -204,6 +204,7 @@ Use `mix test` to run the entire test suite, which is subdivided into 3 main fil
 * `test/live_select/component_test.exs` - everything that can be tested by rendering the component statically
 * `test/live_select_test.exs` - tests for `single` mode that require a running LiveView 
 * `test/live_select_tags_test.exs` - tests for `tags` mode that require a running LiveView
+* `test/live_select_quick_tags_test.exs` - tests for `quick_tags` mode that require a running LiveView
 
 Tests that require a LiveView use the showcase app as the parent LiveView.
 
