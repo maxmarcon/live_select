@@ -8,40 +8,42 @@
   data-field={@field.id}
   data-debounce={@debounce}
 >
-<%= if @tags_container_position == :top do %>
-  <div class={class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)}>
-    <%= if (@mode in [:tags, :quick_tags]) && Enum.any?(@selection) do %>
-      <%= for {option, idx} <- Enum.with_index(@selection) do %>
-        <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
-          <%= if @tag == [] do %>
-            <%= option[:tag_label] || option[:label] %>
-          <% else %>
-            <%= render_slot(@tag, option) %>
-          <% end %>
-          <button
-            :if={!option[:sticky] && !@disabled}
-            type="button"
-            data-idx={idx}
-            class={
-              class(
-                @style,
-                :clear_tag_button,
-                @clear_tag_button_class,
-                @clear_tag_button_extra_class
-              ) ++
-                if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-tag-button)
-            }
-          >
-            <%= if @clear_button == [] do %>
-              <.x />
+  <%= if @tags_container_position == :top do %>
+    <div class={
+      class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)
+    }>
+      <%= if (@mode in [:tags, :quick_tags]) && Enum.any?(@selection) do %>
+        <%= for {option, idx} <- Enum.with_index(@selection) do %>
+          <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
+            <%= if @tag == [] do %>
+              <%= option[:tag_label] || option[:label] %>
             <% else %>
-              <%= render_slot(@clear_button) %>
+              <%= render_slot(@tag, option) %>
             <% end %>
-          </button>
-        </div>
+            <button
+              :if={!option[:sticky] && !@disabled}
+              type="button"
+              data-idx={idx}
+              class={
+                class(
+                  @style,
+                  :clear_tag_button,
+                  @clear_tag_button_class,
+                  @clear_tag_button_extra_class
+                ) ++
+                  if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-tag-button)
+              }
+            >
+              <%= if @clear_button == [] do %>
+                <.x />
+              <% else %>
+                <%= render_slot(@clear_button) %>
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
   <% end %>
 
   <div>
@@ -154,38 +156,40 @@
   <% end %>
 
   <%= if @tags_container_position == :bottom do %>
-  <div class={class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)}>
-    <%= if (@mode in [:tags, :quick_tags]) && Enum.any?(@selection) do %>
-      <%= for {option, idx} <- Enum.with_index(@selection) do %>
-        <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
-          <%= if @tag == [] do %>
-            <%= option[:tag_label] || option[:label] %>
-          <% else %>
-            <%= render_slot(@tag, option) %>
-          <% end %>
-          <button
-            :if={!option[:sticky] && !@disabled}
-            type="button"
-            data-idx={idx}
-            class={
-              class(
-                @style,
-                :clear_tag_button,
-                @clear_tag_button_class,
-                @clear_tag_button_extra_class
-              ) ++
-                if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-tag-button)
-            }
-          >
-            <%= if @clear_button == [] do %>
-              <.x />
+    <div class={
+      class(@style, :tags_container, @tags_container_class, @tags_container_extra_class)
+    }>
+      <%= if (@mode in [:tags, :quick_tags]) && Enum.any?(@selection) do %>
+        <%= for {option, idx} <- Enum.with_index(@selection) do %>
+          <div class={class(@style, :tag, @tag_class, @tag_extra_class)}>
+            <%= if @tag == [] do %>
+              <%= option[:tag_label] || option[:label] %>
             <% else %>
-              <%= render_slot(@clear_button) %>
+              <%= render_slot(@tag, option) %>
             <% end %>
-          </button>
-        </div>
+            <button
+              :if={!option[:sticky] && !@disabled}
+              type="button"
+              data-idx={idx}
+              class={
+                class(
+                  @style,
+                  :clear_tag_button,
+                  @clear_tag_button_class,
+                  @clear_tag_button_extra_class
+                ) ++
+                  if @no_basic_styles_for_clear_buttons, do: [], else: ~w(ls-clear-tag-button)
+              }
+            >
+              <%= if @clear_button == [] do %>
+                <.x />
+              <% else %>
+                <%= render_slot(@clear_button) %>
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
   <% end %>
 </div>

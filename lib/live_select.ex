@@ -457,7 +457,6 @@ defmodule LiveSelect do
     doc:
       "one of `:tailwind`, `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
-
   attr :tags_container_position, :atom,
     values: [:top, :bottom],
     default: Component.default_opts()[:tags_container_position],
