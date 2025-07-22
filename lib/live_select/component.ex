@@ -41,6 +41,7 @@ defmodule LiveSelect.Component do
     tag_extra_class: nil,
     tags_container_class: nil,
     tags_container_extra_class: nil,
+    tags_container_position: :top,
     text_input_class: nil,
     text_input_extra_class: nil,
     text_input_selected_class: nil,

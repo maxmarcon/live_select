@@ -457,6 +457,13 @@ defmodule LiveSelect do
     doc:
       "one of `:tailwind`, `:daisyui` or `:none`. See the [Styling section](styling.html) for details"
 
+
+  attr :tags_container_position, :atom,
+    values: [:top, :bottom],
+    default: Component.default_opts()[:tags_container_position],
+    doc:
+      "used to set the position of the tags container. One of `:top` or `:bottom` to show the tags container at the top or bottom of the dropdown"
+
   slot(:option,
     doc:
       "optional slot that renders an option in the dropdown. The option's data is available via `:let`"
