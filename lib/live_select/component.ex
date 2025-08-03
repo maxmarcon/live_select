@@ -199,15 +199,10 @@ defmodule LiveSelect.Component do
       |> client_select(%{
         parent_event: socket.assigns[:"phx-blur"],
         current_text:
-          cond do
-            socket.assigns.mode == :single && socket.assigns.selection != [] ->
-              List.first(socket.assigns.selection).label
-
-            socket.assigns.mode == :single && socket.assigns.selection == [] ->
-              ""
-
-            true ->
-              socket.assigns.current_text
+          if socket.assigns.mode == :single && socket.assigns.selection != [] do
+            List.first(socket.assigns.selection).label
+          else
+            ""
           end
       })
 
