@@ -1,3 +1,8 @@
+## 1.7.1 (2025-09-17)
+
+* Do not show <div> container for tags when not in tagged mode
+* Unify blur experience between single and tagged modes
+
 ## 1.7.0 (2025-06-19)
 
 * DaisyUI 5 compatibility - active options now include both `active` and `menu-active` classes for compatibility with DaisyUI 3, 4, and 5
