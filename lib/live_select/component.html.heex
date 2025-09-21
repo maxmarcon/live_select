@@ -112,7 +112,7 @@
       <%= for {option, idx} <- Enum.with_index(@options) do %>
         <li class={
           cond do
-            option.disabled ->
+            Map.has_key?(option, :disabled) && option.disabled ->
               class(@style, :unavailable_option, @unavailable_option_class)
 
             already_selected?(option, @selection) ->
