@@ -486,6 +486,7 @@ defmodule LiveSelect.Component do
       else
         [selected]
       end
+      |> Enum.reject(&is_nil/1)
 
     socket =
       socket
