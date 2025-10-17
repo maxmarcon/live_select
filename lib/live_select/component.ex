@@ -383,6 +383,7 @@ defmodule LiveSelect.Component do
           :"phx-focus",
           :option,
           :tag,
+          :caret,
           :clear_button,
           :hide_dropdown,
           :value_mapper,
