@@ -1,6 +1,10 @@
-## 1.7.2 (2025-10-17)
+## 1.7.3 (2025-10-19)
 
 * Bugfix: [label not found in nil](https://github.com/maxmarcon/live_select/issues/125)
+
+## 1.7.2 (2025-10-17)
+
+* ~~Bugfix: [label not found in nil](https://github.com/maxmarcon/live_select/issues/125)~~
 * Bugfix: [2 bugs hit on form recovery](https://github.com/maxmarcon/live_select/pull/124)
 
 ## 1.7.1 (2025-09-17)
