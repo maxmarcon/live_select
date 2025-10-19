@@ -1107,8 +1107,8 @@ defmodule LiveSelectTest do
     end
   end
 
-  test "handles nil in options list when navigating and clearing input", %{conn: conn} do
-    stub_options([{"A", 1}, {"B", 2}, {"C", 3}])
+  test "handles hitting enter after options have been cleared", %{conn: conn} do
+    stub_options(["A", "B", "C"])
 
     {:ok, live, _html} = live(conn, "/")
 
@@ -1124,5 +1124,35 @@ defmodule LiveSelectTest do
     keydown(live, "Enter")
 
     refute_selected(live)
+  end
+
+  test "handles hitting enter after options have been cleared and something was previously selected",
+       %{
+         conn: conn
+       } do
+    stub_options(["A", "B", "C"])
+
+    {:ok, live, _html} = live(conn, "/")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    select_nth_option(live, 2)
+
+    assert_selected(live, "B")
+
+    type(live, "ABC")
+
+    assert_options(live, ["A", "B", "C"])
+
+    keydown(live, "ArrowDown")
+    keydown(live, "Backspace")
+
+    type(live, "")
+
+    keydown(live, "Enter")
+
+    assert_selected_static(live, "B")
   end
 end

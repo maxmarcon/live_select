@@ -261,13 +261,7 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("options_clear", _params, socket) do
-    socket =
-      socket
-      |> assign(current_text: "", options: [])
-
-    {:noreply, socket}
-  end
+  def handle_event("options_clear", _params, socket), do: {:noreply, clear_options(socket)}
 
   @impl true
   def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
@@ -486,7 +480,6 @@ defmodule LiveSelect.Component do
       else
         [selected]
       end
-      |> Enum.reject(&is_nil/1)
 
     socket =
       socket
@@ -499,7 +492,7 @@ defmodule LiveSelect.Component do
         &if keep_options_on_select?(&1) do
           &1
         else
-          assign(&1, %{options: [], current_text: ""})
+          clear_options(&1)
         end
       )
 
@@ -532,6 +525,8 @@ defmodule LiveSelect.Component do
     |> assign(selection: [])
     |> client_select(params)
   end
+
+  defp clear_options(socket), do: assign(socket, current_text: "", options: [], active_option: -1)
 
   defp client_select(socket, extra_params) do
     socket
