@@ -131,7 +131,6 @@ defmodule LiveSelect.Component do
     socket =
       socket
       |> assign(assigns)
-      |> assign(:active_option, -1)
       |> update(:awaiting_update, fn
         _, %{options: _} -> false
         awaiting_update, _ -> awaiting_update
@@ -272,7 +271,7 @@ defmodule LiveSelect.Component do
         active_option: active_option,
         hide_dropdown: false
       )
-      |> push_event("active", %{id: socket.assigns.id, idx: active_option})
+      |> scroll_to_active_option()
 
     {:noreply, socket}
   end
@@ -286,7 +285,7 @@ defmodule LiveSelect.Component do
         active_option: active_option,
         hide_dropdown: false
       )
-      |> push_event("active", %{id: socket.assigns.id, idx: active_option})
+      |> scroll_to_active_option()
 
     {:noreply, socket}
   end
@@ -507,6 +506,7 @@ defmodule LiveSelect.Component do
         extra_params
       )
     )
+    |> scroll_to_active_option()
   end
 
   defp unselect(socket, pos) do
@@ -518,6 +518,11 @@ defmodule LiveSelect.Component do
       end
 
     client_select(socket, %{input_event: true})
+    |> scroll_to_active_option()
+  end
+
+  defp scroll_to_active_option(socket) do
+    push_event(socket, "active", %{id: socket.assigns.id, idx: socket.assigns.active_option})
   end
 
   defp clear(socket, params) do
@@ -526,7 +531,9 @@ defmodule LiveSelect.Component do
     |> client_select(params)
   end
 
-  defp clear_options(socket), do: assign(socket, current_text: "", options: [], active_option: -1)
+  defp clear_options(socket) do
+    assign(socket, current_text: "", options: [], active_option: -1)
+  end
 
   defp client_select(socket, extra_params) do
     socket

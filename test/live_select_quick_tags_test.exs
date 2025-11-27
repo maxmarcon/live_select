@@ -33,10 +33,6 @@ defmodule LiveSelectQuickTagsTest do
     select_nth_option(live, 2)
     assert_selected_multiple(live, ~w(B))
 
-    type(live, "ABC")
-    navigate(live, 3, :down)
-    navigate(live, 1, :up)
-
     keydown(live, "Enter")
     assert_selected_multiple(live, ~w())
   end
@@ -73,7 +69,7 @@ defmodule LiveSelectQuickTagsTest do
     assert_selected_multiple_static(live, [])
   end
 
-  test "hitting enter with only one option does not select it if already selected", %{live: live} do
+  test "hitting enter with only one option deselects it if already selected", %{live: live} do
     stub_options(~w(A))
 
     type(live, "ABC")
@@ -82,11 +78,9 @@ defmodule LiveSelectQuickTagsTest do
 
     assert_selected_multiple(live, ~w(A))
 
-    type(live, "ABC")
-
     keydown(live, "Enter")
 
-    assert_selected_multiple_static(live, ~w(A))
+    assert_selected_multiple_static(live, ~w())
   end
 
   describe "when user_defined_options = true" do
@@ -252,21 +246,15 @@ defmodule LiveSelectQuickTagsTest do
 
     type(live, "ABC")
 
-    select_nth_option(live, 2)
+    select_nth_option(live, 1, method: :click)
+    select_nth_option(live, 2, method: :click)
+    select_nth_option(live, 3, method: :click)
 
-    type(live, "ABC")
-
-    select_nth_option(live, 3)
-
-    type(live, "ABC")
-
-    select_nth_option(live, 1)
-
-    assert_selected_multiple(live, ~w(B C A))
+    assert_selected_multiple(live, ~w(A B C))
 
     unselect_nth_option(live, 2)
 
-    assert_selected_multiple(live, ~w(B A))
+    assert_selected_multiple(live, ~w(A C))
   end
 
   test "can set an option as sticky so it can't be removed", %{live: live} do
