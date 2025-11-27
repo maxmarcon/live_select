@@ -92,7 +92,7 @@ export default {
             this.handleEvent("select", ({ id, selection, mode, current_text, input_event, parent_event }) => {
                 if (this.el.id === id) {
                     this.selection = selection
-                    if (current_text !== null) {
+                    if (current_text != null) {
                         this.setInputValue(current_text)
                     }
                     if (input_event) {

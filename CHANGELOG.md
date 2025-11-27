@@ -1,3 +1,5 @@
+* Bugfix: [Getting undefined in search box when a tag is unselected](https://github.com/maxmarcon/live_select/issues/128)
+
 ## 1.7.3 (2025-10-19)
 
 * Bugfix: [label not found in nil](https://github.com/maxmarcon/live_select/issues/125)
