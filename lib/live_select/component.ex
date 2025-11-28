@@ -534,13 +534,18 @@ defmodule LiveSelect.Component do
   end
 
   defp client_select(socket, extra_params) do
+    cleansed_selection =
+      Enum.map(socket.assigns.selection, fn option ->
+        Map.take(option, [:disabled, :label, :value, :tag_label])
+      end)
+
     socket
     |> push_event(
       "select",
       %{
         id: socket.assigns.id,
         mode: socket.assigns.mode,
-        selection: socket.assigns.selection
+        selection: cleansed_selection
       }
       |> Map.merge(extra_params)
     )
