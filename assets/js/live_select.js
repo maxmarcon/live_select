@@ -103,7 +103,7 @@ export default {
                     }
                 }
             })
-            this.handleEvent("active", ({ id, idx }) => {
+            this.handleEvent("scroll_to_option", ({ id, idx }) => {
                 if (this.el.id === id) {
                     const option = this.el.querySelector(`div[data-idx="${idx}"]`)
                     if (option) {

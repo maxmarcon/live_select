@@ -587,7 +587,7 @@ defmodule LiveSelectTest do
     navigate(live, 1, :up)
 
     assert_option_active(live, 3)
-    assert_active_event(live, 3)
+    assert_scroll_to_option(live, 3)
   end
 
   test "navigating down selects the first option", %{conn: conn} do
@@ -600,7 +600,7 @@ defmodule LiveSelectTest do
     navigate(live, 1, :down)
 
     assert_option_active(live, 1)
-    assert_active_event(live, 1)
+    assert_scroll_to_option(live, 1)
   end
 
   test "dropdown becomes visible when typing", %{conn: conn} do

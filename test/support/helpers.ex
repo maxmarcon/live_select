@@ -6,6 +6,9 @@ defmodule LiveSelect.TestHelpers do
   @default_style :tailwind
   def default_style(), do: @default_style
 
+  @select_event "select"
+  @scroll_to_option_event "scroll_to_option"
+
   @expected_class [
     daisyui: [
       active_option: ~W(active),
@@ -248,13 +251,15 @@ defmodule LiveSelect.TestHelpers do
   def assert_selected(live, label, value \\ nil) do
     {label, value} = assert_selected_static(live, label, value)
 
-    assert_push_event(live, "select", %{
+    assert_push_event(live, @select_event, %{
       id: @component_id,
       selection: [%{label: ^label, value: ^value}],
       input_event: true,
       mode: :single,
       current_text: ^label
     })
+
+    assert_push_event(live, @scroll_to_option_event, %{})
   end
 
   def assert_selected_static(html, label, value \\ nil)
@@ -326,16 +331,18 @@ defmodule LiveSelect.TestHelpers do
   def assert_selected_multiple(live, selection) do
     normalized_selection = assert_selected_multiple_static(live, selection)
 
-    assert_push_event(live, "select", %{
+    assert_push_event(live, @select_event, %{
       id: @component_id,
       selection: ^normalized_selection
     })
+
+    assert_push_event(live, @scroll_to_option_event, %{})
   end
 
   def assert_selected_multiple(live, selection, current_text) do
     normalized_selection = assert_selected_multiple_static(live, selection)
 
-    assert_push_event(live, "select", %{
+    assert_push_event(live, @select_event, %{
       id: @component_id,
       selection: ^normalized_selection,
       current_text: ^current_text
@@ -420,7 +427,7 @@ defmodule LiveSelect.TestHelpers do
   def assert_clear_selection(live) do
     assert_clear_selection_static(live)
 
-    assert_push_event(live, "select", %{
+    assert_push_event(live, @select_event, %{
       id: @component_id,
       selection: [],
       input_event: true
@@ -428,7 +435,7 @@ defmodule LiveSelect.TestHelpers do
   end
 
   def assert_set_text_field(live, text) do
-    assert_push_event(live, "select", %{
+    assert_push_event(live, @select_event, %{
       id: @component_id,
       current_text: ^text
     })
@@ -454,10 +461,10 @@ defmodule LiveSelect.TestHelpers do
     refute has_element?(live, selector)
   end
 
-  def assert_active_event(live, active_option_idx) do
+  def assert_scroll_to_option(live, active_option_idx) do
     actual_idx = active_option_idx - 1
 
-    assert_push_event(live, "active", %{
+    assert_push_event(live, @scroll_to_option_event, %{
       id: @component_id,
       idx: ^actual_idx
     })

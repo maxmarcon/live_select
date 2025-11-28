@@ -510,19 +510,17 @@ defmodule LiveSelect.Component do
   end
 
   defp unselect(socket, pos) do
-    socket =
-      if pos == :all do
-        assign(socket, :selection, [])
-      else
-        update(socket, :selection, &List.delete_at(&1, pos))
-      end
-
-    client_select(socket, %{input_event: true})
+    socket
+    |> update(:selection, &List.delete_at(&1, pos))
+    |> client_select(%{input_event: true})
     |> scroll_to_active_option()
   end
 
   defp scroll_to_active_option(socket) do
-    push_event(socket, "active", %{id: socket.assigns.id, idx: socket.assigns.active_option})
+    push_event(socket, "scroll_to_option", %{
+      id: socket.assigns.id,
+      idx: socket.assigns.active_option
+    })
   end
 
   defp clear(socket, params) do
