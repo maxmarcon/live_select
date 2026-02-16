@@ -543,6 +543,14 @@ defmodule LiveSelect do
 
     iex> decode(["{\"name\":\"New York City\",\"pos\":[-74.00597,40.71427]}","{\"name\":\"Stockholm\",\"pos\":[18.06871,59.32938]}"])
     [%{"name" => "New York City","pos" => [-74.00597,40.71427]}, %{"name" => "Stockholm","pos" => [18.06871,59.32938]}]
+
+  Non-JSON strings (e.g. raw text from a search input) are returned as-is:
+
+    iex> decode("Glon")
+    "Glon"
+
+    iex> decode(["Berlin", "Rome"])
+    ["Berlin", "Rome"]
   """
   def decode(selection) do
     json = Phoenix.json_library()
@@ -550,8 +558,14 @@ defmodule LiveSelect do
     case selection do
       nil -> []
       "" -> nil
-      selection when is_list(selection) -> Enum.map(selection, &json.decode!/1)
-      selection -> json.decode!(selection)
+      selection when is_list(selection) -> Enum.map(selection, &safe_decode(json, &1))
+      selection -> safe_decode(json, selection)
     end
+  end
+
+  defp safe_decode(json, value) do
+    json.decode!(value)
+  rescue
+    _ -> value
   end
 end
