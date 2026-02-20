@@ -202,7 +202,10 @@ defmodule LiveSelect.Component do
   def handle_event("blur", _params, socket) do
     socket =
       socket
-      |> assign(:hide_dropdown, true)
+      |> assign(
+        :hide_dropdown,
+        if(quick_tags_mode?(socket), do: socket.assigns.hide_dropdown, else: true)
+      )
       |> client_select(%{
         parent_event: socket.assigns[:"phx-blur"],
         current_text:
@@ -214,6 +217,11 @@ defmodule LiveSelect.Component do
       })
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("self_blur", _params, socket) do
+    handle_event("blur", %{}, assign(socket, :hide_dropdown, true))
   end
 
   @impl true
