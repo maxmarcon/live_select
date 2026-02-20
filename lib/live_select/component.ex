@@ -271,8 +271,9 @@ defmodule LiveSelect.Component do
   def handle_event("options_clear", _params, socket), do: {:noreply, clear_options(socket)}
 
   @impl true
-  def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
-    active_option = next_selectable(socket.assigns)
+  def handle_event("keydown", %{"key" => "ArrowDown"} = params, socket) do
+    visual_order = Map.get(params, "visual_order", default_visual_order(socket.assigns))
+    active_option = next_selectable(socket.assigns, visual_order)
 
     socket =
       assign(socket,
@@ -285,8 +286,9 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
-    active_option = prev_selectable(socket.assigns)
+  def handle_event("keydown", %{"key" => "ArrowUp"} = params, socket) do
+    visual_order = Map.get(params, "visual_order", default_visual_order(socket.assigns))
+    active_option = prev_selectable(socket.assigns, visual_order)
 
     socket =
       assign(socket,
@@ -755,55 +757,77 @@ defmodule LiveSelect.Component do
     end
   end
 
-  defp next_selectable(%{
-         selection: selection,
-         active_option: active_option,
-         max_selectable: max_selectable,
-         mode: mode
-       })
-       when mode != :quick_tags and max_selectable > 0 and length(selection) >= max_selectable,
-       do: active_option
-
-  defp next_selectable(%{
-         options: options,
-         active_option: active_option,
-         selection: selection,
-         mode: mode
-       }) do
-    options
-    |> Enum.with_index()
-    |> Enum.reject(fn {opt, _} ->
-      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection)) ||
-        Map.get(opt, :disabled)
-    end)
-    |> Enum.map(fn {_, idx} -> idx end)
-    |> Enum.find(active_option, &(&1 > active_option))
+  defp default_visual_order(%{options: options}) do
+    Enum.to_list(0..(length(options) - 1))
   end
 
-  defp prev_selectable(%{
-         selection: selection,
-         active_option: active_option,
-         max_selectable: max_selectable,
-         mode: mode
-       })
+  defp selectable_in_visual_order(
+         %{options: options, selection: selection, mode: mode},
+         visual_order
+       ) do
+    Enum.filter(visual_order, fn idx ->
+      option = Enum.at(options, idx)
+
+      option && not Map.get(option, :disabled, false) &&
+        (mode == :quick_tags || not already_selected?(option, selection))
+    end)
+  end
+
+  defp next_selectable(
+         %{
+           selection: selection,
+           active_option: active_option,
+           max_selectable: max_selectable,
+           mode: mode
+         },
+         _visual_order
+       )
        when mode != :quick_tags and max_selectable > 0 and length(selection) >= max_selectable,
        do: active_option
 
-  defp prev_selectable(%{
-         options: options,
-         active_option: active_option,
-         selection: selection,
-         mode: mode
-       }) do
-    options
-    |> Enum.with_index()
-    |> Enum.reverse()
-    |> Enum.reject(fn {opt, _} ->
-      active_option == opt || (mode != :quick_tags && already_selected?(opt, selection)) ||
-        Map.get(opt, :disabled)
-    end)
-    |> Enum.map(fn {_, idx} -> idx end)
-    |> Enum.find(active_option, &(&1 < active_option || active_option == -1))
+  defp next_selectable(%{active_option: active_option} = assigns, visual_order) do
+    selectable = selectable_in_visual_order(assigns, visual_order)
+
+    case active_option do
+      -1 ->
+        List.first(selectable, -1)
+
+      current ->
+        case Enum.drop_while(selectable, &(&1 != current)) do
+          [_ | [next | _]] -> next
+          _ -> current
+        end
+    end
+  end
+
+  defp prev_selectable(
+         %{
+           selection: selection,
+           active_option: active_option,
+           max_selectable: max_selectable,
+           mode: mode
+         },
+         _visual_order
+       )
+       when mode != :quick_tags and max_selectable > 0 and length(selection) >= max_selectable,
+       do: active_option
+
+  defp prev_selectable(%{active_option: active_option} = assigns, visual_order) do
+    selectable = selectable_in_visual_order(assigns, visual_order)
+
+    case active_option do
+      -1 ->
+        List.last(selectable, -1)
+
+      current ->
+        selectable
+        |> Enum.reverse()
+        |> Enum.drop_while(&(&1 != current))
+        |> case do
+          [_ | [prev | _]] -> prev
+          _ -> current
+        end
+    end
   end
 
   defp x(assigns) do

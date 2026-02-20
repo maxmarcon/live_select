@@ -49,7 +49,11 @@ export default {
                 if (event.code === "Enter") {
                     event.preventDefault()
                 }
-                this.pushEventTo(this.el, 'keydown', { key: event.code })
+                const options = Array.from(this.el.querySelectorAll('div[data-idx]'))
+                const visualOrder = options
+                    .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)
+                    .map(el => parseInt(el.dataset.idx))
+                this.pushEventTo(this.el, 'keydown', { key: event.code, visual_order: visualOrder })
             }
             this.changeEvents = debounce((id, field, text) => {
                 this.pushEventTo(this.el, "change", { text })
