@@ -92,6 +92,7 @@ export default {
             this.handleEvent("select", ({ id, selection, mode, current_text, input_event, parent_event }) => {
                 if (this.el.id === id) {
                     this.selection = selection
+                    this._skipNextScroll = true
                     if (current_text != null) {
                         this.setInputValue(current_text)
                     }
@@ -105,6 +106,10 @@ export default {
             })
             this.handleEvent("scroll_to_option", ({ id, idx }) => {
                 if (this.el.id === id) {
+                    if (this._skipNextScroll) {
+                        this._skipNextScroll = false
+                        return
+                    }
                     const option = this.el.querySelector(`div[data-idx="${idx}"]`)
                     if (option) {
                         option.scrollIntoView({ block: "nearest", behavior: "instant", container: "nearest" })
@@ -113,7 +118,18 @@ export default {
             })
             this.attachDomEventHandlers()
         },
+        beforeUpdate() {
+            const dropdown = this.el.querySelector("ul")
+            this._dropdownScrollTop = dropdown ? dropdown.scrollTop : null
+        },
         updated() {
+            if (this._dropdownScrollTop != null) {
+                const dropdown = this.el.querySelector("ul")
+                if (dropdown) {
+                    dropdown.scrollTop = this._dropdownScrollTop
+                }
+                this._dropdownScrollTop = null
+            }
             this.maybeStyleClearButtons()
             this.attachDomEventHandlers()
         },
