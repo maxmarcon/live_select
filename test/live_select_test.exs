@@ -1213,4 +1213,92 @@ defmodule LiveSelectTest do
 
     refute_selected(live)
   end
+
+  describe "when keep_label_on_select = true" do
+    setup %{conn: conn} do
+      stub_options(A: 1, B: 2, C: 3)
+
+      {:ok, live, _html} = live(conn, "/?keep_label_on_select=true")
+
+      type(live, "ABC")
+      select_nth_option(live, 2)
+      assert_selected(live, :B, 2)
+
+      %{live: live}
+    end
+
+    test "on focus, the text input displays the selected label", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      assert_set_text_field(live, :B)
+    end
+
+    test "on click, the text input displays the selected label", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_click()
+
+      assert_set_text_field(live, :B)
+    end
+
+    test "on blur, the text input is restored to the selected label", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_set_text_field(live, :B)
+    end
+
+    test "blur then focus cycle preserves the selected label", %{live: live} do
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_set_text_field(live, :B)
+
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      assert_set_text_field(live, :B)
+
+      element(live, selectors()[:text_input])
+      |> render_blur()
+
+      assert_selected_static(live, :B, 2)
+    end
+
+    test "without a selection, focus behaves as default", %{conn: conn} do
+      stub_options(A: 1, B: 2, C: 3)
+
+      {:ok, live, _html} = live(conn, "/?keep_label_on_select=true")
+
+      type(live, "ABC")
+
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      assert_set_text_field(live, "ABC")
+    end
+
+    test "phx-focus parent_event fires normally on focus", %{conn: conn} do
+      stub_options(A: 1, B: 2, C: 3)
+
+      {:ok, live, _html} =
+        live(conn, "/?keep_label_on_select=true&phx-focus=focus-event-for-parent")
+
+      type(live, "ABC")
+      select_nth_option(live, 2)
+      assert_selected(live, :B, 2)
+
+      element(live, selectors()[:text_input])
+      |> render_focus()
+
+      assert_push_event(live, "select", %{
+        id: "my_form_city_search_live_select_component",
+        current_text: :B,
+        parent_event: "focus-event-for-parent"
+      })
+    end
+  end
 end

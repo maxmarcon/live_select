@@ -20,6 +20,7 @@ defmodule LiveSelect.Component do
     clear_tag_button_class: nil,
     clear_tag_button_extra_class: nil,
     keep_options_on_select: false,
+    keep_label_on_select: false,
     current_text: "",
     user_defined_options: false,
     container_class: nil,
@@ -218,12 +219,25 @@ defmodule LiveSelect.Component do
 
   @impl true
   def handle_event(event, _params, socket) when event in ~w(focus click) do
+    keep_label_on_select =
+      socket.assigns.keep_label_on_select &&
+        socket.assigns.mode == :single &&
+        socket.assigns.selection != []
+
+    display_text =
+      if keep_label_on_select do
+        List.first(socket.assigns.selection).label
+      else
+        socket.assigns.current_text
+      end
+
     socket =
       socket
+      |> assign(current_text: if(keep_label_on_select, do: "", else: socket.assigns.current_text))
       |> client_select(%{
         input_event: false,
         parent_event: socket.assigns[:"phx-focus"],
-        current_text: socket.assigns.current_text
+        current_text: display_text
       })
       |> assign(hide_dropdown: false)
 
@@ -542,8 +556,8 @@ defmodule LiveSelect.Component do
 
   defp clear(socket, params) do
     socket
-    |> assign(selection: [])
-    |> client_select(params)
+    |> assign(selection: [], current_text: "")
+    |> client_select(Map.put(params, :current_text, ""))
   end
 
   defp clear_options(socket) do

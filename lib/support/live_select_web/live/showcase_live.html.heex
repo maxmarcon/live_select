@@ -74,6 +74,13 @@
                 disabled: to_string(@settings_form[:mode].value) == "quick_tags"
               )}
             </label>
+            <label class="label cursor-pointer">
+              <span class="label-text mr-1">Keep label on select:</span>
+              {checkbox(@settings_form, :keep_label_on_select,
+                class: "toggle",
+                disabled: to_string(@settings_form[:mode].value) != "single"
+              )}
+            </label>
             <%= label class: "label cursor-pointer" do %>
               <span class="label-text mr-1">Disabled:&nbsp;</span>
               {checkbox(@settings_form, :disabled, class: "toggle")}
