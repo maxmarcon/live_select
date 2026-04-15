@@ -167,6 +167,16 @@ defmodule LiveSelect do
 
   To set a custom id for the component to use with `Phoenix.LiveView.send_update/3`, you can pass the `id` assign to `live_select/1`.
 
+  ## Dynamically updating the selection
+
+  You can dynamically update the selection by using the `:update_selection` assign.
+  `:update_selection` must be a 1-arity function that receives the current selection and returns the new one:
+
+  ```
+  send_update(LiveSelect.Component, id: live_select_id, update_selection: fn current_selection -> Enum.filter(current_selection, &String.length(&1.label) > 3))
+  ```
+
+  In this case, only the values with a label longer than 3 characters will be kept in the selection.
 
   ## Examples
 
