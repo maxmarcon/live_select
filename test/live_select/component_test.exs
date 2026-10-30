@@ -524,6 +524,19 @@ defmodule LiveSelect.ComponentTest do
     end
   end
 
+  test "dropdown is not a tab stop", %{form: form} do
+    # A scrollable dropdown (e.g. max-h + overflow-y-auto via dropdown_extra_class)
+    # has no focusable children, so browsers would make it a Tab stop of its own.
+    component =
+      render_component(&LiveSelect.live_select/1,
+        field: form[:city_search],
+        options: ["A", "B"],
+        hide_dropdown: false
+      )
+
+    assert Floki.attribute(component, selectors()[:dropdown], "tabindex") == ["-1"]
+  end
+
   test "can set class with list", %{form: form} do
     component =
       render_component(
