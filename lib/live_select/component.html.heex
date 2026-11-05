@@ -108,7 +108,7 @@
     <% end %>
   <% end %>
   <%= if Enum.any?(@options) && !@hide_dropdown do %>
-    <ul class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}>
+    <ul tabindex="-1" class={class(@style, :dropdown, @dropdown_class, @dropdown_extra_class)}>
       <%= for {option, idx} <- Enum.with_index(@options) do %>
         <li class={
           cond do
