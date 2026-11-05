@@ -191,6 +191,25 @@ defmodule LiveSelect.Component do
           input_event: true,
           current_text: new_current_text_after_selection(socket)
         })
+        |> scroll_to_active_option()
+      else
+        socket
+      end
+
+    socket =
+      if Map.has_key?(assigns, :update_selection) do
+        update(socket, :selection, fn
+          selection,
+          %{update_selection: update_fn, options: options, mode: mode, value_mapper: value_mapper} ->
+            update_selection(update_fn, selection, options, mode, value_mapper)
+        end)
+        |> then(fn socket ->
+          client_select(socket, %{
+            input_event: true,
+            current_text: new_current_text_after_selection(socket)
+          })
+        end)
+        |> scroll_to_active_option()
       else
         socket
       end
@@ -396,6 +415,7 @@ defmodule LiveSelect.Component do
           :clear_button,
           :hide_dropdown,
           :value_mapper,
+          :update_selection,
           # for backwards compatibility
           :form
         ]
@@ -564,6 +584,26 @@ defmodule LiveSelect.Component do
   end
 
   defp update_selection(nil, _current_selection, _options, _mode, _value_mapper), do: []
+
+  defp update_selection(update_fn, current_selection, options, _mode, value_mapper)
+       when is_function(update_fn, 1) do
+    new_selection = update_fn.(current_selection)
+
+    {existing, new} = Enum.split_with(new_selection, &(&1 in current_selection))
+
+    new =
+      Enum.map(new, &normalize_selection_value(&1, options, value_mapper))
+      |> Enum.reject(&is_nil/1)
+
+    Enum.uniq(existing ++ new)
+  end
+
+  defp update_selection(update_fn, _current_selection, _options, _mode, _value_mapper)
+       when is_function(update_fn) do
+    raise """
+    Option for `:update_selection` must be a function with arity 1
+    """
+  end
 
   defp update_selection(value, current_selection, options, :single, value_mapper) do
     List.wrap(normalize_selection_value(value, options ++ current_selection, value_mapper))
