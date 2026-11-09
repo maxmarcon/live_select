@@ -1,4 +1,4 @@
-# NOTE: THIS REPO IS LOOKING FOR A MAINTAINER
+# THIS REPO IS LOOKING FOR A MAINTAINER
 If you're interested, drop a message [here](https://github.com/maxmarcon/live_select/discussions/143).
 
 # LiveSelect
