@@ -1,3 +1,6 @@
+# NOTE: THIS REPO IS LOOKING FOR A MAINTAINER
+If you're interested, drop a message [here](https://github.com/maxmarcon/live_select/discussions/143).
+
 # LiveSelect
 
 [![Hex](https://img.shields.io/hexpm/v/live_select.svg)](https://hex.pm/packages/live_select)
