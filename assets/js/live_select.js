@@ -112,6 +112,14 @@ export default {
                 }
             })
             this.attachDomEventHandlers()
+            this.textInput().addEventListener('blur', () => {
+                clearTimeout(this._blurTimeout)
+                this._blurTimeout = setTimeout(() => {
+                    if (document.activeElement !== this.textInput()) {
+                        this.pushEventTo(this.el, 'self_blur', {})
+                    }
+                }, 100)
+            })
         },
         updated() {
             this.maybeStyleClearButtons()
